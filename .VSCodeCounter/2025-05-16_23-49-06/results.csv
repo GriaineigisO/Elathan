@@ -1,0 +1,58 @@
+"filename", "language", "JavaScript JSX", "CSS", "XML", "Markdown", "JSON", "HTML", "JavaScript", "comment", "blank", "total"
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\addEtymology.js", "JavaScript", 0, 0, 0, 0, 0, 0, 114, 4, 23, 141
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\addGroup.js", "JavaScript", 0, 0, 0, 0, 0, 0, 62, 5, 15, 82
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\addLanguage.js", "JavaScript", 0, 0, 0, 0, 0, 0, 110, 4, 18, 132
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\addWord.js", "JavaScript", 0, 0, 0, 0, 0, 0, 116, 4, 15, 135
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\editGroup.js", "JavaScript", 0, 0, 0, 0, 0, 0, 65, 4, 14, 83
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\editLanguage.js", "JavaScript", 0, 0, 0, 0, 0, 0, 148, 6, 25, 179
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\editWord.js", "JavaScript", 0, 0, 0, 0, 0, 0, 112, 4, 15, 131
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getAllWords.js", "JavaScript", 0, 0, 0, 0, 0, 0, 449, 13, 75, 537
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getCognates.js", "JavaScript", 0, 0, 0, 0, 0, 0, 101, 8, 25, 134
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getDaughterLanguages.js", "JavaScript", 0, 0, 0, 0, 0, 0, 50, 4, 14, 68
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getDerivations.js", "JavaScript", 0, 0, 0, 0, 0, 0, 93, 6, 20, 119
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getDescendants.js", "JavaScript", 0, 0, 0, 0, 0, 0, 124, 9, 25, 158
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getEtymology.js", "JavaScript", 0, 0, 0, 0, 0, 0, 126, 9, 28, 163
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getGroups.js", "JavaScript", 0, 0, 0, 0, 0, 0, 50, 4, 15, 69
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getLanguage.js", "JavaScript", 0, 0, 0, 0, 0, 0, 78, 5, 18, 101
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getLanguageName.js", "JavaScript", 0, 0, 0, 0, 0, 0, 50, 4, 14, 68
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getLanguages.js", "JavaScript", 0, 0, 0, 0, 0, 0, 51, 0, 14, 65
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getMotherLanguage.js", "JavaScript", 0, 0, 0, 0, 0, 0, 67, 4, 16, 87
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getWord.js", "JavaScript", 0, 0, 0, 0, 0, 0, 49, 4, 13, 66
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getWordCategories.js", "JavaScript", 0, 0, 0, 0, 0, 0, 74, 5, 16, 95
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\getWordForms.js", "JavaScript", 0, 0, 0, 0, 0, 0, 62, 1, 13, 76
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\login.js", "JavaScript", 0, 0, 0, 0, 0, 0, 72, 8, 18, 98
+"c:\Users\marca\Documents\GitHub\Elatha\backend\api\register.js", "JavaScript", 0, 0, 0, 0, 0, 0, 84, 10, 16, 110
+"c:\Users\marca\Documents\GitHub\Elatha\backend\package-lock.json", "JSON", 0, 0, 0, 0, 2204, 0, 0, 0, 1, 2205
+"c:\Users\marca\Documents\GitHub\Elatha\backend\package.json", "JSON", 0, 0, 0, 0, 33, 0, 0, 0, 1, 34
+"c:\Users\marca\Documents\GitHub\Elatha\backend\server.js", "JavaScript", 0, 0, 0, 0, 0, 0, 105, 6, 16, 127
+"c:\Users\marca\Documents\GitHub\Elatha\backend\vercel.json", "JSON", 0, 0, 0, 0, 14, 0, 0, 0, 1, 15
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\README.md", "Markdown", 0, 0, 0, 7, 0, 0, 0, 0, 6, 13
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\eslint.config.js", "JavaScript", 0, 0, 0, 0, 0, 0, 32, 0, 2, 34
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\index.html", "HTML", 0, 0, 0, 0, 0, 16, 0, 0, 2, 18
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\package-lock.json", "JSON", 0, 0, 0, 0, 3435, 0, 0, 0, 1, 3436
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\package.json", "JSON", 0, 0, 0, 0, 32, 0, 0, 0, 1, 33
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\public\vite.svg", "XML", 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\App.css", "CSS", 0, 401, 0, 0, 0, 0, 0, 4, 79, 484
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\App.jsx", "JavaScript JSX", 27, 0, 0, 0, 0, 0, 0, 1, 5, 33
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\EditLanguageModal.jsx", "JavaScript JSX", 1019, 0, 0, 0, 0, 0, 0, 4, 79, 1102
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\EditWordModal.jsx", "JavaScript JSX", 985, 0, 0, 0, 0, 0, 0, 0, 69, 1054
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\addEtymologyModal.jsx", "JavaScript JSX", 307, 0, 0, 0, 0, 0, 0, 1, 29, 337
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\addGroupModal.jsx", "JavaScript JSX", 775, 0, 0, 0, 0, 0, 0, 1, 58, 834
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\addLanguageModal.jsx", "JavaScript JSX", 966, 0, 0, 0, 0, 0, 0, 5, 79, 1050
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\addWordModal.jsx", "JavaScript JSX", 915, 0, 0, 0, 0, 0, 0, 0, 63, 978
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\editGroupModal.jsx", "JavaScript JSX", 2037, 0, 0, 0, 0, 0, 0, 0, 132, 2169
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\groupSelector.jsx", "JavaScript JSX", 98, 0, 0, 0, 0, 0, 0, 1, 12, 111
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\languageSelector.jsx", "JavaScript JSX", 120, 0, 0, 0, 0, 0, 0, 1, 14, 135
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\navbar.jsx", "JavaScript JSX", 80, 0, 0, 0, 0, 0, 0, 23, 11, 114
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\wordSelector.jsx", "JavaScript JSX", 150, 0, 0, 0, 0, 0, 0, 0, 18, 168
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Pages\dictionary.jsx", "JavaScript JSX", 1222, 0, 0, 0, 0, 0, 0, 113, 25, 1360
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Pages\home.jsx", "JavaScript JSX", 216, 0, 0, 0, 0, 0, 0, 1, 19, 236
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Pages\login.jsx", "JavaScript JSX", 71, 0, 0, 0, 0, 0, 0, 1, 10, 82
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Pages\register.jsx", "JavaScript JSX", 99, 0, 0, 0, 0, 0, 0, 2, 14, 115
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Pages\word.jsx", "JavaScript JSX", 1092, 0, 0, 0, 0, 0, 0, 1, 75, 1168
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\assets\pencil-square.svg", "XML", 0, 0, 36, 0, 0, 0, 0, 1, 2, 39
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\assets\react.svg", "XML", 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\index.css", "CSS", 0, 60, 0, 0, 0, 0, 0, 0, 8, 68
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\src\main.jsx", "JavaScript JSX", 8, 0, 0, 0, 0, 0, 0, 0, 3, 11
+"c:\Users\marca\Documents\GitHub\Elatha\frontend\vite.config.js", "JavaScript", 0, 0, 0, 0, 0, 0, 5, 1, 2, 8
+"Total", "-", 10187, 461, 38, 7, 5718, 16, 2449, 292, 1302, 20470

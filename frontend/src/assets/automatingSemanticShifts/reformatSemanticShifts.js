@@ -1,0 +1,38675 @@
+import fs from "fs";
+
+const semanticDriftRules = {
+
+  sun: [
+    {
+      pos: "noun_meaning",
+      meaning: "day",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "shine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "star",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "day",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "eye",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "time",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fire",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "father",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mother",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gold",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "heat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "year",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "moon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "summer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "god",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "season",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "starfish",
+    },
+  ],
+  hot: [
+    {
+      pos: "noun_meaning",
+      meaning: "heat",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "warm",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fast",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "spicy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bitter",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "flourish",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "prosper",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "cook",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "feel pain",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "ache",
+    },
+  ],
+  run: [
+    {
+      pos: "noun_meaning",
+      meaning: "race",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "chase",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "travel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hare",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "flow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ram",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "happen",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "servant",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "result in",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "abduct",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "kidnap a bride",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "resemble",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be alike",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "penetrate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "get into",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "use",
+    },
+  ],
+  foreigner: [
+    {
+      pos: "noun_meaning",
+      meaning: "giant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "monster",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stranger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "outcast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "outlaw",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soldier",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "monster",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rooster",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tomato",
+    },
+  ],
+  hand: [
+    {
+      pos: "noun_meaning",
+      meaning: "finger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "toe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "side",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ray",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strait",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strength",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "direction",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "arm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "finger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "toe",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "twig",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "way",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trunk",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "help",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "aid",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "handle",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "move",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "direction",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tame",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "govern",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "control",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "rule",
+    },
+  ],
+  knot: [
+    {
+      pos: "noun_meaning",
+      meaning: "bud",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rope",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "log",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "get a cramp",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "spasm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "relation",
+    },
+  ],
+  tooth: [
+    {
+      pos: "noun_meaning",
+      meaning: "sword",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mouth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clove",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "berry",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stick",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thorn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sword",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crag",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cliff",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mouth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thorn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "egg",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bead",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stick",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "berry",
+    },
+  ],
+  sword: [
+    {
+      pos: "noun_meaning",
+      meaning: "weapon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "reed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plough",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "reed",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "sickle",
+    },
+  ],
+  almond: [
+    {
+      pos: "noun_meaning",
+      meaning: "plum",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tonsil",
+    },
+  ],
+  berry: [
+    {
+      pos: "noun_meaning",
+      meaning: "nipple",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bead",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fruit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drop",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "small thing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "berry",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "berry",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nipple",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+  ],
+  scorpion: [
+    {
+      pos: "noun_meaning",
+      meaning: "spider",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "foe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "danger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nettle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spider",
+    },
+  ],
+  stallion: [
+    {
+      pos: "noun_meaning",
+      meaning: "slacker",
+    },
+  ],
+  forest: [
+    {
+      pos: "noun_meaning",
+      meaning: "wilderness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "timber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "hunt",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "toilet",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wild",
+    },
+  ],
+  lord: [
+    {
+      pos: "noun_meaning",
+      meaning: "eagle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chieftain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ruler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "master",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "god",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "father",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "eagle",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+  ],
+  hair: [
+    {
+      pos: "noun_meaning",
+      meaning: "fur",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thread",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "head",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hair",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "frequent",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thread",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "respect",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+  ],
+  goat: [
+    {
+      pos: "noun_meaning",
+      meaning: "cliff-dweller",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nimble person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sacrifice",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "silly person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hare",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shrimp",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snipe",
+    },
+  ],
+  knife: [
+    {
+      pos: "noun_meaning",
+      meaning: "tooth",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "cut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "claw",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pike",
+    },
+  ],
+  rope: [
+    {
+      pos: "noun_meaning",
+      meaning: "line",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bond",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "bind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snake",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "split",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "braid",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "respect",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tendon",
+    },
+  ],
+  wheel: [
+    {
+      pos: "noun_meaning",
+      meaning: "circle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sun",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cycle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sky",
+    },
+  ],
+  pot: [
+    {
+      pos: "noun_meaning",
+      meaning: "belly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "container",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grave",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "womb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "furnace",
+    },
+  ],
+  path: [
+    {
+      pos: "noun_meaning",
+      meaning: "road",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "journey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fate",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "way",
+    },
+  ],
+  valley: [
+    {
+      pos: "noun_meaning",
+      meaning: "womb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "home",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "way",
+    },
+  ],
+  love: [
+    {
+      pos: "verb_meaning",
+      meaning: "want",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "pity",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "friend",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "want",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "kiss",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "friend",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "let",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "allow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sadness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "melancholy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "daughter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "son",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "must",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+  ],
+  axe: [
+    {
+      pos: "noun_meaning",
+      meaning: "weapon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "woodpecker",
+    },
+  ],
+  ant: [
+    {
+      pos: "noun_meaning",
+      meaning: "small person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "servant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "laborer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crowd",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swarm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "speck",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tiny thing",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "grow numb",
+    },
+  ],
+  anus: [
+    {
+      pos: "noun_meaning",
+      meaning: "end",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "opening",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "exit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pit",
+    },
+  ],
+  arch: [
+    {
+      pos: "noun_meaning",
+      meaning: "curve",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gateway",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "span",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bridge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "roof",
+    },
+  ],
+  apple: [
+    {
+      pos: "noun_meaning",
+      meaning: "fruit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "food",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "round object",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ball",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "knee",
+    },
+  ],
+  acorn: [
+    {
+      pos: "noun_meaning",
+      meaning: "nut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "food",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beginning",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bean",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jay",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cone",
+    },
+  ],
+  affliction: [
+    {
+      pos: "noun_meaning",
+      meaning: "pain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "illness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burden",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "curse",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trouble",
+    },
+  ],
+  alder: [
+    {
+      pos: "noun_meaning",
+      meaning: "tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "material",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blood",
+    },
+  ],
+  stiff: [
+    {
+      pos: "adj_meaning",
+      meaning: "rigid",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "frozen",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "formal",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dead",
+    },
+  ],
+  short: [
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brief",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "low",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "insufficient",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "lack",
+    },
+  ],
+  able: [
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fit",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "skilled",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "allowed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "possible",
+    },
+  ],
+  abundant: [
+    {
+      pos: "adj_meaning",
+      meaning: "full",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fertile",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "plentiful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "overflowing",
+    },
+  ],
+  afraid: [
+    {
+      pos: "adj_meaning",
+      meaning: "respectful",
+    },
+  ],
+  personal: [
+    {
+      pos: "adj_meaning",
+      meaning: "private",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "inner",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "self",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "intimate",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "individual",
+    },
+  ],
+  bulky: [
+    {
+      pos: "adj_meaning",
+      meaning: "muscular",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+  ],
+  alive: [
+    {
+      pos: "adj_meaning",
+      meaning: "living",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "awake",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "active",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "moving",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "present",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "intact",
+    },
+  ],
+  sweet: [
+    {
+      pos: "adj_meaning",
+      meaning: "pleasant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "gentle",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beloved",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fragrant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tasty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+  ],
+  alone: [
+    {
+      pos: "adj_meaning",
+      meaning: "solitary",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unique",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "abandoned",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "independent",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lonely",
+    },
+  ],
+  significant: [
+    {
+      pos: "adj_meaning",
+      meaning: "important",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "notable",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "big",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weighty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "meaningful",
+    },
+  ],
+  angry: [
+    {
+      pos: "adj_meaning",
+      meaning: "vengeful",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "revolt",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "rebel",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brave",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "evil",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "strike",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "hit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+  ],
+  hungry: [
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "needy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "eager",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "greedy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+  ],
+  impure: [
+    {
+      pos: "adj_meaning",
+      meaning: "dirty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unclean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "mixed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tainted",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+  ],
+  swollen: [
+    {
+      pos: "adj_meaning",
+      meaning: "puffy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "full",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "large",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "inflamed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pregnant",
+    },
+  ],
+  intelligent: [
+    {
+      pos: "adj_meaning",
+      meaning: "wise",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "skilled",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "clever",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "aware",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "quick",
+    },
+  ],
+  intense: [
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "deep",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hot",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "serious",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sharp",
+    },
+  ],
+  lean: [
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "narrow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "scarce",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "light",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+  ],
+  light: [
+    {
+      pos: "adj_meaning",
+      meaning: "easy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "morning",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "easy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lung",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "world",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "provoke",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "birch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sky",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "shoot",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "loud",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sun",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be resurrected",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "run",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "strike",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "hit",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "torch fishing",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "white",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bright",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "clear",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+  ],
+  painful: [
+    {
+      pos: "adj_meaning",
+      meaning: "sharp",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bitter",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sad",
+    },
+  ],
+  long: [
+    {
+      pos: "adj_meaning",
+      meaning: "tall",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "far",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lasting",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "deep",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "long",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "long",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "high",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tall",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "endure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snake",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring",
+    },
+  ],
+  loose: [
+    {
+      pos: "adj_meaning",
+      meaning: "free",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unrestricted",
+    },
+  ],
+  mild: [
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "gentle",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cool",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "simple",
+    },
+  ],
+  easy: [
+    {
+      pos: "adj_meaning",
+      meaning: "light",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "simple",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "quick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "smooth",
+    },
+  ],
+  uncanny: [
+    {
+      pos: "adj_meaning",
+      meaning: "strange",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dark",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "ghostly",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dangerous",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rare",
+    },
+  ],
+  straight: [
+    {
+      pos: "adj_meaning",
+      meaning: "true",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "direct",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "honest",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "narrow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "correct",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "easy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "healthy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "straight",
+    },
+  ],
+  moist: [
+    {
+      pos: "adj_meaning",
+      meaning: "damp",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wet",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "warm",
+    },
+  ],
+  naked: [
+    {
+      pos: "adj_meaning",
+      meaning: "bare",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "exposed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bald",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bat",
+    },
+  ],
+  narrow: [
+    {
+      pos: "adj_meaning",
+      meaning: "tight",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "close",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "oppress",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "street",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "fear",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be afraid",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ravine",
+    },
+  ],
+  near: [
+    {
+      pos: "adj_meaning",
+      meaning: "close",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "local",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tight",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "friendly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "twin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spleen",
+    },
+  ],
+  new: [
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "young",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strange",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "recent",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "young",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "moon",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+  ],
+  noble: [
+    {
+      pos: "adj_meaning",
+      meaning: "great",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "holy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "high",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "free",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+  ],
+  normal: [
+    {
+      pos: "adj_meaning",
+      meaning: "ordinary",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "common",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "straight",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "true",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "expected",
+    },
+  ],
+  nourishing: [
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "life-giving",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "full",
+    },
+  ],
+  obvious: [
+    {
+      pos: "adj_meaning",
+      meaning: "clear",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "open",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "true",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "plain",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "known",
+    },
+  ],
+  old: [
+    {
+      pos: "adj_meaning",
+      meaning: "ancient",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "worn",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wise",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "gray",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "former",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "old",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "firm",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rotten",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "priest",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "ripe",
+    },
+  ],
+  other: [
+    {
+      pos: "adj_meaning",
+      meaning: "different",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strange",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "second",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "foreign",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "new",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hostile",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "friend",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  padded: [
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "protected",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "round",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cushioned",
+    },
+  ],
+  pale: [
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "faint",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cold",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "gray",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sickly",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sick",
+    },
+  ],
+  kind: [
+    {
+      pos: "adj_meaning",
+      meaning: "gentle",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "helpful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "warm",
+    },
+  ],
+  hollow: [
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sunken",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "false",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "armpit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sinus",
+    },
+  ],
+  holy: [
+    {
+      pos: "adj_meaning",
+      meaning: "sacred",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "clean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "powerful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "set apart",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sacrum",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "feast",
+    },
+  ],
+  divine: [
+    {
+      pos: "adj_meaning",
+      meaning: "supernatural",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "heavenly",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "perfect",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fateful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "eternal",
+    },
+  ],
+  important: [
+    {
+      pos: "adj_meaning",
+      meaning: "great",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "serious",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "heavy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "central",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "needed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "expensive",
+    },
+  ],
+  hostile: [
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dangerous",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "foreign",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cold",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "opposed",
+    },
+  ],
+  awake: [
+    {
+      pos: "adj_meaning",
+      meaning: "alert",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "aware",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "alive",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "moving",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bright",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "guard",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be not frozen",
+    },
+  ],
+  bad: [
+    {
+      pos: "adj_meaning",
+      meaning: "evil",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wrong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unlucky",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "evil",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "stupid",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brave",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "ugly",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sick",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  last: [
+    {
+      pos: "adj_meaning",
+      meaning: "final",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dead",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slowest",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "least",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "worst",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  unexpressive: [
+    {
+      pos: "adj_meaning",
+      meaning: "calm",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cold",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "still",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "silent",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "distant",
+    },
+  ],
+  bald: [
+    {
+      pos: "adj_meaning",
+      meaning: "bare",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "smooth",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "exposed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "skull",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dandelion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  bare: [
+    {
+      pos: "adj_meaning",
+      meaning: "honest",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bald",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bat",
+    },
+  ],
+  beautiful: [
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bright",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pleasant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "graceful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fly agaric",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "big",
+    },
+  ],
+  big: [
+    {
+      pos: "adj_meaning",
+      meaning: "great",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "important",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wide",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "long",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brave",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thumb",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "loud",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "important",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "high",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tall",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pregnant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "adult",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rude",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+  ],
+  bitter: [
+    {
+      pos: "adj_meaning",
+      meaning: "sharp",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "painful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rancid",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "poison",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bile",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "feel pain",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "ache",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sour",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "yellow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dandelion",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "stink",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rowan",
+    },
+  ],
+  hate: [
+    {
+      pos: "verb_meaning",
+      meaning: "fear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "avoid",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "slander",
+    },
+  ],
+  anger: [
+    {
+      pos: "noun_meaning",
+      meaning: "fire",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "storm",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "burn",
+    },
+  ],
+  joy: [
+    {
+      pos: "noun_meaning",
+      meaning: "luck",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "youth",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "laugh",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "daughter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "son",
+    },
+  ],
+  day: [
+    {
+      pos: "noun_meaning",
+      meaning: "sun",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "time",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "season",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "period",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "span",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sun",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "guard",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "today",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "time",
+    },
+  ],
+  night: [
+    {
+      pos: "noun_meaning",
+      meaning: "dark",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "death",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mystery",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "darkness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "badger",
+    },
+  ],
+  year: [
+    {
+      pos: "noun_meaning",
+      meaning: "harvest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cycle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "age",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "harvest",
+    },
+  ],
+  dawn: [
+    {
+      pos: "noun_meaning",
+      meaning: "east",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "youth",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "shine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "morning",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "light",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rise",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "daybreak",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "want",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tune",
+    },
+  ],
+  shield: [
+    {
+      pos: "noun_meaning",
+      meaning: "protection",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "law",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "protect",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "coin",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tortoise",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "turtle",
+    },
+  ],
+  spear: [
+    {
+      pos: "noun_meaning",
+      meaning: "staff",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ray",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sword",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "arrow",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "sting",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dragonfly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "reed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "icicle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  army: [
+    {
+      pos: "noun_meaning",
+      meaning: "crowd",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "migration",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "storm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "war",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "force",
+    },
+  ],
+  woman: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "female animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mother",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mother",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sheaf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "daughter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+  ],
+  stranger: [
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "merchant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "foreigner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "guest",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "other",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "deprive",
+    },
+  ],
+  north: [
+    {
+      pos: "noun_meaning",
+      meaning: "cold",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountains",
+    },
+  ],
+  south: [
+    {
+      pos: "noun_meaning",
+      meaning: "heat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sun",
+    },
+  ],
+  center: [
+    {
+      pos: "noun_meaning",
+      meaning: "heart",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "village",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "altar",
+    },
+  ],
+  house: [
+    {
+      pos: "noun_meaning",
+      meaning: "family",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clan",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lineage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "family",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "room",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "marry",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "take a wife",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grave",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "womb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "village",
+    },
+  ],
+  door: [
+    {
+      pos: "noun_meaning",
+      meaning: "threshold",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beginning",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "choice",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "entrance",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "opportunity",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chapter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "way",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ravine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mouth",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "cover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "window",
+    },
+  ],
+  eagle: [
+    {
+      pos: "noun_meaning",
+      meaning: "king",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "guardian",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fierce",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "noble warrior",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "raptor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain eagle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "golden eagle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "columbine",
+    },
+  ],
+  blood: [
+    {
+      pos: "noun_meaning",
+      meaning: "family",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "anger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "life",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "revenge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "yarrow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+  ],
+  belly: [
+    {
+      pos: "noun_meaning",
+      meaning: "womb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "inside",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "storehouse",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "body",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "navel",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pregnant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "womb",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beehive",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sadness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "abdomen",
+    },
+  ],
+  nose: [
+    {
+      pos: "noun_meaning",
+      meaning: "front",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leader",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "smell",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snout",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nostril",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "face",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "corner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mouth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "palate",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "barrel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "root",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shrew",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nostril",
+    },
+  ],
+  head: [
+    {
+      pos: "noun_meaning",
+      meaning: "top",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leader",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "peak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forehead",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hill",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "border",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spike",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "face",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "top",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "upper part",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "roof",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "think",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "consider",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thumb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nipple",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chapter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "human",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "club",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shoulder",
+    },
+  ],
+  wing: [
+    {
+      pos: "noun_meaning",
+      meaning: "eagle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "arm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "side",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "border",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "defend",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "armpit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "window",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "eagle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shoulder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scapula",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fern",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "eyelash",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "twig",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaf",
+    },
+  ],
+  bark: [
+    {
+      pos: "noun_meaning",
+      meaning: "skin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "armor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shell",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "quarrel",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "shout",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "cough",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "fight",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "scuffle",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tell lies",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "joke",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "stink",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tan",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cream",
+    },
+  ],
+  top: [
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "defeat",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "win",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sky",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cream",
+    },
+  ],
+  thorn: [
+    {
+      pos: "noun_meaning",
+      meaning: "sturgeon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "arrow",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "sting",
+    },
+  ],
+  tree: [
+    {
+      pos: "noun_meaning",
+      meaning: "wooden beam",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "post",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ship-mast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ancestor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mushroom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "club",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beam",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fire",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bush",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fish",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stick",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cross",
+    },
+  ],
+  worm: [
+    {
+      pos: "noun_meaning",
+      meaning: "snake",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "caterpillar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "insect",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snake",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beetle",
+    },
+  ],
+  beam: [
+    {
+      pos: "noun_meaning",
+      meaning: "antler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pillar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ray",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "support",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "support",
+    },
+  ],
+  fire: [
+    {
+      pos: "noun_meaning",
+      meaning: "light",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "anger",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "burn",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "anger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "war",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flame",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fireplace",
+    },
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "shoot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fox",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "squirrel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fire",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "summer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flint",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+  ],
+  water: [
+    {
+      pos: "noun_meaning",
+      meaning: "river",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "urine",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "flow",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "melt",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "water",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "river",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mirror",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "adorn",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "decorate",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "otter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mirror",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "columbine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dragonfly",
+    },
+  ],
+  moon: [
+    {
+      pos: "noun_meaning",
+      meaning: "month",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pale person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "coin",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "white",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sky",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mirror",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "noon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "girl",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "time",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "sickle",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "calculate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "count",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spider",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "lead",
+    },
+  ],
+  seed: [
+    {
+      pos: "noun_meaning",
+      meaning: "origin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lineage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tribe",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "ferment",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tablet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pupil",
+    },
+  ],
+  polluted: [
+    {
+      pos: "adj_meaning",
+      meaning: "dirty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unclean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "foul",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tainted",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "impure",
+    },
+  ],
+  powerful: [
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "mighty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "great",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "important",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "violent",
+    },
+  ],
+  pure: [
+    {
+      pos: "adj_meaning",
+      meaning: "clean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "holy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bright",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "simple",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "true",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "true",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "correct",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+  ],
+  quiet: [
+    {
+      pos: "adj_meaning",
+      meaning: "silent",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "calm",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "still",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "shy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "peaceful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+  ],
+  raw: [
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "green",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wild",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bloody",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "untrained",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rude",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lazy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "alive",
+    },
+  ],
+  ready: [
+    {
+      pos: "adj_meaning",
+      meaning: "prepared",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "quick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "eager",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "ripe",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "close",
+    },
+    {
+      pos: "pron_meaning",
+      meaning: "enough",
+    },
+  ],
+  real: [
+    {
+      pos: "adj_meaning",
+      meaning: "true",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "solid",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "natural",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+  ],
+  rich: [
+    {
+      pos: "adj_meaning",
+      meaning: "fat",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "full",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fertile",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "valuable",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tasty",
+    },
+  ],
+  same: [
+    {
+      pos: "adj_meaning",
+      meaning: "equal",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "shared",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "similar",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "united",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "ordinary",
+    },
+  ],
+  right: [
+    {
+      pos: "adj_meaning",
+      meaning: "true",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "straight",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "just",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "correct",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "straight",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "liver",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "healthy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rule",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+  ],
+  rough: [
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wild",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sharp",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rude",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sour",
+    },
+  ],
+  rude: [
+    {
+      pos: "adj_meaning",
+      meaning: "rough",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wild",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "untrained",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "simple",
+    },
+  ],
+  scared: [
+    {
+      pos: "adj_meaning",
+      meaning: "afraid",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "shaking",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lost",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+  ],
+  sharp: [
+    {
+      pos: "adj_meaning",
+      meaning: "pointed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "quick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "clever",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bitter",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "painful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bitter",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unpleasant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brave",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hot",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "iron",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rude",
+    },
+  ],
+  skinny: [
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+  ],
+  slippery: [
+    {
+      pos: "adj_meaning",
+      meaning: "slick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fast",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tricky",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slim",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+  ],
+  slow: [
+    {
+      pos: "adj_meaning",
+      meaning: "late",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "heavy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "stupid",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "calm",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "inhabit",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "live",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lazy",
+    },
+  ],
+  small: [
+    {
+      pos: "adj_meaning",
+      meaning: "little",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "young",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "short",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "insignificant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hair",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "young",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "quiet",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "mouse",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "girl",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "boy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "aunt",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "easy",
+    },
+  ],
+  smooth: [
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "flat",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "calm",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "level",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "easy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bald",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "correct",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "escape",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "flee",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "move quickly",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "flatter",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "lick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "smooth",
+    },
+  ],
+  soft: [
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "young",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "saturated",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "smooth",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "quiet",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "young",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "easy",
+    },
+  ],
+  stone: [
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cold",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hill",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "hit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cold",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "idol",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "glass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "calculate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "count",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sky",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "kidney",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "anchor",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "firm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pupil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "egg",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tooth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "iron",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scapula",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "heart",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flint",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flint",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lamprey",
+    },
+  ],
+  storm: [
+    {
+      pos: "noun_meaning",
+      meaning: "battle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "anger",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "rage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "winter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "accident",
+    },
+  ],
+  rain: [
+    {
+      pos: "verb_meaning",
+      meaning: "weep",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "fall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blessing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "earthworm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "year",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+  ],
+  mountain: [
+    {
+      pos: "noun_meaning",
+      meaning: "fortress",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sky",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nose",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sharp point",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cloud",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "island",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "year",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bank",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+  ],
+  intestine: [
+    {
+      pos: "noun_meaning",
+      meaning: "gut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "inside",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cord",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "line",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "belly",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pregnant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "heart",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brave",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "worm",
+    },
+  ],
+  letter: [
+    {
+      pos: "noun_meaning",
+      meaning: "message",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sign",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mark",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "word",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "record",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "paper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "letter",
+    },
+  ],
+  root: [
+    {
+      pos: "noun_meaning",
+      meaning: "origin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chief",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "grip",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "origin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "base",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "origin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tendon",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "breed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "family",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "root",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "carrot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bread",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "root",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sprout",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nerve",
+    },
+  ],
+  heart: [
+    {
+      pos: "noun_meaning",
+      meaning: "mind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "courage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "center",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brave",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "intestine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "belly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "liver",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lung",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stomach",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "abdomen",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "desire",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "happy",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "remember",
+    },
+  ],
+  snake: [
+    {
+      pos: "noun_meaning",
+      meaning: "dragon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "traitor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "caterpillar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lamprey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "eel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dragon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "worm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "otter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dragonfly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fly agaric",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "lead",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "keel",
+    },
+  ],
+  wind: [
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "breathe",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "blow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "window",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "air",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "autumn",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "fart",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "direction",
+    },
+  ],
+  wood: [
+    {
+      pos: "noun_meaning",
+      meaning: "tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stick",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "club",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "weapon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest",
+    },
+  ],
+  hammer: [
+    {
+      pos: "verb_meaning",
+      meaning: "hit",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "build",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "axe",
+    },
+  ],
+  wolf: [
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "outlaw",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brigand",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hyena",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hare",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fly agaric",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pike",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lion",
+    },
+  ],
+  cold: [
+    {
+      pos: "adj_meaning",
+      meaning: "dead",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unfriendly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "winter",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unpleasant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wind",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cold",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hostile",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "winter",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "shame",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pale",
+    },
+  ],
+  know: [
+    {
+      pos: "verb_meaning",
+      meaning: "see",
+    },
+     { pos: "verb_meaning", meaning: "be able" },
+    {
+      pos: "verb_meaning",
+      meaning: "remember",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wisdom",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "know how",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "understand",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "noble",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sign",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "practice witchcraft",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "feel",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "remember",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "custom",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "respect",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "do",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "act",
+    },
+  ],
+  king: [
+    {
+      pos: "noun_meaning",
+      meaning: "leader",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chief",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hero",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "father",
+    },
+  ],
+  smoke: [
+    {
+      pos: "noun_meaning",
+      meaning: "cloud",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "vanish",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "rise",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dust",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "house",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "steam",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scent",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "flow",
+    },
+  ],
+  ash: [
+    {
+      pos: "noun_meaning",
+      meaning: "dust",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ruin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "death",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spear-wood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "maple",
+    },
+  ],
+  soil: [
+    {
+      pos: "noun_meaning",
+      meaning: "ground",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clay",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "land",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nation",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "waste",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dark",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "disgrace",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "dishonor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "land",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dust",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "human",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mother",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "year",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "god",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clay",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "truffle",
+    },
+  ],
+  natural: [
+    {
+      pos: "adj_meaning",
+      meaning: "wild",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "normal",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "true",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "innate",
+    },
+  ],
+  damp: [
+    {
+      pos: "adj_meaning",
+      meaning: "wet",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "humid",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "musty",
+    },
+  ],
+  dark: [
+    {
+      pos: "adj_meaning",
+      meaning: "shadowed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hidden",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "evil",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unknown",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "deep",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "evil",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "mysterious",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "hide",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "blind",
+    },
+  ],
+  all: [
+    {
+      pos: "adj_meaning",
+      meaning: "every",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "whole",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "complete",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "universal",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "general",
+    },
+  ],
+  dead: [
+    {
+      pos: "adj_meaning",
+      meaning: "cold",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "silent",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "still",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "finished",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lost",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "phantom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fly agaric",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be out",
+    },
+  ],
+  married: [
+    {
+      pos: "adj_meaning",
+      meaning: "taken",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "joined",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bound",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "paired",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "settled",
+    },
+  ],
+  deaf: [
+    {
+      pos: "adj_meaning",
+      meaning: "unhearing",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "ignorant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "stubborn",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unaware",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "closed",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "grow numb",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dumb",
+    },
+  ],
+  dear: [
+    {
+      pos: "adj_meaning",
+      meaning: "beloved",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "precious",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "important",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "expensive",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rare",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "expensive",
+    },
+  ],
+  deep: [
+    {
+      pos: "adj_meaning",
+      meaning: "profound",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "low",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dark",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "full",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "serious",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dark",
+    },
+  ],
+  difficult: [
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rare",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strange",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "stubborn",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pregnant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lazy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+  ],
+  different: [
+    {
+      pos: "adj_meaning",
+      meaning: "other",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strange",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "new",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "separate",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unusual",
+    },
+  ],
+  dry: [
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thirsty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "barren",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lifeless",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "plain",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "land",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dirty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+  ],
+  dumb: [
+    {
+      pos: "adj_meaning",
+      meaning: "silent",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "simple",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "mute",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "shy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "quiet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "foreigner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  early: [
+    {
+      pos: "adj_meaning",
+      meaning: "ready",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "prepared",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "morning",
+    },
+  ],
+  empty: [
+    {
+      pos: "adj_meaning",
+      meaning: "hollow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bare",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "open",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "desert",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hungry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "stop doing something.",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ravine",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+  ],
+  lazy: [
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "idle",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "useless",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tasteless",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "deceive",
+    },
+  ],
+  evil: [
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dark",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dangerous",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unclean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "twisted",
+    },
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  fast: [
+    {
+      pos: "adj_meaning",
+      meaning: "quick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "early",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "firm",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sharp",
+    },
+  ],
+  fat: [
+    {
+      pos: "adj_meaning",
+      meaning: "thick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "big",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grease",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rich food",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "well fed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bone marrow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "butter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "catfish",
+    },
+  ],
+  fertile: [
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "full",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fruitful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "growing",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+  ],
+  firm: [
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "steady",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sure",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tight",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "loud",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "healthy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+  ],
+  flat: [
+    {
+      pos: "adj_meaning",
+      meaning: "smooth",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wide",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "plain",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "level",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "easy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "straight",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "table",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "desk",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "louse",
+    },
+  ],
+  foul: [
+    {
+      pos: "adj_meaning",
+      meaning: "dirty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rotten",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "impure",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "evil",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "stinking",
+    },
+  ],
+  free: [
+    {
+      pos: "adj_meaning",
+      meaning: "loose",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "open",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "untied",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "independent",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wild",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "can",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be able",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brave",
+    },
+  ],
+  fresh: [
+    {
+      pos: "adj_meaning",
+      meaning: "new",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cool",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "clean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "green",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cold",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wet",
+    },
+  ],
+  local: [
+    {
+      pos: "adj_meaning",
+      meaning: "near",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "homely",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "home",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "native",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "familiar",
+    },
+  ],
+  full: [
+    {
+      pos: "adj_meaning",
+      meaning: "stuffed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "complete",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pregnant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "crowded",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "true",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "accomplish",
+    },
+  ],
+  fun: [
+    {
+      pos: "adj_meaning",
+      meaning: "playful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "light",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "happy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "silly",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "free",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wedding",
+    },
+  ],
+  funny: [
+    {
+      pos: "adj_meaning",
+      meaning: "silly",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "foolish",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "naive",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unserious",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weird",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unusual",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "odd",
+    },
+  ],
+  good: [
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "useful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "healthy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "new",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "salt",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tasty",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "foreigner",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "healthy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "happy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "noble",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sweet",
+    },
+  ],
+  delicate: [
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fine",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "gentle",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "breakable",
+    },
+  ],
+  gracious: [
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "gentle",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "holy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "merciful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "blessed",
+    },
+  ],
+  giant: [
+    {
+      pos: "adj_meaning",
+      meaning: "huge",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "mighty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "powerful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "monster-like",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rare",
+    },
+  ],
+  huge: [
+    {
+      pos: "adj_meaning",
+      meaning: "great",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "massive",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "important",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "deep",
+    },
+  ],
+  massive: [
+    {
+      pos: "adj_meaning",
+      meaning: "heavy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "solid",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "big",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dense",
+    },
+  ],
+  gray: [
+    {
+      pos: "adj_meaning",
+      meaning: "pale",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "old",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "faded",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dull",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cold",
+    },
+  ],
+  green: [
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "young",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "naive",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "new",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "leaf",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "young",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bile",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "yellow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pale",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "healthy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wet",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  half: [
+    {
+      pos: "adj_meaning",
+      meaning: "partial",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "broken",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "incomplete",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "low",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+  ],
+  happy: [
+    {
+      pos: "adj_meaning",
+      meaning: "lucky",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "joyful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "light",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bright",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "trust",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "forget",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "healthy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+  ],
+  hard: [
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "stubborn",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "solid",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "loud",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "firm",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "long",
+    },
+  ],
+  healthy: [
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "whole",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "clean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "safe",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "correct",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "big",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "intact",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "firm",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "durable",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sun",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brave",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+  ],
+  high: [
+    {
+      pos: "adj_meaning",
+      meaning: "tall",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "great",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "holy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "distant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "upper",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "deep",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "loud",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "high",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tall",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+  ],
+  puffy: [
+    {
+      pos: "adj_meaning",
+      meaning: "swollen",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "light",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fat",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cloud-like",
+    },
+  ],
+  sour: [
+    {
+      pos: "adj_meaning",
+      meaning: "bitter",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sharp",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unfriendly",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bitter",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tamarind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sorrel",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rotten",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "acid",
+    },
+  ],
+  rotten: [
+    {
+      pos: "adj_meaning",
+      meaning: "spoiled",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "foul",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dead",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "broken",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lazy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unpleasant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+  ],
+  speckled: [
+    {
+      pos: "adj_meaning",
+      meaning: "spotted",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "marked",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dirty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "painted",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "varied",
+    },
+  ],
+  stark: [
+    {
+      pos: "adj_meaning",
+      meaning: "bare",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "severe",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "clear",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cold",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+  ],
+  stinky: [
+    {
+      pos: "adj_meaning",
+      meaning: "foul",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rotten",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dirty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unclean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sour",
+    },
+  ],
+  suitable: [
+    {
+      pos: "adj_meaning",
+      meaning: "fit",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "proper",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "ready",
+    },
+  ],
+  blunt: [
+    {
+      pos: "adj_meaning",
+      meaning: "dull",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "simple",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fat",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "toothless",
+    },
+  ],
+  sure: [
+    {
+      pos: "adj_meaning",
+      meaning: "certain",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "true",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "safe",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "firm",
+    },
+  ],
+  tall: [
+    {
+      pos: "adj_meaning",
+      meaning: "high",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "long",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "great",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "important",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "deep",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "loud",
+    },
+  ],
+  tasty: [
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sweet",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pleasant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sweet-smelling",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fragrant",
+    },
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+  ],
+  thirsty: [
+    {
+      pos: "adj_meaning",
+      meaning: "dry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hungry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "eager",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "greedy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+  ],
+  thick: [
+    {
+      pos: "adj_meaning",
+      meaning: "fat",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dense",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "heavy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "stupid",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "loud",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hair",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "big",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rough",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dark",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "make",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "create",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+  ],
+  thin: [
+    {
+      pos: "adj_meaning",
+      meaning: "narrow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slight",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bright",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "clear",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "quiet",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "delicate",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "narrow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "young",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giraffe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "back",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "investigate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "examine",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "liquid",
+    },
+  ],
+  tired: [
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "old",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "boring",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "used",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lazy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pregnant",
+    },
+  ],
+  tough: [
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "stubborn",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wild",
+    },
+  ],
+  unhealthy: [
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sick",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dirty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pale",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+  ],
+  unpleasant: [
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bitter",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "ugly",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "foul",
+    },
+  ],
+  useful: [
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fit",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "able",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "needed",
+    },
+  ],
+  unusual: [
+    {
+      pos: "adj_meaning",
+      meaning: "strange",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rare",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "special",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "other",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unexpected",
+    },
+  ],
+  violent: [
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wild",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dangerous",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "furious",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "stormy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+  ],
+  visible: [
+    {
+      pos: "adj_meaning",
+      meaning: "clear",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "open",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "known",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bright",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "public",
+    },
+  ],
+  weak: [
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pale",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "blunt",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sad",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lazy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tired",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pregnant",
+    },
+  ],
+  weird: [
+    {
+      pos: "adj_meaning",
+      meaning: "strange",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "uncanny",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "magical",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "foreign",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "ill-omened",
+    },
+  ],
+  wet: [
+    {
+      pos: "adj_meaning",
+      meaning: "moist",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cold",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "dye",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "strike",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "hit",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "drink",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soft",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "fall of rain",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "snow",
+    },
+  ],
+  white: [
+    {
+      pos: "adj_meaning",
+      meaning: "bright",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "blindingly bright",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "clean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "honest",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "direct",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "distracting",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pale",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "palid",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "colour",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "iron",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brilliant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "glaring",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "clean",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "poplar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "squirrel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wheat",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bare",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "birch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "salt",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "light",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bright",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "clear",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "white",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swan",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sorghum",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "weasel",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "noble",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ice",
+    },
+  ],
+  wide: [
+    {
+      pos: "adj_meaning",
+      meaning: "open",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "broad",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "free",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "large",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "far",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "flat",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "big",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "long",
+    },
+  ],
+  unsettling: [
+    {
+      pos: "adj_meaning",
+      meaning: "strange",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dark",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "uncanny",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dangerous",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "ill-omened",
+    },
+  ],
+  wonderful: [
+    {
+      pos: "adj_meaning",
+      meaning: "amazing",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strange",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "powerful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lucky",
+    },
+  ],
+  yellow: [
+    {
+      pos: "adj_meaning",
+      meaning: "pale",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bright",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "golden",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "warm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gold",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "saffron",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bile",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "green",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "honey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "yolk",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wasp",
+    },
+  ],
+  young: [
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "new",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "green",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "new",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brave",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unripe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "white",
+    },
+  ],
+  clean: [
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bright",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "simple",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fresh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "holy",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "cure",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "treat",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "totally",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "absolutely",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "deceive",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "steal",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "destroy",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "annihilate",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "baptize",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "healthy",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "castrate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "investigate",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hot",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "flog",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "circumcise",
+    },
+  ],
+  clear: [
+    {
+      pos: "adj_meaning",
+      meaning: "bright",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "open",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "true",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "plain",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "known",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "morning",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "birch",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "loud",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "white",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+  ],
+  loud: [
+    {
+      pos: "adj_meaning",
+      meaning: "noisy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "public",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bold",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "light",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bright",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "clear",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brilliant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "glaring",
+    },
+  ],
+  toy: [
+    {
+      pos: "noun_meaning",
+      meaning: "tool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "small object",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "game",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "play",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flower",
+    },
+  ],
+  arm: [
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strength",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "support",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "finger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "toe",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "twig",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "way",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trunk",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "help",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "aid",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "handle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaf",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tame",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "govern",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "control",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "rule",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "neck",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shoulder",
+    },
+  ],
+  arrow: [
+    {
+      pos: "noun_meaning",
+      meaning: "weapon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stick",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ray",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "path",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "message",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "comb",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "straight",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fibula",
+    },
+  ],
+  attack: [
+    {
+      pos: "noun_meaning",
+      meaning: "fight",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "danger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strike",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "storm",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "dance",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "rob",
+    },
+  ],
+  audience: [
+    {
+      pos: "noun_meaning",
+      meaning: "crowd",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "assembly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "people",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "village",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "followers",
+    },
+  ],
+  auger: [
+    {
+      pos: "noun_meaning",
+      meaning: "tool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drill",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tooth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spiral",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "root",
+    },
+  ],
+  autumn: [
+    {
+      pos: "noun_meaning",
+      meaning: "harvest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "end",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "age",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "coolness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "year",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "harvest",
+    },
+  ],
+  back: [
+    {
+      pos: "noun_meaning",
+      meaning: "support",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ridge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "protection",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burden",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "carry",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "support",
+    },
+    {
+      pos: "adp_meaning",
+      meaning: "behind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "height",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "surface",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stern",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "roof",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "top",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "upper part",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "heel",
+    },
+  ],
+  bag: [
+    {
+      pos: "noun_meaning",
+      meaning: "lung",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bladder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scrotum",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "head",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "discharge",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "dismiss",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cochlea",
+    },
+  ],
+  ball: [
+    {
+      pos: "noun_meaning",
+      meaning: "sphere",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fruit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  culture: [
+    {
+      pos: "noun_meaning",
+      meaning: "tradition",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "people",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "custom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "knowledge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "craft",
+    },
+  ],
+  buffet: [
+    {
+      pos: "noun_meaning",
+      meaning: "feast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spread",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "banquet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "table",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "platter",
+    },
+  ],
+  building: [
+    {
+      pos: "noun_meaning",
+      meaning: "house",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "structure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dwelling",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "workshop",
+    },
+  ],
+  bump: [
+    {
+      pos: "noun_meaning",
+      meaning: "lump",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bruise",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hill",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rise",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "knot",
+    },
+  ],
+  burden: [
+    {
+      pos: "noun_meaning",
+      meaning: "load",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "weight",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "task",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "duty",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "care",
+    },
+  ],
+  bush: [
+    {
+      pos: "noun_meaning",
+      meaning: "shrub",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thicket",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brush",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clump",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spleen",
+    },
+  ],
+  butterfly: [
+    {
+      pos: "noun_meaning",
+      meaning: "insect",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ornament",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flying fish",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "worry",
+    },
+  ],
+  butt: [
+    {
+      pos: "noun_meaning",
+      meaning: "rear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "end",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stump",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "base",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bottom",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "pray",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "stamp one's foot",
+    },
+  ],
+  cabin: [
+    {
+      pos: "noun_meaning",
+      meaning: "hut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shelter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lodge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "room",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dwelling",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "house",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "building",
+    },
+  ],
+  cage: [
+    {
+      pos: "noun_meaning",
+      meaning: "prison",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pen",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enclosure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "box",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cell",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chest",
+    },
+  ],
+  carp: [
+    {
+      pos: "noun_meaning",
+      meaning: "fish",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "catch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "food",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scale",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swimmer",
+    },
+  ],
+  carrot: [
+    {
+      pos: "noun_meaning",
+      meaning: "root",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vegetable",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "food",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "orange thing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crop",
+    },
+  ],
+  cat: [
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thief",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vagina",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "owl",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hare",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "anchor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "squirrel",
+    },
+  ],
+  cauldron: [
+    {
+      pos: "noun_meaning",
+      meaning: "pot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "boiler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cauldron-fire",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cooking vessel",
+    },
+  ],
+  cave: [
+    {
+      pos: "noun_meaning",
+      meaning: "hollow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "den",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shelter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "womb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "underworld",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "home",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grave",
+    },
+  ],
+  stalactite: [
+    {
+      pos: "noun_meaning",
+      meaning: "dripstone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fang",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tooth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spike",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "icicle",
+    },
+  ],
+  stalagmite: [
+    {
+      pos: "noun_meaning",
+      meaning: "pillar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tooth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spike",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rise",
+    },
+  ],
+  speleothem: [
+    {
+      pos: "noun_meaning",
+      meaning: "formation",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone-shape",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dripstone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "growth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mineral",
+    },
+  ],
+  column: [
+    {
+      pos: "noun_meaning",
+      meaning: "pillar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "support",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "post",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shaft",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beam",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spine",
+    },
+  ],
+  flowstone: [
+    {
+      pos: "noun_meaning",
+      meaning: "sheet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "layer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drip",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "smooth stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cascade",
+    },
+  ],
+  grotto: [
+    {
+      pos: "noun_meaning",
+      meaning: "cave",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hollow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chamber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "retreat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sanctum",
+    },
+  ],
+  sinkhole: [
+    {
+      pos: "noun_meaning",
+      meaning: "pit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shaft",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "collapse",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fall",
+    },
+  ],
+  cavern: [
+    {
+      pos: "noun_meaning",
+      meaning: "cave",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "void",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "depth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hollow place",
+    },
+  ],
+  karst: [
+    {
+      pos: "noun_meaning",
+      meaning: "stone-land",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rough ground",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "limestone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sink-country",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "broken land",
+    },
+  ],
+  moonmilk: [
+    {
+      pos: "noun_meaning",
+      meaning: "paste",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clay",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "quartz",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mineral",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "slime",
+    },
+  ],
+  helictite: [
+    {
+      pos: "noun_meaning",
+      meaning: "twist",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch-stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "root-stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "growth",
+    },
+  ],
+  dripstone: [
+    {
+      pos: "noun_meaning",
+      meaning: "stone drop",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "deposit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mineral",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "growth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "layer",
+    },
+  ],
+  bat: [
+    {
+      pos: "noun_meaning",
+      meaning: "flyer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shadow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flitter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fang-wing",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+  ],
+  troglobite: [
+    {
+      pos: "noun_meaning",
+      meaning: "dweller",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blind creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pale animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "deep-being",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cave-spirit",
+    },
+  ],
+  speleologist: [
+    {
+      pos: "noun_meaning",
+      meaning: "explorer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scholar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "guide",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "discoverer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "earth-knower",
+    },
+  ],
+  cavity: [
+    {
+      pos: "noun_meaning",
+      meaning: "hollow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "void",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cup",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "armpit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sinus",
+    },
+  ],
+  cedar: [
+    {
+      pos: "noun_meaning",
+      meaning: "tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "timber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grove",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "aroma",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "resin",
+    },
+  ],
+  cell: [
+    {
+      pos: "noun_meaning",
+      meaning: "chamber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "room",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "unit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pod",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "prison",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cell",
+    },
+  ],
+  change: [
+    {
+      pos: "noun_meaning",
+      meaning: "shift",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "turn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "difference",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "course",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alteration",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "change clothes",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "shed hair or feathers",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "cheat on",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be unfaithful to",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "distract",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "betray",
+    },
+  ],
+  chair: [
+    {
+      pos: "noun_meaning",
+      meaning: "seat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "support",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "throne",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thigh",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hip",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "udder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "table",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "desk",
+    },
+  ],
+  chariot: [
+    {
+      pos: "noun_meaning",
+      meaning: "cart",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wagon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "war-car",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vehicle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "runner",
+    },
+  ],
+  cherry: [
+    {
+      pos: "noun_meaning",
+      meaning: "fruit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "berry",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "red thing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crop",
+    },
+  ],
+  chicken: [
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fowl",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "food",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "prey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "domestic animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+  ],
+  meal: [
+    {
+      pos: "noun_meaning",
+      meaning: "food",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "feast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "portion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "banquet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "serving",
+    },
+  ],
+  chickpea: [
+    {
+      pos: "noun_meaning",
+      meaning: "pea",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bean",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "food",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crop",
+    },
+  ],
+  child: [
+    {
+      pos: "noun_meaning",
+      meaning: "young",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "offspring",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "small person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "student",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "servant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sprout",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pupil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "interest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "son",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "man",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "orphan",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "boy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fruit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "servant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "girl",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mistress",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "uvula",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "friend",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "daughter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "young animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stupid",
+    },
+  ],
+  chin: [
+    {
+      pos: "noun_meaning",
+      meaning: "jaw",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "point",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "front",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tip",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jaw",
+    },
+  ],
+  chunk: [
+    {
+      pos: "noun_meaning",
+      meaning: "piece",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "block",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lump",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fragment",
+    },
+  ],
+  clan: [
+    {
+      pos: "noun_meaning",
+      meaning: "family",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tribe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "group",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "kin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "followers",
+    },
+  ],
+  plant: [
+    {
+      pos: "noun_meaning",
+      meaning: "herb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crop",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sprout",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "green thing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "medicine",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brown",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "daughter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "roof",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "flourish",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "prosper",
+    },
+  ],
+  cheetah: [
+    {
+      pos: "noun_meaning",
+      meaning: "swift one",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spotted beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "runner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chaser",
+    },
+  ],
+  leopard: [
+    {
+      pos: "noun_meaning",
+      meaning: "spotted one",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shadow-beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tree-cat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ambusher",
+    },
+  ],
+  giraffe: [
+    {
+      pos: "noun_meaning",
+      meaning: "long-neck",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tall beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaf-eater",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tower-animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spot-beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "camel",
+    },
+  ],
+  zebra: [
+    {
+      pos: "noun_meaning",
+      meaning: "striped horse",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "herd animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "runner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wild horse",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brayer",
+    },
+  ],
+  wildebeest: [
+    {
+      pos: "noun_meaning",
+      meaning: "herd animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "migrant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horned runner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bull",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lowing beast",
+    },
+  ],
+  impala: [
+    {
+      pos: "noun_meaning",
+      meaning: "leaper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "herd animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gazelle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swift one",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horned deer",
+    },
+  ],
+  kudu: [
+    {
+      pos: "noun_meaning",
+      meaning: "spiral-horn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest deer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shy beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horned one",
+    },
+  ],
+  ostrich: [
+    {
+      pos: "noun_meaning",
+      meaning: "big bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "runner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "feather-beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "egg-layer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giant bird",
+    },
+  ],
+  meerkat: [
+    {
+      pos: "noun_meaning",
+      meaning: "sentry",
+    },
+  ],
+  hyena: [
+    {
+      pos: "noun_meaning",
+      meaning: "trickster",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "old",
+    },
+  ],
+  hartebeest: [
+    {
+      pos: "noun_meaning",
+      meaning: "antelope",
+    },
+  ],
+  civet: [
+    {
+      pos: "noun_meaning",
+      meaning: "cat",
+    },
+  ],
+  rhino: [
+    {
+      pos: "noun_meaning",
+      meaning: "rage",
+    },
+  ],
+  circle: [
+    {
+      pos: "noun_meaning",
+      meaning: "ring",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wheel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "loop",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "group",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enclosure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "knee",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wheel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "eye",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "year",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "flat",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "all",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "yard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vicinity",
+    },
+  ],
+  band: [
+    {
+      pos: "noun_meaning",
+      meaning: "group",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rope",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "line",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clan",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "circle",
+    },
+  ],
+  banquet: [
+    {
+      pos: "noun_meaning",
+      meaning: "abundance",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "excess",
+    },
+  ],
+  bar: [
+    {
+      pos: "noun_meaning",
+      meaning: "rod",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "boundary",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "block",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beam",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "limit",
+    },
+  ],
+  barrow: [
+    {
+      pos: "noun_meaning",
+      meaning: "mound",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grave",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hill",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tomb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pile",
+    },
+  ],
+  basket: [
+    {
+      pos: "noun_meaning",
+      meaning: "container",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "net",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bag",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "store",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bundle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beehive",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vagina",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "belly",
+    },
+  ],
+  bead: [
+    {
+      pos: "noun_meaning",
+      meaning: "drop",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ornament",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spider",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vertebra",
+    },
+  ],
+  beak: [
+    {
+      pos: "noun_meaning",
+      meaning: "nose",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "point",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mouth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "face",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shrew",
+    },
+  ],
+  bean: [
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "food",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pod",
+    },
+  ],
+  bear: [
+    {
+      pos: "noun_meaning",
+      meaning: "beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strong man",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "warrior",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strong person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "monkey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hedgehog",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "raccoon",
+    },
+  ],
+  beard: [
+    {
+      pos: "noun_meaning",
+      meaning: "hair",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mane",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thicket",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fringe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mask",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "axe",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "braid",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mane",
+    },
+  ],
+  beaver: [
+    {
+      pos: "noun_meaning",
+      meaning: "river animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "builder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "worker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fur",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "otter",
+    },
+  ],
+  bed: [
+    {
+      pos: "noun_meaning",
+      meaning: "grave",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crib",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crable",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bearing",
+    },
+  ],
+  bedroom: [
+    {
+      pos: "noun_meaning",
+      meaning: "chamber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "room",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "house",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "private space",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dwelling",
+    },
+  ],
+  bee: [
+    {
+      pos: "noun_meaning",
+      meaning: "insect",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "worker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swarm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "servant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "honey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wasp",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hornet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sugar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "honey",
+    },
+  ],
+  beehive: [
+    {
+      pos: "noun_meaning",
+      meaning: "nest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "house",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "colony",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "store",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swarm",
+    },
+  ],
+  hive: [
+    {
+      pos: "noun_meaning",
+      meaning: "nest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "house",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "colony",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "store",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swarm",
+    },
+  ],
+  beech: [
+    {
+      pos: "noun_meaning",
+      meaning: "tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grove",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ash",
+    },
+  ],
+  belt: [
+    {
+      pos: "noun_meaning",
+      meaning: "strap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "line",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "girdle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "boundary",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "band",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "ripen",
+    },
+  ],
+  bird: [
+    {
+      pos: "noun_meaning",
+      meaning: "animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flyer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "messenger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "song",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "omen",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "swift",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tell a person's fortune",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "eagle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bat",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cockchafer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spleen",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chicken",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "butterfly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  birdsong: [
+    {
+      pos: "noun_meaning",
+      meaning: "music",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "call",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cry",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "message",
+    },
+  ],
+  birth: [
+    {
+      pos: "noun_meaning",
+      meaning: "origin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beginning",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "creation",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "emergence",
+    },
+  ],
+  bison: [
+    {
+      pos: "noun_meaning",
+      meaning: "ox",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "herd",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giant animal",
+    },
+  ],
+  blackbird: [
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "singer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "omen",
+    },
+  ],
+  bladder: [
+    {
+      pos: "noun_meaning",
+      meaning: "sack",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "skin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bag",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bubble",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "belly",
+    },
+  ],
+  blade: [
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "knife",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fang",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wave",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "barrel",
+    },
+  ],
+  blister: [
+    {
+      pos: "noun_meaning",
+      meaning: "bubble",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sore",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swelling",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wound",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cell",
+    },
+  ],
+  blow: [
+    {
+      pos: "noun_meaning",
+      meaning: "strike",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burst",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "breathe",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "deceive",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "rise of Moon",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "Sun",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "grow",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "emit smell",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "speak",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "winnow",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "strike",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "hit",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "spread",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "whisper",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "spit",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "go mad",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "evaporate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "exhale",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "have strange ideas",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "dry",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dandelion",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "provoke",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "smoke",
+    },
+  ],
+  boar: [
+    {
+      pos: "noun_meaning",
+      meaning: "pig",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wild animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brave man",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strongman",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "threat",
+    },
+  ],
+  board: [
+    {
+      pos: "noun_meaning",
+      meaning: "plank",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "table",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "surface",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ship deck",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "cover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shield",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "table",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "floor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "table",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plate",
+    },
+  ],
+  body: [
+    {
+      pos: "noun_meaning",
+      meaning: "flesh",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "corpse",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "form",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "human",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "person",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+    {
+      pos: "pron_meaning",
+      meaning: "self",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "daughter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "son",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hull",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "height",
+    },
+  ],
+  bolt: [
+    {
+      pos: "noun_meaning",
+      meaning: "arrow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rod",
+    },
+  ],
+  bone: [
+    {
+      pos: "noun_meaning",
+      meaning: "core",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stick",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "weapon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "foundation",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "body",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "skull",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "yellow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "foot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leg",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "needle",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "height",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shell",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "keel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stick",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "twig",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  boot: [
+    {
+      pos: "noun_meaning",
+      meaning: "shoe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leather",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "kick",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "protection",
+    },
+  ],
+  bottle: [
+    {
+      pos: "noun_meaning",
+      meaning: "container",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "skin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vessel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "neck",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "glass",
+    },
+  ],
+  border: [
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "limit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "frontier",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "line",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "side",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "last",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "coast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shore",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "land",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+  ],
+  bottom: [
+    {
+      pos: "noun_meaning",
+      meaning: "base",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "end",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "depth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ground",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sole",
+    },
+  ],
+  boulder: [
+    {
+      pos: "noun_meaning",
+      meaning: "rock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hill",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burden",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giant",
+    },
+  ],
+  bow: [
+    {
+      pos: "noun_meaning",
+      meaning: "weapon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "curve",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shape",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "front",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bend",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clavicle",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be disposed towards",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "lose one's way",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "obey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "boy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "avoid",
+    },
+  ],
+  bowl: [
+    {
+      pos: "noun_meaning",
+      meaning: "cup",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "basin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "valley",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "belly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "container",
+    },
+  ],
+  bowstring: [
+    {
+      pos: "noun_meaning",
+      meaning: "string",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cord",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "line",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sinew",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thread",
+    },
+  ],
+  boy: [
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "young man",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "servant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "son",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "youth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "servant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "son",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pupil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "human",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  bracelet: [
+    {
+      pos: "noun_meaning",
+      meaning: "ring",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "band",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ornament",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "circle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chain",
+    },
+  ],
+  brain: [
+    {
+      pos: "noun_meaning",
+      meaning: "mind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thought",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "head",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wisdom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "core",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "head",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swamp",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bone marrow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hazel",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "top of the head",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "skull",
+    },
+  ],
+  branch: [
+    {
+      pos: "noun_meaning",
+      meaning: "tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "limb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "appendage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "arm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leg",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "offshoot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "subset",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "willow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tribe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hand",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "arm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "root",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+  ],
+  breast: [
+    {
+      pos: "noun_meaning",
+      meaning: "chest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "torso",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "upper body",
+    },
+  ],
+  wizard: [
+    {
+      pos: "noun_meaning",
+      meaning: "magician",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "priest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit-man",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "healer",
+    },
+  ],
+  breath: [
+    {
+      pos: "noun_meaning",
+      meaning: "air",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "life",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sigh",
+    },
+  ],
+  bristle: [
+    {
+      pos: "noun_meaning",
+      meaning: "hair",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spike",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "quill",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thorn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brush",
+    },
+  ],
+  broom: [
+    {
+      pos: "noun_meaning",
+      meaning: "brush",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sweep",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch tool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stick",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cleaner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rake",
+    },
+  ],
+  brother: [
+    {
+      pos: "noun_meaning",
+      meaning: "kin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "friend",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ally",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "man",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "partner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "friend",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "son",
+    },
+  ],
+  brow: [
+    {
+      pos: "noun_meaning",
+      meaning: "forehead",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ridge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "line",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "marker",
+    },
+  ],
+  flamingo: [
+    {
+      pos: "noun_meaning",
+      meaning: "wader",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pink bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fisher",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "long-leg bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "marsh bird",
+    },
+  ],
+  vulture: [
+    {
+      pos: "noun_meaning",
+      meaning: "scavenger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bone-eater",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sky-cleaner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "carrion bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "circle-bird",
+    },
+  ],
+  termite: [
+    {
+      pos: "noun_meaning",
+      meaning: "wood-eater",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burrower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "colony",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swarm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grain",
+    },
+  ],
+  grasshopper: [
+    {
+      pos: "noun_meaning",
+      meaning: "flying fish",
+    },
+  ],
+  locust: [
+    {
+      pos: "noun_meaning",
+      meaning: "swarm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plague",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cloud",
+    },
+  ],
+  camelthorn: [
+    {
+      pos: "noun_meaning",
+      meaning: "thorn-bush",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fuel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brush",
+    },
+  ],
+  eland: [
+    {
+      pos: "noun_meaning",
+      meaning: "giant antelope",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grazer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shy giant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horned one",
+    },
+  ],
+  gemsbok: [
+    {
+      pos: "noun_meaning",
+      meaning: "spear-horn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "desert antelope",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fighter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "striped deer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "runner",
+    },
+  ],
+  oryx: [
+    {
+      pos: "noun_meaning",
+      meaning: "spear-horn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "desert deer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "runner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horned one",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grazer",
+    },
+  ],
+  boomslang: [
+    {
+      pos: "noun_meaning",
+      meaning: "tree-snake",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "climber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaf-snake",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "venom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shadow-serpent",
+    },
+  ],
+  springhare: [
+    {
+      pos: "noun_meaning",
+      meaning: "jumper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burrower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night-runner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rodent",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaper",
+    },
+  ],
+  suni: [
+    {
+      pos: "noun_meaning",
+      meaning: "tiny antelope",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest deer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shy one",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horned one",
+    },
+  ],
+  oribi: [
+    {
+      pos: "noun_meaning",
+      meaning: "grass deer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swift one",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grazer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "small antelope",
+    },
+  ],
+  klipspringer: [
+    {
+      pos: "noun_meaning",
+      meaning: "rock jumper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cliff deer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nimble one",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horned one",
+    },
+  ],
+  steenbok: [
+    {
+      pos: "noun_meaning",
+      meaning: "small antelope",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rock deer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swift one",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horned one",
+    },
+  ],
+  serval: [
+    {
+      pos: "noun_meaning",
+      meaning: "long-leg cat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stalker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter-cat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jumper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night-cat",
+    },
+  ],
+  caracal: [
+    {
+      pos: "noun_meaning",
+      meaning: "ear-cat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stalker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter-cat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jumper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night-cat",
+    },
+  ],
+  calculate: [
+    {
+      pos: "verb_meaning",
+      meaning: "respect",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "take into account",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "respect",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tell",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "read",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "have opinion",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "repeat",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "prepare",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "measure",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "intend",
+    },
+  ],
+  find: [
+    {
+      pos: "verb_meaning",
+      meaning: "respect",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "have opinion",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "get",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "obtain",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "meet",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "find out",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "reach",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "know",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "give birth",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be situated",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "exist",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "catch",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "turn",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "become infected",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "guess",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "invent",
+    },
+  ],
+  count: [
+    {
+      pos: "verb_meaning",
+      meaning: "respect",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "take into account",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "respect",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tell",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "read",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "have opinion",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "repeat",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "prepare",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "measure",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "intend",
+    },
+  ],
+  buck: [
+    {
+      pos: "noun_meaning",
+      meaning: "male animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "goat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stag",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fighter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "man",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "young man",
+    },
+  ],
+  bucket: [
+    {
+      pos: "noun_meaning",
+      meaning: "container",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scoop",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "skin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pot",
+    },
+  ],
+  melons: [
+    {
+      pos: "noun_meaning",
+      meaning: "fruit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "food",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "round thing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "belly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sweet",
+    },
+  ],
+  cliff: [
+    {
+      pos: "noun_meaning",
+      meaning: "rock face",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "height",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fall",
+    },
+  ],
+  cloak: [
+    {
+      pos: "noun_meaning",
+      meaning: "cover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wrap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "veil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shadow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "garment",
+    },
+  ],
+  gluttony: [
+    {
+      pos: "noun_meaning",
+      meaning: "excess",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "urge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "feasting",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "greed",
+    },
+  ],
+  cloud: [
+    {
+      pos: "noun_meaning",
+      meaning: "mist",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vapor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shadow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sky",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dust",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "smoke",
+    },
+  ],
+  club: [
+    {
+      pos: "noun_meaning",
+      meaning: "stick",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "weapon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "staff",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thumper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dragonfly",
+    },
+  ],
+  cluster: [
+    {
+      pos: "noun_meaning",
+      meaning: "group",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bundle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "knot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clump",
+    },
+  ],
+  coin: [
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "token",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "metal piece",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "round",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "value",
+    },
+  ],
+  comb: [
+    {
+      pos: "noun_meaning",
+      meaning: "teeth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brush",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "arranger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "straightener",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "comb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "comb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mane",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "harrow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mane",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "reed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rake",
+    },
+  ],
+  pain: [
+    {
+      pos: "noun_meaning",
+      meaning: "hurt",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "suffering",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ache",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sting",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wound",
+    },
+  ],
+  confession: [
+    {
+      pos: "noun_meaning",
+      meaning: "admission",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "truth-speaking",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "revelation",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "speech",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "telling",
+    },
+  ],
+  confluence: [
+    {
+      pos: "noun_meaning",
+      meaning: "meeting",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "joining",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "union",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crossing",
+    },
+  ],
+  coma: [
+    {
+      pos: "noun_meaning",
+      meaning: "sleep",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stillness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "silence",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "unawareness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "deep rest",
+    },
+  ],
+  coot: [
+    {
+      pos: "noun_meaning",
+      meaning: "water bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "diver",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swimmer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shrieker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "river bird",
+    },
+  ],
+  corner: [
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "point",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "turn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "angle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "side",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jaw",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "elbow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "heel",
+    },
+  ],
+  council: [
+    {
+      pos: "noun_meaning",
+      meaning: "assembly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meeting",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rule-body",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "elders",
+    },
+  ],
+  cow: [
+    {
+      pos: "noun_meaning",
+      meaning: "udder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "livestock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "squirrel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cockchafer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hippopotamus",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "woman",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meat",
+    },
+  ],
+  cowherd: [
+    {
+      pos: "noun_meaning",
+      meaning: "sentry",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "herder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pasture-worker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "caretaker",
+    },
+  ],
+  crab: [
+    {
+      pos: "noun_meaning",
+      meaning: "claw",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scorpion",
+    },
+  ],
+  cradle: [
+    {
+      pos: "noun_meaning",
+      meaning: "bed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "resting place",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "basket",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "swing",
+    },
+  ],
+  craftsman: [
+    {
+      pos: "noun_meaning",
+      meaning: "creator",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "builder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "labourer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "worker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blacksmith",
+    },
+  ],
+  crack: [
+    {
+      pos: "noun_meaning",
+      meaning: "split",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "break",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fault",
+    },
+  ],
+  crease: [
+    {
+      pos: "noun_meaning",
+      meaning: "fold",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "line",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mark",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bend",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wrinkle",
+    },
+  ],
+  creature: [
+    {
+      pos: "noun_meaning",
+      meaning: "being",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "life",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thing",
+    },
+  ],
+  mind: [
+    {
+      pos: "noun_meaning",
+      meaning: "thought",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "awareness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "inner self",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "memory",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "memory",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "way",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "go mad",
+    },
+  ],
+  crime: [
+    {
+      pos: "noun_meaning",
+      meaning: "wrong",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "offense",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "transgression",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "guilt",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "act",
+    },
+  ],
+  criminal: [
+    {
+      pos: "noun_meaning",
+      meaning: "wrongdoer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "offender",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lawbreaker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "outcast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "culprit",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+  ],
+  crow: [
+    {
+      pos: "noun_meaning",
+      meaning: "black bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scavenger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "caller",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "watcher",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trickster",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "raven",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jay",
+    },
+  ],
+  crowd: [
+    {
+      pos: "noun_meaning",
+      meaning: "group",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gathering",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "multitude",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "people",
+    },
+  ],
+  crown: [
+    {
+      pos: "noun_meaning",
+      meaning: "head-ring",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rule",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "authority",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "top",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "top",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "crown",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tonsure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "comb",
+    },
+  ],
+  cuckoo: [
+    {
+      pos: "noun_meaning",
+      meaning: "call-bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brood-thief",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "singer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trickster",
+    },
+  ],
+  cup: [
+    {
+      pos: "noun_meaning",
+      meaning: "bowl",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drinker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "holder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "measure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vessel",
+    },
+  ],
+  curve: [
+    {
+      pos: "noun_meaning",
+      meaning: "bend",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "arc",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "loop",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sweep",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "turn",
+    },
+  ],
+  custom: [
+    {
+      pos: "noun_meaning",
+      meaning: "tradition",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "habit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "way",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "law",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "practice",
+    },
+  ],
+  daughter: [
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "girl",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "offspring",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "youth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lineage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "girl",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pupil",
+    },
+  ],
+  dent: [
+    {
+      pos: "adj_meaning",
+      meaning: "defect",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "disqualifying trait",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "disadvantage",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "disability",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "imperfection",
+    },
+  ],
+  dice: [
+    {
+      pos: "noun_meaning",
+      meaning: "lot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chance",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "throw",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "block",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fate-stone",
+    },
+  ],
+  dinner: [
+    {
+      pos: "noun_meaning",
+      meaning: "meal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "feast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "food",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gathering",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "portion",
+    },
+  ],
+  dip: [
+    {
+      pos: "noun_meaning",
+      meaning: "lowering",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drop",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "touch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "taste",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sauce",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "dye",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "strike",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "hit",
+    },
+  ],
+  direction: [
+    {
+      pos: "noun_meaning",
+      meaning: "way",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "path",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "course",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "guiding",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "orientation",
+    },
+  ],
+  ditch: [
+    {
+      pos: "noun_meaning",
+      meaning: "trench",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "channel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hollow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drain",
+    },
+  ],
+  dog: [
+    {
+      pos: "noun_meaning",
+      meaning: "hound",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "companion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "guardian",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shark",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beaver",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "witch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "auger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horse",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "moon",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "hunt",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pike",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "otter",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rude",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fly agaric",
+    },
+  ],
+  dolphin: [
+    {
+      pos: "noun_meaning",
+      meaning: "sea-beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swimmer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jumper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "caller",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "friend-beast",
+    },
+  ],
+  shepherd: [
+    {
+      pos: "noun_meaning",
+      meaning: "keeper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "watcher",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "guardian",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leader",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "caretaker",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "defend",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "follow",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "go after smb.",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dragonfly",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "guard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cattle egret",
+    },
+  ],
+  graze: [
+    {
+      pos: "verb_meaning",
+      meaning: "feed on",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "browse",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "nibble on",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "eat",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "eat too much",
+    },
+  ],
+  herd: [
+    {
+      pos: "noun_meaning",
+      meaning: "gathering",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drive",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "movement",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "control",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grouping",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "group",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swarm",
+    },
+  ],
+  shear: [
+    {
+      pos: "verb_meaning",
+      meaning: "cut",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "clip",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "remove",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "harvest",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "slice",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "prune",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "destroy",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "annihilate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "rob",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "move ears",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "blink",
+    },
+  ],
+  milk: [
+    {
+      pos: "noun_meaning",
+      meaning: "white liquid",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "food",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nourishment",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "yield",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "extraction",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "spawn",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "extort",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gum",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "derive profit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dandelion",
+    },
+  ],
+  brand: [
+    {
+      pos: "noun_meaning",
+      meaning: "mark",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sign",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "emblem",
+    },
+  ],
+  pastoral: [
+    {
+      pos: "adj_meaning",
+      meaning: "rural",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "agrarian",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "simple",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "peaceful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "natural",
+    },
+  ],
+  herding: [
+    {
+      pos: "adj_meaning",
+      meaning: "driving",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "grouping",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tending",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "guiding",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "managing",
+    },
+  ],
+  grazing: [
+    {
+      pos: "adj_meaning",
+      meaning: "feeding",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "browsing",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pasturing",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "slow-moving",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "searching",
+    },
+  ],
+  nomadic: [
+    {
+      pos: "adj_meaning",
+      meaning: "wandering",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "mobile",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "travelling",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "land-ranging",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "seasonal-moving",
+    },
+  ],
+  mobile: [
+    {
+      pos: "adj_meaning",
+      meaning: "moving",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wandering",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "light-footed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "shifted",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "travelled",
+    },
+  ],
+  subsistence: [
+    {
+      pos: "adj_meaning",
+      meaning: "basic",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "minimal",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "survival-level",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "essential",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bare-living",
+    },
+  ],
+  rural: [
+    {
+      pos: "adj_meaning",
+      meaning: "country",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "local",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small-village",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "agrarian",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "field-living",
+    },
+  ],
+  remote: [
+    {
+      pos: "adj_meaning",
+      meaning: "far",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "distant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "isolated",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hard-to-reach",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "outer",
+    },
+  ],
+  seasonal: [
+    {
+      pos: "adj_meaning",
+      meaning: "cyclic",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "periodic",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "yearly",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "scheduled",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "phase-bound",
+    },
+  ],
+  herder: [
+    {
+      pos: "noun_meaning",
+      meaning: "keeper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "guardian",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pastor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "watcher",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leader",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dragonfly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cattle egret",
+    },
+  ],
+  flock: [
+    {
+      pos: "noun_meaning",
+      meaning: "birds",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "group",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "followers",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "collective",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "livestock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crowd",
+    },
+  ],
+  livestock: [
+    {
+      pos: "noun_meaning",
+      meaning: "animals",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "herd",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beasts",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meat-animals",
+    },
+  ],
+  cattle: [
+    {
+      pos: "noun_meaning",
+      meaning: "herd",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bulls",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beasts",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "livestock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cattle egret",
+    },
+  ],
+  sheep: [
+    {
+      pos: "noun_meaning",
+      meaning: "flock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lambs",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beasts",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "provisions",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sacrifice",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "prey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snipe",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "goat",
+    },
+  ],
+  camel: [
+    {
+      pos: "noun_meaning",
+      meaning: "desert-beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "carrier",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pack-animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hump-beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "long-walker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ostrich",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giraffe",
+    },
+  ],
+  oasis: [
+    {
+      pos: "noun_meaning",
+      meaning: "spring",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "water-place",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "green-spot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "haven",
+    },
+  ],
+  sandstorm: [
+    {
+      pos: "noun_meaning",
+      meaning: "storm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dust",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shroud",
+    },
+  ],
+  mirage: [
+    {
+      pos: "noun_meaning",
+      meaning: "illusion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vision",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ghost",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "glimmer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "false-water",
+    },
+  ],
+  desert: [
+    {
+      pos: "noun_meaning",
+      meaning: "waste",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "barren-land",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dry-place",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "emptiness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "open-land",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stranger",
+    },
+  ],
+  quicksand: [
+    {
+      pos: "noun_meaning",
+      meaning: "trap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sink",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soft-ground",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pull",
+    },
+  ],
+  thornbush: [
+    {
+      pos: "noun_meaning",
+      meaning: "thorn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "briar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shrub",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "barb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bramble",
+    },
+  ],
+  viper: [
+    {
+      pos: "noun_meaning",
+      meaning: "snake",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fang",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "danger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "coil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "poisonous snake",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "treacherous person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hidden enemy",
+    },
+  ],
+  jerboa: [
+    {
+      pos: "noun_meaning",
+      meaning: "hopper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tiny rodent",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burrower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night-creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaper",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+  ],
+  basin: [
+    {
+      pos: "noun_meaning",
+      meaning: "lowland",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hollow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "valley",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "depression",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bowl",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lake",
+    },
+  ],
+  arroyo: [
+    {
+      pos: "noun_meaning",
+      meaning: "dry stream",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gully",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wash",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "channel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ravine",
+    },
+  ],
+  parched: [
+    {
+      pos: "adj_meaning",
+      meaning: "dry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cracked",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thirsty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "burned",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "scorched",
+    },
+  ],
+  barren: [
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lifeless",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unfruitful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "waste",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bare",
+    },
+  ],
+  dusty: [
+    {
+      pos: "adj_meaning",
+      meaning: "dry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "powdery",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unclean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wind-blown",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "faded",
+    },
+  ],
+  blistering: [
+    {
+      pos: "adj_meaning",
+      meaning: "burning",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "scalding",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fierce",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "intense",
+    },
+  ],
+  sandy: [
+    {
+      pos: "adj_meaning",
+      meaning: "grainy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "loose",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pale",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dust-like",
+    },
+  ],
+  rocky: [
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "stony",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rough",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "broken",
+    },
+  ],
+  harsh: [
+    {
+      pos: "adj_meaning",
+      meaning: "cruel",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "severe",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rough",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "painful",
+    },
+  ],
+  scorch: [
+    {
+      pos: "noun_meaning",
+      meaning: "burn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mark",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "heat-damage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "char",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flare",
+    },
+  ],
+  sunstroke: [
+    {
+      pos: "noun_meaning",
+      meaning: "heat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fever",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "collapse",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dizziness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "overheating",
+    },
+  ],
+  tarantula: [
+    {
+      pos: "noun_meaning",
+      meaning: "spider",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hairy-spider",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crawler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "biter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night-creature",
+    },
+  ],
+  succulent: [
+    {
+      pos: "noun_meaning",
+      meaning: "fleshy-plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "water-plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thick-leaf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "desert-plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sap-holder",
+    },
+  ],
+  scalding: [
+    {
+      pos: "adj_meaning",
+      meaning: "burning",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "searing",
+    },
+  ],
+  desiccated: [
+    {
+      pos: "adj_meaning",
+      meaning: "dry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "withered",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dead",
+    },
+  ],
+  lifeless: [
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "barren",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "quiet",
+    },
+  ],
+  dirty: [
+    {
+      pos: "adj_meaning",
+      meaning: "unclean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "stained",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "soiled",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swamp",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "smoke",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snake",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  withered: [
+    {
+      pos: "adj_meaning",
+      meaning: "shrunk",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "faded",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husk",
+    },
+  ],
+  shadeless: [
+    {
+      pos: "adj_meaning",
+      meaning: "exposed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bare",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "open land",
+    },
+  ],
+  overheat: [
+    {
+      pos: "verb_meaning",
+      meaning: "burn",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "strain",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "exhaust",
+    },
+  ],
+  desiccate: [
+    {
+      pos: "verb_meaning",
+      meaning: "dry out",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "shrink",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "age",
+    },
+  ],
+  scuttle: [
+    {
+      pos: "verb_meaning",
+      meaning: "hurry",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "skitter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scramble",
+    },
+  ],
+  caravan: [
+    {
+      pos: "noun_meaning",
+      meaning: "journey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "train",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "company",
+    },
+  ],
+  camouflaged: [
+    {
+      pos: "adj_meaning",
+      meaning: "hidden",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "blended",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cover",
+    },
+  ],
+  aloe: [
+    {
+      pos: "noun_meaning",
+      meaning: "medicine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soothing plant",
+    },
+  ],
+  lion: [
+    {
+      pos: "noun_meaning",
+      meaning: "beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "predator",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ruler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mane",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snake",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cat",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "big",
+    },
+  ],
+  xerophytic: [
+    {
+      pos: "adj_meaning",
+      meaning: "dry-adapted",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tough",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "surviving",
+    },
+  ],
+  nocturnal: [
+    {
+      pos: "adj_meaning",
+      meaning: "night-active",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hidden",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night-beast",
+    },
+  ],
+  emptiness: [
+    {
+      pos: "noun_meaning",
+      meaning: "void",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "space",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "silence",
+    },
+  ],
+  desolation: [
+    {
+      pos: "noun_meaning",
+      meaning: "ruin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "loneliness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "waste",
+    },
+  ],
+  solitude: [
+    {
+      pos: "noun_meaning",
+      meaning: "isolation",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "quiet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "remoteness",
+    },
+  ],
+  bleak: [
+    {
+      pos: "adj_meaning",
+      meaning: "cold",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bare",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+  ],
+  suffocate: [
+    {
+      pos: "verb_meaning",
+      meaning: "choke",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "struggle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "asphyxia",
+    },
+  ],
+  dune: [
+    {
+      pos: "noun_meaning",
+      meaning: "ridge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wave",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hill",
+    },
+  ],
+  mesa: [
+    {
+      pos: "noun_meaning",
+      meaning: "table-land",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plateau",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rockrise",
+    },
+  ],
+  butte: [
+    {
+      pos: "noun_meaning",
+      meaning: "spire",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pillar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stand",
+    },
+  ],
+  wadi: [
+    {
+      pos: "noun_meaning",
+      meaning: "gully",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ravine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "channel",
+    },
+  ],
+  arid: [
+    {
+      pos: "adj_meaning",
+      meaning: "dry",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sterile",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+  ],
+  erode: [
+    {
+      pos: "verb_meaning",
+      meaning: "wear",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "carve",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "loss",
+    },
+  ],
+  donkey: [
+    {
+      pos: "noun_meaning",
+      meaning: "pack animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stubborn person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beast of burden",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  doorjam: [
+    {
+      pos: "noun_meaning",
+      meaning: "door frame",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "support pole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "side post",
+    },
+  ],
+  dormouse: [
+    {
+      pos: "noun_meaning",
+      meaning: "sleepy person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hibernator",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "small forest animal",
+    },
+  ],
+  dragon: [
+    {
+      pos: "noun_meaning",
+      meaning: "monster",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "warlord",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fire spirit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seahorse",
+    },
+  ],
+  dream: [
+    {
+      pos: "noun_meaning",
+      meaning: "vision",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wish",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "omen",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "long for",
+    },
+  ],
+  drop: [
+    {
+      pos: "noun_meaning",
+      meaning: "small amount",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be in a hurry",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "accuse",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "blame",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "lose",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "miss the target",
+    },
+  ],
+  duck: [
+    {
+      pos: "noun_meaning",
+      meaning: "water bird",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "dodge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "coward",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "imitate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "dip",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "hide",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "enter",
+    },
+  ],
+  dugout: [
+    {
+      pos: "noun_meaning",
+      meaning: "hollow boat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shelter pit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hideout",
+    },
+  ],
+  nature: [
+    {
+      pos: "noun_meaning",
+      meaning: "world outdoors",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "character",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "way of things",
+    },
+  ],
+  adder: [
+    {
+      pos: "noun_meaning",
+      meaning: "venom snake",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lurker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest danger",
+    },
+  ],
+  ear: [
+    {
+      pos: "noun_meaning",
+      meaning: "listener",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "head of grain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge of pot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hare",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leaf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "weapon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "handle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mushroom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mushroom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "twig",
+    },
+  ],
+  edge: [
+    {
+      pos: "noun_meaning",
+      meaning: "border",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brink",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sharpness",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "last",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "coast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shore",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "land",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wave",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "barrel",
+    },
+  ],
+  eel: [
+    {
+      pos: "noun_meaning",
+      meaning: "slippery fish",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wriggler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trickster person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "worm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lamprey",
+    },
+  ],
+  egg: [
+    {
+      pos: "noun_meaning",
+      meaning: "seed of beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beginning",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fragile thing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "white",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "berry",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "larva",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "kidney",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dandelion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "world",
+    },
+  ],
+  elbow: [
+    {
+      pos: "noun_meaning",
+      meaning: "joint",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bend in river",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "push aside",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "bend",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "corner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "curve",
+    },
+  ],
+  elk: [
+    {
+      pos: "noun_meaning",
+      meaning: "great deer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest spirit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strong hunter",
+    },
+  ],
+  elm: [
+    {
+      pos: "noun_meaning",
+      meaning: "shade tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "village tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beam wood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beech",
+    },
+  ],
+  embrace: [
+    {
+      pos: "noun_meaning",
+      meaning: "hug",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "welcome",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "accept",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "hatch eggs",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "kiss",
+    },
+  ],
+  emotion: [
+    {
+      pos: "noun_meaning",
+      meaning: "passion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "disposition",
+    },
+  ],
+  enclosure: [
+    {
+      pos: "noun_meaning",
+      meaning: "fenced place",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "animal pen",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "protected area",
+    },
+  ],
+  enemy: [
+    {
+      pos: "noun_meaning",
+      meaning: "foe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "outsider",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hated person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "foreigner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "army",
+    },
+  ],
+  estuary: [
+    {
+      pos: "noun_meaning",
+      meaning: "river mouth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mixing water",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tidal inlet",
+    },
+  ],
+  ewe: [
+    {
+      pos: "noun_meaning",
+      meaning: "mother sheep",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "milk animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gentle woman",
+    },
+  ],
+  exchange: [
+    {
+      pos: "noun_meaning",
+      meaning: "trade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "deal",
+    },
+  ],
+  eye: [
+    {
+      pos: "noun_meaning",
+      meaning: "orb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bud",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "window",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "eyelid",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "window",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cavity",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hollow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jewel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wheel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "eyebright",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sun",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "planet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nipple",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "eye",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "temple",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sprout",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mirror",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "star",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "anus",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "door",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ankle",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "awaken",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "wake up",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "cover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drop",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "human",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "see",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "look at",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lamprey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lamprey",
+    },
+  ],
+  eyebrow: [
+    {
+      pos: "noun_meaning",
+      meaning: "brow ridge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rim of eye",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sign of mood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "eyelash",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hill",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "border",
+    },
+  ],
+  face: [
+    {
+      pos: "noun_meaning",
+      meaning: "front of head",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "appearance",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cliff front",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "eye",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "page",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "surface",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "way",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "direction",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "human",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "turkey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sun",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "resemble",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be alike",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forehead",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "cover",
+    },
+  ],
+  falcon: [
+    {
+      pos: "noun_meaning",
+      meaning: "swift hawk",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "royal hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "battle bird",
+    },
+  ],
+  family: [
+    {
+      pos: "noun_meaning",
+      meaning: "household",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lineage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clan",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  father: [
+    {
+      pos: "noun_meaning",
+      meaning: "male parent",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ancestor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "founder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "uncle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "god",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grandfather",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "priest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "father-in-law",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mother",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "man",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pillar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "son",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "big",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "aunt",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "uncle",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+  ],
+  favour: [
+    {
+      pos: "noun_meaning",
+      meaning: "kindness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gift",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "good will",
+    },
+  ],
+  feast: [
+    {
+      pos: "noun_meaning",
+      meaning: "great meal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "festival",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "holy banquet",
+    },
+  ],
+  cobweb: [
+    {
+      pos: "noun_meaning",
+      meaning: "spider net",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "old dust",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sign of neglect",
+    },
+  ],
+  fence: [
+    {
+      pos: "noun_meaning",
+      meaning: "boundary",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "barrier",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enclosure wall",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "defend",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shield",
+    },
+  ],
+  festival: [
+    {
+      pos: "noun_meaning",
+      meaning: "holy day",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "village celebration",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "song gathering",
+    },
+  ],
+  death: [
+    {
+      pos: "noun_meaning",
+      meaning: "end of life",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "underworld",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plague",
+    },
+  ],
+  field: [
+    {
+      pos: "noun_meaning",
+      meaning: "farmland",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "battlefield",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "open country",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pasture",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wild",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "year",
+    },
+  ],
+  finger: [
+    {
+      pos: "noun_meaning",
+      meaning: "small digit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pointer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "narrow tongue of land",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "twig",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "neck",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "icicle",
+    },
+  ],
+  finch: [
+    {
+      pos: "noun_meaning",
+      meaning: "songbird",
+    },
+  ],
+  fish: [
+    {
+      pos: "noun_meaning",
+      meaning: "catch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "prey from water",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "food from river",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "muscle",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "flirt",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "girl",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "otter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meat",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tortoise",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "turtle",
+    },
+  ],
+  fist: [
+    {
+      pos: "noun_meaning",
+      meaning: "closed hand",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "symbol of force",
+    },
+  ],
+  ocean: [
+    {
+      pos: "noun_meaning",
+      meaning: "great sea",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "world edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "water wilderness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dictionary",
+    },
+  ],
+  floor: [
+    {
+      pos: "noun_meaning",
+      meaning: "ground inside",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bottom layer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "river bed",
+    },
+  ],
+  flower: [
+    {
+      pos: "noun_meaning",
+      meaning: "blossom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beauty",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "prime of life",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fire",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "girl",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "comb",
+    },
+  ],
+  flow: [
+    {
+      pos: "noun_meaning",
+      meaning: "current",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stream",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "move smoothly",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "crawl",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "fall",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "move quickly",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "cry",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "weep",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "island",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "shed hair or feathers",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "float",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "run",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "pass",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "grow numb",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "follow logically",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "consequently",
+    },
+  ],
+  fly: [
+    {
+      pos: "noun_meaning",
+      meaning: "small insect",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "move quickly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "annoyance",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "run",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mosquito",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gnat",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "spring",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "jump",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cloud",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "escape",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "flee",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fly agaric",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "break down",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "flutter",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "pass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bee",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "attack",
+    },
+  ],
+  fold: [
+    {
+      pos: "noun_meaning",
+      meaning: "sheep pen",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enclosed group",
+    },
+  ],
+  sugar: [
+    {
+      pos: "noun_meaning",
+      meaning: "sweet crystals",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "treat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flattery words",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sweet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "honey",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brown",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+  ],
+  foot: [
+    {
+      pos: "noun_meaning",
+      meaning: "mountain foot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "measure of length",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "step",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mouth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "twig",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "footprint",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hare",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plantain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "handle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "time",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wheel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "leg",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "toe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bottom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "foot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "road",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trunk",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "floor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "heel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "heel",
+    },
+  ],
+  coast: [
+    {
+      pos: "noun_meaning",
+      meaning: "sea edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shoreland",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "move without effort",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hill",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "border",
+    },
+  ],
+  footprint: [
+    {
+      pos: "noun_meaning",
+      meaning: "track",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sign of presence",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trace",
+    },
+    {
+      pos: "adp_meaning",
+      meaning: "behind",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sign",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "road",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "moose",
+    },
+  ],
+  forearm: [
+    {
+      pos: "noun_meaning",
+      meaning: "lower arm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shield arm",
+    },
+  ],
+  pine: [
+    {
+      pos: "noun_meaning",
+      meaning: "needle tree",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "waste away",
+    },
+  ],
+  hemlock: [
+    {
+      pos: "noun_meaning",
+      meaning: "poison plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dark tree",
+    },
+  ],
+  juniper: [
+    {
+      pos: "noun_meaning",
+      meaning: "berry tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "smoke herb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cypress",
+    },
+  ],
+  cypress: [
+    {
+      pos: "noun_meaning",
+      meaning: "grave tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mourning tree",
+    },
+  ],
+  yew: [
+    {
+      pos: "noun_meaning",
+      meaning: "bow wood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "graveyard tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "willow",
+    },
+  ],
+  cone: [
+    {
+      pos: "noun_meaning",
+      meaning: "seed case",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "projectile",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cone",
+    },
+  ],
+  needle: [
+    {
+      pos: "noun_meaning",
+      meaning: "sewing point",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pine leaf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thorn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sharp point",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pencil",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "sting",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dragonfly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "arrow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hedgehog",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "needle",
+    },
+  ],
+  underbrush: [
+    {
+      pos: "noun_meaning",
+      meaning: "forest tangle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "animal cover",
+    },
+  ],
+  sap: [
+    {
+      pos: "noun_meaning",
+      meaning: "vital juice",
+    },
+  ],
+  twig: [
+    {
+      pos: "noun_meaning",
+      meaning: "small branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "switch for beating",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "willow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tribe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hand",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "arm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "root",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+  ],
+  evergreen: [
+    {
+      pos: "adj_meaning",
+      meaning: "never fading",
+    },
+  ],
+  forehead: [
+    {
+      pos: "noun_meaning",
+      meaning: "brow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "front head",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "face ridge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hill",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "skull",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+  ],
+  fork: [
+    {
+      pos: "noun_meaning",
+      meaning: "skewer",
+    },
+  ],
+  fortification: [
+    {
+      pos: "noun_meaning",
+      meaning: "battlement",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "war wall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "defensive works",
+    },
+  ],
+  freeman: [
+    {
+      pos: "noun_meaning",
+      meaning: "freeholder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "unbound man",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "self-man",
+    },
+  ],
+  friend: [
+    {
+      pos: "noun_meaning",
+      meaning: "ally",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trusted one",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "close companion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trader",
+    },
+  ],
+  chest: [
+    {
+      pos: "noun_meaning",
+      meaning: "breast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rib-cage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "upper torso",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "memory",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lung",
+    },
+  ],
+  chestnut: [
+    {
+      pos: "noun_meaning",
+      meaning: "nut fruit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brown kernel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest hard-nut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "prostate",
+    },
+  ],
+  lake: [
+    {
+      pos: "noun_meaning",
+      meaning: "still water",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "water basin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "inland pool",
+    },
+  ],
+  lamb: [
+    {
+      pos: "noun_meaning",
+      meaning: "young sheep",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soft-fleeced beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring-born animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  land: [
+    {
+      pos: "noun_meaning",
+      meaning: "earth ground",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dry soil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "territory",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "farmer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "world",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "village",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bottom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chapter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "year",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest",
+    },
+  ],
+  language: [
+    {
+      pos: "noun_meaning",
+      meaning: "speech system",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tongue",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spoken code",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "quarrel",
+    },
+  ],
+  larva: [
+    {
+      pos: "noun_meaning",
+      meaning: "grub stage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "early insect form",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wormlike hatchling",
+    },
+  ],
+  laugh: [
+    {
+      pos: "noun_meaning",
+      meaning: "burst of mirth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "joy sound",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chuckle",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "mock",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "smile",
+    },
+  ],
+  leaf: [
+    {
+      pos: "noun_meaning",
+      meaning: "page",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "film",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "skin",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "green",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cloth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "letter",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tobacco",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "sweep",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "window",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fish",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cockchafer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lung",
+    },
+  ],
+  libation: [
+    {
+      pos: "noun_meaning",
+      meaning: "ritual pouring",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "offering drink",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sacred spill",
+    },
+  ],
+  limb: [
+    {
+      pos: "noun_meaning",
+      meaning: "branching part",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "outer extremity",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "appendage",
+    },
+  ],
+  liver: [
+    {
+      pos: "noun_meaning",
+      meaning: "blood-filter organ",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "inner flesh part",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dark organ",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lung",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "belly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spleen",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jellyfish",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bile",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stomach",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "diaphragm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "heart",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pancreas",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brown",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chest",
+    },
+  ],
+  log: [
+    {
+      pos: "noun_meaning",
+      meaning: "antler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pillar",
+    },
+  ],
+  louse: [
+    {
+      pos: "noun_meaning",
+      meaning: "parasite",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "moocher",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  lung: [
+    {
+      pos: "noun_meaning",
+      meaning: "sack",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bag",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "breath",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "liver",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jellyfish",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sponge",
+    },
+  ],
+  garden: [
+    {
+      pos: "noun_meaning",
+      meaning: "cultivated plot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "growing yard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plant enclosure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vineyard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "work",
+    },
+  ],
+  yard: [
+    {
+      pos: "noun_meaning",
+      meaning: "outer space",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ground enclosure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "home field",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "diaphragm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "page",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clavicle",
+    },
+  ],
+  lynx: [
+    {
+      pos: "noun_meaning",
+      meaning: "cat",
+    },
+  ],
+  mace: [
+    {
+      pos: "noun_meaning",
+      meaning: "club weapon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spiked staff",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crushing tool",
+    },
+  ],
+  magpie: [
+    {
+      pos: "noun_meaning",
+      meaning: "crow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "raven",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "smart person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jay",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "woodpecker",
+    },
+  ],
+  mallet: [
+    {
+      pos: "noun_meaning",
+      meaning: "striking hammer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wooden beater",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pounding tool",
+    },
+  ],
+  mammoth: [
+    {
+      pos: "noun_meaning",
+      meaning: "wooly rhino",
+    },
+  ],
+  reindeer: [
+    {
+      pos: "noun_meaning",
+      meaning: "deer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "moose",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "elk",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "moose",
+    },
+  ],
+  deer: [
+    {
+      pos: "noun_meaning",
+      meaning: "prey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "food",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horse",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sheep",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lion",
+    },
+  ],
+  caribou: [
+    {
+      pos: "noun_meaning",
+      meaning: "stag",
+    },
+  ],
+  lemming: [
+    {
+      pos: "noun_meaning",
+      meaning: "tundra rodent",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shrew",
+    },
+  ],
+  ptarmigan: [
+    {
+      pos: "noun_meaning",
+      meaning: "capercailze",
+    },
+  ],
+  moss: [
+    {
+      pos: "noun_meaning",
+      meaning: "carpet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "short carpeting plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gum",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mold",
+    },
+  ],
+  willow: [
+    {
+      pos: "noun_meaning",
+      meaning: "slender tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "river-leaner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bend-branch tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "poplar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alder",
+    },
+  ],
+  birch: [
+    {
+      pos: "noun_meaning",
+      meaning: "white-bark tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "peeling-skin tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thin-trunk tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ash",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beech",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "elm",
+    },
+  ],
+  permafrost: [
+    {
+      pos: "noun_meaning",
+      meaning: "frozen earth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hard-ice soil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "deep frost layer",
+    },
+  ],
+  bog: [
+    {
+      pos: "noun_meaning",
+      meaning: "peat marsh",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mire",
+    },
+  ],
+  man: [
+    {
+      pos: "noun_meaning",
+      meaning: "human",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nobleman",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "freeman",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "warrior",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "human",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "father",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soldier",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "son",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thumb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "woman",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brother",
+    },
+  ],
+  mane: [
+    {
+      pos: "noun_meaning",
+      meaning: "neck hair",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beast fringe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crest hair",
+    },
+  ],
+  map: [
+    {
+      pos: "noun_meaning",
+      meaning: "chart",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "land drawing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "territory sketch",
+    },
+  ],
+  maple: [
+    {
+      pos: "noun_meaning",
+      meaning: "sweetwood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "maple tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sapwood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rowan",
+    },
+  ],
+  oak: [
+    {
+      pos: "noun_meaning",
+      meaning: "hardwood tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "acorn tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strong timber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strength",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rigity",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "acorn",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tan",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cockchafer",
+    },
+  ],
+  hickory: [
+    {
+      pos: "noun_meaning",
+      meaning: "toughwood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nut tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hard timber",
+    },
+  ],
+  hawthorn: [
+    {
+      pos: "noun_meaning",
+      meaning: "berry",
+    },
+  ],
+  rowan: [
+    {
+      pos: "noun_meaning",
+      meaning: "red-berry tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain ash",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "charm tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "henbane",
+    },
+  ],
+  ivy: [
+    {
+      pos: "noun_meaning",
+      meaning: "rope",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vein",
+    },
+  ],
+  nettle: [
+    {
+      pos: "noun_meaning",
+      meaning: "annoying thing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stinging plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jellyfish",
+    },
+  ],
+  rabbit: [
+    {
+      pos: "noun_meaning",
+      meaning: "hare",
+    },
+  ],
+  pheasant: [
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "turkey",
+    },
+  ],
+  weevil: [
+    {
+      pos: "noun_meaning",
+      meaning: "pest",
+    },
+  ],
+  caterpillar: [
+    {
+      pos: "noun_meaning",
+      meaning: "larva",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "worm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "slug",
+    },
+  ],
+  slug: [
+    {
+      pos: "noun_meaning",
+      meaning: "soft creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "slime trail",
+    },
+  ],
+  hornet: [
+    {
+      pos: "noun_meaning",
+      meaning: "loud insect",
+    },
+  ],
+  hummingbird: [
+    {
+      pos: "noun_meaning",
+      meaning: "nectar drinking animal",
+    },
+  ],
+  chanterelle: [
+    {
+      pos: "noun_meaning",
+      meaning: "gold mushroom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest trumpet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soft cap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hill fungus",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "yellow cap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ridge mushroom",
+    },
+  ],
+  boletus: [
+    {
+      pos: "noun_meaning",
+      meaning: "thick stem fungus",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meaty mushroom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brown cap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest meat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soft cap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "root mushroom",
+    },
+  ],
+  chickweed: [
+    {
+      pos: "noun_meaning",
+      meaning: "ground herb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "starwort",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wild herb",
+    },
+  ],
+  larkspur: [
+    {
+      pos: "noun_meaning",
+      meaning: "delphinium",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spurflower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meadow blossom",
+    },
+  ],
+  knapweed: [
+    {
+      pos: "noun_meaning",
+      meaning: "centaury",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "star thistle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wild aster",
+    },
+  ],
+  cornflower: [
+    {
+      pos: "noun_meaning",
+      meaning: "bluebottle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field blossom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ragged blue",
+    },
+  ],
+  poppy: [
+    {
+      pos: "noun_meaning",
+      meaning: "red poppy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "corn poppy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field poppy",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "top",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "upper part",
+    },
+  ],
+  alfalfa: [
+    {
+      pos: "noun_meaning",
+      meaning: "lucerne",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fodder plant",
+    },
+  ],
+  dragonfly: [
+    {
+      pos: "noun_meaning",
+      meaning: "needlefly",
+    },
+  ],
+  damselfly: [
+    {
+      pos: "noun_meaning",
+      meaning: "demoiselle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "slender dragonfly",
+    },
+  ],
+  wasp: [
+    {
+      pos: "noun_meaning",
+      meaning: "yellowjacket",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stinging insect",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hornet",
+    },
+  ],
+  spider: [
+    {
+      pos: "noun_meaning",
+      meaning: "web spider",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ground spider",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "net",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shrew",
+    },
+  ],
+  earthworm: [
+    {
+      pos: "noun_meaning",
+      meaning: "worm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soil worm",
+    },
+  ],
+  snail: [
+    {
+      pos: "noun_meaning",
+      meaning: "garden snail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "land snail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "slug",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cochlea",
+    },
+  ],
+  hare: [
+    {
+      pos: "noun_meaning",
+      meaning: "jackrabbit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field hare",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "moon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "marten",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clover",
+    },
+  ],
+  mole: [
+    {
+      pos: "noun_meaning",
+      meaning: "talcot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burrower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mouse",
+    },
+  ],
+  vole: [
+    {
+      pos: "noun_meaning",
+      meaning: "field vole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meadow vole",
+    },
+  ],
+  shrew: [
+    {
+      pos: "noun_meaning",
+      meaning: "whitetoothed shrew",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "little shrew",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mouse",
+    },
+  ],
+  hedgehog: [
+    {
+      pos: "noun_meaning",
+      meaning: "urchin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hedge pig",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "badger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chestnut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "porcupine",
+    },
+  ],
+  skunk: [
+    {
+      pos: "noun_meaning",
+      meaning: "polecat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "slob",
+    },
+  ],
+  sparrow: [
+    {
+      pos: "noun_meaning",
+      meaning: "house sparrow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tree sparrow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ostrich",
+    },
+  ],
+  lark: [
+    {
+      pos: "noun_meaning",
+      meaning: "meadow lark",
+    },
+  ],
+  goldfinch: [
+    {
+      pos: "noun_meaning",
+      meaning: "redface finch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gold bird",
+    },
+  ],
+  chaffinch: [
+    {
+      pos: "noun_meaning",
+      meaning: "pink finch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tree finch",
+    },
+  ],
+  skylark: [
+    {
+      pos: "noun_meaning",
+      meaning: "sky lark",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cloud singer",
+    },
+  ],
+  thistle: [
+    {
+      pos: "noun_meaning",
+      meaning: "prickleweed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thorn plant",
+    },
+  ],
+  cricket: [
+    {
+      pos: "noun_meaning",
+      meaning: "chirper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field cricket",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grasshopper",
+    },
+  ],
+  milkweed: [
+    {
+      pos: "noun_meaning",
+      meaning: "silkweed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "milk plant",
+    },
+  ],
+  thrift: [
+    {
+      pos: "noun_meaning",
+      meaning: "sea pink",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cliff flower",
+    },
+  ],
+  meadowfoam: [
+    {
+      pos: "noun_meaning",
+      meaning: "foamflower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meadow bloom",
+    },
+  ],
+  arrowhead: [
+    {
+      pos: "noun_meaning",
+      meaning: "water arrow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pond arrow",
+    },
+  ],
+  bedstraw: [
+    {
+      pos: "noun_meaning",
+      meaning: "galium",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "straw herb",
+    },
+  ],
+  birdsfoot: [
+    {
+      pos: "noun_meaning",
+      meaning: "trefoil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "birdfoot flower",
+    },
+  ],
+  butterbur: [
+    {
+      pos: "noun_meaning",
+      meaning: "colt's-foot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giant dock",
+    },
+  ],
+  cowslip: [
+    {
+      pos: "noun_meaning",
+      meaning: "primula",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "primrose",
+    },
+  ],
+  cranes_bill: [
+    {
+      pos: "noun_meaning",
+      meaning: "geranium",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crane flower",
+    },
+  ],
+  dice_plant: [
+    {
+      pos: "noun_meaning",
+      meaning: "spotted plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dapple herb",
+    },
+  ],
+  field_bindweed: [
+    {
+      pos: "noun_meaning",
+      meaning: "bindweed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field twiner",
+    },
+  ],
+  field_pennycress: [
+    {
+      pos: "noun_meaning",
+      meaning: "pennycress",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field cress",
+    },
+  ],
+  field_scabious: [
+    {
+      pos: "noun_meaning",
+      meaning: "knautia",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "purple scabious",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wild pincushion",
+    },
+  ],
+  gallium: [
+    {
+      pos: "noun_meaning",
+      meaning: "bedstraw",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "galium herb",
+    },
+  ],
+  harebell: [
+    {
+      pos: "noun_meaning",
+      meaning: "bellflower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bluebell",
+    },
+  ],
+  hawkweed: [
+    {
+      pos: "noun_meaning",
+      meaning: "hieracium",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meadow hawkweed",
+    },
+  ],
+  monkshood: [
+    {
+      pos: "noun_meaning",
+      meaning: "aconite",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wolf's bane",
+    },
+  ],
+  pignut: [
+    {
+      pos: "noun_meaning",
+      meaning: "earthnut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hog nut",
+    },
+  ],
+  sorrel: [
+    {
+      pos: "noun_meaning",
+      meaning: "red sorrel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field sorrel",
+    },
+  ],
+  speedwell: [
+    {
+      pos: "noun_meaning",
+      meaning: "veronica",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brooklime",
+    },
+  ],
+  teasel: [
+    {
+      pos: "noun_meaning",
+      meaning: "thistle bur",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "carding plant",
+    },
+  ],
+  corncockle: [
+    {
+      pos: "noun_meaning",
+      meaning: "lychnis",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "corn bloom",
+    },
+  ],
+  eyebright: [
+    {
+      pos: "noun_meaning",
+      meaning: "euphrasia",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bright herb",
+    },
+  ],
+  meeting: [
+    {
+      pos: "noun_meaning",
+      meaning: "gathering",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "assembly",
+    },
+  ],
+  membrane: [
+    {
+      pos: "noun_meaning",
+      meaning: "thin tissue",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "film",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cloud",
+    },
+  ],
+  memory: [
+    {
+      pos: "noun_meaning",
+      meaning: "recollection",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mental record",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "respect",
+    },
+  ],
+  mill: [
+    {
+      pos: "noun_meaning",
+      meaning: "grinding house",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grain crusher",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "oppress",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "talk nonsense",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "eat",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "purr",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "destroy",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "annihilate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "learn",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "study",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "drill",
+    },
+  ],
+  mirror: [
+    {
+      pos: "noun_meaning",
+      meaning: "looking glass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "reflector",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "glass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mirror",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dictionary",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "window",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lens",
+    },
+  ],
+  mistress: [
+    {
+      pos: "noun_meaning",
+      meaning: "lady",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "female master",
+    },
+  ],
+  morning: [
+    {
+      pos: "noun_meaning",
+      meaning: "dawn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "daybreak",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "tomorrow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "day",
+    },
+  ],
+  mother: [
+    {
+      pos: "noun_meaning",
+      meaning: "dam",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "matron",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "womb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grandmother",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "daughter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "aunt",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "widow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "father",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thumb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "origin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "aunt",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "ferment",
+    },
+  ],
+  peak: [
+    {
+      pos: "noun_meaning",
+      meaning: "summit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crest",
+    },
+  ],
+  ridge: [
+    {
+      pos: "noun_meaning",
+      meaning: "spine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "divide",
+    },
+  ],
+  scree: [
+    {
+      pos: "noun_meaning",
+      meaning: "fell debris",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone spill",
+    },
+  ],
+  talus: [
+    {
+      pos: "noun_meaning",
+      meaning: "scree slope",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rock slide",
+    },
+  ],
+  summit: [
+    {
+      pos: "noun_meaning",
+      meaning: "peak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "top",
+    },
+  ],
+  cairn: [
+    {
+      pos: "noun_meaning",
+      meaning: "stone marker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "waystone",
+    },
+  ],
+  crag: [
+    {
+      pos: "noun_meaning",
+      meaning: "rock outcrop",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cragstone",
+    },
+  ],
+  bluff: [
+    {
+      pos: "noun_meaning",
+      meaning: "headland",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cliff edge",
+    },
+  ],
+  fir: [
+    {
+      pos: "noun_meaning",
+      meaning: "fir tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "silver fir",
+    },
+  ],
+  larch: [
+    {
+      pos: "noun_meaning",
+      meaning: "tamarack",
+    },
+  ],
+  spruce: [
+    {
+      pos: "noun_meaning",
+      meaning: "spruce tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain spruce",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horsetail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "larch",
+    },
+  ],
+  edelweiss: [
+    {
+      pos: "noun_meaning",
+      meaning: "alpine star",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snow bloom",
+    },
+  ],
+  ibex: [
+    {
+      pos: "noun_meaning",
+      meaning: "wild goat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain goat",
+    },
+  ],
+  chamois: [
+    {
+      pos: "noun_meaning",
+      meaning: "mountain antelope",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rock goat",
+    },
+  ],
+  marmot: [
+    {
+      pos: "noun_meaning",
+      meaning: "whistler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain rodent",
+    },
+  ],
+  yak: [
+    {
+      pos: "noun_meaning",
+      meaning: "mountain ox",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "highland cattle",
+    },
+  ],
+  glacier: [
+    {
+      pos: "noun_meaning",
+      meaning: "ice river",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "slow ice",
+    },
+  ],
+  snowfield: [
+    {
+      pos: "noun_meaning",
+      meaning: "snow plain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "frozen field",
+    },
+  ],
+  raven: [
+    {
+      pos: "noun_meaning",
+      meaning: "mountain raven",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "corvid",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crow",
+    },
+  ],
+  granite: [
+    {
+      pos: "noun_meaning",
+      meaning: "hard rock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "granite stone",
+    },
+  ],
+  limestone: [
+    {
+      pos: "noun_meaning",
+      meaning: "chalk rock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lime rock",
+    },
+  ],
+  basalt: [
+    {
+      pos: "noun_meaning",
+      meaning: "dark stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "volcanic rock",
+    },
+  ],
+  snowcap: [
+    {
+      pos: "noun_meaning",
+      meaning: "snow peak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "whitecap",
+    },
+  ],
+  foothill: [
+    {
+      pos: "noun_meaning",
+      meaning: "lower slope",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hillfoot",
+    },
+  ],
+  glen: [
+    {
+      pos: "noun_meaning",
+      meaning: "valley",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ravine",
+    },
+  ],
+  pika: [
+    {
+      pos: "noun_meaning",
+      meaning: "rock rabbit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "whistling hare",
+    },
+  ],
+  alp: [
+    {
+      pos: "noun_meaning",
+      meaning: "high pasture",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "upland",
+    },
+  ],
+  mouse: [
+    {
+      pos: "noun_meaning",
+      meaning: "rodent",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "muscle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bat",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jerboa",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fly agaric",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "squirrel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field bindweed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tufted vetch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "marmot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shrew",
+    },
+  ],
+  muscle: [
+    {
+      pos: "noun_meaning",
+      meaning: "flesh",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sinew",
+    },
+  ],
+  mouth: [
+    {
+      pos: "noun_meaning",
+      meaning: "opening",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ravine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mouth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "face",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "border",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hill",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vagina",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "womb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "door",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "promise",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "language",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "kiss",
+    },
+  ],
+  mushroom: [
+    {
+      pos: "noun_meaning",
+      meaning: "fungus",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "algae",
+    },
+  ],
+  mussel: [
+    {
+      pos: "noun_meaning",
+      meaning: "shellfish",
+    },
+  ],
+  coral: [
+    {
+      pos: "noun_meaning",
+      meaning: "reef coral",
+    },
+  ],
+  kelp: [
+    {
+      pos: "noun_meaning",
+      meaning: "seaweed",
+    },
+  ],
+  starfish: [
+    {
+      pos: "noun_meaning",
+      meaning: "sea star",
+    },
+  ],
+  barnacle: [
+    {
+      pos: "noun_meaning",
+      meaning: "crust",
+    },
+  ],
+  clam: [
+    {
+      pos: "noun_meaning",
+      meaning: "shellfish",
+    },
+  ],
+  oyster: [
+    {
+      pos: "noun_meaning",
+      meaning: "shellfish",
+    },
+  ],
+  shrimp: [
+    {
+      pos: "noun_meaning",
+      meaning: "prawn",
+    },
+  ],
+  lobster: [
+    {
+      pos: "noun_meaning",
+      meaning: "crustacean",
+    },
+  ],
+  sponge: [
+    {
+      pos: "noun_meaning",
+      meaning: "poriferan",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sponge",
+    },
+  ],
+  jellyfish: [
+    {
+      pos: "noun_meaning",
+      meaning: "medusa",
+    },
+  ],
+  seaweed: [
+    {
+      pos: "noun_meaning",
+      meaning: "algae",
+    },
+  ],
+  tidepool: [
+    {
+      pos: "noun_meaning",
+      meaning: "rock pool",
+    },
+  ],
+  shark: [
+    {
+      pos: "noun_meaning",
+      meaning: "predator fish",
+    },
+  ],
+  whale: [
+    {
+      pos: "noun_meaning",
+      meaning: "cetacean",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "big",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mammoth",
+    },
+  ],
+  squid: [
+    {
+      pos: "noun_meaning",
+      meaning: "cephalopod",
+    },
+  ],
+  octopus: [
+    {
+      pos: "noun_meaning",
+      meaning: "cephalopod",
+    },
+  ],
+  nautilus: [
+    {
+      pos: "noun_meaning",
+      meaning: "chambered shell",
+    },
+  ],
+  mollusk: [
+    {
+      pos: "noun_meaning",
+      meaning: "invertebrate",
+    },
+  ],
+  crustacean: [
+    {
+      pos: "noun_meaning",
+      meaning: "shell creature",
+    },
+  ],
+  seal: [
+    {
+      pos: "noun_meaning",
+      meaning: "pinniped",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "print",
+    },
+  ],
+  manatee: [
+    {
+      pos: "noun_meaning",
+      meaning: "sea cow",
+    },
+  ],
+  sailfish: [
+    {
+      pos: "noun_meaning",
+      meaning: "billfish",
+    },
+  ],
+  tuna: [
+    {
+      pos: "noun_meaning",
+      meaning: "schooling fish",
+    },
+  ],
+  anchovy: [
+    {
+      pos: "noun_meaning",
+      meaning: "small fish",
+    },
+  ],
+  sardine: [
+    {
+      pos: "noun_meaning",
+      meaning: "small fish",
+    },
+  ],
+  herring: [
+    {
+      pos: "noun_meaning",
+      meaning: "shoal fish",
+    },
+  ],
+  mackerel: [
+    {
+      pos: "noun_meaning",
+      meaning: "oily fish",
+    },
+  ],
+  anglerfish: [
+    {
+      pos: "noun_meaning",
+      meaning: "lure fish",
+    },
+  ],
+  lionfish: [
+    {
+      pos: "noun_meaning",
+      meaning: "venomous fish",
+    },
+  ],
+  plankton: [
+    {
+      pos: "noun_meaning",
+      meaning: "drifters",
+    },
+  ],
+  zooplankton: [
+    {
+      pos: "noun_meaning",
+      meaning: "micro animal",
+    },
+  ],
+  phytoplankton: [
+    {
+      pos: "noun_meaning",
+      meaning: "micro plant",
+    },
+  ],
+  sandbar: [
+    {
+      pos: "noun_meaning",
+      meaning: "sand bank",
+    },
+  ],
+  krill: [
+    {
+      pos: "noun_meaning",
+      meaning: "swarm",
+    },
+  ],
+  cuttlefish: [
+    {
+      pos: "noun_meaning",
+      meaning: "cephalopod",
+    },
+  ],
+  tide: [
+    {
+      pos: "noun_meaning",
+      meaning: "current",
+    },
+  ],
+  estuaries: [
+    {
+      pos: "noun_meaning",
+      meaning: "river mouth",
+    },
+  ],
+  seamount: [
+    {
+      pos: "noun_meaning",
+      meaning: "undersea mountain",
+    },
+  ],
+  copepod: [
+    {
+      pos: "noun_meaning",
+      meaning: "microcrustacean",
+    },
+  ],
+  diatom: [
+    {
+      pos: "noun_meaning",
+      meaning: "algae",
+    },
+  ],
+  radiolarian: [
+    {
+      pos: "noun_meaning",
+      meaning: "plankton",
+    },
+  ],
+  foraminifer: [
+    {
+      pos: "noun_meaning",
+      meaning: "plankton",
+    },
+  ],
+  phyllosoma: [
+    {
+      pos: "noun_meaning",
+      meaning: "larva",
+    },
+  ],
+  amphipod: [
+    {
+      pos: "noun_meaning",
+      meaning: "crustacean",
+    },
+  ],
+  isopod: [
+    {
+      pos: "noun_meaning",
+      meaning: "crustacean",
+    },
+  ],
+  tunicate: [
+    {
+      pos: "noun_meaning",
+      meaning: "sea squirt",
+    },
+  ],
+  salp: [
+    {
+      pos: "noun_meaning",
+      meaning: "pelagic tunicate",
+    },
+  ],
+  larvacean: [
+    {
+      pos: "noun_meaning",
+      meaning: "free swimmer",
+    },
+  ],
+  hydrozoan: [
+    {
+      pos: "noun_meaning",
+      meaning: "colonial jelly",
+    },
+  ],
+  scyphozoan: [
+    {
+      pos: "noun_meaning",
+      meaning: "true jelly",
+    },
+  ],
+  cubozoan: [
+    {
+      pos: "noun_meaning",
+      meaning: "box jelly",
+    },
+  ],
+  gorgonian: [
+    {
+      pos: "noun_meaning",
+      meaning: "sea fan",
+    },
+  ],
+  whelk: [
+    {
+      pos: "noun_meaning",
+      meaning: "snail",
+    },
+  ],
+  limpet: [
+    {
+      pos: "noun_meaning",
+      meaning: "snail",
+    },
+  ],
+  murex: [
+    {
+      pos: "noun_meaning",
+      meaning: "shell",
+    },
+  ],
+  pycnogonid: [
+    {
+      pos: "noun_meaning",
+      meaning: "sea spider",
+    },
+  ],
+  amphioxus: [
+    {
+      pos: "noun_meaning",
+      meaning: "lancelet",
+    },
+  ],
+  lancelet: [
+    {
+      pos: "noun_meaning",
+      meaning: "primitive chordate",
+    },
+  ],
+  hagfish: [
+    {
+      pos: "noun_meaning",
+      meaning: "slime eel",
+    },
+  ],
+  lamprey: [
+    {
+      pos: "noun_meaning",
+      meaning: "jawless fish",
+    },
+  ],
+  porpoise: [
+    {
+      pos: "noun_meaning",
+      meaning: "small cetacean",
+    },
+  ],
+  narwhal: [
+    {
+      pos: "noun_meaning",
+      meaning: "tusked whale",
+    },
+  ],
+  orca: [
+    {
+      pos: "noun_meaning",
+      meaning: "killer whale",
+    },
+  ],
+  atoll: [
+    {
+      pos: "noun_meaning",
+      meaning: "reef ring",
+    },
+  ],
+  lagoon: [
+    {
+      pos: "noun_meaning",
+      meaning: "inner sea",
+    },
+  ],
+  thermocline: [
+    {
+      pos: "noun_meaning",
+      meaning: "temperature layer",
+    },
+  ],
+  halocline: [
+    {
+      pos: "noun_meaning",
+      meaning: "salt layer",
+    },
+  ],
+  upwelling: [
+    {
+      pos: "noun_meaning",
+      meaning: "rising water",
+    },
+  ],
+  detritus: [
+    {
+      pos: "noun_meaning",
+      meaning: "waste",
+    },
+  ],
+  sargassum: [
+    {
+      pos: "noun_meaning",
+      meaning: "floating weed",
+    },
+  ],
+  macroalgae: [
+    {
+      pos: "noun_meaning",
+      meaning: "large algae",
+    },
+  ],
+  microalgae: [
+    {
+      pos: "noun_meaning",
+      meaning: "tiny algae",
+    },
+  ],
+  cod: [
+    {
+      pos: "noun_meaning",
+      meaning: "fish",
+    },
+  ],
+  haddock: [
+    {
+      pos: "noun_meaning",
+      meaning: "white fish",
+    },
+  ],
+  pollock: [
+    {
+      pos: "noun_meaning",
+      meaning: "fish",
+    },
+  ],
+  halibut: [
+    {
+      pos: "noun_meaning",
+      meaning: "flatfish",
+    },
+  ],
+  flounder: [
+    {
+      pos: "noun_meaning",
+      meaning: "flatfish",
+    },
+  ],
+  sole: [
+    {
+      pos: "noun_meaning",
+      meaning: "flatfish",
+    },
+  ],
+  grouper: [
+    {
+      pos: "noun_meaning",
+      meaning: "reef fish",
+    },
+  ],
+  snapper: [
+    {
+      pos: "noun_meaning",
+      meaning: "reef fish",
+    },
+  ],
+  pipefish: [
+    {
+      pos: "noun_meaning",
+      meaning: "slender fish",
+    },
+  ],
+  seahorse: [
+    {
+      pos: "noun_meaning",
+      meaning: "pipefish",
+    },
+  ],
+  nail: [
+    {
+      pos: "noun_meaning",
+      meaning: "metal fastener",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "finger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "toe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hoof",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "stare",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "crucify",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thumb",
+    },
+  ],
+  name: [
+    {
+      pos: "noun_meaning",
+      meaning: "designation",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "scold",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grandfather",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "order",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "command",
+    },
+  ],
+  navel: [
+    {
+      pos: "noun_meaning",
+      meaning: "belly mark",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "belly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bottom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pole",
+    },
+  ],
+  neck: [
+    {
+      pos: "noun_meaning",
+      meaning: "throat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "neck",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ravine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "throat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "voice",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "neck",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clavicle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giraffe",
+    },
+  ],
+  necklace: [
+    {
+      pos: "noun_meaning",
+      meaning: "neck ornament",
+    },
+  ],
+  neighbour: [
+    {
+      pos: "noun_meaning",
+      meaning: "near person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  nest: [
+    {
+      pos: "noun_meaning",
+      meaning: "dwelling",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "womb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cradle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "family",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beehive",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "basket",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sheath",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vagina",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "town",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "city",
+    },
+  ],
+  net: [
+    {
+      pos: "noun_meaning",
+      meaning: "mesh",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spider",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "diaphragm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "retina",
+    },
+  ],
+  nipple: [
+    {
+      pos: "noun_meaning",
+      meaning: "teat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bud",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bee",
+    },
+  ],
+  noon: [
+    {
+      pos: "noun_meaning",
+      meaning: "midday",
+    },
+  ],
+  notch: [
+    {
+      pos: "noun_meaning",
+      meaning: "cut",
+    },
+  ],
+  nut: [
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+  ],
+  snow: [
+    {
+      pos: "noun_meaning",
+      meaning: "frost",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "winter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ice",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "weasel",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "swear",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "curse",
+    },
+  ],
+  oar: [
+    {
+      pos: "noun_meaning",
+      meaning: "paddle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "paddle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rowing blade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scapula",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "row",
+    },
+  ],
+  oath: [
+    {
+      pos: "noun_meaning",
+      meaning: "vow",
+    },
+  ],
+  onion: [
+    {
+      pos: "noun_meaning",
+      meaning: "bulb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "garlic",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bulb",
+    },
+  ],
+  origin: [
+    {
+      pos: "noun_meaning",
+      meaning: "beginning",
+    },
+  ],
+  orphan: [
+    {
+      pos: "noun_meaning",
+      meaning: "parentless child",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "widow",
+    },
+  ],
+  otter: [
+    {
+      pos: "noun_meaning",
+      meaning: "good swimmer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beaver",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "polecat",
+    },
+  ],
+  oven: [
+    {
+      pos: "noun_meaning",
+      meaning: "furnace",
+    },
+  ],
+  ox: [
+    {
+      pos: "noun_meaning",
+      meaning: "cattle",
+    },
+  ],
+  page: [
+    {
+      pos: "noun_meaning",
+      meaning: "sheet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "diaphragm",
+    },
+  ],
+  palm: [
+    {
+      pos: "noun_meaning",
+      meaning: "hand",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "glove",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "palm",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "steal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "paw",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "foot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oar",
+    },
+  ],
+  paw: [
+    {
+      pos: "noun_meaning",
+      meaning: "foot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hand",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "twig",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sole",
+    },
+  ],
+  pea: [
+    {
+      pos: "noun_meaning",
+      meaning: "seed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hail",
+    },
+  ],
+  pebble: [
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "button",
+    },
+  ],
+  peg: [
+    {
+      pos: "noun_meaning",
+      meaning: "pin",
+    },
+  ],
+  surface: [
+    {
+      pos: "noun_meaning",
+      meaning: "top",
+    },
+  ],
+  acid: [
+    {
+      pos: "noun_meaning",
+      meaning: "sour substance",
+    },
+  ],
+  pendant: [
+    {
+      pos: "noun_meaning",
+      meaning: "hanging ornament",
+    },
+  ],
+  penis: [
+    {
+      pos: "noun_meaning",
+      meaning: "tail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "man",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vagina",
+    },
+  ],
+  perch: [
+    {
+      pos: "noun_meaning",
+      meaning: "rest",
+    },
+  ],
+  person: [
+    {
+      pos: "noun_meaning",
+      meaning: "individual",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "man",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "servant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "body",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stranger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pupil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "woman",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "uvula",
+    },
+  ],
+  phantom: [
+    {
+      pos: "noun_meaning",
+      meaning: "ghost",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ancestor",
+    },
+  ],
+  pick: [
+    {
+      pos: "noun_meaning",
+      meaning: "tool",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "choose",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "read",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "remove",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "eliminate",
+    },
+  ],
+  pig: [
+    {
+      pos: "noun_meaning",
+      meaning: "swine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hedgehog",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "badger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meat",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "lead",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "livestock",
+    },
+  ],
+  piglet: [
+    {
+      pos: "noun_meaning",
+      meaning: "pig",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vagina",
+    },
+  ],
+  pike: [
+    {
+      pos: "noun_meaning",
+      meaning: "weapon",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "icicle",
+    },
+  ],
+  pillar: [
+    {
+      pos: "noun_meaning",
+      meaning: "column",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "icicle",
+    },
+  ],
+  ankle: [
+    {
+      pos: "noun_meaning",
+      meaning: "joint",
+    },
+  ],
+  pin: [
+    {
+      pos: "noun_meaning",
+      meaning: "fastener",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brooch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "awl",
+    },
+  ],
+  pit: [
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grave",
+    },
+  ],
+  place: [
+    {
+      pos: "noun_meaning",
+      meaning: "location",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "town",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "village",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "house",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "town",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "city",
+    },
+    {
+      pos: "adp_meaning",
+      meaning: "instead of",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "relation",
+    },
+  ],
+  rock: [
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "boulder",
+    },
+  ],
+  rod: [
+    {
+      pos: "noun_meaning",
+      meaning: "staff",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bar",
+    },
+  ],
+  roll: [
+    {
+      pos: "noun_meaning",
+      meaning: "coil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "twist",
+    },
+  ],
+  roof: [
+    {
+      pos: "noun_meaning",
+      meaning: "covering",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "overhang",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "house",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "icicle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sparrow",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "cover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "palate",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mind",
+    },
+  ],
+  bank: [
+    {
+      pos: "noun_meaning",
+      meaning: "money-house",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "treasury",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "river",
+    },
+  ],
+  debt: [
+    {
+      pos: "noun_meaning",
+      meaning: "obligation",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "arrears",
+    },
+  ],
+  room: [
+    {
+      pos: "noun_meaning",
+      meaning: "space",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chamber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "house",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cell",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cell",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cage",
+    },
+  ],
+  rooster: [
+    {
+      pos: "noun_meaning",
+      meaning: "cock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "yard-bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+  ],
+  route: [
+    {
+      pos: "noun_meaning",
+      meaning: "pathway",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "course",
+    },
+  ],
+  row: [
+    {
+      pos: "noun_meaning",
+      meaning: "line",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rank",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "pull",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "stroke",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "fly",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be sleepy",
+    },
+  ],
+  rug: [
+    {
+      pos: "noun_meaning",
+      meaning: "mat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "coverlet",
+    },
+  ],
+  rule: [
+    {
+      pos: "noun_meaning",
+      meaning: "law",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "standard",
+    },
+  ],
+  sail: [
+    {
+      pos: "noun_meaning",
+      meaning: "canvas",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "windcloth",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "voyage",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "navigate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "sail",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "fly",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "drive",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "soar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soft palate",
+    },
+  ],
+  sailor: [
+    {
+      pos: "noun_meaning",
+      meaning: "seaman",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mariner",
+    },
+  ],
+  ship: [
+    {
+      pos: "noun_meaning",
+      meaning: "vessel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "craft",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "sail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vessel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "whale",
+    },
+  ],
+  boat: [
+    {
+      pos: "noun_meaning",
+      meaning: "skiff",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "small vessel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ship",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vessel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "raft",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vehicle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "carrier",
+    },
+  ],
+  mast: [
+    {
+      pos: "noun_meaning",
+      meaning: "spar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mainpost",
+    },
+  ],
+  rudder: [
+    {
+      pos: "noun_meaning",
+      meaning: "steerboard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "guiding blade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tail",
+    },
+  ],
+  helm: [
+    {
+      pos: "noun_meaning",
+      meaning: "tiller",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "steering post",
+    },
+  ],
+  deck: [
+    {
+      pos: "noun_meaning",
+      meaning: "boards",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "topwalk",
+    },
+  ],
+  hull: [
+    {
+      pos: "noun_meaning",
+      meaning: "shell",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "keelbody",
+    },
+  ],
+  stern: [
+    {
+      pos: "noun_meaning",
+      meaning: "aft",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rear end",
+    },
+  ],
+  port: [
+    {
+      pos: "noun_meaning",
+      meaning: "harbour",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dockside",
+    },
+  ],
+  starboard: [
+    {
+      pos: "noun_meaning",
+      meaning: "rightboard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "steerboard side",
+    },
+  ],
+  rigging: [
+    {
+      pos: "noun_meaning",
+      meaning: "ropes",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lineset",
+    },
+  ],
+  capstan: [
+    {
+      pos: "noun_meaning",
+      meaning: "winch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "turnpost",
+    },
+  ],
+  figurehead: [
+    {
+      pos: "noun_meaning",
+      meaning: "prow carving",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ship icon",
+    },
+  ],
+  compass: [
+    {
+      pos: "noun_meaning",
+      meaning: "needle gauge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "finder",
+    },
+  ],
+  sextant: [
+    {
+      pos: "noun_meaning",
+      meaning: "sky gauge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "angle reader",
+    },
+  ],
+  logbook: [
+    {
+      pos: "noun_meaning",
+      meaning: "ledger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ship record",
+    },
+  ],
+  cargo: [
+    {
+      pos: "noun_meaning",
+      meaning: "freight",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "load",
+    },
+  ],
+  crew: [
+    {
+      pos: "noun_meaning",
+      meaning: "hands",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shipmen",
+    },
+  ],
+  navigator: [
+    {
+      pos: "noun_meaning",
+      meaning: "pathfinder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "steer-man",
+    },
+  ],
+  shipwright: [
+    {
+      pos: "noun_meaning",
+      meaning: "boat builder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shipmaker",
+    },
+  ],
+  bilge: [
+    {
+      pos: "noun_meaning",
+      meaning: "bottom water",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ship seepage",
+    },
+  ],
+  keel: [
+    {
+      pos: "noun_meaning",
+      meaning: "bottom beam",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "under-spine",
+    },
+  ],
+  prow: [
+    {
+      pos: "noun_meaning",
+      meaning: "nose",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "front edge",
+    },
+  ],
+  scratch: [
+    {
+      pos: "adj_meaning",
+      meaning: "defect",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "disability",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "imperfection",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "disqualifying trait",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "disadvantage",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "shave",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "scold",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "run away",
+    },
+  ],
+  nick: [
+    {
+      pos: "adj_meaning",
+      meaning: "defect",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "disability",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "imperfection",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "disqualifying trait",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "disadvantage",
+    },
+  ],
+  brave: [
+    {
+      pos: "adj_meaning",
+      meaning: "foolish",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "naive",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "temper",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "threaten",
+    },
+  ],
+  ripe: [
+    {
+      pos: "adj_meaning",
+      meaning: "ready",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "prepared",
+    },
+  ],
+  agreement: [
+    {
+      pos: "noun_meaning",
+      meaning: "duty",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "obligation",
+    },
+  ],
+  wild: [
+    {
+      pos: "adj_meaning",
+      meaning: "uncontrolled",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "headstrong",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dangerous",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unrefined",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "untainted",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unbridled",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "barren",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "violent",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rude",
+    },
+  ],
+  bold: [
+    {
+      pos: "adj_meaning",
+      meaning: "boastful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "egotistic",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "selfish",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "famous",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "glorious",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+  ],
+  blind: [
+    {
+      pos: "adj_meaning",
+      meaning: "unseen",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unnnoticed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "invisible",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "obscure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mole",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "blunt",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dumb",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "deaf",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "temple",
+    },
+  ],
+  word: [
+    {
+      pos: "noun_meaning",
+      meaning: "praise",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "approval",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "promise",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "honesty",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "curse",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swear word",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "insult",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "threat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "letter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "language",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "letter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "book",
+    },
+  ],
+  dispositon: [
+    {
+      pos: "noun_meaning",
+      meaning: "appearance",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "face",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "expression",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "agreement",
+    },
+  ],
+  personality: [
+    {
+      pos: "noun_meaning",
+      meaning: "inborn characteristic",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trait",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "person",
+    },
+  ],
+  apathetic: [
+    {
+      pos: "adj_meaning",
+      meaning: "having nothing to gain",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "irrelevant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "aloof",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stranger",
+    },
+  ],
+  fix: [
+    {
+      pos: "verb_meaning",
+      meaning: "ascertain",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "figure out",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "deduce",
+    },
+  ],
+  from: [
+    {
+      pos: "adp_meaning",
+      meaning: "of",
+    },
+  ],
+  against: [
+    {
+      pos: "adp_meaning",
+      meaning: "with",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "endure",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "moor",
+    },
+  ],
+  again: [
+    {
+      pos: "adv_meaning",
+      meaning: "still",
+    },
+  ],
+  keep: [
+    {
+      pos: "verb_meaning",
+      meaning: "have",
+    },
+  ],
+ 
+  aquiesce: [
+    {
+      pos: "verb_meaning",
+      meaning: "condescend",
+    },
+  ],
+  schooner: [
+    {
+      pos: "noun_meaning",
+      meaning: "tallship",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fastsailer",
+    },
+  ],
+  brig: [
+    {
+      pos: "noun_meaning",
+      meaning: "two-master",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brigantine",
+    },
+  ],
+  frigate: [
+    {
+      pos: "noun_meaning",
+      meaning: "warship",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cruiser",
+    },
+  ],
+  galleon: [
+    {
+      pos: "noun_meaning",
+      meaning: "grandship",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "treasure ship",
+    },
+  ],
+  longboat: [
+    {
+      pos: "noun_meaning",
+      meaning: "shoreboat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tender",
+    },
+  ],
+  navigate: [
+    {
+      pos: "verb_meaning",
+      meaning: "steer",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "pilot",
+    },
+  ],
+  dock: [
+    {
+      pos: "verb_meaning",
+      meaning: "moor",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "harbour",
+    },
+  ],
+  anchor: [
+    {
+      pos: "verb_meaning",
+      meaning: "fasten",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "hold down",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hookstone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "holdfast",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "choose",
+    },
+  ],
+  launch: [
+    {
+      pos: "verb_meaning",
+      meaning: "send off",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "set afloat",
+    },
+  ],
+  tack: [
+    {
+      pos: "verb_meaning",
+      meaning: "turn windward",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "shift course",
+    },
+  ],
+  jibe: [
+    {
+      pos: "verb_meaning",
+      meaning: "turn leeward",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "swing sail",
+    },
+  ],
+  taste: [
+    {
+      pos: "verb_meaning",
+      meaning: "feel",
+    },
+  ],
+  try: [
+    {
+      pos: "verb_meaning",
+      meaning: "measure",
+    },
+  ],
+  attempt: [
+    {
+      pos: "verb_meaning",
+      meaning: "measure",
+    },
+  ],
+  go: [
+    {
+      pos: "verb_meaning",
+      meaning: "continue",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "become",
+    },
+  ],
+  walk: [
+    {
+      pos: "verb_meaning",
+      meaning: "continue",
+    },
+  ],
+  think: [
+    {
+      pos: "verb_meaning",
+      meaning: "know",
+    },
+  ],
+  consider: [
+    {
+      pos: "verb_meaning",
+      meaning: "know",
+    },
+  ],
+  turn: [
+    {
+      pos: "noun_meaning",
+      meaning: "vertebra",
+    },
+  ],
+  rotate: [
+    {
+      pos: "noun_meaning",
+      meaning: "vertebra",
+    },
+  ],
+  know_how: [
+    {
+      pos: "verb_meaning",
+      meaning: "be able",
+    },
+  ],
+  search: [
+    {
+      pos: "verb_meaning",
+      meaning: "ask in marriage",
+    },
+  ],
+  look_for: [
+    {
+      pos: "verb_meaning",
+      meaning: "ask in marriage",
+    },
+  ],
+  call: [
+    {
+      pos: "verb_meaning",
+      meaning: "wake up",
+    },
+  ],
+  grasp: [
+    {
+      pos: "verb_meaning",
+      meaning: "ache",
+    },
+  ],
+  seize: [
+    {
+      pos: "verb_meaning",
+      meaning: "ache",
+    },
+  ],
+  hat: [
+    {
+      pos: "noun_meaning",
+      meaning: "columbine",
+    },
+  ],
+  salty: [
+    {
+      pos: "adj_meaning",
+      meaning: "tasty",
+    },
+  ],
+  hear: [
+    {
+      pos: "verb_meaning",
+      meaning: "inquire",
+    },
+  ],
+  listen: [
+    {
+      pos: "verb_meaning",
+      meaning: "inquire",
+    },
+  ],
+  remind: [
+    {
+      pos: "verb_meaning",
+      meaning: "be alike",
+    },
+  ],
+  hold: [
+    {
+      pos: "verb_meaning",
+      meaning: "use",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "have",
+    },
+  ],
+
+
+  come: [
+    {
+      pos: "verb_meaning",
+      meaning: "become",
+    },
+  ],
+  come_from: [
+    {
+      pos: "verb_meaning",
+      meaning: "originate",
+    },
+  ],
+  arrive: [
+    {
+      pos: "verb_meaning",
+      meaning: "be able",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "succeed",
+    },
+  ],
+  
+  obtain: [
+    {
+      pos: "verb_meaning",
+      meaning: "give birth",
+    },
+    { pos: "verb_meaning", meaning: "become" },
+    { pos: "verb_meaning", meaning: "have" },
+    { pos: "verb_meaning", meaning: "succeed" },
+  ],
+  reach: [
+    {
+      pos: "verb_meaning",
+      meaning: "turn",
+    },
+  ],
+  wait: [
+    {
+      pos: "adj_meaning",
+      meaning: "pregnant",
+    },
+  ],
+  see: [
+    {
+      pos: "verb_meaning",
+      meaning: "introspect",
+    },
+  ],
+  meet: [
+    {
+      pos: "verb_meaning",
+      meaning: "wrestle",
+    },
+  ],
+  smile: [
+    {
+      pos: "verb_meaning",
+      meaning: "please",
+    },
+  ],
+  want: [
+    {
+      pos: "verb_meaning",
+      meaning: "envy",
+    },
+  ],
+  wander: [
+    {
+      pos: "verb_meaning",
+      meaning: "rob",
+    },
+  ],
+  servant: [
+    {
+      pos: "noun_meaning",
+      meaning: "shepherd",
+    },
+  ],
+  correct: [
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+  ],
+  summer: [
+    {
+      pos: "verb_meaning",
+      meaning: "harvest",
+    },
+  ],
+  burst: [
+    {
+      pos: "verb_meaning",
+      meaning: "give birth",
+    },
+  ],
+  tomorrow: [
+    {
+      pos: "verb_meaning",
+      meaning: "yesterday",
+    },
+  ],
+  pull: [
+    {
+      pos: "verb_meaning",
+      meaning: "bring up",
+    },
+  ],
+  draw: [
+    {
+      pos: "verb_meaning",
+      meaning: "bring up",
+    },
+  ],
+  dig: [
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+  ],
+  sweep: [
+    {
+      pos: "verb_meaning",
+      meaning: "wipe",
+    },
+  ],
+  Turk: [
+    {
+      pos: "noun_meaning",
+      meaning: "dandelion",
+    },
+  ],
+  poor: [
+    {
+      pos: "adj_meaning",
+      meaning: "orphan",
+    },
+  ],
+  needy: [
+    {
+      pos: "adj_meaning",
+      meaning: "rude",
+    },
+  ],
+  go_out: [
+    {
+      pos: "verb_meaning",
+      meaning: "weaken",
+    },
+  ],
+  freeze: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  be_cold: [
+    {
+      pos: "verb_meaning",
+      meaning: "worry",
+    },
+  ],
+  middle: [
+    {
+      pos: "noun_meaning",
+      meaning: "liver",
+    },
+  ],
+  centre: [
+    {
+      pos: "noun_meaning",
+      meaning: "liver",
+    },
+  ],
+  mix: [
+    {
+      pos: "verb_meaning",
+      meaning: "add",
+    },
+  ],
+  stir: [
+    {
+      pos: "verb_meaning",
+      meaning: "add",
+    },
+  ],
+  thief: [
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+  ],
+  shake: [
+    {
+      pos: "verb_meaning",
+      meaning: "astonish",
+    },
+  ],
+  throw: [
+    {
+      pos: "verb_meaning",
+      meaning: "undress",
+    },
+  ],
+  carry: [
+    {
+      pos: "verb_meaning",
+      meaning: "lay eggs",
+    },
+  ],
+  shrink: [
+    {
+      pos: "verb_meaning",
+      meaning: "understand",
+    },
+  ],
+  suffer: [
+    {
+      pos: "verb_meaning",
+      meaning: "be damaged",
+    },
+  ],
+  endure: [
+    {
+      pos: "verb_meaning",
+      meaning: "remember",
+    },
+  ],
+  drag: [
+    {
+      pos: "verb_meaning",
+      meaning: "steal",
+    },
+  ],
+  hazel: [
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+  ],
+  potato: [
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+  ],
+  horn: [
+    {
+      pos: "noun_meaning",
+      meaning: "nostril",
+    },
+  ],
+  crocodile: [
+    {
+      pos: "noun_meaning",
+      meaning: "criminal",
+    },
+  ],
+  radish: [
+    {
+      pos: "noun_meaning",
+      meaning: "carrot",
+    },
+  ],
+  rib: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  drive: [
+    {
+      pos: "verb_meaning",
+      meaning: "plough",
+    },
+  ],
+  return: [
+    {
+      pos: "adv_meaning",
+      meaning: "again",
+    },
+  ],
+  skirt: [
+    {
+      pos: "noun_meaning",
+      meaning: "woman",
+    },
+  ],
+  shoot: [
+    {
+      pos: "verb_meaning",
+      meaning: "throw a lasso",
+    },
+  ],
+  strike: [
+    {
+      pos: "verb_meaning",
+      meaning: "walk",
+    },
+  ],
+  eat: [
+    {
+      pos: "verb_meaning",
+      meaning: "burn",
+    },
+  ],
+  hit: [
+    {
+      pos: "verb_meaning",
+      meaning: "walk",
+    },
+  ],
+  hunt: [
+    {
+      pos: "verb_meaning",
+      meaning: "flirt",
+    },
+  ],
+  braid: [
+    {
+      pos: "noun_meaning",
+      meaning: "spider",
+    },
+  ],
+  plait: [
+    {
+      pos: "noun_meaning",
+      meaning: "spider",
+    },
+  ],
+  weave: [
+    {
+      pos: "noun_meaning",
+      meaning: "spider",
+    },
+  ],
+  press: [
+    {
+      pos: "verb_meaning",
+      meaning: "win",
+    },
+  ],
+  break: [
+    {
+      pos: "verb_meaning",
+      meaning: "run away",
+    },
+  ],
+  track: [
+    {
+      pos: "noun_meaning",
+      meaning: "moose",
+    },
+  ],
+  sleep: [
+    {
+      pos: "noun_meaning",
+      meaning: "pancreas",
+    },
+  ],
+  heel: [
+    {
+      pos: "noun_meaning",
+      meaning: "heel",
+    },
+  ],
+  vomit: [
+    {
+      pos: "verb_meaning",
+      meaning: "curse",
+    },
+  ],
+  interest: [
+    {
+      pos: "verb_meaning",
+      meaning: "respect",
+    },
+  ],
+  bridge: [
+    {
+      pos: "noun_meaning",
+      meaning: "sternum",
+    },
+  ],
+  shadow: [
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+  ],
+  dye: [
+    {
+      pos: "verb_meaning",
+      meaning: "boast",
+    },
+  ],
+  itch: [
+    {
+      pos: "verb_meaning",
+      meaning: "worry",
+    },
+  ],
+  strong: [
+    {
+      pos: "adj_meaning",
+      meaning: "sour",
+    },
+  ],
+  strength: [
+    {
+      pos: "noun_meaning",
+      meaning: "price",
+    },
+  ],
+  broad: [
+    {
+      pos: "adj_meaning",
+      meaning: "long",
+    },
+  ],
+  present: [
+    {
+      pos: "verb_meaning",
+      meaning: "sacrifice",
+    },
+  ],
+  gift: [
+    {
+      pos: "verb_meaning",
+      meaning: "sacrifice",
+    },
+  ],
+  spring: [
+    {
+      pos: "verb_meaning",
+      meaning: "flee",
+    },
+  ],
+  jump: [
+    {
+      pos: "verb_meaning",
+      meaning: "flee",
+    },
+  ],
+  sit: [
+    {
+      pos: "verb_meaning",
+      meaning: "a horse",
+    },
+  ],
+  bowels: [
+    {
+      pos: "noun_meaning",
+      meaning: "worm",
+    },
+  ],
+  die: [
+    {
+      pos: "verb_meaning",
+      meaning: "sick",
+    },
+  ],
+  cover: [
+    {
+      pos: "verb_meaning",
+      meaning: "keep secret",
+    },
+  ],
+  wash: [
+    {
+      pos: "verb_meaning",
+      meaning: "scold",
+    },
+  ],
+  opposite: [
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+  ],
+  understand: [
+    {
+      pos: "verb_meaning",
+      meaning: "have a good relationship",
+    },
+  ],
+  curved: [
+    {
+      pos: "adj_meaning",
+      meaning: "unpleasant",
+    },
+  ],
+  wave: [
+    {
+      pos: "verb_meaning",
+      meaning: "look around",
+    },
+  ],
+  crawl: [
+    {
+      pos: "adj_meaning",
+      meaning: "slippery",
+    },
+  ],
+  float: [
+    {
+      pos: "verb_meaning",
+      meaning: "pass",
+    },
+  ],
+  sad: [
+    {
+      pos: "adj_meaning",
+      meaning: "lazy",
+    },
+  ],
+  people: [
+    {
+      pos: "noun_meaning",
+      meaning: "village",
+    },
+  ],
+  nation: [
+    {
+      pos: "noun_meaning",
+      meaning: "servant",
+    },
+  ],
+  expensive: [
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+  ],
+  sting: [
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  dust: [
+    {
+      pos: "noun_meaning",
+      meaning: "hail",
+    },
+  ],
+  bend: [
+    {
+      pos: "verb_meaning",
+      meaning: "avoid",
+    },
+  ],
+  strew: [
+    {
+      pos: "noun_meaning",
+      meaning: "prose",
+    },
+  ],
+  open: [
+    {
+      pos: "verb_meaning",
+      meaning: "debark",
+    },
+  ],
+  shoulder: [
+    {
+      pos: "noun_meaning",
+      meaning: "friend",
+    },
+  ],
+  god: [
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+  ],
+  pear: [
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+  ],
+  leg: [
+    {
+      pos: "noun_meaning",
+      meaning: "trunk",
+    },
+  ],
+  bind: [
+    {
+      pos: "verb_meaning",
+      meaning: "enter into a contract",
+    },
+  ],
+  look: [
+    {
+      pos: "noun_meaning",
+      meaning: "face",
+    },
+  ],
+  low: [
+    {
+      pos: "adj_meaning",
+      meaning: "small",
+    },
+  ],
+  faeces: [
+    {
+      pos: "noun_meaning",
+      meaning: "berry",
+    },
+  ],
+  spoil: [
+    {
+      pos: "verb_meaning",
+      meaning: "pamper",
+    },
+  ],
+  raise: [
+    {
+      pos: "verb_meaning",
+      meaning: "inter",
+    },
+  ],
+  lift: [
+    {
+      pos: "verb_meaning",
+      meaning: "inter",
+    },
+  ],
+  shallow: [
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+  ],
+  oil: [
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+  ],
+  wound: [
+    {
+      pos: "verb_meaning",
+      meaning: "deceive",
+    },
+  ],
+  touch: [
+    {
+      pos: "verb_meaning",
+      meaning: "hit",
+    },
+  ],
+  suffice: [
+    {
+      pos: "verb_meaning",
+      meaning: "take possession",
+    },
+  ],
+  can: [
+    {
+      pos: "adj_meaning",
+      meaning: "suitable",
+    },
+  ],
+  pursue: [
+    {
+      pos: "verb_meaning",
+      meaning: "recover a debt",
+    },
+  ],
+  joint: [
+    {
+      pos: "noun_meaning",
+      meaning: "sapling",
+    },
+  ],
+  articulation: [
+    {
+      pos: "noun_meaning",
+      meaning: "sapling",
+    },
+  ],
+  heavy: [
+    {
+      pos: "verb_meaning",
+      meaning: "offend",
+    },
+  ],
+  bury: [
+    {
+      pos: "verb_meaning",
+      meaning: "inoculate",
+    },
+  ],
+  read: [
+    {
+      pos: "verb_meaning",
+      meaning: "speak",
+    },
+  ],
+  sleeve: [
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+  ],
+  hide: [
+    {
+      pos: "verb_meaning",
+      meaning: "inter",
+    },
+  ],
+  frozen: [
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+  ],
+  necessary: [
+    {
+      pos: "verb_meaning",
+      meaning: "toilet",
+    },
+  ],
+  stop: [
+    {
+      pos: "verb_meaning",
+      meaning: "doubt",
+    },
+  ],
+  thigh: [
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  hip: [
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  mud: [
+    {
+      pos: "verb_meaning",
+      meaning: "dye",
+    },
+  ],
+  eyelash: [
+    {
+      pos: "noun_meaning",
+      meaning: "eyelid",
+    },
+  ],
+  miserable: [
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+  ],
+  unhappy: [
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+  ],
+  inflated: [
+    {
+      pos: "adj_meaning",
+      meaning: "empty",
+    },
+  ],
+  choke: [
+    {
+      pos: "verb_meaning",
+      meaning: "offend",
+    },
+  ],
+  strangle: [
+    {
+      pos: "verb_meaning",
+      meaning: "offend",
+    },
+  ],
+  shore: [
+    {
+      pos: "noun_meaning",
+      meaning: "river",
+    },
+  ],
+  hump: [
+    {
+      pos: "verb_meaning",
+      meaning: "work",
+    },
+  ],
+  red: [
+    {
+      pos: "adj_meaning",
+      meaning: "raw",
+    },
+  ],
+  catch: [
+    {
+      pos: "verb_meaning",
+      meaning: "fall ill",
+    },
+  ],
+  box: [
+    {
+      pos: "noun_meaning",
+      meaning: "cradle",
+    },
+  ],
+  container: [
+    {
+      pos: "verb_meaning",
+      meaning: "trade",
+    },
+  ],
+  vessel: [
+    {
+      pos: "noun_meaning",
+      meaning: "basin",
+    },
+  ],
+  little: [
+    {
+      pos: "adj_meaning",
+      meaning: "easy",
+    },
+  ],
+  torso: [
+    {
+      pos: "verb_meaning",
+      meaning: "trunk",
+    },
+  ],
+  lid: [
+    {
+      pos: "verb_meaning",
+      meaning: "cover",
+    },
+  ],
+  lip: [
+    {
+      pos: "noun_meaning",
+      meaning: "coast",
+    },
+  ],
+  life: [
+    {
+      pos: "noun_meaning",
+      meaning: "death",
+    },
+  ],
+  speak: [
+    {
+      pos: "verb_meaning",
+      meaning: "bequeath",
+    },
+  ],
+  eyelid: [
+    {
+      pos: "noun_meaning",
+      meaning: "eye",
+    },
+  ],
+  throat: [
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+  ],
+  forelock: [
+    {
+      pos: "noun_meaning",
+      meaning: "hill",
+    },
+  ],
+  occupit: [
+    {
+      pos: "noun_meaning",
+      meaning: "heel",
+    },
+  ],
+  tongue: [
+    {
+      pos: "noun_meaning",
+      meaning: "spleen",
+    },
+  ],
+  skin: [
+    {
+      pos: "noun_meaning",
+      meaning: "person",
+    },
+  ],
+  pay: [
+    {
+      pos: "verb_meaning",
+      meaning: "award",
+    },
+  ],
+  close: [
+    {
+      pos: "verb_meaning",
+      meaning: "consequently",
+    },
+  ],
+  pocket: [
+    {
+      pos: "noun_meaning",
+      meaning: "wealth",
+    },
+  ],
+  human: [
+    {
+      pos: "noun_meaning",
+      meaning: "uvula",
+    },
+  ],
+  enter: [
+    {
+      pos: "verb_meaning",
+      meaning: "clothe",
+    },
+  ],
+  cross: [
+    {
+      pos: "noun_meaning",
+      meaning: "sacrum",
+    },
+  ],
+  traverse: [
+    {
+      pos: "verb_meaning",
+      meaning: "exceed",
+    },
+  ],
+  son: [
+    {
+      pos: "noun_meaning",
+      meaning: "womb",
+    },
+  ],
+  girl: [
+    {
+      pos: "noun_meaning",
+      meaning: "fish",
+    },
+  ],
+  disappear: [
+    {
+      pos: "verb_meaning",
+      meaning: "decide",
+    },
+  ],
+  sky: [
+    {
+      pos: "noun_meaning",
+      meaning: "iron",
+    },
+  ],
+  crockery: [
+    {
+      pos: "noun_meaning",
+      meaning: "face",
+    },
+  ],
+  inhabit: [
+    {
+      pos: "verb_meaning",
+      meaning: "plough",
+    },
+  ],
+  live: [
+    {
+      pos: "verb_meaning",
+      meaning: "recover from illness",
+    },
+  ],
+  pleasure: [
+    {
+      pos: "verb_meaning",
+      meaning: "benefit",
+    },
+  ],
+  timber: [
+    {
+      pos: "noun_meaning",
+      meaning: "forest",
+    },
+  ],
+  firewood: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  road: [
+    {
+      pos: "noun_meaning",
+      meaning: "caravan",
+    },
+  ],
+  kill: [
+    {
+      pos: "verb_meaning",
+      meaning: "waste",
+    },
+  ],
+  lose: [
+    {
+      pos: "verb_meaning",
+      meaning: "inter",
+    },
+  ],
+  fang: [
+    {
+      pos: "noun_meaning",
+      meaning: "maple",
+    },
+  ],
+  shame: [
+    {
+      pos: "noun_meaning",
+      meaning: "defect",
+    },
+  ],
+  glass: [
+    {
+      pos: "noun_meaning",
+      meaning: "lens",
+    },
+  ],
+  window: [
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+  ],
+  ripen: [
+    {
+      pos: "adj_meaning",
+      meaning: "ready",
+    },
+  ],
+  burn: [
+    {
+      pos: "verb_meaning",
+      meaning: "frostbite",
+    },
+  ],
+  load: [
+    {
+      pos: "verb_meaning",
+      meaning: "charge",
+    },
+  ],
+  castrate: [
+    {
+      pos: "verb_meaning",
+      meaning: "take out",
+    },
+  ],
+  liquid: [
+    {
+      pos: "adj_meaning",
+      meaning: "smooth",
+    },
+  ],
+  shout: [
+    {
+      pos: "verb_meaning",
+      meaning: "sing",
+    },
+  ],
+  tin: [
+    {
+      pos: "verb_meaning",
+      meaning: "scold",
+    },
+  ],
+  slaughter: [
+    {
+      pos: "verb_meaning",
+      meaning: "deceive",
+    },
+  ],
+  soul: [
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+  ],
+  spirit: [
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+  ],
+  breathing: [
+    {
+      pos: "noun_meaning",
+      meaning: "spell",
+    },
+  ],
+  doll: [
+    {
+      pos: "noun_meaning",
+      meaning: "larva",
+    },
+  ],
+  pumpkin: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  artiodactyl: [
+    {
+      pos: "noun_meaning",
+      meaning: "woman",
+    },
+  ],
+  air: [
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+  ],
+  "rolling-pin": [
+    {
+      pos: "noun_meaning",
+      meaning: "arrow",
+    },
+  ],
+  whet: [
+    {
+      pos: "verb_meaning",
+      meaning: "improve",
+    },
+  ],
+  plank: [
+    {
+      pos: "noun_meaning",
+      meaning: "plate",
+    },
+  ],
+  paper: [
+    {
+      pos: "verb_meaning",
+      meaning: "read",
+    },
+  ],
+  juice: [
+    {
+      pos: "noun_meaning",
+      meaning: "soup",
+    },
+  ],
+  grain: [
+    {
+      pos: "noun_meaning",
+      meaning: "pupil",
+    },
+  ],
+  stick: [
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  adhere: [
+    {
+      pos: "verb_meaning",
+      meaning: "become infected",
+    },
+  ],
+  behind: [
+    {
+      pos: "adv_meaning",
+      meaning: "afterwards",
+    },
+  ],
+  durable: [
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+  ],
+  solid: [
+    {
+      pos: "adj_meaning",
+      meaning: "long",
+    },
+  ],
+  measure: [
+    {
+      pos: "verb_meaning",
+      meaning: "consider",
+    },
+  ],
+  lead: [
+    {
+      pos: "noun_meaning",
+      meaning: "mirror",
+    },
+  ],
+  weigh: [
+    {
+      pos: "verb_meaning",
+      meaning: "consider",
+    },
+  ],
+  spot: [
+    {
+      pos: "noun_meaning",
+      meaning: "place",
+    },
+  ],
+  stain: [
+    {
+      pos: "noun_meaning",
+      meaning: "place",
+    },
+  ],
+  fill: [
+    {
+      pos: "verb_meaning",
+      meaning: "load",
+    },
+  ],
+  brilliant: [
+    {
+      pos: "adj_meaning",
+      meaning: "loud",
+    },
+  ],
+  glaring: [
+    {
+      pos: "adj_meaning",
+      meaning: "loud",
+    },
+  ],
+  moisten: [
+    {
+      pos: "verb_meaning",
+      meaning: "snow",
+    },
+  ],
+  shine: [
+    {
+      pos: "verb_meaning",
+      meaning: "get angry",
+    },
+  ],
+  glitter: [
+    {
+      pos: "verb_meaning",
+      meaning: "get angry",
+    },
+  ],
+  cut: [
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+  ],
+  womb: [
+    {
+      pos: "noun_meaning",
+      meaning: "stomach",
+    },
+  ],
+  uterus: [
+    {
+      pos: "adj_meaning",
+      meaning: "pregnant",
+    },
+  ],
+  judge: [
+    {
+      pos: "verb_meaning",
+      meaning: "rule",
+    },
+  ],
+  honey: [
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+  ],
+  breathe: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  time: [
+    {
+      pos: "noun_meaning",
+      meaning: "death",
+    },
+  ],
+  grass: [
+    {
+      pos: "noun_meaning",
+      meaning: "poison",
+    },
+  ],
+  herb: [
+    {
+      pos: "noun_meaning",
+      meaning: "poison",
+    },
+  ],
+  uneven: [
+    {
+      pos: "adj_meaning",
+      meaning: "sour",
+    },
+  ],
+  earth: [
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+  ],
+  wax: [
+    {
+      pos: "adj_meaning",
+      meaning: "yellow",
+    },
+  ],
+  tread: [
+    {
+      pos: "verb_meaning",
+      meaning: "infringe",
+    },
+  ],
+  gold: [
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+  ],
+  grind: [
+    {
+      pos: "verb_meaning",
+      meaning: "drill",
+    },
+  ],
+  saffron: [
+    {
+      pos: "adj_meaning",
+      meaning: "yellow",
+    },
+  ],
+  take: [
+    {
+      pos: "verb_meaning",
+      meaning: "win",
+    },
+  ],
+  grow: [
+    {
+      pos: "noun_meaning",
+      meaning: "plant",
+    },
+  ],
+  bright: [
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+  ],
+  guest: [
+    {
+      pos: "noun_meaning",
+      meaning: "friend",
+    },
+  ],
+  revenge: [
+    {
+      pos: "noun_meaning",
+      meaning: "passion",
+    },
+  ],
+  feed: [
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  show: [
+    {
+      pos: "verb_meaning",
+      meaning: "teach",
+    },
+  ],
+  indicate: [
+    {
+      pos: "verb_meaning",
+      meaning: "teach",
+    },
+  ],
+  salt: [
+    {
+      pos: "verb_meaning",
+      meaning: "dishonor",
+    },
+  ],
+  put: [
+    {
+      pos: "verb_meaning",
+      meaning: "name",
+    },
+  ],
+  black: [
+    {
+      pos: "noun_meaning",
+      meaning: "sadness",
+    },
+  ],
+  nomadize: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  stand: [
+    {
+      pos: "verb_meaning",
+      meaning: "know",
+    },
+  ],
+  cheek: [
+    {
+      pos: "noun_meaning",
+      meaning: "ploughshare",
+    },
+  ],
+  smear: [
+    {
+      pos: "verb_meaning",
+      meaning: "miss the target",
+    },
+  ],
+  anoint: [
+    {
+      pos: "verb_meaning",
+      meaning: "miss the target",
+    },
+  ],
+  rice: [
+    {
+      pos: "noun_meaning",
+      meaning: "wheat",
+    },
+  ],
+  food: [
+    {
+      pos: "noun_meaning",
+      meaning: "pasture",
+    },
+  ],
+  paint: [
+    {
+      pos: "verb_meaning",
+      meaning: "tell lies",
+    },
+  ],
+  husband: [
+    {
+      pos: "noun_meaning",
+      meaning: "big",
+    },
+  ],
+  fearful: [
+    {
+      pos: "adj_meaning",
+      meaning: "unpleasant",
+    },
+  ],
+  dreadful: [
+    {
+      pos: "adj_meaning",
+      meaning: "unpleasant",
+    },
+  ],
+  horse: [
+    {
+      pos: "noun_meaning",
+      meaning: "bison",
+    },
+  ],
+  bite: [
+    {
+      pos: "verb_meaning",
+      meaning: "rend",
+    },
+  ],
+  tame: [
+    {
+      pos: "verb_meaning",
+      meaning: "kill",
+    },
+  ],
+  ask: [
+    {
+      pos: "verb_meaning",
+      meaning: "study",
+    },
+  ],
+  inquire: [
+    {
+      pos: "verb_meaning",
+      meaning: "study",
+    },
+  ],
+  request: [
+    {
+      pos: "verb_meaning",
+      meaning: "want",
+    },
+  ],
+  have: [
+    {
+      pos: "verb_meaning",
+      meaning: "carry",
+    },
+  ],
+  possess: [
+    {
+      pos: "verb_meaning",
+      meaning: "carry",
+    },
+  ],
+  wife: [
+    {
+      pos: "verb_meaning",
+      meaning: "take a wife",
+    },
+  ],
+  strain: [
+    {
+      pos: "verb_meaning",
+      meaning: "prepare",
+    },
+  ],
+  hope: [
+    {
+      pos: "verb_meaning",
+      meaning: "request",
+    },
+  ],
+  linger: [
+    {
+      pos: "verb_meaning",
+      meaning: "live",
+    },
+  ],
+  sack: [
+    {
+      pos: "noun_meaning",
+      meaning: "cochlea",
+    },
+  ],
+  thrust: [
+    {
+      pos: "verb_meaning",
+      meaning: "scold",
+    },
+  ],
+  push: [
+    {
+      pos: "verb_meaning",
+      meaning: "bribe",
+    },
+  ],
+  bloom: [
+    {
+      pos: "verb_meaning",
+      meaning: "brood",
+    },
+  ],
+  flourish: [
+    {
+      pos: "verb_meaning",
+      meaning: "blossom",
+    },
+  ],
+  prosper: [
+    {
+      pos: "verb_meaning",
+      meaning: "blossom",
+    },
+  ],
+  blossom: [
+    {
+      pos: "verb_meaning",
+      meaning: "brood",
+    },
+  ],
+  key: [
+    {
+      pos: "noun_meaning",
+      meaning: "clavicle",
+    },
+  ],
+  trunk: [
+    {
+      pos: "noun_meaning",
+      meaning: "turkey",
+    },
+  ],
+  stork: [
+    {
+      pos: "noun_meaning",
+      meaning: "heron",
+    },
+  ],
+  weaken: [
+    {
+      pos: "verb_meaning",
+      meaning: "fold",
+    },
+  ],
+  backwards: [
+    {
+      pos: "adv_meaning",
+      meaning: "again",
+    },
+  ],
+  price: [
+    {
+      pos: "noun_meaning",
+      meaning: "honour",
+    },
+  ],
+  squirrel: [
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+  ],
+  insect: [
+    {
+      pos: "noun_meaning",
+      meaning: "gnat",
+    },
+  ],
+  cotton: [
+    {
+      pos: "verb_meaning",
+      meaning: "grow numb",
+    },
+  ],
+  stink: [
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+  ],
+  instrument: [
+    {
+      pos: "noun_meaning",
+      meaning: "weapon",
+    },
+  ],
+  tool: [
+    {
+      pos: "noun_meaning",
+      meaning: "weapon",
+    },
+  ],
+  stingy: [
+    {
+      pos: "adj_meaning",
+      meaning: "deaf",
+    },
+  ],
+  defecate: [
+    {
+      pos: "verb_meaning",
+      meaning: "damage",
+    },
+  ],
+  side: [
+    {
+      pos: "adj_meaning",
+      meaning: "half",
+    },
+  ],
+  plumbum: [
+    {
+      pos: "noun_meaning",
+      meaning: "mirror",
+    },
+  ],
+  feel: [
+    {
+      pos: "verb_meaning",
+      meaning: "know",
+    },
+  ],
+  world: [
+    {
+      pos: "noun_meaning",
+      meaning: "god",
+    },
+  ],
+  check: [
+    {
+      pos: "verb_meaning",
+      meaning: "try on",
+    },
+  ],
+  test: [
+    {
+      pos: "verb_meaning",
+      meaning: "have experience",
+    },
+  ],
+  pelican: [
+    {
+      pos: "noun_meaning",
+      meaning: "heron",
+    },
+  ],
+  untie: [
+    {
+      pos: "verb_meaning",
+      meaning: "abolish",
+    },
+  ],
+  unbind: [
+    {
+      pos: "verb_meaning",
+      meaning: "abolish",
+    },
+  ],
+  guilt: [
+    {
+      pos: "verb_meaning",
+      meaning: "be in debt",
+    },
+  ],
+  guilty: [
+    {
+      pos: "verb_meaning",
+      meaning: "be in debt",
+    },
+  ],
+  sea: [
+    {
+      pos: "noun_meaning",
+      meaning: "coast",
+    },
+  ],
+  end: [
+    {
+      pos: "adv_meaning",
+      meaning: "afterwards",
+    },
+  ],
+  finish: [
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+  ],
+  neigh: [
+    {
+      pos: "verb_meaning",
+      meaning: "laugh",
+    },
+  ],
+  knock: [
+    {
+      pos: "verb_meaning",
+      meaning: "let know",
+    },
+  ],
+  mask: [
+    {
+      pos: "noun_meaning",
+      meaning: "larva",
+    },
+  ],
+  shave: [
+    {
+      pos: "verb_meaning",
+      meaning: "civilize",
+    },
+  ],
+  sow: [
+    {
+      pos: "verb_meaning",
+      meaning: "grind",
+    },
+  ],
+  bridle: [
+    {
+      pos: "verb_meaning",
+      meaning: "subjugate",
+    },
+  ],
+  copper: [
+    {
+      pos: "verb_meaning",
+      meaning: "lead",
+    },
+  ],
+  calm: [
+    {
+      pos: "adj_meaning",
+      meaning: "adult",
+    },
+  ],
+  mortal: [
+    {
+      pos: "noun_meaning",
+      meaning: "person",
+    },
+  ],
+  mute: [
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  work: [
+    {
+      pos: "verb_meaning",
+      meaning: "attempt",
+    },
+  ],
+  plough: [
+    {
+      pos: "noun_meaning",
+      meaning: "moose",
+    },
+  ],
+  tremble: [
+    {
+      pos: "verb_meaning",
+      meaning: "glimmer",
+    },
+  ],
+  give: [
+    {
+      pos: "verb_meaning",
+      meaning: "advise",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "cause",
+    },
+  ],
+  ache: [
+    {
+      pos: "verb_meaning",
+      meaning: "worry",
+    },
+  ],
+  crane: [
+    {
+      pos: "noun_meaning",
+      meaning: "pike",
+    },
+  ],
+  fruit: [
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  boil: [
+    {
+      pos: "verb_meaning",
+      meaning: "boil",
+    },
+  ],
+  hoof: [
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+  ],
+  knee: [
+    {
+      pos: "noun_meaning",
+      meaning: "tribe",
+    },
+  ],
+  approach: [
+    {
+      pos: "verb_meaning",
+      meaning: "be enough",
+    },
+  ],
+  frog: [
+    {
+      pos: "noun_meaning",
+      meaning: "bat",
+    },
+  ],
+  swelling: [
+    {
+      pos: "noun_meaning",
+      meaning: "truffle",
+    },
+  ],
+  kick: [
+    {
+      pos: "verb_meaning",
+      meaning: "dig",
+    },
+  ],
+  hill: [
+    {
+      pos: "noun_meaning",
+      meaning: "grave",
+    },
+  ],
+  ceiling: [
+    {
+      pos: "noun_meaning",
+      meaning: "palate",
+    },
+  ],
+  defend: [
+    {
+      pos: "verb_meaning",
+      meaning: "act according to",
+    },
+  ],
+  prohibit: [
+    {
+      pos: "noun_meaning",
+      meaning: "pig",
+    },
+  ],
+  maize: [
+    {
+      pos: "noun_meaning",
+      meaning: "cone",
+    },
+  ],
+  cough: [
+    {
+      pos: "verb_meaning",
+      meaning: "be afraid",
+    },
+  ],
+  become: [
+    {
+      pos: "verb_meaning",
+      meaning: "be able",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be",
+    },
+  ],
+  tear: [
+    {
+      pos: "verb_meaning",
+      meaning: "ache",
+    },
+  ],
+  rend: [
+    {
+      pos: "verb_meaning",
+      meaning: "cut off relationships",
+    },
+  ],
+  pinch: [
+    {
+      pos: "verb_meaning",
+      meaning: "pluck",
+    },
+  ],
+  feather: [
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+  ],
+  regret: [
+    {
+      pos: "verb_meaning",
+      meaning: "revenge",
+    },
+  ],
+  intend: [
+    {
+      pos: "verb_meaning",
+      meaning: "hope",
+    },
+  ],
+  rusty: [
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  stove: [
+    {
+      pos: "noun_meaning",
+      meaning: "house",
+    },
+  ],
+  kiss: [
+    {
+      pos: "verb_meaning",
+      meaning: "collide",
+    },
+  ],
+  part: [
+    {
+      pos: "adj_meaning",
+      meaning: "half",
+    },
+  ],
+  stomach: [
+    {
+      pos: "verb_meaning",
+      meaning: "taste",
+    },
+  ],
+  pour: [
+    {
+      pos: "verb_meaning",
+      meaning: "snow",
+    },
+  ],
+  bast: [
+    {
+      pos: "noun_meaning",
+      meaning: "skull",
+    },
+  ],
+  many: [
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+  ],
+  much: [
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+  ],
+  pus: [
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+  ],
+  dew: [
+    {
+      pos: "noun_meaning",
+      meaning: "drop",
+    },
+  ],
+  closed: [
+    {
+      pos: "adj_meaning",
+      meaning: "dark",
+    },
+  ],
+  bride: [
+    {
+      pos: "noun_meaning",
+      meaning: "poppy",
+    },
+  ],
+  inter: [
+    {
+      pos: "verb_meaning",
+      meaning: "annihilate",
+    },
+  ],
+  grandfather: [
+    {
+      pos: "noun_meaning",
+      meaning: "uncle",
+    },
+  ],
+  spade: [
+    {
+      pos: "verb_meaning",
+      meaning: "tooth",
+    },
+  ],
+  shovel: [
+    {
+      pos: "verb_meaning",
+      meaning: "tooth",
+    },
+  ],
+  soiled: [
+    {
+      pos: "verb_meaning",
+      meaning: "become infected",
+    },
+  ],
+  wrist: [
+    {
+      pos: "noun_meaning",
+      meaning: "ankle",
+    },
+  ],
+  bull: [
+    {
+      pos: "noun_meaning",
+      meaning: "mammoth",
+    },
+  ],
+  quick: [
+    {
+      pos: "adj_meaning",
+      meaning: "early",
+    },
+  ],
+  sing: [
+    {
+      pos: "verb_meaning",
+      meaning: "talk nonsense",
+    },
+  ],
+  sway: [
+    {
+      pos: "verb_meaning",
+      meaning: "masturbate",
+    },
+  ],
+  tie: [
+    {
+      pos: "verb_meaning",
+      meaning: "block",
+    },
+  ],
+  follow: [
+    {
+      pos: "verb_meaning",
+      meaning: "recompense",
+    },
+  ],
+  hawk: [
+    {
+      pos: "noun_meaning",
+      meaning: "hawkweed",
+    },
+  ],
+  foam: [
+    {
+      pos: "verb_meaning",
+      meaning: "get angry",
+    },
+  ],
+  abundance: [
+    {
+      pos: "verb_meaning",
+      meaning: "harvest",
+    },
+  ],
+  harvest: [
+    {
+      pos: "verb_meaning",
+      meaning: "year",
+    },
+  ],
+  darling: [
+    {
+      pos: "noun_meaning",
+      meaning: "expensive",
+    },
+  ],
+  frequent: [
+    {
+      pos: "noun_meaning",
+      meaning: "hair",
+    },
+  ],
+  disdain: [
+    {
+      pos: "verb_meaning",
+      meaning: "despair",
+    },
+  ],
+  drug: [
+    {
+      pos: "verb_meaning",
+      meaning: "help",
+    },
+  ],
+  help: [
+    {
+      pos: "verb_meaning",
+      meaning: "cast a spell",
+    },
+  ],
+  medicine: [
+    {
+      pos: "verb_meaning",
+      meaning: "help",
+    },
+  ],
+  river: [
+    {
+      pos: "noun_meaning",
+      meaning: "otter",
+    },
+  ],
+  greedy: [
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+  ],
+  drink: [
+    {
+      pos: "verb_meaning",
+      meaning: "drink alcohol",
+    },
+  ],
+  lie: [
+    {
+      pos: "verb_meaning",
+      meaning: "be imprisoned",
+    },
+  ],
+  harness: [
+    {
+      pos: "noun_meaning",
+      meaning: "snare",
+    },
+  ],
+  ravine: [
+    {
+      pos: "noun_meaning",
+      meaning: "steppe",
+    },
+  ],
+  remain: [
+    {
+      pos: "verb_meaning",
+      meaning: "stop doing something.",
+    },
+  ],
+  stay: [
+    {
+      pos: "verb_meaning",
+      meaning: "stop doing something.",
+    },
+  ],
+  soldier: [
+    {
+      pos: "noun_meaning",
+      meaning: "son",
+    },
+  ],
+  owl: [
+    {
+      pos: "noun_meaning",
+      meaning: "bat",
+    },
+  ],
+  tail: [
+    {
+      pos: "noun_meaning",
+      meaning: "scorpion",
+    },
+  ],
+  pasture: [
+    {
+      pos: "verb_meaning",
+      meaning: "guard",
+    },
+  ],
+  gate: [
+    {
+      pos: "verb_meaning",
+      meaning: "city",
+    },
+  ],
+  play: [
+    {
+      pos: "verb_meaning",
+      meaning: "glimmer",
+    },
+  ],
+  respect: [
+    {
+      pos: "verb_meaning",
+      meaning: "act according to",
+    },
+  ],
+  "dock-tailed": [
+    {
+      pos: "adj_meaning",
+      meaning: "old",
+    },
+  ],
+  tailless: [
+    {
+      pos: "adj_meaning",
+      meaning: "old",
+    },
+  ],
+  disgusting: [
+    {
+      pos: "noun_meaning",
+      meaning: "snake",
+    },
+  ],
+  rust: [
+    {
+      pos: "noun_meaning",
+      meaning: "defect",
+    },
+  ],
+  grief: [
+    {
+      pos: "verb_meaning",
+      meaning: "feel pity",
+    },
+  ],
+  sorrow: [
+    {
+      pos: "verb_meaning",
+      meaning: "feel pity",
+    },
+  ],
+  iron: [
+    {
+      pos: "verb_meaning",
+      meaning: "lead",
+    },
+  ],
+  sieve: [
+    {
+      pos: "noun_meaning",
+      meaning: "dragonfly",
+    },
+  ],
+  let: [
+    {
+      pos: "verb_meaning",
+      meaning: "praise",
+    },
+  ],
+  leave: [
+    {
+      pos: "verb_meaning",
+      meaning: "begin",
+    },
+  ],
+  defeat: [
+    {
+      pos: "verb_meaning",
+      meaning: "miss the target",
+    },
+  ],
+  win: [
+    {
+      pos: "verb_meaning",
+      meaning: "miss the target",
+    },
+  ],
+  bile: [
+    {
+      pos: "noun_meaning",
+      meaning: "sadness",
+    },
+  ],
+  tight: [
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+  ],
+  taut: [
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+  ],
+  muzzle: [
+    {
+      pos: "noun_meaning",
+      meaning: "face",
+    },
+  ],
+  suck: [
+    {
+      pos: "verb_meaning",
+      meaning: "lick",
+    },
+  ],
+  untamed: [
+    {
+      pos: "adj_meaning",
+      meaning: "rude",
+    },
+  ],
+  birthmark: [
+    {
+      pos: "noun_meaning",
+      meaning: "mold",
+    },
+  ],
+  smell: [
+    {
+      pos: "verb_meaning",
+      meaning: "perfume",
+    },
+  ],
+  adorn: [
+    {
+      pos: "verb_meaning",
+      meaning: "circumcise",
+    },
+  ],
+  decorate: [
+    {
+      pos: "verb_meaning",
+      meaning: "circumcise",
+    },
+  ],
+  Romani: [
+    {
+      pos: "verb_meaning",
+      meaning: "steal",
+    },
+  ],
+  moisture: [
+    {
+      pos: "verb_meaning",
+      meaning: "benefit",
+    },
+  ],
+  sprinkle: [
+    {
+      pos: "verb_meaning",
+      meaning: "cut",
+    },
+  ],
+  threshold: [
+    {
+      pos: "noun_meaning",
+      meaning: "rapids",
+    },
+  ],
+  bring: [
+    {
+      pos: "verb_meaning",
+      meaning: "cause",
+    },
+  ],
+  dive: [
+    {
+      pos: "verb_meaning",
+      meaning: "appear for a moment",
+    },
+  ],
+  blue: [
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+  ],
+  skill: [
+    {
+      pos: "noun_meaning",
+      meaning: "memory",
+    },
+  ],
+  add: [
+    {
+      pos: "verb_meaning",
+      meaning: "force to move on",
+    },
+  ],
+  aid: [
+    {
+      pos: "verb_meaning",
+      meaning: "cast a spell",
+    },
+  ],
+  write: [
+    {
+      pos: "verb_meaning",
+      meaning: "command",
+    },
+  ],
+  refuse: [
+    {
+      pos: "verb_meaning",
+      meaning: "dislike",
+    },
+  ],
+  dislike: [
+    {
+      pos: "verb_meaning",
+      meaning: "slander",
+    },
+  ],
+  repeat: [
+    {
+      pos: "verb_meaning",
+      meaning: "study",
+    },
+  ],
+  contain: [
+    {
+      pos: "verb_meaning",
+      meaning: "remember",
+    },
+  ],
+  squeeze: [
+    {
+      pos: "verb_meaning",
+      meaning: "shoot",
+    },
+  ],
+  separate: [
+    {
+      pos: "adj_meaning",
+      meaning: "holy",
+    },
+  ],
+  hang: [
+    {
+      pos: "verb_meaning",
+      meaning: "indicate",
+    },
+  ],
+  cartilage: [
+    {
+      pos: "noun_meaning",
+      meaning: "tin",
+    },
+  ],
+  conversation: [
+    {
+      pos: "noun_meaning",
+      meaning: "language",
+    },
+  ],
+  gaiety: [
+    {
+      pos: "noun_meaning",
+      meaning: "wedding",
+    },
+  ],
+  bypass: [
+    {
+      pos: "verb_meaning",
+      meaning: "evade",
+    },
+  ],
+  dislocate: [
+    {
+      pos: "verb_meaning",
+      meaning: "go mad",
+    },
+  ],
+  mad: [
+    {
+      pos: "adj_meaning",
+      meaning: "wild",
+    },
+  ],
+  insane: [
+    {
+      pos: "adj_meaning",
+      meaning: "wild",
+    },
+  ],
+  steep: [
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+  ],
+  pierce: [
+    {
+      pos: "verb_meaning",
+      meaning: "enter",
+    },
+  ],
+  abandon: [
+    {
+      pos: "verb_meaning",
+      meaning: "begin",
+    },
+  ],
+  Sun: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  crackle: [
+    {
+      pos: "verb_meaning",
+      meaning: "eat",
+    },
+  ],
+  gnaw: [
+    {
+      pos: "verb_meaning",
+      meaning: "bite",
+    },
+  ],
+  armpit: [
+    {
+      pos: "verb_meaning",
+      meaning: "tickle",
+    },
+  ],
+  stupid: [
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  tribe: [
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+  ],
+  fountain: [
+    {
+      pos: "noun_meaning",
+      meaning: "origin",
+    },
+  ],
+  mangy: [
+    {
+      pos: "noun_meaning",
+      meaning: "field scabious",
+    },
+  ],
+  scabby: [
+    {
+      pos: "noun_meaning",
+      meaning: "field scabious",
+    },
+  ],
+  cackle: [
+    {
+      pos: "verb_meaning",
+      meaning: "speak",
+    },
+  ],
+  cluck: [
+    {
+      pos: "verb_meaning",
+      meaning: "speak",
+    },
+  ],
+  bud: [
+    {
+      pos: "noun_meaning",
+      meaning: "fish",
+    },
+  ],
+  "squint-eyed": [
+    {
+      pos: "noun_meaning",
+      meaning: "hare",
+    },
+  ],
+  mosquito: [
+    {
+      pos: "noun_meaning",
+      meaning: "nettle",
+    },
+  ],
+  gnat: [
+    {
+      pos: "noun_meaning",
+      meaning: "nettle",
+    },
+  ],
+  corpse: [
+    {
+      pos: "verb_meaning",
+      meaning: "grow numb",
+    },
+  ],
+  overcoat: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  make: [
+    {
+      pos: "verb_meaning",
+      meaning: "give birth",
+    },
+  ],
+  create: [
+    {
+      pos: "verb_meaning",
+      meaning: "give birth",
+    },
+  ],
+  silver: [
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+  ],
+  money: [
+    {
+      pos: "noun_meaning",
+      meaning: "gold",
+    },
+  ],
+  greasy: [
+    {
+      pos: "noun_meaning",
+      meaning: "cream",
+    },
+  ],
+  locked: [
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+  ],
+  canopy: [
+    {
+      pos: "verb_meaning",
+      meaning: "defend",
+    },
+  ],
+  rest: [
+    {
+      pos: "verb_meaning",
+      meaning: "sleep",
+    },
+  ],
+  awaken: [
+    {
+      pos: "verb_meaning",
+      meaning: "keep a fire burning",
+    },
+  ],
+  muddy: [
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+  ],
+  turbid: [
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+  ],
+  opaque: [
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+  ],
+  equal: [
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+  ],
+  identical: [
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+  ],
+  "powder-like": [
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+  ],
+  kindle: [
+    {
+      pos: "verb_meaning",
+      meaning: "torch fishing",
+    },
+  ],
+  shut: [
+    {
+      pos: "verb_meaning",
+      meaning: "consequently",
+    },
+  ],
+  colour: [
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+  ],
+  bread: [
+    {
+      pos: "noun_meaning",
+      meaning: "liver",
+    },
+  ],
+  owner: [
+    {
+      pos: "noun_meaning",
+      meaning: "merchant",
+    },
+  ],
+  hew: [
+    {
+      pos: "verb_meaning",
+      meaning: "hit",
+    },
+  ],
+  build: [
+    {
+      pos: "verb_meaning",
+      meaning: "pretend",
+    },
+  ],
+  sand: [
+    {
+      pos: "noun_meaning",
+      meaning: "sugar",
+    },
+  ],
+  monkey: [
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+  ],
+  coward: [
+    {
+      pos: "noun_meaning",
+      meaning: "cat",
+    },
+  ],
+  quarrel: [
+    {
+      pos: "verb_meaning",
+      meaning: "bargain",
+    },
+  ],
+  monster: [
+    {
+      pos: "noun_meaning",
+      meaning: "whale",
+    },
+  ],
+  fear: [
+    {
+      pos: "verb_meaning",
+      meaning: "look after",
+    },
+  ],
+  camp: [
+    {
+      pos: "noun_meaning",
+      meaning: "bearing",
+    },
+  ],
+  sprout: [
+    {
+      pos: "noun_meaning",
+      meaning: "descendant",
+    },
+  ],
+  "finger-ring": [
+    {
+      pos: "noun_meaning",
+      meaning: "vertebra",
+    },
+  ],
+  opening: [
+    {
+      pos: "noun_meaning",
+      meaning: "lamprey",
+    },
+  ],
+  hole: [
+    {
+      pos: "noun_meaning",
+      meaning: "lamprey",
+    },
+  ],
+  ugly: [
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  remember: [
+    {
+      pos: "verb_meaning",
+      meaning: "feel",
+    },
+  ],
+  metal: [
+    {
+      pos: "noun_meaning",
+      meaning: "axe",
+    },
+  ],
+  stump: [
+    {
+      pos: "noun_meaning",
+      meaning: "thumb",
+    },
+  ],
+  chew: [
+    {
+      pos: "verb_meaning",
+      meaning: "disregard",
+    },
+  ],
+  lower: [
+    {
+      pos: "verb_meaning",
+      meaning: "kill",
+    },
+  ],
+  do: [
+    {
+      pos: "verb_meaning",
+      meaning: "treat",
+    },
+  ],
+  act: [
+    {
+      pos: "verb_meaning",
+      meaning: "treat",
+    },
+  ],
+  answer: [
+    {
+      pos: "verb_meaning",
+      meaning: "obey",
+    },
+  ],
+  sick: [
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+  ],
+  ill: [
+    {
+      pos: "adj_meaning",
+      meaning: "poor",
+    },
+  ],
+  jewelry: [
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  mist: [
+    {
+      pos: "noun_meaning",
+      meaning: "cloud",
+    },
+  ],
+  fog: [
+    {
+      pos: "noun_meaning",
+      meaning: "cloud",
+    },
+  ],
+  rub: [
+    {
+      pos: "verb_meaning",
+      meaning: "bother",
+    },
+  ],
+  winter: [
+    {
+      pos: "noun_meaning",
+      meaning: "fog",
+    },
+  ],
+  croak: [
+    {
+      pos: "verb_meaning",
+      meaning: "predict misfortune",
+    },
+  ],
+  greet: [
+    {
+      pos: "verb_meaning",
+      meaning: "kiss",
+    },
+  ],
+  August: [
+    {
+      pos: "verb_meaning",
+      meaning: "harvest",
+    },
+  ],
+  arc: [
+    {
+      pos: "noun_meaning",
+      meaning: "bow",
+    },
+  ],
+  cord: [
+    {
+      pos: "verb_meaning",
+      meaning: "braid",
+    },
+  ],
+  pole: [
+    {
+      pos: "noun_meaning",
+      meaning: "oak",
+    },
+  ],
+  "pine-tree": [
+    {
+      pos: "noun_meaning",
+      meaning: "larch",
+    },
+  ],
+  aspen: [
+    {
+      pos: "noun_meaning",
+      meaning: "elm",
+    },
+  ],
+  poplar: [
+    {
+      pos: "noun_meaning",
+      meaning: "tree",
+    },
+  ],
+  shadberry: [
+    {
+      pos: "noun_meaning",
+      meaning: "honeysuckle",
+    },
+  ],
+  hornbeam: [
+    {
+      pos: "noun_meaning",
+      meaning: "beech",
+    },
+  ],
+  leek: [
+    {
+      pos: "noun_meaning",
+      meaning: "club",
+    },
+  ],
+  country: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  intact: [
+    {
+      pos: "adj_meaning",
+      meaning: "true",
+    },
+  ],
+  duckweed: [
+    {
+      pos: "verb_meaning",
+      meaning: "wander",
+    },
+  ],
+  drill: [
+    {
+      pos: "verb_meaning",
+      meaning: "ache",
+    },
+  ],
+  swear: [
+    {
+      pos: "verb_meaning",
+      meaning: "curse",
+    },
+  ],
+  vow: [
+    {
+      pos: "verb_meaning",
+      meaning: "curse",
+    },
+  ],
+  loosen: [
+    {
+      pos: "verb_meaning",
+      meaning: "fold",
+    },
+  ],
+  two: [
+    {
+      pos: "verb_meaning",
+      meaning: "doubt",
+    },
+  ],
+  merchant: [
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+  ],
+  clever: [
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+  ],
+  wise: [
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+  ],
+  foreign: [
+    {
+      pos: "verb_meaning",
+      meaning: "deprive",
+    },
+  ],
+  line: [
+    {
+      pos: "noun_meaning",
+      meaning: "table",
+    },
+  ],
+  excitement: [
+    {
+      pos: "noun_meaning",
+      meaning: "music",
+    },
+  ],
+  agitation: [
+    {
+      pos: "noun_meaning",
+      meaning: "music",
+    },
+  ],
+  destroy: [
+    {
+      pos: "verb_meaning",
+      meaning: "spoil",
+    },
+  ],
+  annihilate: [
+    {
+      pos: "verb_meaning",
+      meaning: "spoil",
+    },
+  ],
+  extinguish: [
+    {
+      pos: "verb_meaning",
+      meaning: "calm down",
+    },
+  ],
+  common: [
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  shared: [
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  promise: [
+    {
+      pos: "verb_meaning",
+      meaning: "point",
+    },
+  ],
+  unfold: [
+    {
+      pos: "verb_meaning",
+      meaning: "explain",
+    },
+  ],
+  unwind: [
+    {
+      pos: "verb_meaning",
+      meaning: "explain",
+    },
+  ],
+  enjoy: [
+    {
+      pos: "verb_meaning",
+      meaning: "eat",
+    },
+  ],
+  heat: [
+    {
+      pos: "noun_meaning",
+      meaning: "sun",
+    },
+  ],
+  badger: [
+    {
+      pos: "noun_meaning",
+      meaning: "honey badger",
+    },
+  ],
+  blacksmith: [
+    {
+      pos: "noun_meaning",
+      meaning: "wizard",
+    },
+  ],
+  animal: [
+    {
+      pos: "noun_meaning",
+      meaning: "horse",
+    },
+  ],
+  sweat: [
+    {
+      pos: "verb_meaning",
+      meaning: "get tired",
+    },
+  ],
+  weapon: [
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  companion: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  partner: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  noise: [
+    {
+      pos: "noun_meaning",
+      meaning: "Bitis arietans",
+    },
+  ],
+  shell: [
+    {
+      pos: "noun_meaning",
+      meaning: "skull",
+    },
+  ],
+  lick: [
+    {
+      pos: "verb_meaning",
+      meaning: "suck",
+    },
+  ],
+  chip: [
+    {
+      pos: "noun_meaning",
+      meaning: "spoon",
+    },
+  ],
+  splinter: [
+    {
+      pos: "noun_meaning",
+      meaning: "splinter",
+    },
+  ],
+  table: [
+    {
+      pos: "noun_meaning",
+      meaning: "chair",
+    },
+  ],
+  desk: [
+    {
+      pos: "noun_meaning",
+      meaning: "chair",
+    },
+  ],
+  barley: [
+    {
+      pos: "noun_meaning",
+      meaning: "bread",
+    },
+  ],
+  swim: [
+    {
+      pos: "verb_meaning",
+      meaning: "wash",
+    },
+  ],
+  monarch: [
+    {
+      pos: "noun_meaning",
+      meaning: "king",
+    },
+  ],
+  lengthen: [
+    {
+      pos: "verb_meaning",
+      meaning: "dilute",
+    },
+  ],
+  baptize: [
+    {
+      pos: "noun_meaning",
+      meaning: "rain",
+    },
+  ],
+  firearm: [
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  peck: [
+    {
+      pos: "verb_meaning",
+      meaning: "kiss",
+    },
+  ],
+  roast: [
+    {
+      pos: "verb_meaning",
+      meaning: "torture",
+    },
+  ],
+  "bow-string": [
+    {
+      pos: "noun_meaning",
+      meaning: "spring",
+    },
+  ],
+  brief: [
+    {
+      pos: "verb_meaning",
+      meaning: "lack",
+    },
+  ],
+  move: [
+    {
+      pos: "verb_meaning",
+      meaning: "change residence",
+    },
+  ],
+  shift: [
+    {
+      pos: "verb_meaning",
+      meaning: "translate",
+    },
+  ],
+  transfer: [
+    {
+      pos: "verb_meaning",
+      meaning: "translate",
+    },
+  ],
+  trade: [
+    {
+      pos: "verb_meaning",
+      meaning: "deceive",
+    },
+  ],
+  melt: [
+    {
+      pos: "verb_meaning",
+      meaning: "compassion",
+    },
+  ],
+  thaw: [
+    {
+      pos: "verb_meaning",
+      meaning: "compassion",
+    },
+  ],
+  skull: [
+    {
+      pos: "noun_meaning",
+      meaning: "palate",
+    },
+  ],
+  spike: [
+    {
+      pos: "noun_meaning",
+      meaning: "weapon",
+    },
+  ],
+  lotus: [
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+  ],
+  left: [
+    {
+      pos: "noun_meaning",
+      meaning: "spleen",
+    },
+  ],
+  seem: [
+    {
+      pos: "verb_meaning",
+      meaning: "scoff",
+    },
+  ],
+  large: [
+    {
+      pos: "verb_meaning",
+      meaning: "bring up",
+    },
+  ],
+  knead: [
+    {
+      pos: "verb_meaning",
+      meaning: "hit",
+    },
+  ],
+  tasteless: [
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+  ],
+  hen: [
+    {
+      pos: "noun_meaning",
+      meaning: "partridge",
+    },
+  ],
+  weasel: [
+    {
+      pos: "noun_meaning",
+      meaning: "skunk",
+    },
+  ],
+  copulate: [
+    {
+      pos: "noun_meaning",
+      meaning: "dragonfly",
+    },
+  ],
+  "sweet-smelling": [
+    {
+      pos: "adj_meaning",
+      meaning: "tasty",
+    },
+  ],
+  fragrant: [
+    {
+      pos: "adj_meaning",
+      meaning: "tasty",
+    },
+  ],
+  dense: [
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+  ],
+  raspberry: [
+    {
+      pos: "verb_meaning",
+      meaning: "split",
+    },
+  ],
+  handle: [
+    {
+      pos: "noun_meaning",
+      meaning: "nipple",
+    },
+  ],
+  gripe: [
+    {
+      pos: "noun_meaning",
+      meaning: "nipple",
+    },
+  ],
+  vagina: [
+    {
+      pos: "noun_meaning",
+      meaning: "girl",
+    },
+  ],
+  allow: [
+    {
+      pos: "verb_meaning",
+      meaning: "praise",
+    },
+  ],
+  blink: [
+    {
+      pos: "verb_meaning",
+      meaning: "tremble",
+    },
+  ],
+  marry: [
+    {
+      pos: "verb_meaning",
+      meaning: "wife",
+    },
+  ],
+  orthopteran: [
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+  ],
+  gall: [
+    {
+      pos: "noun_meaning",
+      meaning: "sadness",
+    },
+  ],
+  bowel: [
+    {
+      pos: "noun_meaning",
+      meaning: "string",
+    },
+  ],
+  sadness: [
+    {
+      pos: "noun_meaning",
+      meaning: "love",
+    },
+  ],
+  melancholy: [
+    {
+      pos: "noun_meaning",
+      meaning: "love",
+    },
+  ],
+  fireplace: [
+    {
+      pos: "noun_meaning",
+      meaning: "home",
+    },
+  ],
+  swamp: [
+    {
+      pos: "noun_meaning",
+      meaning: "forest",
+    },
+  ],
+  equalize: [
+    {
+      pos: "verb_meaning",
+      meaning: "compare",
+    },
+  ],
+  prove: [
+    {
+      pos: "verb_meaning",
+      meaning: "find",
+    },
+  ],
+  argue: [
+    {
+      pos: "verb_meaning",
+      meaning: "find",
+    },
+  ],
+  ice: [
+    {
+      pos: "noun_meaning",
+      meaning: "hail",
+    },
+  ],
+  profession: [
+    {
+      pos: "noun_meaning",
+      meaning: "grasshopper",
+    },
+  ],
+  tickle: [
+    {
+      pos: "verb_meaning",
+      meaning: "make noise",
+    },
+  ],
+  undress: [
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+  ],
+  miracle: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  witch: [
+    {
+      pos: "noun_meaning",
+      meaning: "owl",
+    },
+  ],
+  sorceress: [
+    {
+      pos: "noun_meaning",
+      meaning: "butterfly",
+    },
+  ],
+  saw: [
+    {
+      pos: "noun_meaning",
+      meaning: "way",
+    },
+  ],
+  clasp: [
+    {
+      pos: "noun_meaning",
+      meaning: "fibula",
+    },
+  ],
+  buckle: [
+    {
+      pos: "noun_meaning",
+      meaning: "fibula",
+    },
+  ],
+  shoal: [
+    {
+      pos: "noun_meaning",
+      meaning: "troop",
+    },
+  ],
+  grey: [
+    {
+      pos: "noun_meaning",
+      meaning: "badger",
+    },
+  ],
+  peach: [
+    {
+      pos: "noun_meaning",
+      meaning: "kiss",
+    },
+  ],
+  hinder: [
+    {
+      pos: "verb_meaning",
+      meaning: "object",
+    },
+  ],
+  doubt: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  rye: [
+    {
+      pos: "noun_meaning",
+      meaning: "wheat",
+    },
+  ],
+  cereal: [
+    {
+      pos: "noun_meaning",
+      meaning: "cornflower",
+    },
+  ],
+  priest: [
+    {
+      pos: "noun_meaning",
+      meaning: "king",
+    },
+  ],
+  Misgurnus: [
+    {
+      pos: "noun_meaning",
+      meaning: "eel",
+    },
+  ],
+  master: [
+    {
+      pos: "adj_meaning",
+      meaning: "rich",
+    },
+  ],
+  runner: [
+    {
+      pos: "noun_meaning",
+      meaning: "millstone",
+    },
+  ],
+  cowrie: [
+    {
+      pos: "noun_meaning",
+      meaning: "vagina",
+    },
+  ],
+  tamarind: [
+    {
+      pos: "adj_meaning",
+      meaning: "sour",
+    },
+  ],
+  round: [
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+  ],
+  stammerer: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  teach: [
+    {
+      pos: "verb_meaning",
+      meaning: "answer",
+    },
+  ],
+  yoke: [
+    {
+      pos: "noun_meaning",
+      meaning: "yoke",
+    },
+  ],
+  drunk: [
+    {
+      pos: "verb_meaning",
+      meaning: "grow numb",
+    },
+  ],
+  chameleon: [
+    {
+      pos: "verb_meaning",
+      meaning: "counterfeit",
+    },
+  ],
+  opossum: [
+    {
+      pos: "noun_meaning",
+      meaning: "pig",
+    },
+  ],
+  bell: [
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+  ],
+  steal: [
+    {
+      pos: "verb_meaning",
+      meaning: "seize",
+    },
+  ],
+  omen: [
+    {
+      pos: "noun_meaning",
+      meaning: "monster",
+    },
+  ],
+  palate: [
+    {
+      pos: "verb_meaning",
+      meaning: "chew",
+    },
+  ],
+  gamble: [
+    {
+      pos: "verb_meaning",
+      meaning: "risk",
+    },
+  ],
+  hell: [
+    {
+      pos: "noun_meaning",
+      meaning: "mouth",
+    },
+  ],
+  spit: [
+    {
+      pos: "verb_meaning",
+      meaning: "practice witchcraft",
+    },
+  ],
+  unripe: [
+    {
+      pos: "adj_meaning",
+      meaning: "young",
+    },
+  ],
+  insert: [
+    {
+      pos: "noun_meaning",
+      meaning: "vagina",
+    },
+  ],
+  dilute: [
+    {
+      pos: "verb_meaning",
+      meaning: "deceive",
+    },
+  ],
+  exact: [
+    {
+      pos: "verb_meaning",
+      meaning: "be alike",
+    },
+  ],
+  flea: [
+    {
+      pos: "noun_meaning",
+      meaning: "plantain",
+    },
+  ],
+  revive: [
+    {
+      pos: "verb_meaning",
+      meaning: "treat",
+    },
+  ],
+  say: [
+    {
+      pos: "verb_meaning",
+      meaning: "sing",
+    },
+  ],
+  need: [
+    {
+      pos: "verb_meaning",
+      meaning: "urinate",
+    },
+  ],
+  begin: [
+    {
+      pos: "verb_meaning",
+      meaning: "put into",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "come from",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "originate",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "be born",
+    },
+  ],
+  toe: [
+    {
+      pos: "noun_meaning",
+      meaning: "wing",
+    },
+  ],
+  jaw: [
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+  ],
+  loins: [
+    {
+      pos: "noun_meaning",
+      meaning: "hip",
+    },
+  ],
+  lap: [
+    {
+      pos: "noun_meaning",
+      meaning: "womb",
+    },
+  ],
+  choose: [
+    {
+      pos: "verb_meaning",
+      meaning: "distinguish",
+    },
+  ],
+  precede: [
+    {
+      pos: "verb_meaning",
+      meaning: "advance",
+    },
+  ],
+  meat: [
+    {
+      pos: "noun_meaning",
+      meaning: "body",
+    },
+  ],
+  strengthen: [
+    {
+      pos: "verb_meaning",
+      meaning: "close",
+    },
+  ],
+  descendant: [
+    {
+      pos: "noun_meaning",
+      meaning: "sprout",
+    },
+  ],
+  fight: [
+    {
+      pos: "verb_meaning",
+      meaning: "have a dispute",
+    },
+  ],
+  scuffle: [
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+  ],
+  inhabitant: [
+    {
+      pos: "noun_meaning",
+      meaning: "beetle",
+    },
+  ],
+  tell: [
+    {
+      pos: "verb_meaning",
+      meaning: "request",
+    },
+  ],
+  hunter: [
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+  ],
+  guess: [
+    {
+      pos: "verb_meaning",
+      meaning: "remember",
+    },
+  ],
+  fox: [
+    {
+      pos: "noun_meaning",
+      meaning: "vagina",
+    },
+  ],
+  glorify: [
+    {
+      pos: "verb_meaning",
+      meaning: "dishonor",
+    },
+  ],
+  uncle: [
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+  ],
+  eyeball: [
+    {
+      pos: "noun_meaning",
+      meaning: "eyelid",
+    },
+  ],
+  creak: [
+    {
+      pos: "verb_meaning",
+      meaning: "scream",
+    },
+  ],
+  silent: [
+    {
+      pos: "verb_meaning",
+      meaning: "rest",
+    },
+  ],
+  cry: [
+    {
+      pos: "verb_meaning",
+      meaning: "snow",
+    },
+  ],
+  dance: [
+    {
+      pos: "verb_meaning",
+      meaning: "take exercise",
+    },
+  ],
+  poison: [
+    {
+      pos: "noun_meaning",
+      meaning: "hemlock",
+    },
+  ],
+  moose: [
+    {
+      pos: "noun_meaning",
+      meaning: "fly agaric",
+    },
+  ],
+  spotted: [
+    {
+      pos: "noun_meaning",
+      meaning: "fly agaric",
+    },
+  ],
+  "grey-haired": [
+    {
+      pos: "verb_meaning",
+      meaning: "lose colour",
+    },
+  ],
+  funnel: [
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+  ],
+  "curly-headed": [
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+  ],
+  Jewish: [
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+  ],
+  genuine: [
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+  ],
+  true: [
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+  ],
+  weather: [
+    {
+      pos: "noun_meaning",
+      meaning: "god",
+    },
+  ],
+  sty: [
+    {
+      pos: "noun_meaning",
+      meaning: "hedgehog",
+    },
+  ],
+  deprive: [
+    {
+      pos: "verb_meaning",
+      meaning: "steal",
+    },
+  ],
+  power: [
+    {
+      pos: "noun_meaning",
+      meaning: "artery",
+    },
+  ],
+  authority: [
+    {
+      pos: "noun_meaning",
+      meaning: "artery",
+    },
+  ],
+  spicy: [
+    {
+      pos: "adj_meaning",
+      meaning: "sour",
+    },
+  ],
+  gain: [
+    {
+      pos: "verb_meaning",
+      meaning: "win",
+    },
+  ],
+  earn: [
+    {
+      pos: "verb_meaning",
+      meaning: "win",
+    },
+  ],
+  complex: [
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+  ],
+  complicated: [
+    {
+      pos: "adj_meaning",
+      meaning: "difficult",
+    },
+  ],
+  pigeon: [
+    {
+      pos: "noun_meaning",
+      meaning: "columbine",
+    },
+  ],
+  gather: [
+    {
+      pos: "verb_meaning",
+      meaning: "concentrate",
+    },
+  ],
+  deceive: [
+    {
+      pos: "verb_meaning",
+      meaning: "seduce",
+    },
+  ],
+  grandmother: [
+    {
+      pos: "noun_meaning",
+      meaning: "granddaughter",
+    },
+  ],
+  hiss: [
+    {
+      pos: "verb_meaning",
+      meaning: "blow",
+    },
+  ],
+  spell: [
+    {
+      pos: "verb_meaning",
+      meaning: "practice witchcraft",
+    },
+  ],
+  transversal: [
+    {
+      pos: "noun_meaning",
+      meaning: "stranger",
+    },
+  ],
+  crosscut: [
+    {
+      pos: "noun_meaning",
+      meaning: "stranger",
+    },
+  ],
+  buttock: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  honest: [
+    {
+      pos: "adj_meaning",
+      meaning: "healthy",
+    },
+  ],
+  crossroads: [
+    {
+      pos: "noun_meaning",
+      meaning: "mouth",
+    },
+  ],
+  wine: [
+    {
+      pos: "adj_meaning",
+      meaning: "brown",
+    },
+  ],
+  devil: [
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+  ],
+  satan: [
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+  ],
+  compare: [
+    {
+      pos: "verb_meaning",
+      meaning: "imitate",
+    },
+  ],
+  accompany: [
+    {
+      pos: "verb_meaning",
+      meaning: "express agreement",
+    },
+  ],
+  inside: [
+    {
+      pos: "verb_meaning",
+      meaning: "be satisfied",
+    },
+  ],
+  stamen: [
+    {
+      pos: "noun_meaning",
+      meaning: "eyelash",
+    },
+  ],
+  shrub: [
+    {
+      pos: "noun_meaning",
+      meaning: "spleen",
+    },
+  ],
+  spindle: [
+    {
+      pos: "noun_meaning",
+      meaning: "axle",
+    },
+  ],
+  kidney: [
+    {
+      pos: "noun_meaning",
+      meaning: "bean",
+    },
+  ],
+  ochre: [
+    {
+      pos: "adj_meaning",
+      meaning: "yellow",
+    },
+  ],
+  turmeric: [
+    {
+      pos: "adj_meaning",
+      meaning: "yellow",
+    },
+  ],
+  citron: [
+    {
+      pos: "adj_meaning",
+      meaning: "yellow",
+    },
+  ],
+  hail: [
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+  ],
+  book: [
+    {
+      pos: "noun_meaning",
+      meaning: "letter",
+    },
+  ],
+  relieve: [
+    {
+      pos: "verb_meaning",
+      meaning: "take off",
+    },
+  ],
+  button: [
+    {
+      pos: "noun_meaning",
+      meaning: "nipple",
+    },
+  ],
+  hajji: [
+    {
+      pos: "noun_meaning",
+      meaning: "father",
+    },
+  ],
+  encircle: [
+    {
+      pos: "adj_meaning",
+      meaning: "pregnant",
+    },
+  ],
+  surround: [
+    {
+      pos: "adj_meaning",
+      meaning: "pregnant",
+    },
+  ],
+  watch: [
+    {
+      pos: "adj_meaning",
+      meaning: "awake",
+    },
+  ],
+  stare: [
+    {
+      pos: "adj_meaning",
+      meaning: "awake",
+    },
+  ],
+  marten: [
+    {
+      pos: "noun_meaning",
+      meaning: "skunk",
+    },
+  ],
+  slide: [
+    {
+      pos: "verb_meaning",
+      meaning: "ski",
+    },
+  ],
+  together: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  intoxicate: [
+    {
+      pos: "verb_meaning",
+      meaning: "delight",
+    },
+  ],
+  truffle: [
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+  ],
+  yam: [
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+  ],
+  taro: [
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+  ],
+  tuber: [
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+  ],
+  reed: [
+    {
+      pos: "noun_meaning",
+      meaning: "icicle",
+    },
+  ],
+  jackal: [
+    {
+      pos: "noun_meaning",
+      meaning: "warrior",
+    },
+  ],
+  cook: [
+    {
+      pos: "verb_meaning",
+      meaning: "study",
+    },
+  ],
+  queen: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  second: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  God: [
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+  ],
+  forgive: [
+    {
+      pos: "verb_meaning",
+      meaning: "say goodbye",
+    },
+  ],
+  surf: [
+    {
+      pos: "verb_meaning",
+      meaning: "browse",
+    },
+  ],
+  offspring: [
+    {
+      pos: "noun_meaning",
+      meaning: "crowd",
+    },
+  ],
+  voice: [
+    {
+      pos: "noun_meaning",
+      meaning: "language",
+    },
+  ],
+  bellows: [
+    {
+      pos: "noun_meaning",
+      meaning: "pot",
+    },
+  ],
+  craw: [
+    {
+      pos: "noun_meaning",
+      meaning: "stomach",
+    },
+  ],
+  scales: [
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+  ],
+  plum: [
+    {
+      pos: "verb_meaning",
+      meaning: "tomato",
+    },
+  ],
+  toad: [
+    {
+      pos: "noun_meaning",
+      meaning: "wart",
+    },
+  ],
+  star: [
+    {
+      pos: "noun_meaning",
+      meaning: "eye",
+    },
+  ],
+  pink: [
+    {
+      pos: "adj_meaning",
+      meaning: "good",
+    },
+  ],
+  cloudberry: [
+    {
+      pos: "verb_meaning",
+      meaning: "split",
+    },
+  ],
+  "night-blindness": [
+    {
+      pos: "noun_meaning",
+      meaning: "scarlet pimpernel",
+    },
+  ],
+  still: [
+    {
+      pos: "adv_meaning",
+      meaning: "again",
+    },
+  ],
+  elephant: [
+    {
+      pos: "noun_meaning",
+      meaning: "turkey",
+    },
+  ],
+  pimple: [
+    {
+      pos: "noun_meaning",
+      meaning: "nipple",
+    },
+  ],
+  stumble: [
+    {
+      pos: "verb_meaning",
+      meaning: "be wrong",
+    },
+  ],
+  Ranunculus: [
+    {
+      pos: "noun_meaning",
+      meaning: "cornflower",
+    },
+  ],
+  bronze: [
+    {
+      pos: "noun_meaning",
+      meaning: "mirror",
+    },
+  ],
+  elder: [
+    {
+      pos: "noun_meaning",
+      meaning: "thumb",
+    },
+  ],
+  eggplant: [
+    {
+      pos: "verb_meaning",
+      meaning: "tomato",
+    },
+  ],
+  lentil: [
+    {
+      pos: "noun_meaning",
+      meaning: "lens",
+    },
+  ],
+  earnest: [
+    {
+      pos: "adj_meaning",
+      meaning: "important",
+    },
+  ],
+  serious: [
+    {
+      pos: "adj_meaning",
+      meaning: "important",
+    },
+  ],
+  lavish: [
+    {
+      pos: "adj_meaning",
+      meaning: "fertile",
+    },
+  ],
+  generous: [
+    {
+      pos: "adj_meaning",
+      meaning: "fertile",
+    },
+  ],
+  hoe: [
+    {
+      pos: "noun_meaning",
+      meaning: "anchor",
+    },
+  ],
+  any: [
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  penetrate: [
+    {
+      pos: "verb_meaning",
+      meaning: "understand",
+    },
+  ],
+  rivet: [
+    {
+      pos: "verb_meaning",
+      meaning: "win",
+    },
+  ],
+  sell: [
+    {
+      pos: "verb_meaning",
+      meaning: "pretend",
+    },
+  ],
+  couple: [
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+  ],
+  buy: [
+    {
+      pos: "verb_meaning",
+      meaning: "bribe",
+    },
+  ],
+  sink: [
+    {
+      pos: "verb_meaning",
+      meaning: "keep secret",
+    },
+  ],
+  straw: [
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  ard: [
+    {
+      pos: "noun_meaning",
+      meaning: "moose",
+    },
+  ],
+  goldsmith: [
+    {
+      pos: "noun_meaning",
+      meaning: "dragonfly",
+    },
+  ],
+  official: [
+    {
+      pos: "noun_meaning",
+      meaning: "dragonfly",
+    },
+  ],
+  explain: [
+    {
+      pos: "verb_meaning",
+      meaning: "translate",
+    },
+  ],
+  sod: [
+    {
+      pos: "noun_meaning",
+      meaning: "oath",
+    },
+  ],
+  corral: [
+    {
+      pos: "verb_meaning",
+      meaning: "herd",
+    },
+  ],
+  revere: [
+    {
+      pos: "verb_meaning",
+      meaning: "keep the fast",
+    },
+  ],
+  beloved: [
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+  ],
+  tiger: [
+    {
+      pos: "noun_meaning",
+      meaning: "lion",
+    },
+  ],
+  cigar: [
+    {
+      pos: "noun_meaning",
+      meaning: "dragonfly",
+    },
+  ],
+  courtyard: [
+    {
+      pos: "noun_meaning",
+      meaning: "page",
+    },
+  ],
+  harm: [
+    {
+      pos: "verb_meaning",
+      meaning: "steal",
+    },
+  ],
+  damage: [
+    {
+      pos: "verb_meaning",
+      meaning: "steal",
+    },
+  ],
+  accuse: [
+    {
+      pos: "verb_meaning",
+      meaning: "revenge",
+    },
+  ],
+  blame: [
+    {
+      pos: "verb_meaning",
+      meaning: "revenge",
+    },
+  ],
+  spine: [
+    {
+      pos: "noun_meaning",
+      meaning: "back",
+    },
+  ],
+  backbone: [
+    {
+      pos: "noun_meaning",
+      meaning: "back",
+    },
+  ],
+  danger: [
+    {
+      pos: "noun_meaning",
+      meaning: "accident",
+    },
+  ],
+  always: [
+    {
+      pos: "verb_meaning",
+      meaning: "too much",
+    },
+  ],
+  use: [
+    {
+      pos: "verb_meaning",
+      meaning: "employ",
+    },
+  ],
+  sheath: [
+    {
+      pos: "noun_meaning",
+      meaning: "vagina",
+    },
+  ],
+  unload: [
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+  ],
+  download: [
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+  ],
+  prick: [
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+  ],
+  ray: [
+    {
+      pos: "noun_meaning",
+      meaning: "radius",
+    },
+  ],
+  horned: [
+    {
+      pos: "noun_meaning",
+      meaning: "deer",
+    },
+  ],
+  stem: [
+    {
+      pos: "verb_meaning",
+      meaning: "torso",
+    },
+  ],
+  innocent: [
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  goddess: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  chief: [
+    {
+      pos: "noun_meaning",
+      meaning: "thumb",
+    },
+  ],
+  boss: [
+    {
+      pos: "noun_meaning",
+      meaning: "thumb",
+    },
+  ],
+  sweetheart: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  tender: [
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  sati: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  whore: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  inform: [
+    {
+      pos: "verb_meaning",
+      meaning: "blame",
+    },
+  ],
+  "cross-": [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  aunt: [
+    {
+      pos: "noun_meaning",
+      meaning: "widow",
+    },
+  ],
+  step: [
+    {
+      pos: "verb_meaning",
+      meaning: "move",
+    },
+  ],
+  pace: [
+    {
+      pos: "verb_meaning",
+      meaning: "move",
+    },
+  ],
+  lineage: [
+    {
+      pos: "adj_meaning",
+      meaning: "noble",
+    },
+  ],
+  gas: [
+    {
+      pos: "noun_meaning",
+      meaning: "steam",
+    },
+  ],
+  steam: [
+    {
+      pos: "noun_meaning",
+      meaning: "dust",
+    },
+  ],
+  vapour: [
+    {
+      pos: "noun_meaning",
+      meaning: "dust",
+    },
+  ],
+  beetle: [
+    {
+      pos: "noun_meaning",
+      meaning: "insect",
+    },
+  ],
+  wipe: [
+    {
+      pos: "verb_meaning",
+      meaning: "forgive",
+    },
+  ],
+  drone: [
+    {
+      pos: "noun_meaning",
+      meaning: "hornet",
+    },
+  ],
+  bumblebee: [
+    {
+      pos: "noun_meaning",
+      meaning: "cockchafer",
+    },
+  ],
+  mortar: [
+    {
+      pos: "noun_meaning",
+      meaning: "bell",
+    },
+  ],
+  sister: [
+    {
+      pos: "noun_meaning",
+      meaning: "friend",
+    },
+  ],
+  establish: [
+    {
+      pos: "noun_meaning",
+      meaning: "mother",
+    },
+  ],
+  found: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  dough: [
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+  ],
+  cabbage: [
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+  ],
+  lightning: [
+    {
+      pos: "verb_meaning",
+      meaning: "curse",
+    },
+  ],
+  sticky: [
+    {
+      pos: "noun_meaning",
+      meaning: "honey",
+    },
+  ],
+  zenith: [
+    {
+      pos: "noun_meaning",
+      meaning: "noon",
+    },
+  ],
+  Pleiades: [
+    {
+      pos: "noun_meaning",
+      meaning: "star",
+    },
+  ],
+  chervil: [
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+  ],
+  chalk: [
+    {
+      pos: "noun_meaning",
+      meaning: "pencil",
+    },
+  ],
+  sacred: [
+    {
+      pos: "noun_meaning",
+      meaning: "feast",
+    },
+  ],
+  pass: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  Samsara: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  praise: [
+    {
+      pos: "verb_meaning",
+      meaning: "bless",
+    },
+  ],
+  bathroom: [
+    {
+      pos: "verb_meaning",
+      meaning: "toilet",
+    },
+  ],
+  ashes: [
+    {
+      pos: "adj_meaning",
+      meaning: "dead",
+    },
+  ],
+  grape: [
+    {
+      pos: "noun_meaning",
+      meaning: "carrot",
+    },
+  ],
+  millet: [
+    {
+      pos: "noun_meaning",
+      meaning: "sorghum",
+    },
+  ],
+  one: [
+    {
+      pos: "noun_meaning",
+      meaning: "god",
+    },
+  ],
+  single: [
+    {
+      pos: "noun_meaning",
+      meaning: "god",
+    },
+  ],
+  pope: [
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+  ],
+  misfortune: [
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+  ],
+  sable: [
+    {
+      pos: "noun_meaning",
+      meaning: "otter",
+    },
+  ],
+  fur: [
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+  ],
+  ancestor: [
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+  ],
+  claw: [
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+  ],
+  predator: [
+    {
+      pos: "adj_meaning",
+      meaning: "evil",
+    },
+  ],
+  grandchild: [
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+  ],
+  shin: [
+    {
+      pos: "noun_meaning",
+      meaning: "leg",
+    },
+  ],
+  "bow-legged": [
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+  ],
+  barrier: [
+    {
+      pos: "noun_meaning",
+      meaning: "diaphragm",
+    },
+  ],
+  kite: [
+    {
+      pos: "noun_meaning",
+      meaning: "flying fish",
+    },
+  ],
+  court: [
+    {
+      pos: "adj_meaning",
+      meaning: "noble",
+    },
+  ],
+  strange: [
+    {
+      pos: "noun_meaning",
+      meaning: "monster",
+    },
+  ],
+  clay: [
+    {
+      pos: "noun_meaning",
+      meaning: "chalk",
+    },
+  ],
+  twin: [
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+  ],
+  "shoulder-blade": [
+    {
+      pos: "noun_meaning",
+      meaning: "clavicle",
+    },
+  ],
+  scapula: [
+    {
+      pos: "noun_meaning",
+      meaning: "clavicle",
+    },
+  ],
+  ladle: [
+    {
+      pos: "noun_meaning",
+      meaning: "scapula",
+    },
+  ],
+  rainbow: [
+    {
+      pos: "noun_meaning",
+      meaning: "iris",
+    },
+  ],
+  humpbacked: [
+    {
+      pos: "noun_meaning",
+      meaning: "gnat",
+    },
+  ],
+  pellicle: [
+    {
+      pos: "noun_meaning",
+      meaning: "cloud",
+    },
+  ],
+  season: [
+    {
+      pos: "noun_meaning",
+      meaning: "chapter",
+    },
+  ],
+  resemble: [
+    {
+      pos: "verb_meaning",
+      meaning: "get along",
+    },
+  ],
+  forget: [
+    {
+      pos: "verb_meaning",
+      meaning: "be wrong",
+    },
+  ],
+  clothe: [
+    {
+      pos: "verb_meaning",
+      meaning: "tell lies",
+    },
+  ],
+  distinguish: [
+    {
+      pos: "verb_meaning",
+      meaning: "choose",
+    },
+  ],
+  joke: [
+    {
+      pos: "verb_meaning",
+      meaning: "teach",
+    },
+  ],
+  decorticate: [
+    {
+      pos: "verb_meaning",
+      meaning: "flay",
+    },
+  ],
+  debark: [
+    {
+      pos: "verb_meaning",
+      meaning: "flay",
+    },
+  ],
+  flay: [
+    {
+      pos: "verb_meaning",
+      meaning: "rob",
+    },
+  ],
+  weep: [
+    {
+      pos: "verb_meaning",
+      meaning: "snow",
+    },
+  ],
+  will: [
+    {
+      pos: "verb_meaning",
+      meaning: "wish",
+    },
+  ],
+  intention: [
+    {
+      pos: "verb_meaning",
+      meaning: "wish",
+    },
+  ],
+  dialect: [
+    {
+      pos: "verb_meaning",
+      meaning: "tone",
+    },
+  ],
+  tailed: [
+    {
+      pos: "noun_meaning",
+      meaning: "witch",
+    },
+  ],
+  dump: [
+    {
+      pos: "verb_meaning",
+      meaning: "toilet",
+    },
+  ],
+  string: [
+    {
+      pos: "noun_meaning",
+      meaning: "tendon",
+    },
+  ],
+  flap: [
+    {
+      pos: "verb_meaning",
+      meaning: "look around",
+    },
+  ],
+  prayer: [
+    {
+      pos: "noun_meaning",
+      meaning: "spell",
+    },
+  ],
+  wither: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  warm: [
+    {
+      pos: "adj_meaning",
+      meaning: "lazy",
+    },
+  ],
+  moustache: [
+    {
+      pos: "verb_meaning",
+      meaning: "grow up",
+    },
+  ],
+  winnow: [
+    {
+      pos: "verb_meaning",
+      meaning: "waste",
+    },
+  ],
+  overstep: [
+    {
+      pos: "verb_meaning",
+      meaning: "go mad",
+    },
+  ],
+  precipitous: [
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+  ],
+  inflate: [
+    {
+      pos: "verb_meaning",
+      meaning: "ascend",
+    },
+  ],
+  tablecloth: [
+    {
+      pos: "noun_meaning",
+      meaning: "feast",
+    },
+  ],
+  rear: [
+    {
+      pos: "adj_meaning",
+      meaning: "last",
+    },
+  ],
+  falsified: [
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  fake: [
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  doctor: [
+    {
+      pos: "noun_meaning",
+      meaning: "moon",
+    },
+  ],
+  physician: [
+    {
+      pos: "noun_meaning",
+      meaning: "moon",
+    },
+  ],
+  gnarl: [
+    {
+      pos: "verb_meaning",
+      meaning: "spasm",
+    },
+  ],
+  under: [
+    {
+      pos: "noun_meaning",
+      meaning: "mistress",
+    },
+  ],
+  below: [
+    {
+      pos: "noun_meaning",
+      meaning: "mistress",
+    },
+  ],
+  fool: [
+    {
+      pos: "noun_meaning",
+      meaning: "tall person",
+    },
+  ],
+  forge: [
+    {
+      pos: "verb_meaning",
+      meaning: "counterfeit",
+    },
+  ],
+  collapse: [
+    {
+      pos: "verb_meaning",
+      meaning: "be defeated",
+    },
+  ],
+  plunge: [
+    {
+      pos: "verb_meaning",
+      meaning: "dip",
+    },
+  ],
+  hug: [
+    {
+      pos: "verb_meaning",
+      meaning: "kiss",
+    },
+  ],
+  tendon: [
+    {
+      pos: "noun_meaning",
+      meaning: "rope",
+    },
+  ],
+  learn: [
+    {
+      pos: "verb_meaning",
+      meaning: "domesticated",
+    },
+  ],
+  study: [
+    {
+      pos: "verb_meaning",
+      meaning: "domesticated",
+    },
+  ],
+  grave: [
+    {
+      pos: "noun_meaning",
+      meaning: "night",
+    },
+  ],
+  tomb: [
+    {
+      pos: "noun_meaning",
+      meaning: "night",
+    },
+  ],
+  soon: [
+    {
+      pos: "adj_meaning",
+      meaning: "early",
+    },
+  ],
+  apricot: [
+    {
+      pos: "noun_meaning",
+      meaning: "chanterelle",
+    },
+  ],
+  pomegranate: [
+    {
+      pos: "noun_meaning",
+      meaning: "hawthorn",
+    },
+  ],
+  tapir: [
+    {
+      pos: "noun_meaning",
+      meaning: "horse",
+    },
+  ],
+  ring: [
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+  ],
+  beware: [
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+  ],
+  plate: [
+    {
+      pos: "noun_meaning",
+      meaning: "table",
+    },
+  ],
+  porcelain: [
+    {
+      pos: "noun_meaning",
+      meaning: "plate",
+    },
+  ],
+  in: [
+    {
+      pos: "adp_meaning",
+      meaning: "during",
+    },
+  ],
+  arrange: [
+    {
+      pos: "verb_meaning",
+      meaning: "kill",
+    },
+  ],
+  sound: [
+    {
+      pos: "noun_meaning",
+      meaning: "song",
+    },
+  ],
+  obstinate: [
+    {
+      pos: "adj_meaning",
+      meaning: "healthy",
+    },
+  ],
+  persistent: [
+    {
+      pos: "adj_meaning",
+      meaning: "healthy",
+    },
+  ],
+  experiment: [
+    {
+      pos: "verb_meaning",
+      meaning: "have experience",
+    },
+  ],
+  overflow: [
+    {
+      pos: "verb_meaning",
+      meaning: "get angry",
+    },
+  ],
+  algae: [
+    {
+      pos: "noun_meaning",
+      meaning: "moss",
+    },
+  ],
+  partridge: [
+    {
+      pos: "noun_meaning",
+      meaning: "hazel grouse",
+    },
+  ],
+  collect: [
+    {
+      pos: "verb_meaning",
+      meaning: "concentrate",
+    },
+  ],
+  solve: [
+    {
+      pos: "verb_meaning",
+      meaning: "finish",
+    },
+  ],
+  ink: [
+    {
+      pos: "noun_meaning",
+      meaning: "cuttlefish",
+    },
+  ],
+  tadpole: [
+    {
+      pos: "noun_meaning",
+      meaning: "leech",
+    },
+  ],
+  whistle: [
+    {
+      pos: "verb_meaning",
+      meaning: "blow",
+    },
+  ],
+  untwist: [
+    {
+      pos: "verb_meaning",
+      meaning: "sober up",
+    },
+  ],
+  unscrew: [
+    {
+      pos: "verb_meaning",
+      meaning: "sober up",
+    },
+  ],
+  sew: [
+    {
+      pos: "verb_meaning",
+      meaning: "deceive",
+    },
+  ],
+  repaire: [
+    {
+      pos: "verb_meaning",
+      meaning: "reconcile",
+    },
+  ],
+  mend: [
+    {
+      pos: "verb_meaning",
+      meaning: "reconcile",
+    },
+  ],
+  cure: [
+    {
+      pos: "verb_meaning",
+      meaning: "save",
+    },
+  ],
+  treat: [
+    {
+      pos: "verb_meaning",
+      meaning: "save",
+    },
+  ],
+  stepfather: [
+    {
+      pos: "noun_meaning",
+      meaning: "father-in-law",
+    },
+  ],
+  lame: [
+    {
+      pos: "adj_meaning",
+      meaning: "slow",
+    },
+  ],
+  May: [
+    {
+      pos: "noun_meaning",
+      meaning: "cockchafer",
+    },
+  ],
+  rhinoceros: [
+    {
+      pos: "noun_meaning",
+      meaning: "hippopotamus",
+    },
+  ],
+  straighten: [
+    {
+      pos: "verb_meaning",
+      meaning: "correct",
+    },
+  ],
+  increase: [
+    {
+      pos: "verb_meaning",
+      meaning: "continue",
+    },
+  ],
+  gum: [
+    {
+      pos: "noun_meaning",
+      meaning: "glue",
+    },
+  ],
+  cope: [
+    {
+      pos: "verb_meaning",
+      meaning: "give birth",
+    },
+  ],
+  foundation: [
+    {
+      pos: "noun_meaning",
+      meaning: "bearing",
+    },
+  ],
+  basement: [
+    {
+      pos: "noun_meaning",
+      meaning: "bearing",
+    },
+  ],
+  pillow: [
+    {
+      pos: "noun_meaning",
+      meaning: "bearing",
+    },
+  ],
+  engaged: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  steppe: [
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+  ],
+  plain: [
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+  ],
+  often: [
+    {
+      pos: "adj_meaning",
+      meaning: "all",
+    },
+  ],
+  aim: [
+    {
+      pos: "verb_meaning",
+      meaning: "set a bone",
+    },
+  ],
+  thousand: [
+    {
+      pos: "noun_meaning",
+      meaning: "yarrow",
+    },
+  ],
+  tower: [
+    {
+      pos: "verb_meaning",
+      meaning: "city",
+    },
+  ],
+  cupboard: [
+    {
+      pos: "noun_meaning",
+      meaning: "snare",
+    },
+  ],
+  closet: [
+    {
+      pos: "noun_meaning",
+      meaning: "snare",
+    },
+  ],
+  flute: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  coagulate: [
+    {
+      pos: "verb_meaning",
+      meaning: "bake",
+    },
+  ],
+  curdle: [
+    {
+      pos: "verb_meaning",
+      meaning: "bake",
+    },
+  ],
+  nape: [
+    {
+      pos: "adp_meaning",
+      meaning: "behind",
+    },
+  ],
+  hem: [
+    {
+      pos: "noun_meaning",
+      meaning: "soft palate",
+    },
+  ],
+  scale: [
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+  ],
+  squama: [
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+  ],
+  eunuch: [
+    {
+      pos: "noun_meaning",
+      meaning: "servant",
+    },
+  ],
+  silence: [
+    {
+      pos: "noun_meaning",
+      meaning: "death",
+    },
+  ],
+  yawn: [
+    {
+      pos: "adj_meaning",
+      meaning: "hostile",
+    },
+  ],
+  spend: [
+    {
+      pos: "verb_meaning",
+      meaning: "kill",
+    },
+  ],
+  brushwood: [
+    {
+      pos: "noun_meaning",
+      meaning: "oak",
+    },
+  ],
+  scald: [
+    {
+      pos: "verb_meaning",
+      meaning: "incur losses",
+    },
+  ],
+  digest: [
+    {
+      pos: "verb_meaning",
+      meaning: "endure",
+    },
+  ],
+  character: [
+    {
+      pos: "noun_meaning",
+      meaning: "custom",
+    },
+  ],
+  respected: [
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+  ],
+  venerable: [
+    {
+      pos: "adj_meaning",
+      meaning: "strong",
+    },
+  ],
+  spinach: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  cast: [
+    {
+      pos: "verb_meaning",
+      meaning: "defecate",
+    },
+  ],
+  disease: [
+    {
+      pos: "noun_meaning",
+      meaning: "death",
+    },
+  ],
+  fasten: [
+    {
+      pos: "verb_meaning",
+      meaning: "respect",
+    },
+  ],
+  relocate: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  "lily-of-the-valley": [
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+  ],
+  evening: [
+    {
+      pos: "noun_meaning",
+      meaning: "dinner",
+    },
+  ],
+  turkey: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  unprofitable: [
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  unbend: [
+    {
+      pos: "verb_meaning",
+      meaning: "agree",
+    },
+  ],
+  sign: [
+    {
+      pos: "noun_meaning",
+      meaning: "letter",
+    },
+  ],
+  designation: [
+    {
+      pos: "noun_meaning",
+      meaning: "letter",
+    },
+  ],
+  tighten: [
+    {
+      pos: "verb_meaning",
+      meaning: "harden",
+    },
+  ],
+  source: [
+    {
+      pos: "verb_meaning",
+      meaning: "crown",
+    },
+  ],
+  trust: [
+    {
+      pos: "noun_meaning",
+      meaning: "credit",
+    },
+  ],
+  skeleton: [
+    {
+      pos: "adj_meaning",
+      meaning: "thin",
+    },
+  ],
+  coffee: [
+    {
+      pos: "adj_meaning",
+      meaning: "brown",
+    },
+  ],
+  caulk: [
+    {
+      pos: "verb_meaning",
+      meaning: "scold",
+    },
+  ],
+  pen: [
+    {
+      pos: "adj_meaning",
+      meaning: "kind",
+    },
+  ],
+  peacock: [
+    {
+      pos: "noun_meaning",
+      meaning: "turkey",
+    },
+  ],
+  "many-coloured": [
+    {
+      pos: "noun_meaning",
+      meaning: "lemming",
+    },
+  ],
+  motley: [
+    {
+      pos: "noun_meaning",
+      meaning: "lemming",
+    },
+  ],
+  wedge: [
+    {
+      pos: "noun_meaning",
+      meaning: "knife",
+    },
+  ],
+  snot: [
+    {
+      pos: "noun_meaning",
+      meaning: "turkey",
+    },
+  ],
+  cannon: [
+    {
+      pos: "noun_meaning",
+      meaning: "turkey",
+    },
+  ],
+  proboscis: [
+    {
+      pos: "noun_meaning",
+      meaning: "turkey",
+    },
+  ],
+  whip: [
+    {
+      pos: "verb_meaning",
+      meaning: "induce",
+    },
+  ],
+  whisper: [
+    {
+      pos: "verb_meaning",
+      meaning: "snitch",
+    },
+  ],
+  decrease: [
+    {
+      pos: "verb_meaning",
+      meaning: "subside",
+    },
+  ],
+  preserve: [
+    {
+      pos: "verb_meaning",
+      meaning: "remember",
+    },
+  ],
+  embarrassed: [
+    {
+      pos: "verb_meaning",
+      meaning: "shut one's eyes",
+    },
+  ],
+  vineyard: [
+    {
+      pos: "noun_meaning",
+      meaning: "garden",
+    },
+  ],
+  digit: [
+    {
+      pos: "noun_meaning",
+      meaning: "problem",
+    },
+  ],
+  unite: [
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+  ],
+  thresh: [
+    {
+      pos: "verb_meaning",
+      meaning: "tell a person's fortune",
+    },
+  ],
+  eternity: [
+    {
+      pos: "noun_meaning",
+      meaning: "grave",
+    },
+  ],
+  corrupt: [
+    {
+      pos: "verb_meaning",
+      meaning: "leave untreated",
+    },
+  ],
+  deprave: [
+    {
+      pos: "verb_meaning",
+      meaning: "leave untreated",
+    },
+  ],
+  swan: [
+    {
+      pos: "adj_meaning",
+      meaning: "pale",
+    },
+  ],
+  torn: [
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  lard: [
+    {
+      pos: "noun_meaning",
+      meaning: "butter",
+    },
+  ],
+  dissimilar: [
+    {
+      pos: "adj_meaning",
+      meaning: "unusual",
+    },
+  ],
+  distinct: [
+    {
+      pos: "adj_meaning",
+      meaning: "unusual",
+    },
+  ],
+  be: [
+    {
+      pos: "verb_meaning",
+      meaning: "want",
+    },
+  ],
+  exist: [
+    {
+      pos: "verb_meaning",
+      meaning: "want",
+    },
+  ],
+  worry: [
+    {
+      pos: "verb_meaning",
+      meaning: "be interested in",
+    },
+  ],
+  anxiety: [
+    {
+      pos: "verb_meaning",
+      meaning: "be interested in",
+    },
+  ],
+  keen: [
+    {
+      pos: "adj_meaning",
+      meaning: "clear",
+    },
+  ],
+  congeal: [
+    {
+      pos: "verb_meaning",
+      meaning: "curdle",
+    },
+  ],
+  clothes: [
+    {
+      pos: "noun_meaning",
+      meaning: "thing",
+    },
+  ],
+  rejoice: [
+    {
+      pos: "verb_meaning",
+      meaning: "congratulate",
+    },
+  ],
+  idle: [
+    {
+      pos: "noun_meaning",
+      meaning: "feast",
+    },
+  ],
+  cut_out: [
+    {
+      pos: "verb_meaning",
+      meaning: "castrate",
+    },
+  ],
+  pull_ashore: [
+    {
+      pos: "verb_meaning",
+      meaning: "remove from fire",
+    },
+  ],
+  take_a_fixed_vertical_position: [
+    {
+      pos: "verb_meaning",
+      meaning: "begin",
+    },
+  ],
+  uncultivated: [
+    {
+      pos: "adj_meaning",
+      meaning: "rude",
+    },
+  ],
+  unprocessed: [
+    {
+      pos: "adj_meaning",
+      meaning: "rude",
+    },
+  ],
+  snore: [
+    {
+      pos: "verb_meaning",
+      meaning: "purr",
+    },
+  ],
+  pray: [
+    {
+      pos: "verb_meaning",
+      meaning: "bow down",
+    },
+  ],
+  "great-grandmother": [
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+  ],
+  lattice: [
+    {
+      pos: "verb_meaning",
+      meaning: "harrow",
+    },
+  ],
+  grid: [
+    {
+      pos: "verb_meaning",
+      meaning: "harrow",
+    },
+  ],
+  stairs: [
+    {
+      pos: "verb_meaning",
+      meaning: "harrow",
+    },
+  ],
+  ladder: [
+    {
+      pos: "verb_meaning",
+      meaning: "harrow",
+    },
+  ],
+  rake: [
+    {
+      pos: "verb_meaning",
+      meaning: "harrow",
+    },
+  ],
+  wampum: [
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+  ],
+  urine: [
+    {
+      pos: "noun_meaning",
+      meaning: "ant",
+    },
+  ],
+  afterwards: [
+    {
+      pos: "verb_meaning",
+      meaning: "consequently",
+    },
+  ],
+  later: [
+    {
+      pos: "verb_meaning",
+      meaning: "consequently",
+    },
+  ],
+  nephew: [
+    {
+      pos: "noun_meaning",
+      meaning: "warrior",
+    },
+  ],
+  layer: [
+    {
+      pos: "noun_meaning",
+      meaning: "time",
+    },
+  ],
+  porcupine: [
+    {
+      pos: "noun_meaning",
+      meaning: "hedgehog",
+    },
+  ],
+  polish: [
+    {
+      pos: "verb_meaning",
+      meaning: "render a wall",
+    },
+  ],
+  yolk: [
+    {
+      pos: "adj_meaning",
+      meaning: "yellow",
+    },
+  ],
+  monitor: [
+    {
+      pos: "verb_meaning",
+      meaning: "prohibit",
+    },
+  ],
+  supervise: [
+    {
+      pos: "verb_meaning",
+      meaning: "prohibit",
+    },
+  ],
+  street: [
+    {
+      pos: "noun_meaning",
+      meaning: "ravine",
+    },
+  ],
+  headscarf: [
+    {
+      pos: "noun_meaning",
+      meaning: "woman",
+    },
+  ],
+  scythe: [
+    {
+      pos: "noun_meaning",
+      meaning: "bow",
+    },
+  ],
+  pitchfork: [
+    {
+      pos: "noun_meaning",
+      meaning: "thymus",
+    },
+  ],
+  goose: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  ski: [
+    {
+      pos: "verb_meaning",
+      meaning: "crawl",
+    },
+  ],
+  substance: [
+    {
+      pos: "noun_meaning",
+      meaning: "text",
+    },
+  ],
+  material: [
+    {
+      pos: "noun_meaning",
+      meaning: "text",
+    },
+  ],
+  region: [
+    {
+      pos: "noun_meaning",
+      meaning: "family",
+    },
+  ],
+  lunch: [
+    {
+      pos: "noun_meaning",
+      meaning: "dinner",
+    },
+  ],
+  pearl: [
+    {
+      pos: "noun_meaning",
+      meaning: "bead",
+    },
+  ],
+  "hoar-frost": [
+    {
+      pos: "noun_meaning",
+      meaning: "fog",
+    },
+  ],
+  abolish: [
+    {
+      pos: "verb_meaning",
+      meaning: "lose",
+    },
+  ],
+  advice: [
+    {
+      pos: "noun_meaning",
+      meaning: "thought",
+    },
+  ],
+  hobble: [
+    {
+      pos: "verb_meaning",
+      meaning: "brake",
+    },
+  ],
+  fetlock: [
+    {
+      pos: "noun_meaning",
+      meaning: "bush",
+    },
+  ],
+  anemic: [
+    {
+      pos: "adj_meaning",
+      meaning: "weak",
+    },
+  ],
+  proud: [
+    {
+      pos: "adj_meaning",
+      meaning: "brave",
+    },
+  ],
+  accelerate: [
+    {
+      pos: "verb_meaning",
+      meaning: "ease",
+    },
+  ],
+  soften: [
+    {
+      pos: "verb_meaning",
+      meaning: "bring into a good mood",
+    },
+  ],
+  send: [
+    {
+      pos: "verb_meaning",
+      meaning: "marry off",
+    },
+  ],
+  game: [
+    {
+      pos: "noun_meaning",
+      meaning: "wedding",
+    },
+  ],
+  yes: [
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+  ],
+  rare: [
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  rattle: [
+    {
+      pos: "verb_meaning",
+      meaning: "ache",
+    },
+  ],
+  rumble: [
+    {
+      pos: "verb_meaning",
+      meaning: "ache",
+    },
+  ],
+  earring: [
+    {
+      pos: "noun_meaning",
+      meaning: "bellflower",
+    },
+  ],
+  tusk: [
+    {
+      pos: "noun_meaning",
+      meaning: "icicle",
+    },
+  ],
+  awl: [
+    {
+      pos: "noun_meaning",
+      meaning: "icicle",
+    },
+  ],
+  candle: [
+    {
+      pos: "noun_meaning",
+      meaning: "icicle",
+    },
+  ],
+  news: [
+    {
+      pos: "noun_meaning",
+      meaning: "interest",
+    },
+  ],
+  trench: [
+    {
+      pos: "noun_meaning",
+      meaning: "thread",
+    },
+  ],
+  textile: [
+    {
+      pos: "noun_meaning",
+      meaning: "sail",
+    },
+  ],
+  cloth: [
+    {
+      pos: "noun_meaning",
+      meaning: "sail",
+    },
+  ],
+  rag: [
+    {
+      pos: "noun_meaning",
+      meaning: "sail",
+    },
+  ],
+  duster: [
+    {
+      pos: "noun_meaning",
+      meaning: "sail",
+    },
+  ],
+  curtain: [
+    {
+      pos: "noun_meaning",
+      meaning: "sail",
+    },
+  ],
+  campfire: [
+    {
+      pos: "noun_meaning",
+      meaning: "starfish",
+    },
+  ],
+  bonfire: [
+    {
+      pos: "noun_meaning",
+      meaning: "starfish",
+    },
+  ],
+  tick: [
+    {
+      pos: "verb_meaning",
+      meaning: "drink",
+    },
+  ],
+  fin: [
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+  ],
+  cousin: [
+    {
+      pos: "noun_meaning",
+      meaning: "uncle",
+    },
+  ],
+  tidy: [
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+  ],
+  neat: [
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+  ],
+  crumble: [
+    {
+      pos: "verb_meaning",
+      meaning: "wander off",
+    },
+  ],
+  guard: [
+    {
+      pos: "verb_meaning",
+      meaning: "act according to",
+    },
+  ],
+  clove: [
+    {
+      pos: "noun_meaning",
+      meaning: "twin",
+    },
+  ],
+  segment: [
+    {
+      pos: "noun_meaning",
+      meaning: "twin",
+    },
+  ],
+  larynx: [
+    {
+      pos: "noun_meaning",
+      meaning: "aorta",
+    },
+  ],
+  recall: [
+    {
+      pos: "verb_meaning",
+      meaning: "dream",
+    },
+  ],
+  recollect: [
+    {
+      pos: "verb_meaning",
+      meaning: "dream",
+    },
+  ],
+  channel: [
+    {
+      pos: "noun_meaning",
+      meaning: "river",
+    },
+  ],
+  spleen: [
+    {
+      pos: "noun_meaning",
+      meaning: "pupil",
+    },
+  ],
+  exude: [
+    {
+      pos: "verb_meaning",
+      meaning: "compassion",
+    },
+  ],
+  sucking: [
+    {
+      pos: "noun_meaning",
+      meaning: "nipple",
+    },
+  ],
+  sharpen: [
+    {
+      pos: "verb_meaning",
+      meaning: "set bounds",
+    },
+  ],
+  destiny: [
+    {
+      pos: "noun_meaning",
+      meaning: "death",
+    },
+  ],
+  convalesce: [
+    {
+      pos: "verb_meaning",
+      meaning: "have luck",
+    },
+  ],
+  traitor: [
+    {
+      pos: "noun_meaning",
+      meaning: "snail",
+    },
+  ],
+  join: [
+    {
+      pos: "verb_meaning",
+      meaning: "obey",
+    },
+  ],
+  title: [
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+  ],
+  leech: [
+    {
+      pos: "noun_meaning",
+      meaning: "slug",
+    },
+  ],
+  nimble: [
+    {
+      pos: "noun_meaning",
+      meaning: "lung",
+    },
+  ],
+  deft: [
+    {
+      pos: "noun_meaning",
+      meaning: "lung",
+    },
+  ],
+  pancreas: [
+    {
+      pos: "noun_meaning",
+      meaning: "spleen",
+    },
+  ],
+  abdomen: [
+    {
+      pos: "noun_meaning",
+      meaning: "womb",
+    },
+  ],
+  lizard: [
+    {
+      pos: "noun_meaning",
+      meaning: "uvula",
+    },
+  ],
+  flank: [
+    {
+      pos: "noun_meaning",
+      meaning: "spleen",
+    },
+  ],
+  butter: [
+    {
+      pos: "noun_meaning",
+      meaning: "dandelion",
+    },
+  ],
+  peace: [
+    {
+      pos: "noun_meaning",
+      meaning: "kiss",
+    },
+  ],
+  inkwell: [
+    {
+      pos: "noun_meaning",
+      meaning: "squid",
+    },
+  ],
+  buzz: [
+    {
+      pos: "noun_meaning",
+      meaning: "crowd",
+    },
+  ],
+  frigidity: [
+    {
+      pos: "adj_meaning",
+      meaning: "cold",
+    },
+  ],
+  North: [
+    {
+      pos: "adj_meaning",
+      meaning: "last",
+    },
+  ],
+  melody: [
+    {
+      pos: "noun_meaning",
+      meaning: "way",
+    },
+  ],
+  tune: [
+    {
+      pos: "noun_meaning",
+      meaning: "way",
+    },
+  ],
+  surprising: [
+    {
+      pos: "adj_meaning",
+      meaning: "beautiful",
+    },
+  ],
+  yesterday: [
+    {
+      pos: "verb_meaning",
+      meaning: "tomorrow",
+    },
+  ],
+  envious: [
+    {
+      pos: "verb_meaning",
+      meaning: "want",
+    },
+  ],
+  envy: [
+    {
+      pos: "verb_meaning",
+      meaning: "want",
+    },
+  ],
+  photograph: [
+    {
+      pos: "noun_meaning",
+      meaning: "mirror",
+    },
+  ],
+  knit: [
+    {
+      pos: "verb_meaning",
+      meaning: "weave",
+    },
+  ],
+  radius: [
+    {
+      pos: "noun_meaning",
+      meaning: "radius",
+    },
+  ],
+  sausage: [
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  first: [
+    {
+      pos: "adj_meaning",
+      meaning: "near",
+    },
+  ],
+  obsidian: [
+    {
+      pos: "noun_meaning",
+      meaning: "glass",
+    },
+  ],
+  seat: [
+    {
+      pos: "noun_meaning",
+      meaning: "desk",
+    },
+  ],
+  veil: [
+    {
+      pos: "noun_meaning",
+      meaning: "soft palate",
+    },
+  ],
+  "head-covering": [
+    {
+      pos: "noun_meaning",
+      meaning: "soft palate",
+    },
+  ],
+  hinge: [
+    {
+      pos: "noun_meaning",
+      meaning: "clavicle",
+    },
+  ],
+  improve: [
+    {
+      pos: "verb_meaning",
+      meaning: "shave",
+    },
+  ],
+  false: [
+    {
+      pos: "adj_meaning",
+      meaning: "different",
+    },
+  ],
+  wrong: [
+    {
+      pos: "adj_meaning",
+      meaning: "different",
+    },
+  ],
+  soup: [
+    {
+      pos: "noun_meaning",
+      meaning: "sauce",
+    },
+  ],
+  gills: [
+    {
+      pos: "verb_meaning",
+      meaning: "cover",
+    },
+  ],
+  novice: [
+    {
+      pos: "noun_meaning",
+      meaning: "stranger",
+    },
+  ],
+  tears: [
+    {
+      pos: "noun_meaning",
+      meaning: "saliva",
+    },
+  ],
+  cunning: [
+    {
+      pos: "adj_meaning",
+      meaning: "lazy",
+    },
+  ],
+  sly: [
+    {
+      pos: "adj_meaning",
+      meaning: "lazy",
+    },
+  ],
+  pestle: [
+    {
+      pos: "noun_meaning",
+      meaning: "millstone",
+    },
+  ],
+  mature: [
+    {
+      pos: "verb_meaning",
+      meaning: "take a wife",
+    },
+  ],
+  underground: [
+    {
+      pos: "noun_meaning",
+      meaning: "worm",
+    },
+  ],
+  subterranean: [
+    {
+      pos: "noun_meaning",
+      meaning: "worm",
+    },
+  ],
+  wrinkle: [
+    {
+      pos: "noun_meaning",
+      meaning: "street",
+    },
+  ],
+  foster: [
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+  ],
+  astringent: [
+    {
+      pos: "verb_meaning",
+      meaning: "suffer",
+    },
+  ],
+  tart: [
+    {
+      pos: "verb_meaning",
+      meaning: "suffer",
+    },
+  ],
+  rip: [
+    {
+      pos: "verb_meaning",
+      meaning: "break one's fast",
+    },
+  ],
+  monk: [
+    {
+      pos: "noun_meaning",
+      meaning: "sparrow",
+    },
+  ],
+  udder: [
+    {
+      pos: "verb_meaning",
+      meaning: "wish",
+    },
+  ],
+  perfume: [
+    {
+      pos: "verb_meaning",
+      meaning: "befriend",
+    },
+  ],
+  admire: [
+    {
+      pos: "verb_meaning",
+      meaning: "look at",
+    },
+  ],
+  education: [
+    {
+      pos: "verb_meaning",
+      meaning: "bring up",
+    },
+  ],
+  layman: [
+    {
+      pos: "noun_meaning",
+      meaning: "warrior",
+    },
+  ],
+  archer: [
+    {
+      pos: "noun_meaning",
+      meaning: "soldier",
+    },
+  ],
+  prepare: [
+    {
+      pos: "verb_meaning",
+      meaning: "cook",
+    },
+  ],
+  swallow: [
+    {
+      pos: "noun_meaning",
+      meaning: "throat",
+    },
+  ],
+  desire: [
+    {
+      pos: "verb_meaning",
+      meaning: "have sexual desire",
+    },
+  ],
+  eavesdrop: [
+    {
+      pos: "verb_meaning",
+      meaning: "listen",
+    },
+  ],
+  breed: [
+    {
+      pos: "verb_meaning",
+      meaning: "bring up",
+    },
+  ],
+  trace: [
+    {
+      pos: "verb_meaning",
+      meaning: "investigate",
+    },
+  ],
+  crucify: [
+    {
+      pos: "verb_meaning",
+      meaning: "hang",
+    },
+  ],
+  sin: [
+    {
+      pos: "noun_meaning",
+      meaning: "scorpion",
+    },
+  ],
+  solder: [
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+  ],
+  lichen: [
+    {
+      pos: "noun_meaning",
+      meaning: "lichen",
+    },
+  ],
+  meaning: [
+    {
+      pos: "noun_meaning",
+      meaning: "dream",
+    },
+  ],
+  sense: [
+    {
+      pos: "noun_meaning",
+      meaning: "dream",
+    },
+  ],
+  climb: [
+    {
+      pos: "verb_meaning",
+      meaning: "increase",
+    },
+  ],
+  reel: [
+    {
+      pos: "verb_meaning",
+      meaning: "spend",
+    },
+  ],
+  virtue: [
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  crumple: [
+    {
+      pos: "verb_meaning",
+      meaning: "loosen",
+    },
+  ],
+  split: [
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+  ],
+  chop: [
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+  ],
+  deficiency: [
+    {
+      pos: "noun_meaning",
+      meaning: "defect",
+    },
+  ],
+  lack: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  defect: [
+    {
+      pos: "noun_meaning",
+      meaning: "lack",
+    },
+  ],
+  localization: [
+    {
+      pos: "verb_meaning",
+      meaning: "know",
+    },
+  ],
+  conceive: [
+    {
+      pos: "verb_meaning",
+      meaning: "become pregnant",
+    },
+  ],
+  forbidden: [
+    {
+      pos: "adj_meaning",
+      meaning: "holy",
+    },
+  ],
+  vine: [
+    {
+      pos: "noun_meaning",
+      meaning: "rope",
+    },
+  ],
+  village: [
+    {
+      pos: "noun_meaning",
+      meaning: "house",
+    },
+  ],
+  benediction: [
+    {
+      pos: "noun_meaning",
+      meaning: "rain",
+    },
+  ],
+  blessing: [
+    {
+      pos: "noun_meaning",
+      meaning: "rain",
+    },
+  ],
+  thread: [
+    {
+      pos: "noun_meaning",
+      meaning: "string",
+    },
+  ],
+  must: [
+    {
+      pos: "noun_meaning",
+      meaning: "mustard",
+    },
+  ],
+  fragile: [
+    {
+      pos: "adj_meaning",
+      meaning: "pregnant",
+    },
+  ],
+  simple: [
+    {
+      pos: "adj_meaning",
+      meaning: "pure",
+    },
+  ],
+  obey: [
+    {
+      pos: "verb_meaning",
+      meaning: "belong",
+    },
+  ],
+  host: [
+    {
+      pos: "verb_meaning",
+      meaning: "curse",
+    },
+  ],
+  protect: [
+    {
+      pos: "verb_meaning",
+      meaning: "preserve",
+    },
+  ],
+  scold: [
+    {
+      pos: "verb_meaning",
+      meaning: "curse",
+    },
+  ],
+  steel: [
+    {
+      pos: "noun_meaning",
+      meaning: "flint",
+    },
+  ],
+  boredom: [
+    {
+      pos: "verb_meaning",
+      meaning: "long for",
+    },
+  ],
+  missing: [
+    {
+      pos: "verb_meaning",
+      meaning: "long for",
+    },
+  ],
+  fail: [
+    {
+      pos: "verb_meaning",
+      meaning: "long for",
+    },
+  ],
+  nerve: [
+    {
+      pos: "verb_meaning",
+      meaning: "be nervous",
+    },
+  ],
+  vegetable: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  testicle: [
+    {
+      pos: "adj_meaning",
+      meaning: "brave",
+    },
+  ],
+  mine: [
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+  ],
+  cicada: [
+    {
+      pos: "noun_meaning",
+      meaning: "cricket",
+    },
+  ],
+  outwards: [
+    {
+      pos: "verb_meaning",
+      meaning: "invent",
+    },
+  ],
+  fluff: [
+    {
+      pos: "noun_meaning",
+      meaning: "wealth",
+    },
+  ],
+  down: [
+    {
+      pos: "noun_meaning",
+      meaning: "wealth",
+    },
+  ],
+  three: [
+    {
+      pos: "noun_meaning",
+      meaning: "clover",
+    },
+  ],
+  weight: [
+    {
+      pos: "noun_meaning",
+      meaning: "rhythm",
+    },
+  ],
+  space: [
+    {
+      pos: "noun_meaning",
+      meaning: "room",
+    },
+  ],
+  wallaby: [
+    {
+      pos: "noun_meaning",
+      meaning: "fish",
+    },
+  ],
+  captive: [
+    {
+      pos: "adj_meaning",
+      meaning: "bad",
+    },
+  ],
+  tube: [
+    {
+      pos: "noun_meaning",
+      meaning: "barrel",
+    },
+  ],
+  pipe: [
+    {
+      pos: "noun_meaning",
+      meaning: "barrel",
+    },
+  ],
+  tangle: [
+    {
+      pos: "verb_meaning",
+      meaning: "confuse",
+    },
+  ],
+  numeral: [
+    {
+      pos: "noun_meaning",
+      meaning: "lamprey",
+    },
+  ],
+  reflection: [
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+  ],
+  Christian: [
+    {
+      pos: "noun_meaning",
+      meaning: "farmer",
+    },
+  ],
+  banana: [
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  polar_bear: [
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enemy",
+    },
+  ],
+  adams_apple: [
+    {
+      pos: "noun_meaning",
+      meaning: "throat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "voice",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bulge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "neck",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "core",
+    },
+  ],
+  hollow_tree: [
+    {
+      pos: "noun_meaning",
+      meaning: "lazy person",
+    },
+  ],
+  strong_adj: [
+    {
+      pos: "adj_meaning",
+      meaning: "hard",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "powerful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "firm",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "brave",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "healthy",
+    },
+  ],
+  true_adj: [
+    {
+      pos: "adj_meaning",
+      meaning: "real",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "straight",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "just",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "faithful",
+    },
+  ],
+  wild_adj: [
+    {
+      pos: "adj_meaning",
+      meaning: "untamed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "free",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dangerous",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "strange",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "natural",
+    },
+  ],
+  cave_pool: [
+    {
+      pos: "noun_meaning",
+      meaning: "water",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "basin",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mirror",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "well",
+    },
+  ],
+  lava_tube: [
+    {
+      pos: "noun_meaning",
+      meaning: "tunnel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "passage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pipe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "channel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cave",
+    },
+  ],
+  ice_cave: [
+    {
+      pos: "noun_meaning",
+      meaning: "cold hall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "winter cave",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ice hollow",
+    },
+  ],
+  soda_straw: [
+    {
+      pos: "noun_meaning",
+      meaning: "tube",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pipe",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drip",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thread",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spine",
+    },
+  ],
+  cave_wall: [
+    {
+      pos: "noun_meaning",
+      meaning: "stone face",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "side",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cliff",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "barrier",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "surface",
+    },
+  ],
+  cave_floor: [
+    {
+      pos: "noun_meaning",
+      meaning: "ground",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bottom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bedrock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "layer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "platform",
+    },
+  ],
+  cave_entrance: [
+    {
+      pos: "noun_meaning",
+      meaning: "mouth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gate",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "opening",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "threshold",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "doorway",
+    },
+  ],
+  underground_stream: [
+    {
+      pos: "noun_meaning",
+      meaning: "river",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "channel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "water vein",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "current",
+    },
+  ],
+  stalactite_forest: [
+    {
+      pos: "noun_meaning",
+      meaning: "stone grove",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cluster",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "teeth-field",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spike-land",
+    },
+  ],
+  cave_bear: [
+    {
+      pos: "noun_meaning",
+      meaning: "beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "predator",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shadow-animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit-beast",
+    },
+  ],
+  cave_spider: [
+    {
+      pos: "noun_meaning",
+      meaning: "web-maker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lurker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shadow-creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spinner",
+    },
+  ],
+  cave_salamander: [
+    {
+      pos: "noun_meaning",
+      meaning: "lizard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crawler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wet creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pale animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring-being",
+    },
+  ],
+  blind_fish: [
+    {
+      pos: "noun_meaning",
+      meaning: "pale fish",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "water-creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "deep swimmer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit fish",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mute fish",
+    },
+  ],
+  cave_fungus: [
+    {
+      pos: "noun_meaning",
+      meaning: "mold",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "growth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rot",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spore",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "moss",
+    },
+  ],
+  stalactite_curtain: [
+    {
+      pos: "noun_meaning",
+      meaning: "stone curtain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "veil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "teeth-wall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "partition",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drape",
+    },
+  ],
+  cave_sediment: [
+    {
+      pos: "noun_meaning",
+      meaning: "mud",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sand",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "deposit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "layer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "silt",
+    },
+  ],
+  cave_painting: [
+    {
+      pos: "noun_meaning",
+      meaning: "art",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mark",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "story",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "record",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "symbol",
+    },
+  ],
+  cave_system: [
+    {
+      pos: "noun_meaning",
+      meaning: "network",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "maze",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "realm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "depths",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "underworld",
+    },
+  ],
+  cave_chamber: [
+    {
+      pos: "noun_meaning",
+      meaning: "hall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "room",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vault",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hollow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "space",
+    },
+  ],
+  cave_passage: [
+    {
+      pos: "noun_meaning",
+      meaning: "tunnel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "corridor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "way",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "channel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "path",
+    },
+  ],
+  stalagmite_tower: [
+    {
+      pos: "noun_meaning",
+      meaning: "pillar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spike",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "monolith",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "horn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rise",
+    },
+  ],
+  cave_pool_deposit: [
+    {
+      pos: "noun_meaning",
+      meaning: "crust",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "layer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sheet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "deposit",
+    },
+  ],
+  cave_microclimate: [
+    {
+      pos: "noun_meaning",
+      meaning: "chill",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "air",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stillness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mist",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "breath",
+    },
+  ],
+  cave_stalactite_drip: [
+    {
+      pos: "noun_meaning",
+      meaning: "drop",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drip",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "droplet",
+    },
+  ],
+  speleothem_formation: [
+    {
+      pos: "noun_meaning",
+      meaning: "growth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shape",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "deposit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mineral",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone-form",
+    },
+  ],
+  cave_biodiversity: [
+    {
+      pos: "noun_meaning",
+      meaning: "life",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "creatures",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swarm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "community",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ecology",
+    },
+  ],
+  subterranean_river: [
+    {
+      pos: "noun_meaning",
+      meaning: "flow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "channel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "water-path",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "deep river",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "undercurrent",
+    },
+  ],
+  karst_window: [
+    {
+      pos: "noun_meaning",
+      meaning: "opening",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sink",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "break",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lightwell",
+    },
+  ],
+  african_pencil_cedar: [
+    {
+      pos: "noun_meaning",
+      meaning: "tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "timber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pillar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "post",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "resin",
+    },
+  ],
+  readying_for_harvest: [
+    {
+      pos: "noun_meaning",
+      meaning: "ripeness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "preparation",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "season",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "readiness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fullness",
+    },
+  ],
+  tall_variety_of_maize: [
+    {
+      pos: "noun_meaning",
+      meaning: "corn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crop",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giant plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stalk",
+    },
+  ],
+  african_elephant: [
+    {
+      pos: "noun_meaning",
+      meaning: "giant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tusk",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain-animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pillar-beast",
+    },
+  ],
+  african_buffalo: [
+    {
+      pos: "noun_meaning",
+      meaning: "horned beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "herd animal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giant cow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "charger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wild bull",
+    },
+  ],
+  black_backed_jackal: [
+    {
+      pos: "noun_meaning",
+      meaning: "scout",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trickster",
+    },
+  ],
+  african_hare: [
+    {
+      pos: "noun_meaning",
+      meaning: "prey",
+    },
+  ],
+  nile_monitor: [
+    {
+      pos: "noun_meaning",
+      meaning: "lizard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scavenger",
+    },
+  ],
+  savannah_monitor_lizard: [
+    {
+      pos: "noun_meaning",
+      meaning: "lizard",
+    },
+  ],
+  green_mamba: [
+    {
+      pos: "noun_meaning",
+      meaning: "venom",
+    },
+  ],
+  cave_ceiling: [
+    {
+      pos: "noun_meaning",
+      meaning: "roof",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sky",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "top",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dome",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "arch",
+    },
+  ],
+  kori_bustard: [
+    {
+      pos: "noun_meaning",
+      meaning: "giant bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strider",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "feather giant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "duster",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ground bird",
+    },
+  ],
+  savannah_sparrow: [
+    {
+      pos: "noun_meaning",
+      meaning: "small bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "singer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flutterer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grass bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "seed-eater",
+    },
+  ],
+  african_grey_hornbill: [
+    {
+      pos: "noun_meaning",
+      meaning: "long-beak bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "caller",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tree bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "clacker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest bird",
+    },
+  ],
+  army_ant: [
+    {
+      pos: "noun_meaning",
+      meaning: "swarm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "marcher",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soldier-ant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "devourer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "raider",
+    },
+  ],
+  acacia_tree: [
+    {
+      pos: "noun_meaning",
+      meaning: "thorn-tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gum",
+    },
+  ],
+  baobab_tree: [
+    {
+      pos: "noun_meaning",
+      meaning: "giant tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "water tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trunk",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "living stone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ancestor tree",
+    },
+  ],
+  savannah_oak: [
+    {
+      pos: "noun_meaning",
+      meaning: "hardwood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grove tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shade-tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "timber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mast",
+    },
+  ],
+  marula_tree: [
+    {
+      pos: "noun_meaning",
+      meaning: "fruit-tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spirit tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grove",
+    },
+  ],
+  candelabra_tree: [
+    {
+      pos: "noun_meaning",
+      meaning: "branch-tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fork-tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "torch-tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strange tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "desert tree",
+    },
+  ],
+  sable_antelope: [
+    {
+      pos: "noun_meaning",
+      meaning: "horned runner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "black deer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "striker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "charger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "herd beast",
+    },
+  ],
+  bat_hawk: [
+    {
+      pos: "noun_meaning",
+      meaning: "night-hawk",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swift bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sky-hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chaser",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dark bird",
+    },
+  ],
+  bush_shrike: [
+    {
+      pos: "noun_meaning",
+      meaning: "singer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thicket bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "caller",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter-bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shrieker",
+    },
+  ],
+  crowned_crane: [
+    {
+      pos: "noun_meaning",
+      meaning: "dancer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crowned bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wader",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "caller",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "long-leg bird",
+    },
+  ],
+  flap_necked_chameleon: [
+    {
+      pos: "noun_meaning",
+      meaning: "colour-changer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "twig-lizard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "climber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "still creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shifter",
+    },
+  ],
+  rock_monitor: [
+    {
+      pos: "noun_meaning",
+      meaning: "stone-lizard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crawler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "talon-lizard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scaler",
+    },
+  ],
+  savannah_horned_viper: [
+    {
+      pos: "noun_meaning",
+      meaning: "horn-snake",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lurker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "striker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "venom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "coil",
+    },
+  ],
+  veld_rat: [
+    {
+      pos: "noun_meaning",
+      meaning: "rodent",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nibbler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burrower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "small beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pest",
+    },
+  ],
+  african_striped_weasel: [
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "striped one",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scent-beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burrower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mouse-killer",
+    },
+  ],
+  striped_polecat: [
+    {
+      pos: "noun_meaning",
+      meaning: "striped predator",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scent-beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burrower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night-creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+  ],
+  bat_eared_fox: [
+    {
+      pos: "noun_meaning",
+      meaning: "listener",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "digger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pup",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night-runner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scavenger",
+    },
+  ],
+  african_civet: [
+    {
+      pos: "noun_meaning",
+      meaning: "night-cat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scent-beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "prowler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "striped cat",
+    },
+  ],
+  small_spotted_genet: [
+    {
+      pos: "noun_meaning",
+      meaning: "night-creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spot-cat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "climber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shadow-beast",
+    },
+  ],
+  yellow_mongoose: [
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snake-fighter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "quick one",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "prowler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scout",
+    },
+  ],
+  slender_mongoose: [
+    {
+      pos: "noun_meaning",
+      meaning: "long-body",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scent-creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "prowler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burrower",
+    },
+  ],
+  rock_hyrax: [
+    {
+      pos: "noun_meaning",
+      meaning: "rock dweller",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scree-creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shrieker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rodent",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "small beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hyrax",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dassie",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hyrax",
+    },
+  ],
+  tree_hyrax: [
+    {
+      pos: "noun_meaning",
+      meaning: "tree dweller",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shrieker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "climber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night-creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fur-beast",
+    },
+  ],
+  african_rock_python: [
+    {
+      pos: "noun_meaning",
+      meaning: "giant snake",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "coil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strangler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lurker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shadow-snake",
+    },
+  ],
+  pied_crow: [
+    {
+      pos: "noun_meaning",
+      meaning: "scavenger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trickster",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "black bird",
+    },
+  ],
+  desert_locust: [
+    {
+      pos: "noun_meaning",
+      meaning: "plague",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swarm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cloud",
+    },
+  ],
+  termite_mound: [
+    {
+      pos: "noun_meaning",
+      meaning: "tower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "colony",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "earth-pillar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dirt-hill",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nest",
+    },
+  ],
+  spear_grass: [
+    {
+      pos: "noun_meaning",
+      meaning: "sharp grass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thatch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spike",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spear",
+    },
+  ],
+  red_oat_grass: [
+    {
+      pos: "noun_meaning",
+      meaning: "fodder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pasture",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hay",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blade",
+    },
+  ],
+  feather_grass: [
+    {
+      pos: "noun_meaning",
+      meaning: "soft grass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plume",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thatch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pasture",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "white grass",
+    },
+  ],
+  thatching_grass: [
+    {
+      pos: "noun_meaning",
+      meaning: "roofing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thatch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bundle",
+    },
+  ],
+  veld_grass: [
+    {
+      pos: "noun_meaning",
+      meaning: "pasture",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fodder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grassland",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field",
+    },
+  ],
+  pumpkin_vine: [
+    {
+      pos: "noun_meaning",
+      meaning: "vine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "creeper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tendril",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fruit plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sprawler",
+    },
+  ],
+  wild_pear: [
+    {
+      pos: "noun_meaning",
+      meaning: "fruit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "food",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sweet thing",
+    },
+  ],
+  wild_fig: [
+    {
+      pos: "noun_meaning",
+      meaning: "fruit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grove",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sweet",
+    },
+  ],
+  leadwood_tree: [
+    {
+      pos: "noun_meaning",
+      meaning: "hardwood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "deadwood",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "timber",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beam",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pillar",
+    },
+  ],
+  hook_thorn: [
+    {
+      pos: "noun_meaning",
+      meaning: "hook",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brush",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tangle",
+    },
+  ],
+  wild_olive: [
+    {
+      pos: "noun_meaning",
+      meaning: "tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grove",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fruit",
+    },
+  ],
+  sisal_plant: [
+    {
+      pos: "noun_meaning",
+      meaning: "fiber",
+    },
+  ],
+  food_ready_to_be_eaten: [
+    {
+      pos: "noun_meaning",
+      meaning: "meal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dish",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "portion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "feast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bite",
+    },
+  ],
+  curved_beam: [
+    {
+      pos: "noun_meaning",
+      meaning: "arch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "support",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "frame",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rib",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bow",
+    },
+  ],
+  drive_herd: [
+    {
+      pos: "noun_meaning",
+      meaning: "movement",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "push",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rounding",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "directing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "control",
+    },
+  ],
+  fold_sheep: [
+    {
+      pos: "noun_meaning",
+      meaning: "gathering",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "penning",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "round-up",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enclosure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "keeping",
+    },
+  ],
+  water_livestock: [
+    {
+      pos: "noun_meaning",
+      meaning: "watering",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giving drink",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "care",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "supply",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "attendance",
+    },
+  ],
+  build_corral: [
+    {
+      pos: "noun_meaning",
+      meaning: "construction",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enclosure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pen",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "structure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "boundary",
+    },
+  ],
+  construct_paddock: [
+    {
+      pos: "noun_meaning",
+      meaning: "fence",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "yard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "enclosure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "building",
+    },
+  ],
+  move_camp: [
+    {
+      pos: "noun_meaning",
+      meaning: "migration",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shifting",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "travel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "relocation",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "journey",
+    },
+  ],
+  round_up: [
+    {
+      pos: "noun_meaning",
+      meaning: "gathering",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "search",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "control",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "push",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drive",
+    },
+  ],
+  tend_animals: [
+    {
+      pos: "noun_meaning",
+      meaning: "care",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "keeping",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "management",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "watching",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "attending",
+    },
+  ],
+  protect_a_herd: [
+    {
+      pos: "noun_meaning",
+      meaning: "guarding",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "watching",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "keeping",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "defense",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shielding",
+    },
+  ],
+  lead_a_flock: [
+    {
+      pos: "noun_meaning",
+      meaning: "guiding",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "heading",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "directing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "showing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "control",
+    },
+  ],
+  monitor_a_pasture: [
+    {
+      pos: "noun_meaning",
+      meaning: "watching",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "overseeing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "survey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "inspection",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "care",
+    },
+  ],
+  supplement_feed: [
+    {
+      pos: "noun_meaning",
+      meaning: "feeding",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "adding",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "supply",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "help",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "support",
+    },
+  ],
+  rotate_grazing: [
+    {
+      pos: "noun_meaning",
+      meaning: "cycling",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "movement",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rotation",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pasture-shift",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "management",
+    },
+  ],
+  vaccinate_livestock: [
+    {
+      pos: "noun_meaning",
+      meaning: "treatment",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "protection",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "medicine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "care",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "prevention",
+    },
+  ],
+  repair_a_fence: [
+    {
+      pos: "noun_meaning",
+      meaning: "fixing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mending",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "restoration",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "patching",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "work",
+    },
+  ],
+  prepare_fodder: [
+    {
+      pos: "noun_meaning",
+      meaning: "cutting",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mixing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "feed-making",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "supply",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "provision",
+    },
+  ],
+  drive_cattle_to_market: [
+    {
+      pos: "noun_meaning",
+      meaning: "journey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "movement",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "procession",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sell-drive",
+    },
+  ],
+  supervise_herders: [
+    {
+      pos: "noun_meaning",
+      meaning: "leadership",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "management",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "oversight",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "command",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "guidance",
+    },
+  ],
+  round_up_strays: [
+    {
+      pos: "noun_meaning",
+      meaning: "search",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "recovery",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "control",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gathering",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "return",
+    },
+  ],
+  track_animals: [
+    {
+      pos: "noun_meaning",
+      meaning: "search",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunt",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "follow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "path",
+    },
+  ],
+  count_livestock: [
+    {
+      pos: "noun_meaning",
+      meaning: "tally",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "record",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "check",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "review",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "order",
+    },
+  ],
+  livestock_oriented: [
+    {
+      pos: "adj_meaning",
+      meaning: "animal-focused",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "herd-based",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pasture-centered",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "stock-heavy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "resource-driven",
+    },
+  ],
+  semi_nomadic: [
+    {
+      pos: "adj_meaning",
+      meaning: "part-settled",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "circling",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "seasonal",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "shifting",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dual-living",
+    },
+  ],
+  cattle_driven: [
+    {
+      pos: "adj_meaning",
+      meaning: "herd-led",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beast-led",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "stock-guided",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "animal-powered",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pasture-bound",
+    },
+  ],
+  sheep_rearing: [
+    {
+      pos: "adj_meaning",
+      meaning: "wool-based",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fold-keeping",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lamb-raising",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "pasture-using",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "herd-tending",
+    },
+  ],
+  goat_rearing: [
+    {
+      pos: "adj_meaning",
+      meaning: "browsing-based",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "rock-pasture",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "hill-living",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "milk-focused",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "herd-tending",
+    },
+  ],
+  pasture_rich: [
+    {
+      pos: "adj_meaning",
+      meaning: "grassy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "fertile",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "lush",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "grazing-good",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "green",
+    },
+  ],
+  animal_dependent: [
+    {
+      pos: "adj_meaning",
+      meaning: "stock-bound",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "beast-reliant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "herd-reliant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "animal-based",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "resource-dependent",
+    },
+  ],
+  self_sufficient: [
+    {
+      pos: "adj_meaning",
+      meaning: "independent",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "self-reliant",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "autarkic",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unassisted",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sustainable",
+    },
+  ],
+  weather_exposed: [
+    {
+      pos: "adj_meaning",
+      meaning: "open",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bare",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unsheltered",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weather-beaten",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wind-touched",
+    },
+  ],
+  land_intensive: [
+    {
+      pos: "adj_meaning",
+      meaning: "wide-ranging",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "spread-out",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "expansive",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "resource-heavy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "field-heavy",
+    },
+  ],
+  herd_protective: [
+    {
+      pos: "adj_meaning",
+      meaning: "defensive",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "guarding",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "watchful",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "loyal",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "careful",
+    },
+  ],
+  sand_dune_ridge: [
+    {
+      pos: "noun_meaning",
+      meaning: "ridge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hill",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rise",
+    },
+  ],
+  salt_flat: [
+    {
+      pos: "noun_meaning",
+      meaning: "plain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plate",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "white-land",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crust",
+    },
+  ],
+  desert_scrub: [
+    {
+      pos: "noun_meaning",
+      meaning: "bush",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thicket",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shrub",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brush",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cover",
+    },
+  ],
+  sand_cat: [
+    {
+      pos: "noun_meaning",
+      meaning: "desert cat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stalker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wildcat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night predator",
+    },
+  ],
+  gila_monster: [
+    {
+      pos: "noun_meaning",
+      meaning: "lizard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "poison-lizard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crawler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fat-tail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "desert-creature",
+    },
+  ],
+  sun_baked: [
+    {
+      pos: "adj_meaning",
+      meaning: "burnt",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "browned",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "heated",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sun-hardened",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dry-crusted",
+    },
+  ],
+  wind_scorched: [
+    {
+      pos: "adj_meaning",
+      meaning: "weathered",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "burnt",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "exposed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "roughened",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "blasted",
+    },
+  ],
+  trudge_through_sand: [
+    {
+      pos: "noun_meaning",
+      meaning: "effort",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "struggle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "slow-walk",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "labour",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drag",
+    },
+  ],
+  wander_aimlessly_in_desert: [
+    {
+      pos: "noun_meaning",
+      meaning: "stray",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drift",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meander",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lost-walk",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ramble",
+    },
+  ],
+  bake_under_the_sun: [
+    {
+      pos: "noun_meaning",
+      meaning: "heat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drying",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "exposure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hardening",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "warming",
+    },
+  ],
+  sand_drift: [
+    {
+      pos: "noun_meaning",
+      meaning: "shift",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pile",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bank",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "roll",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wave",
+    },
+  ],
+  wind_erode: [
+    {
+      pos: "noun_meaning",
+      meaning: "wear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "decay",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scratch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bite",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shave",
+    },
+  ],
+  search_for_water: [
+    {
+      pos: "noun_meaning",
+      meaning: "quest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunt",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "need",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "journey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hope",
+    },
+  ],
+  burrow_into_sand: [
+    {
+      pos: "noun_meaning",
+      meaning: "dig",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "den",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tunnel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hide",
+    },
+  ],
+  shade_oneself: [
+    {
+      pos: "noun_meaning",
+      meaning: "cover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shelter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "protection",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cooling",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "relief",
+    },
+  ],
+  dry_out: [
+    {
+      pos: "noun_meaning",
+      meaning: "wither",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shrink",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crust",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "parch",
+    },
+  ],
+  heat_haze: [
+    {
+      pos: "noun_meaning",
+      meaning: "mirage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blur",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shimmer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "glow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wavering",
+    },
+  ],
+  dust_cloud: [
+    {
+      pos: "noun_meaning",
+      meaning: "storm",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "veil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mist",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brown-haze",
+    },
+  ],
+  dry_well: [
+    {
+      pos: "noun_meaning",
+      meaning: "pit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "emptiness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "failure",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "waste",
+    },
+  ],
+  rock_spire: [
+    {
+      pos: "noun_meaning",
+      meaning: "pillar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "peak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tooth",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spire",
+    },
+  ],
+  sandstone_bluff: [
+    {
+      pos: "noun_meaning",
+      meaning: "cliff",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "edge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rise",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "face",
+    },
+  ],
+  thorn_lizard: [
+    {
+      pos: "noun_meaning",
+      meaning: "thorn-beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spike-lizard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "defender",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rock-creature",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "armoured-lizard",
+    },
+  ],
+  desert_cricket: [
+    {
+      pos: "noun_meaning",
+      meaning: "singer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "chirper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "insect",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jumper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scraper",
+    },
+  ],
+  sand_fox_den: [
+    {
+      pos: "noun_meaning",
+      meaning: "den",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "burrow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lair",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "nest",
+    },
+  ],
+  rock_crevice: [
+    {
+      pos: "noun_meaning",
+      meaning: "gap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "split",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crack",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "niche",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hollow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crack",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fissure",
+    },
+  ],
+  dry_canyon: [
+    {
+      pos: "noun_meaning",
+      meaning: "gorge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ravine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pass",
+    },
+  ],
+  eroded_arch: [
+    {
+      pos: "noun_meaning",
+      meaning: "archway",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bridge-rock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "span",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "curve",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gate",
+    },
+  ],
+  cactus_grove: [
+    {
+      pos: "noun_meaning",
+      meaning: "patch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stand",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cluster",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thorn-field",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "green-patch",
+    },
+  ],
+  sand_plateau: [
+    {
+      pos: "noun_meaning",
+      meaning: "flat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tableland",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "high-flat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "level",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rise",
+    },
+  ],
+  basalt_field: [
+    {
+      pos: "noun_meaning",
+      meaning: "lava-rock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dark-field",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone-plain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "block-field",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hard-ground",
+    },
+  ],
+  ancient_riverbed: [
+    {
+      pos: "noun_meaning",
+      meaning: "old-wash",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dead-stream",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "valley",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "run",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "channel",
+    },
+  ],
+  dry_wash: [
+    {
+      pos: "noun_meaning",
+      meaning: "gully",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ravine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ditch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shallow",
+    },
+  ],
+  rock_outcrop: [
+    {
+      pos: "noun_meaning",
+      meaning: "rise",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "knob",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone-lip",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "high-rock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "exposure",
+    },
+  ],
+  sun_shelf: [
+    {
+      pos: "noun_meaning",
+      meaning: "ledge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rim",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "perch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sun-rock",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "overhang",
+    },
+  ],
+  "(of_sunlight),_blinding": [
+    {
+      pos: "adj_meaning",
+      meaning: "dazzling",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "piercing",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "glare",
+    },
+  ],
+  "(of_dirt),_cracked": [
+    {
+      pos: "adj_meaning",
+      meaning: "split",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "parched",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fissure",
+    },
+  ],
+  wind_carved: [
+    {
+      pos: "adj_meaning",
+      meaning: "etched",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "worn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ridge",
+    },
+  ],
+  bone_dry: [
+    {
+      pos: "adj_meaning",
+      meaning: "arid",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "thirsty",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "cracked",
+    },
+  ],
+  sand_choked: [
+    {
+      pos: "adj_meaning",
+      meaning: "blocked",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "buried",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "drift",
+    },
+  ],
+  scorched_brown: [
+    {
+      pos: "adj_meaning",
+      meaning: "burnt",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "sun-darkened",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "char",
+    },
+  ],
+  sun_glared: [
+    {
+      pos: "adj_meaning",
+      meaning: "blazed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "overlit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "glint",
+    },
+  ],
+  hard_baked: [
+    {
+      pos: "adj_meaning",
+      meaning: "solid",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unyielding",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crust",
+    },
+  ],
+  of_heat_and_hot_wind_fierce: [
+    {
+      pos: "adj_meaning",
+      meaning: "violent",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "wild",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gale",
+    },
+  ],
+  of_sand_abrasive: [
+    {
+      pos: "adj_meaning",
+      meaning: "rough",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "scraping",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "grit",
+    },
+  ],
+  blister_from_the_sun: [
+    {
+      pos: "verb_meaning",
+      meaning: "peel",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "crack",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "swell",
+    },
+  ],
+  sift_through_sand: [
+    {
+      pos: "verb_meaning",
+      meaning: "search",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "separate",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sorting",
+    },
+  ],
+  of_the_wind_lash_sand: [
+    {
+      pos: "verb_meaning",
+      meaning: "whip",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "scatter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "gust",
+    },
+  ],
+  of_sand_batter: [
+    {
+      pos: "verb_meaning",
+      meaning: "strike",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "erode",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "impact",
+    },
+  ],
+  collapse_from_heat: [
+    {
+      pos: "verb_meaning",
+      meaning: "faint",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "succumb",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fall",
+    },
+  ],
+  seek_shade: [
+    {
+      pos: "verb_meaning",
+      meaning: "hide",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "rest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shelter",
+    },
+  ],
+  leave_tracks_in_the_sand: [
+    {
+      pos: "verb_meaning",
+      meaning: "mark",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "trail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "footprint",
+    },
+  ],
+  dig_for_water: [
+    {
+      pos: "verb_meaning",
+      meaning: "search",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "excavate",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "effort",
+    },
+  ],
+  burrow_downward: [
+    {
+      pos: "verb_meaning",
+      meaning: "dive",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "sink",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hole",
+    },
+  ],
+  of_hot_air_shimmer: [
+    {
+      pos: "verb_meaning",
+      meaning: "waver",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "flicker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mirage",
+    },
+  ],
+  "bleach_(sun_bleaching_bones)": [
+    {
+      pos: "verb_meaning",
+      meaning: "whiten",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "fade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "paleness",
+    },
+  ],
+  of_rock_erosion_weather: [
+    {
+      pos: "verb_meaning",
+      meaning: "wear",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "crumble",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "erosion",
+    },
+  ],
+  oasis_route: [
+    {
+      pos: "noun_meaning",
+      meaning: "trail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "road",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pathway",
+    },
+  ],
+  dune_path: [
+    {
+      pos: "noun_meaning",
+      meaning: "track",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ridge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wave",
+    },
+  ],
+  sandstorm_marker: [
+    {
+      pos: "noun_meaning",
+      meaning: "warning",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "signal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "omen",
+    },
+  ],
+  water_cache: [
+    {
+      pos: "noun_meaning",
+      meaning: "reserve",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "supply",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stash",
+    },
+  ],
+  mirage_guide: [
+    {
+      pos: "noun_meaning",
+      meaning: "illusion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sign",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "vision",
+    },
+  ],
+  navigate_dunes: [
+    {
+      pos: "verb_meaning",
+      meaning: "travel",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "cross",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "wander",
+    },
+  ],
+  traverse_plateau: [
+    {
+      pos: "verb_meaning",
+      meaning: "walk",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "scale",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "range",
+    },
+  ],
+  cross_wash: [
+    {
+      pos: "verb_meaning",
+      meaning: "ford",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "step",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "passage",
+    },
+  ],
+  well_traveled: [
+    {
+      pos: "adj_meaning",
+      meaning: "known",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "used",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "open",
+    },
+  ],
+  desert_hardened: [
+    {
+      pos: "adj_meaning",
+      meaning: "tough",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tested",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weathered",
+    },
+  ],
+  camel_cavalry: [
+    {
+      pos: "noun_meaning",
+      meaning: "riders",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "war band",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "guards",
+    },
+  ],
+  sand_ambush: [
+    {
+      pos: "noun_meaning",
+      meaning: "attack",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "strike",
+    },
+  ],
+  desert_fortress: [
+    {
+      pos: "noun_meaning",
+      meaning: "stronghold",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "post",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bastion",
+    },
+  ],
+  desert_scout: [
+    {
+      pos: "noun_meaning",
+      meaning: "spy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pathfinder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "messenger",
+    },
+  ],
+  siege_rampart: [
+    {
+      pos: "noun_meaning",
+      meaning: "wall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "barricade",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mound",
+    },
+  ],
+  raid_an_oasis: [
+    {
+      pos: "verb_meaning",
+      meaning: "attack",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "plunder",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "invade",
+    },
+  ],
+  skirmish_in_dunes: [
+    {
+      pos: "verb_meaning",
+      meaning: "fight",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "clash",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "engage",
+    },
+  ],
+  sand_blinded: [
+    {
+      pos: "adj_meaning",
+      meaning: "sightless",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "dazed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blindness",
+    },
+  ],
+  heat_fatigued: [
+    {
+      pos: "adj_meaning",
+      meaning: "tired",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "worn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "exhaustion",
+    },
+  ],
+  date_palm: [
+    {
+      pos: "noun_meaning",
+      meaning: "fruit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shade",
+    },
+  ],
+  desert_rat: [
+    {
+      pos: "noun_meaning",
+      meaning: "forager",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "survivor",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wanderer",
+    },
+  ],
+  fennec_fox: [
+    {
+      pos: "noun_meaning",
+      meaning: "hunter",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "night-beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "watcher",
+    },
+  ],
+  desert_hare: [
+    {
+      pos: "noun_meaning",
+      meaning: "runner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "prey",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "jumper",
+    },
+  ],
+  kalahari_lion: [
+    {
+      pos: "noun_meaning",
+      meaning: "killer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "king-beast",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stalker",
+    },
+  ],
+  sahara_ant: [
+    {
+      pos: "noun_meaning",
+      meaning: "scavenger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "worker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swarm",
+    },
+  ],
+  sand_dune_lizard: [
+    {
+      pos: "noun_meaning",
+      meaning: "skitterer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sun-dweller",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crawler",
+    },
+  ],
+  desert_cactus_flower: [
+    {
+      pos: "noun_meaning",
+      meaning: "bloom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sweetness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beauty",
+    },
+  ],
+  ephemeral_pool: [
+    {
+      pos: "noun_meaning",
+      meaning: "puddle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "passing water",
+    },
+  ],
+  mesquite_bush: [
+    {
+      pos: "noun_meaning",
+      meaning: "thicket",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "brush",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wood",
+    },
+  ],
+  drought_resistant: [
+    {
+      pos: "adj_meaning",
+      meaning: "hardy",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "surviving",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "tenacious",
+    },
+  ],
+  die_of_thirst: [
+    {
+      pos: "noun_meaning",
+      meaning: "death",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "end",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fading",
+    },
+  ],
+  of_the_desert_sun_and_landscape_unforgiving: [
+    {
+      pos: "adj_meaning",
+      meaning: "harsh",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "merciless",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "unyielding",
+    },
+  ],
+  waste_away: [
+    {
+      pos: "verb_meaning",
+      meaning: "weaken",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "diminish",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "decline",
+    },
+  ],
+  wander_aimlessly: [
+    {
+      pos: "verb_meaning",
+      meaning: "roam",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "drift",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "meander",
+    },
+  ],
+  salt_pan: [
+    {
+      pos: "noun_meaning",
+      meaning: "flat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "plain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crust",
+    },
+  ],
+  alluvial_fan: [
+    {
+      pos: "noun_meaning",
+      meaning: "delta",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spread",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "slope",
+    },
+  ],
+  rock_varnish: [
+    {
+      pos: "noun_meaning",
+      meaning: "coat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "glaze",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sheen",
+    },
+  ],
+  desert_pavement: [
+    {
+      pos: "noun_meaning",
+      meaning: "stones",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "flat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "floor",
+    },
+  ],
+  wind_swept: [
+    {
+      pos: "adj_meaning",
+      meaning: "exposed",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "bare",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "weathered",
+    },
+  ],
+  salt_encrusted: [
+    {
+      pos: "adj_meaning",
+      meaning: "white-coated",
+    },
+    {
+      pos: "adj_meaning",
+      meaning: "crusted",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "salt-skin",
+    },
+  ],
+  scour_through_sand: [
+    {
+      pos: "verb_meaning",
+      meaning: "search",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "rake",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sifting",
+    },
+  ],
+  dorsal_fin: [
+    {
+      pos: "noun_meaning",
+      meaning: "back ridge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "war banner on back",
+    },
+  ],
+  Bitis_arietans: [
+    {
+      pos: "noun_meaning",
+      meaning: "heavy viper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "steppe killer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ambush snake",
+    },
+  ],
+  father_in_law: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife father",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "marriage elder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "affine",
+    },
+  ],
+  lesser_kudu: [
+    {
+      pos: "noun_meaning",
+      meaning: "small strip antelope",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "light forest game",
+    },
+  ],
+  greater_kudu: [
+    {
+      pos: "noun_meaning",
+      meaning: "large spiral horn antelope",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "trophy beast",
+    },
+  ],
+  cliff_chat: [
+    {
+      pos: "noun_meaning",
+      meaning: "rock songbird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cliff dweller bird",
+    },
+  ],
+  fish_hook: [
+    {
+      pos: "noun_meaning",
+      meaning: "bait crook",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "angler tool",
+    },
+  ],
+  horse_reigns: [
+    {
+      pos: "noun_meaning",
+      meaning: "control straps",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "guiding hand",
+    },
+  ],
+  augar_buzzard: [
+    {
+      pos: "noun_meaning",
+      meaning: "desert hawk",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "carrion watcher",
+    },
+  ],
+  pine_resin: [
+    {
+      pos: "noun_meaning",
+      meaning: "tree tar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "torch fuel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sealant",
+    },
+  ],
+  pine_needle_litter: [
+    {
+      pos: "noun_meaning",
+      meaning: "forest carpet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dry bed",
+    },
+  ],
+  forest_floor: [
+    {
+      pos: "noun_meaning",
+      meaning: "leaf layer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beast path",
+    },
+  ],
+  pine_cone: [
+    {
+      pos: "noun_meaning",
+      meaning: "seed cluster",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "throwing toy",
+    },
+  ],
+  pine_forest_glade: [
+    {
+      pos: "noun_meaning",
+      meaning: "open grove",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meeting place",
+    },
+  ],
+  pine_grove: [
+    {
+      pos: "noun_meaning",
+      meaning: "stand of pines",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "holy grove",
+    },
+  ],
+  forest_canopy: [
+    {
+      pos: "noun_meaning",
+      meaning: "roof",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sky",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "covering",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shade",
+    },
+  ],
+  pine_sapling: [
+    {
+      pos: "noun_meaning",
+      meaning: "young pine",
+    },
+  ],
+  forest_understory: [
+    {
+      pos: "noun_meaning",
+      meaning: "shadow layer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "beast's hiding place",
+    },
+  ],
+  pine_stump: [
+    {
+      pos: "noun_meaning",
+      meaning: "cut tree base",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field seat",
+    },
+  ],
+  fallen_log: [
+    {
+      pos: "noun_meaning",
+      meaning: "forest bridge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "barrier on path",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rot nest",
+    },
+  ],
+  pine_needle_bed: [
+    {
+      pos: "noun_meaning",
+      meaning: "forest bedding",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soft mulch layer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "natural ground pad",
+    },
+  ],
+  pine_pollen: [
+    {
+      pos: "noun_meaning",
+      meaning: "tree dust",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring bloom powder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "yellow drift",
+    },
+  ],
+  cone_bearing_tree: [
+    {
+      pos: "noun_meaning",
+      meaning: "evergreen tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cone bearer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "needle-leaved tree",
+    },
+  ],
+  pine_resin_trail: [
+    {
+      pos: "noun_meaning",
+      meaning: "sap streak",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "amber smear",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sticky trail",
+    },
+  ],
+  forest_path: [
+    {
+      pos: "noun_meaning",
+      meaning: "woodland trail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hunter’s track",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "foot-worn way",
+    },
+  ],
+  forest_stream: [
+    {
+      pos: "noun_meaning",
+      meaning: "brook",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wood-flow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tree-shadowed run",
+    },
+  ],
+  forest_moss_carpet: [
+    {
+      pos: "noun_meaning",
+      meaning: "moss bed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "green cushion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soft forest mat",
+    },
+  ],
+  forest_wildlife: [
+    {
+      pos: "noun_meaning",
+      meaning: "woodland animals",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest creatures",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wild fauna",
+    },
+  ],
+  pine_beetle: [
+    {
+      pos: "noun_meaning",
+      meaning: "bark borer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tree pest",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wood-burrower",
+    },
+  ],
+  forest_mushroom: [
+    {
+      pos: "noun_meaning",
+      meaning: "wood fungus",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest cap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ground sprout",
+    },
+  ],
+  arctic_fox: [
+    {
+      pos: "noun_meaning",
+      meaning: "fox",
+    },
+  ],
+  snowy_owl: [
+    {
+      pos: "noun_meaning",
+      meaning: "owl",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shy person",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wise person",
+    },
+  ],
+  musk_ox: [
+    {
+      pos: "noun_meaning",
+      meaning: "ox",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tundra bison",
+    },
+  ],
+  arctic_hare: [
+    {
+      pos: "noun_meaning",
+      meaning: "hare",
+    },
+  ],
+  tundra_wolf: [
+    {
+      pos: "noun_meaning",
+      meaning: "wolf",
+    },
+  ],
+  snow_buntings: [
+    {
+      pos: "noun_meaning",
+      meaning: "bird",
+    },
+  ],
+  low_shrubs: [
+    {
+      pos: "noun_meaning",
+      meaning: "bush",
+    },
+  ],
+  tundra_pond: [
+    {
+      pos: "noun_meaning",
+      meaning: "ice-rim pool",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "frozen water hollow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cold basin",
+    },
+  ],
+  snow_drifts: [
+    {
+      pos: "noun_meaning",
+      meaning: "wind-heaped snow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "white ridge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snowbank rise",
+    },
+  ],
+  ice_sheet: [
+    {
+      pos: "noun_meaning",
+      meaning: "vast ice plain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "frozen field",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "glacial cover",
+    },
+  ],
+  tundra_hare: [
+    {
+      pos: "noun_meaning",
+      meaning: "frost-runner",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "white hopper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "coldland jumper",
+    },
+  ],
+  arctic_willow: [
+    {
+      pos: "noun_meaning",
+      meaning: "dwarf frost-tree",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "low arctic shrub",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tundra switch-branch",
+    },
+  ],
+  ground_squirrel: [
+    {
+      pos: "noun_meaning",
+      meaning: "burrow scamperer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "earth-runner rodent",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ground forager",
+    },
+  ],
+  arctic_poppy: [
+    {
+      pos: "noun_meaning",
+      meaning: "cold bloom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tundra flower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sun-hungry blossom",
+    },
+  ],
+  tufted_saxifrage: [
+    {
+      pos: "noun_meaning",
+      meaning: "clump blossom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone-bloom plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rock tuft-flower",
+    },
+  ],
+  cotton_grass: [
+    {
+      pos: "noun_meaning",
+      meaning: "white tuft stem",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soft-head grass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "downy stalk",
+    },
+  ],
+  tundra_grasses: [
+    {
+      pos: "noun_meaning",
+      meaning: "coldland blades",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "short wildgrass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wind-fed tufts",
+    },
+  ],
+  lichens_mats: [
+    {
+      pos: "noun_meaning",
+      meaning: "ground crust",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soft moss-crust",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tundra blanket",
+    },
+  ],
+  ice_wedge: [
+    {
+      pos: "noun_meaning",
+      meaning: "frozen split",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cold cleft",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ice crack-core",
+    },
+  ],
+  rocky_outcrop: [
+    {
+      pos: "noun_meaning",
+      meaning: "bare rock-jut",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ridge spur",
+    },
+  ],
+  arctic_wolf: [
+    {
+      pos: "noun_meaning",
+      meaning: "white predator",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "frost prowler",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snow-stalker",
+    },
+  ],
+  snow_hare: [
+    {
+      pos: "noun_meaning",
+      meaning: "winter-bound hare",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snowbound hopper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "white quick-runner",
+    },
+  ],
+  permafrost_soil: [
+    {
+      pos: "noun_meaning",
+      meaning: "ice-bound dirt",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "frozen clay",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hardcold earth",
+    },
+  ],
+  frost_flower: [
+    {
+      pos: "noun_meaning",
+      meaning: "ice petal",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "crystal bloom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "winter lace-sprout",
+    },
+  ],
+  tundra_stream: [
+    {
+      pos: "noun_meaning",
+      meaning: "cold trickle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thin chill-run",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ice-wash streamlet",
+    },
+  ],
+  snow_hare_track: [
+    {
+      pos: "noun_meaning",
+      meaning: "hare print",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snow mark",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "white-step trail",
+    },
+  ],
+  wolf_track: [
+    {
+      pos: "noun_meaning",
+      meaning: "sign of danger",
+    },
+  ],
+  migratory_bird: [
+    {
+      pos: "noun_meaning",
+      meaning: "traveller",
+    },
+  ],
+  nesting_site: [
+    {
+      pos: "noun_meaning",
+      meaning: "nursery",
+    },
+  ],
+  arctic_cotton: [
+    {
+      pos: "noun_meaning",
+      meaning: "fluff",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cloud",
+    },
+  ],
+  roe_deer: [
+    {
+      pos: "noun_meaning",
+      meaning: "deer",
+    },
+  ],
+  barn_owl: [
+    {
+      pos: "noun_meaning",
+      meaning: "ghost",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "phantom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ghost-winged owl",
+    },
+  ],
+  fly_agaric: [
+    {
+      pos: "noun_meaning",
+      meaning: "red cap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "white speck mushroom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spotted fungus",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fairy mushroom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest poison",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bright cap",
+    },
+  ],
+  shaggy_ink_cap: [
+    {
+      pos: "noun_meaning",
+      meaning: "tall fungus",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dripping cap",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "soft stalk",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "white cap mushroom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ink fungus",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ragged mushroom",
+    },
+  ],
+  meadow_saxifrage: [
+    {
+      pos: "noun_meaning",
+      meaning: "rockbreaker",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "white saxifrage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring bloom",
+    },
+  ],
+  meadow_rue: [
+    {
+      pos: "noun_meaning",
+      meaning: "thalictrum",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wild rue",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meadow herb",
+    },
+  ],
+  meadow_buttercup: [
+    {
+      pos: "noun_meaning",
+      meaning: "tall buttercup",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "golden cup",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field ranunculus",
+    },
+  ],
+  meadow_vetchling: [
+    {
+      pos: "noun_meaning",
+      meaning: "vetch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wild vetch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meadow pea",
+    },
+  ],
+  red_clover: [
+    {
+      pos: "noun_meaning",
+      meaning: "trifoliate clover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "bee clover",
+    },
+  ],
+  white_clover: [
+    {
+      pos: "noun_meaning",
+      meaning: "dutch clover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "shamrock",
+    },
+  ],
+  meadow_brown_butterfly: [
+    {
+      pos: "noun_meaning",
+      meaning: "brown butterfly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meadow brown",
+    },
+  ],
+  skipper_butterfly: [
+    {
+      pos: "noun_meaning",
+      meaning: "skipper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "darting butterfly",
+    },
+  ],
+  common_blue_butterfly: [
+    {
+      pos: "noun_meaning",
+      meaning: "common blue",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blue butterfly",
+    },
+  ],
+  painted_lady_butterfly: [
+    {
+      pos: "noun_meaning",
+      meaning: "painted lady",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lady butterfly",
+    },
+  ],
+  meadow_grasshopper: [
+    {
+      pos: "noun_meaning",
+      meaning: "grasshopper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field hopper",
+    },
+  ],
+  field_cricket: [
+    {
+      pos: "noun_meaning",
+      meaning: "cricket",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field insect",
+    },
+  ],
+  field_mouse: [
+    {
+      pos: "noun_meaning",
+      meaning: "wood mouse",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meadow mouse",
+    },
+  ],
+  meadow_pipit: [
+    {
+      pos: "noun_meaning",
+      meaning: "pipit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meadow bird",
+    },
+  ],
+  reed_bunting: [
+    {
+      pos: "noun_meaning",
+      meaning: "reed bird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "marsh bunting",
+    },
+  ],
+  meadow_ant: [
+    {
+      pos: "noun_meaning",
+      meaning: "field ant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hill ant",
+    },
+  ],
+  field_grasshopper: [
+    {
+      pos: "noun_meaning",
+      meaning: "grasshopper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field jumper",
+    },
+  ],
+  butterfly_bush: [
+    {
+      pos: "noun_meaning",
+      meaning: "buddleia",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "summer lilac",
+    },
+  ],
+  meadow_saffron: [
+    {
+      pos: "noun_meaning",
+      meaning: "autumn crocus",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field crocus",
+    },
+  ],
+  alder_buckthorn: [
+    {
+      pos: "noun_meaning",
+      meaning: "buckthorn",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alder shrub",
+    },
+  ],
+  autumn_hawkbit: [
+    {
+      pos: "noun_meaning",
+      meaning: "hawkbit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "autumn bloom",
+    },
+  ],
+  black_medick: [
+    {
+      pos: "noun_meaning",
+      meaning: "medick",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "black clover",
+    },
+  ],
+  blue_eyed_grass: [
+    {
+      pos: "noun_meaning",
+      meaning: "blue grass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "iris grass",
+    },
+  ],
+  cats_ear: [
+    {
+      pos: "noun_meaning",
+      meaning: "false dandelion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "catleaf",
+    },
+  ],
+  common_knapweed: [
+    {
+      pos: "noun_meaning",
+      meaning: "knapweed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hardhead",
+    },
+  ],
+  common_sorrel: [
+    {
+      pos: "noun_meaning",
+      meaning: "sorrel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dock herb",
+    },
+  ],
+  creeping_thistle: [
+    {
+      pos: "noun_meaning",
+      meaning: "thistle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field thistle",
+    },
+  ],
+  cow_wheat: [
+    {
+      pos: "noun_meaning",
+      meaning: "melampyrum",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cow herb",
+    },
+  ],
+  evening_primrose: [
+    {
+      pos: "noun_meaning",
+      meaning: "primrose",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "evening bloom",
+    },
+  ],
+  field_speedwell: [
+    {
+      pos: "noun_meaning",
+      meaning: "speedwell",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "veronica",
+    },
+  ],
+  fiddlehead_fern: [
+    {
+      pos: "noun_meaning",
+      meaning: "young fern",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spiral fern",
+    },
+  ],
+  goats_beard: [
+    {
+      pos: "noun_meaning",
+      meaning: "salsify",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "goat plant",
+    },
+  ],
+  herb_robert: [
+    {
+      pos: "noun_meaning",
+      meaning: "geranium",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stinking bob",
+    },
+  ],
+  hop_trefoil: [
+    {
+      pos: "noun_meaning",
+      meaning: "trefoil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hop clover",
+    },
+  ],
+  ladys_mantle: [
+    {
+      pos: "noun_meaning",
+      meaning: "alchemilla",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lady's plant",
+    },
+  ],
+  meadow_anemone: [
+    {
+      pos: "noun_meaning",
+      meaning: "pasque flower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "windflower",
+    },
+  ],
+  meadow_clary: [
+    {
+      pos: "noun_meaning",
+      meaning: "clary",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sage flower",
+    },
+  ],
+  meadow_cranes_bill: [
+    {
+      pos: "noun_meaning",
+      meaning: "geranium",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meadow geranium",
+    },
+  ],
+  meadow_fescue: [
+    {
+      pos: "noun_meaning",
+      meaning: "fescue",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tall fescue",
+    },
+  ],
+  meadow_foxtail: [
+    {
+      pos: "noun_meaning",
+      meaning: "foxtail",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field foxtail",
+    },
+  ],
+  meadow_hawkweed: [
+    {
+      pos: "noun_meaning",
+      meaning: "hawkweed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "yellow hawkweed",
+    },
+  ],
+  meadow_viper_grass: [
+    {
+      pos: "noun_meaning",
+      meaning: "viper's grass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meadow grass",
+    },
+  ],
+  meadow_violet: [
+    {
+      pos: "noun_meaning",
+      meaning: "violet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wild violet",
+    },
+  ],
+  mountain_melick: [
+    {
+      pos: "noun_meaning",
+      meaning: "melick",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain grass",
+    },
+  ],
+  mountain_pansy: [
+    {
+      pos: "noun_meaning",
+      meaning: "wild pansy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alpine pansy",
+    },
+  ],
+  mountain_sorrel: [
+    {
+      pos: "noun_meaning",
+      meaning: "sorrel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alpine sorrel",
+    },
+  ],
+  ox_eye_daisy: [
+    {
+      pos: "noun_meaning",
+      meaning: "daisy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "moonflower",
+    },
+  ],
+  plantain_leaved_sedge: [
+    {
+      pos: "noun_meaning",
+      meaning: "sedge",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "broad sedge",
+    },
+  ],
+  reed_canary_grass: [
+    {
+      pos: "noun_meaning",
+      meaning: "canary grass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "reed grass",
+    },
+  ],
+  ribwort_plantain: [
+    {
+      pos: "noun_meaning",
+      meaning: "plantain",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ribgrass",
+    },
+  ],
+  rosemary_leaved_sage: [
+    {
+      pos: "noun_meaning",
+      meaning: "sage",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rosemary sage",
+    },
+  ],
+  rough_hawkbit: [
+    {
+      pos: "noun_meaning",
+      meaning: "hawkbit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rough flower",
+    },
+  ],
+  scarlet_pimpernel: [
+    {
+      pos: "noun_meaning",
+      meaning: "pimpernel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "scarlet herb",
+    },
+  ],
+  self_heal: [
+    {
+      pos: "noun_meaning",
+      meaning: "healall",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "prunella",
+    },
+  ],
+  sheeps_bit: [
+    {
+      pos: "noun_meaning",
+      meaning: "sheepweed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "blue daisy",
+    },
+  ],
+  slender_clover: [
+    {
+      pos: "noun_meaning",
+      meaning: "clover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thin clover",
+    },
+  ],
+  sweet_vernal_grass: [
+    {
+      pos: "noun_meaning",
+      meaning: "vernal grass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sweetgrass",
+    },
+  ],
+  tall_fescue: [
+    {
+      pos: "noun_meaning",
+      meaning: "fescue",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "giant fescue",
+    },
+  ],
+  tufted_vetch: [
+    {
+      pos: "noun_meaning",
+      meaning: "vetch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tufted pea",
+    },
+  ],
+  yellow_rattle: [
+    {
+      pos: "noun_meaning",
+      meaning: "rattle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "yellow bloom",
+    },
+  ],
+  adders_tongue_fern: [
+    {
+      pos: "noun_meaning",
+      meaning: "adder's tongue",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tongue fern",
+    },
+  ],
+  black_knapweed: [
+    {
+      pos: "noun_meaning",
+      meaning: "knapweed",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hardhead",
+    },
+  ],
+  cowslip_orchid: [
+    {
+      pos: "noun_meaning",
+      meaning: "orchid",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cowslip orchid",
+    },
+  ],
+  common_milkwort: [
+    {
+      pos: "noun_meaning",
+      meaning: "milkwort",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field milkwort",
+    },
+  ],
+  creeping_cinquefoil: [
+    {
+      pos: "noun_meaning",
+      meaning: "cinquefoil",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "creeping flower",
+    },
+  ],
+  dogs_mercury: [
+    {
+      pos: "noun_meaning",
+      meaning: "mercury plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dog plant",
+    },
+  ],
+  field_forget_me_not: [
+    {
+      pos: "noun_meaning",
+      meaning: "forget-me-not",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "field bloom",
+    },
+  ],
+  field_gentian: [
+    {
+      pos: "noun_meaning",
+      meaning: "gentian",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meadow gentian",
+    },
+  ],
+  field_mustard: [
+    {
+      pos: "noun_meaning",
+      meaning: "mustard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wild mustard",
+    },
+  ],
+  ground_ivy: [
+    {
+      pos: "noun_meaning",
+      meaning: "creeping charlie",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ground vine",
+    },
+  ],
+  ladys_smock: [
+    {
+      pos: "noun_meaning",
+      meaning: "cuckooflower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "lady flower",
+    },
+  ],
+  meadow_barley: [
+    {
+      pos: "noun_meaning",
+      meaning: "barley grass",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meadow grass",
+    },
+  ],
+  meadow_sweet: [
+    {
+      pos: "noun_meaning",
+      meaning: "meadowsweet",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "queen of the meadow",
+    },
+  ],
+  alpine_meadow: [
+    {
+      pos: "noun_meaning",
+      meaning: "high meadow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "upland meadow",
+    },
+  ],
+  mountain_pine: [
+    {
+      pos: "noun_meaning",
+      meaning: "stone pine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alpine pine",
+    },
+  ],
+  mountain_goat: [
+    {
+      pos: "noun_meaning",
+      meaning: "goat",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rock goat",
+    },
+  ],
+  snow_leopard: [
+    {
+      pos: "noun_meaning",
+      meaning: "ounce",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain leopard",
+    },
+  ],
+  alpine_ibex: [
+    {
+      pos: "noun_meaning",
+      meaning: "ibex",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alpine goat",
+    },
+  ],
+  mountain_hare: [
+    {
+      pos: "noun_meaning",
+      meaning: "blue hare",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alpine hare",
+    },
+  ],
+  mountain_ash: [
+    {
+      pos: "noun_meaning",
+      meaning: "rowan",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rowan tree",
+    },
+  ],
+  mountain_stream: [
+    {
+      pos: "noun_meaning",
+      meaning: "torrent",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "swift stream",
+    },
+  ],
+  pine_marten: [
+    {
+      pos: "noun_meaning",
+      meaning: "marten",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "tree marten",
+    },
+  ],
+  rock_ptarmigan: [
+    {
+      pos: "noun_meaning",
+      meaning: "ptarmigan",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rock grouse",
+    },
+  ],
+  mountain_birch: [
+    {
+      pos: "noun_meaning",
+      meaning: "birch",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "dwarf birch",
+    },
+  ],
+  alpine_cushion_plant: [
+    {
+      pos: "noun_meaning",
+      meaning: "cushion plant",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alpine cushion",
+    },
+  ],
+  mountain_pine_beetle: [
+    {
+      pos: "noun_meaning",
+      meaning: "bark beetle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pine borer",
+    },
+  ],
+  alpine_tundra: [
+    {
+      pos: "noun_meaning",
+      meaning: "high tundra",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cold uplands",
+    },
+  ],
+  mountain_laurel: [
+    {
+      pos: "noun_meaning",
+      meaning: "laurel",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "calico bush",
+    },
+  ],
+  mountain_lion: [
+    {
+      pos: "noun_meaning",
+      meaning: "cougar",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "puma",
+    },
+  ],
+  mountain_bellflower: [
+    {
+      pos: "noun_meaning",
+      meaning: "bellflower",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alpine bell",
+    },
+  ],
+  snow_vole: [
+    {
+      pos: "noun_meaning",
+      meaning: "mountain vole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "white vole",
+    },
+  ],
+  mountain_bluebird: [
+    {
+      pos: "noun_meaning",
+      meaning: "bluebird",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alpine bluebird",
+    },
+  ],
+  alpine_poppy: [
+    {
+      pos: "noun_meaning",
+      meaning: "poppy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain poppy",
+    },
+  ],
+  mountain_pine_vole: [
+    {
+      pos: "noun_meaning",
+      meaning: "pine vole",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "forest vole",
+    },
+  ],
+  mountain_chickadee: [
+    {
+      pos: "noun_meaning",
+      meaning: "chickadee",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alpine chickadee",
+    },
+  ],
+  snow_melt_stream: [
+    {
+      pos: "noun_meaning",
+      meaning: "meltwater stream",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snow run",
+    },
+  ],
+  crystal_spring: [
+    {
+      pos: "noun_meaning",
+      meaning: "clear spring",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "cold spring",
+    },
+  ],
+  alpine_salamander: [
+    {
+      pos: "noun_meaning",
+      meaning: "salamander",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain salamander",
+    },
+  ],
+  mountain_ash_butterfly: [
+    {
+      pos: "noun_meaning",
+      meaning: "rowan butterfly",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain butterfly",
+    },
+  ],
+  mountain_heather: [
+    {
+      pos: "noun_meaning",
+      meaning: "heather",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alpine heather",
+    },
+  ],
+  alpine_gentian: [
+    {
+      pos: "noun_meaning",
+      meaning: "gentian",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain gentian",
+    },
+  ],
+  mountain_mahogany: [
+    {
+      pos: "noun_meaning",
+      meaning: "mahogany shrub",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain shrub",
+    },
+  ],
+  rock_wren: [
+    {
+      pos: "noun_meaning",
+      meaning: "wren",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rock bird",
+    },
+  ],
+  glacial_lake: [
+    {
+      pos: "noun_meaning",
+      meaning: "ice lake",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "meltwater lake",
+    },
+  ],
+  alpine_ibex_kid: [
+    {
+      pos: "noun_meaning",
+      meaning: "young ibex",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ibex kid",
+    },
+  ],
+  mountain_hare_leveret: [
+    {
+      pos: "noun_meaning",
+      meaning: "young hare",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "hare leveret",
+    },
+  ],
+  rock_lizard: [
+    {
+      pos: "noun_meaning",
+      meaning: "lizard",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain lizard",
+    },
+  ],
+  mountain_moss: [
+    {
+      pos: "noun_meaning",
+      meaning: "rock moss",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alpine moss",
+    },
+  ],
+  alpine_clover: [
+    {
+      pos: "noun_meaning",
+      meaning: "clover",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain clover",
+    },
+  ],
+  mountain_saffron: [
+    {
+      pos: "noun_meaning",
+      meaning: "alpine saffron",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain crocus",
+    },
+  ],
+  pika_burrow: [
+    {
+      pos: "noun_meaning",
+      meaning: "rock burrow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pika den",
+    },
+  ],
+  rocky_plateau: [
+    {
+      pos: "noun_meaning",
+      meaning: "stone plateau",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "high tableland",
+    },
+  ],
+  mountain_goat_kid: [
+    {
+      pos: "noun_meaning",
+      meaning: "goat kid",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "young mountain goat",
+    },
+  ],
+  alpine_boulder: [
+    {
+      pos: "noun_meaning",
+      meaning: "mountain boulder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "fell stone",
+    },
+  ],
+  mountain_pine_marten_den: [
+    {
+      pos: "noun_meaning",
+      meaning: "marten den",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pine hollow",
+    },
+  ],
+  glacial_moraine: [
+    {
+      pos: "noun_meaning",
+      meaning: "ice moraine",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rock drift",
+    },
+  ],
+  mountain_fox: [
+    {
+      pos: "noun_meaning",
+      meaning: "highland fox",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rock fox",
+    },
+  ],
+  snow_leopard_cub: [
+    {
+      pos: "noun_meaning",
+      meaning: "leopard cub",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "snow cub",
+    },
+  ],
+  alpine_willow: [
+    {
+      pos: "noun_meaning",
+      meaning: "dwarf willow",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "mountain willow",
+    },
+  ],
+  mountain_birch_sapling: [
+    {
+      pos: "noun_meaning",
+      meaning: "birch sapling",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "young mountain birch",
+    },
+  ],
+  rock_rabbit: [
+    {
+      pos: "noun_meaning",
+      meaning: "pika",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "stone rabbit",
+    },
+  ],
+  mountain_stream_insect: [
+    {
+      pos: "noun_meaning",
+      meaning: "stream nymph",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "water skimmer",
+    },
+  ],
+  highland_viper: [
+    {
+      pos: "noun_meaning",
+      meaning: "mountain viper",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "rock adder",
+    },
+  ],
+  mountain_pine_cone: [
+    {
+      pos: "noun_meaning",
+      meaning: "pine cone",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "alpine cone",
+    },
+  ],
+  glacial_ice_patch: [
+    {
+      pos: "noun_meaning",
+      meaning: "glacier",
+    },
+  ],
+  alpine_violet: [
+    {
+      pos: "noun_meaning",
+      meaning: "violet",
+    },
+  ],
+  mountain_pine_seedling: [
+    {
+      pos: "noun_meaning",
+      meaning: "seedling",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "pine sprout",
+    },
+  ],
+  mountain_stream_trout: [
+    {
+      pos: "noun_meaning",
+      meaning: "trout",
+    },
+  ],
+  alpine_hawk: [
+    {
+      pos: "noun_meaning",
+      meaning: "hawk",
+    },
+  ],
+  mountain_pine_bark_beetle: [
+    {
+      pos: "noun_meaning",
+      meaning: "bark beetle",
+    },
+  ],
+  mountain_ash_sapling: [
+    {
+      pos: "noun_meaning",
+      meaning: "sapling",
+    },
+  ],
+  mountain_pine_nut: [
+    {
+      pos: "noun_meaning",
+      meaning: "pine nut",
+    },
+  ],
+  alpine_chough: [
+    {
+      pos: "noun_meaning",
+      meaning: "chough",
+    },
+  ],
+  mountain_quail: [
+    {
+      pos: "noun_meaning",
+      meaning: "quail",
+    },
+  ],
+  snowfield_hare: [
+    {
+      pos: "noun_meaning",
+      meaning: "hare",
+    },
+  ],
+  glacial_erratic: [
+    {
+      pos: "noun_meaning",
+      meaning: "erratic boulder",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "wanderer stone",
+    },
+  ],
+  mountain_tundra: [
+    {
+      pos: "noun_meaning",
+      meaning: "tundra",
+    },
+  ],
+  alpine_meadow_butterfly: [
+    {
+      pos: "noun_meaning",
+      meaning: "butterfly",
+    },
+  ],
+  mountain_bluebell: [
+    {
+      pos: "noun_meaning",
+      meaning: "bluebell",
+    },
+  ],
+  mountain_lichen: [
+    {
+      pos: "noun_meaning",
+      meaning: "lichen",
+    },
+  ],
+  mountain_ash_blossom: [
+    {
+      pos: "noun_meaning",
+      meaning: "blossom",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "spring bloom",
+    },
+  ],
+  glacial_meltwater_stream: [
+    {
+      pos: "noun_meaning",
+      meaning: "stream",
+    },
+  ],
+  mountain_crow: [
+    {
+      pos: "noun_meaning",
+      meaning: "crow",
+    },
+  ],
+  alpine_hare: [
+    {
+      pos: "noun_meaning",
+      meaning: "hare",
+    },
+  ],
+  rock_wren_nest: [
+    {
+      pos: "noun_meaning",
+      meaning: "nest",
+    },
+  ],
+  mountain_stonecrop: [
+    {
+      pos: "noun_meaning",
+      meaning: "stonecrop",
+    },
+  ],
+  snow_vole_burrow: [
+    {
+      pos: "noun_meaning",
+      meaning: "burrow",
+    },
+  ],
+  mountain_alder: [
+    {
+      pos: "noun_meaning",
+      meaning: "alder",
+    },
+  ],
+  rocky_pass: [
+    {
+      pos: "noun_meaning",
+      meaning: "pass",
+    },
+  ],
+  mountain_meadow_vole: [
+    {
+      pos: "noun_meaning",
+      meaning: "vole",
+    },
+  ],
+  mountain_pine_sapling: [
+    {
+      pos: "noun_meaning",
+      meaning: "sapling",
+    },
+  ],
+  high_altitude_bee: [
+    {
+      pos: "noun_meaning",
+      meaning: "mountain bee",
+    },
+  ],
+  alpine_insect: [
+    {
+      pos: "noun_meaning",
+      meaning: "insect",
+    },
+  ],
+  glacial_melt_pond: [
+    {
+      pos: "noun_meaning",
+      meaning: "melt pond",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "ice pond",
+    },
+  ],
+  mountain_stream_mayfly: [
+    {
+      pos: "noun_meaning",
+      meaning: "mayfly",
+    },
+  ],
+  rock_ptarmigan_chick: [
+    {
+      pos: "noun_meaning",
+      meaning: "chick",
+    },
+  ],
+  mountain_pine_marten_kit: [
+    {
+      pos: "noun_meaning",
+      meaning: "kit",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "marten young",
+    },
+  ],
+  alpine_sedge: [
+    {
+      pos: "noun_meaning",
+      meaning: "sedge",
+    },
+  ],
+  mountain_ash_moth: [
+    {
+      pos: "noun_meaning",
+      meaning: "moth",
+    },
+  ],
+  mountain_hawk_eagle: [
+    {
+      pos: "noun_meaning",
+      meaning: "eagle",
+    },
+  ],
+  rock_partridge: [
+    {
+      pos: "noun_meaning",
+      meaning: "partridge",
+    },
+  ],
+  mountain_poppy: [
+    {
+      pos: "noun_meaning",
+      meaning: "poppy",
+    },
+  ],
+  mountain_pine_weevil: [
+    {
+      pos: "noun_meaning",
+      meaning: "weevil",
+    },
+  ],
+  glacial_ice_cave: [
+    {
+      pos: "noun_meaning",
+      meaning: "ice cave",
+    },
+  ],
+  sea_anemone: [
+    {
+      pos: "noun_meaning",
+      meaning: "anemone",
+    },
+  ],
+  sea_urchin: [
+    {
+      pos: "noun_meaning",
+      meaning: "urchin",
+    },
+  ],
+  sea_cucumber: [
+    {
+      pos: "noun_meaning",
+      meaning: "holothurian",
+    },
+  ],
+  urchin_spine: [
+    {
+      pos: "noun_meaning",
+      meaning: "spine",
+    },
+  ],
+  manta_ray: [
+    {
+      pos: "noun_meaning",
+      meaning: "ray",
+    },
+  ],
+  sea_snake: [
+    {
+      pos: "noun_meaning",
+      meaning: "marine snake",
+    },
+  ],
+  sea_lion: [
+    {
+      pos: "noun_meaning",
+      meaning: "pinniped",
+    },
+  ],
+  coral_reef: [
+    {
+      pos: "noun_meaning",
+      meaning: "reef",
+    },
+  ],
+  kelp_forest: [
+    {
+      pos: "noun_meaning",
+      meaning: "kelp bed",
+    },
+  ],
+  seagrass_meadow: [
+    {
+      pos: "noun_meaning",
+      meaning: "seagrass",
+    },
+  ],
+  sea_urchin_larva: [
+    {
+      pos: "noun_meaning",
+      meaning: "larva",
+    },
+  ],
+  tidal_flat: [
+    {
+      pos: "noun_meaning",
+      meaning: "mudflat",
+    },
+  ],
+  rocky_shore: [
+    {
+      pos: "noun_meaning",
+      meaning: "shore",
+    },
+  ],
+  reef_fish: [
+    {
+      pos: "noun_meaning",
+      meaning: "reef dweller",
+    },
+  ],
+  clam_bed: [
+    {
+      pos: "noun_meaning",
+      meaning: "bed",
+    },
+  ],
+  mollusk_shell: [
+    {
+      pos: "noun_meaning",
+      meaning: "shell",
+    },
+  ],
+  coral_polyp: [
+    {
+      pos: "noun_meaning",
+      meaning: "polyp",
+    },
+  ],
+  sea_sponge_colony: [
+    {
+      pos: "noun_meaning",
+      meaning: "colony",
+    },
+  ],
+  marine_worm: [
+    {
+      pos: "noun_meaning",
+      meaning: "worm",
+    },
+  ],
+  sea_otter: [
+    {
+      pos: "noun_meaning",
+      meaning: "otter",
+    },
+  ],
+  sea_star_larva: [
+    {
+      pos: "noun_meaning",
+      meaning: "larva",
+    },
+  ],
+  sea_foam: [
+    {
+      pos: "noun_meaning",
+      meaning: "foam",
+    },
+  ],
+  ocean_current: [
+    {
+      pos: "noun_meaning",
+      meaning: "current",
+    },
+  ],
+  abyssal_plain: [
+    {
+      pos: "noun_meaning",
+      meaning: "deep plain",
+    },
+  ],
+  deep_sea_vent: [
+    {
+      pos: "noun_meaning",
+      meaning: "vent",
+    },
+  ],
+  krill_larva: [
+    {
+      pos: "noun_meaning",
+      meaning: "larva",
+    },
+  ],
+  polychaete_worm: [
+    {
+      pos: "noun_meaning",
+      meaning: "worm",
+    },
+  ],
+  comb_jelly: [
+    {
+      pos: "noun_meaning",
+      meaning: "ctenophore",
+    },
+  ],
+  sea_pen: [
+    {
+      pos: "noun_meaning",
+      meaning: "pen coral",
+    },
+  ],
+  soft_coral: [
+    {
+      pos: "noun_meaning",
+      meaning: "coral",
+    },
+  ],
+  black_coral: [
+    {
+      pos: "noun_meaning",
+      meaning: "coral",
+    },
+  ],
+  stony_coral: [
+    {
+      pos: "noun_meaning",
+      meaning: "reef coral",
+    },
+  ],
+  tube_worm: [
+    {
+      pos: "noun_meaning",
+      meaning: "worm",
+    },
+  ],
+  bristle_worm: [
+    {
+      pos: "noun_meaning",
+      meaning: "worm",
+    },
+  ],
+  pearl_oyster: [
+    {
+      pos: "noun_meaning",
+      meaning: "oyster",
+    },
+  ],
+  giant_clam: [
+    {
+      pos: "noun_meaning",
+      meaning: "clam",
+    },
+  ],
+  whelk_shell: [
+    {
+      pos: "noun_meaning",
+      meaning: "shell",
+    },
+  ],
+  sea_cucumber_larva: [
+    {
+      pos: "noun_meaning",
+      meaning: "larva",
+    },
+  ],
+  sea_lily: [
+    {
+      pos: "noun_meaning",
+      meaning: "crinoid",
+    },
+  ],
+  feather_star: [
+    {
+      pos: "noun_meaning",
+      meaning: "crinoid",
+    },
+  ],
+  brittle_star: [
+    {
+      pos: "noun_meaning",
+      meaning: "echinoderm",
+    },
+  ],
+  sea_urchin_spine_larva: [
+    {
+      pos: "noun_meaning",
+      meaning: "larva",
+    },
+  ],
+  urchin_test: [
+    {
+      pos: "noun_meaning",
+      meaning: "shell",
+    },
+  ],
+  sea_spider: [
+    {
+      pos: "noun_meaning",
+      meaning: "pycnogonid",
+    },
+  ],
+  barnacle_larva: [
+    {
+      pos: "noun_meaning",
+      meaning: "larva",
+    },
+  ],
+  hagfish_slime: [
+    {
+      pos: "noun_meaning",
+      meaning: "slime",
+    },
+  ],
+  oceanic_whitetip_shark: [
+    {
+      pos: "noun_meaning",
+      meaning: "shark",
+    },
+  ],
+  great_white_shark: [
+    {
+      pos: "noun_meaning",
+      meaning: "white shark",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "predator shark",
+    },
+  ],
+  hammerhead_shark: [
+    {
+      pos: "noun_meaning",
+      meaning: "hammerhead",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "broad-headed shark",
+    },
+  ],
+  basking_shark: [
+    {
+      pos: "noun_meaning",
+      meaning: "filter shark",
+    },
+  ],
+  whale_shark: [
+    {
+      pos: "noun_meaning",
+      meaning: "giant shark",
+    },
+  ],
+  beluga_whale: [
+    {
+      pos: "noun_meaning",
+      meaning: "white whale",
+    },
+  ],
+  blue_whale: [
+    {
+      pos: "noun_meaning",
+      meaning: "giant whale",
+    },
+  ],
+  sperm_whale: [
+    {
+      pos: "noun_meaning",
+      meaning: "toothed whale",
+    },
+  ],
+  minke_whale: [
+    {
+      pos: "noun_meaning",
+      meaning: "small whale",
+    },
+  ],
+  sea_otter_pup: [
+    {
+      pos: "noun_meaning",
+      meaning: "otter pup",
+    },
+  ],
+  sea_lion_pup: [
+    {
+      pos: "noun_meaning",
+      meaning: "pinniped pup",
+    },
+  ],
+  seal_pup: [
+    {
+      pos: "noun_meaning",
+      meaning: "pup",
+    },
+  ],
+  pilot_whale: [
+    {
+      pos: "noun_meaning",
+      meaning: "whale",
+    },
+  ],
+  narwhal_calf: [
+    {
+      pos: "noun_meaning",
+      meaning: "calf",
+    },
+  ],
+  sea_ice: [
+    {
+      pos: "noun_meaning",
+      meaning: "pack ice",
+    },
+  ],
+  brine_pool: [
+    {
+      pos: "noun_meaning",
+      meaning: "salt pool",
+    },
+  ],
+  underwater_volcano: [
+    {
+      pos: "noun_meaning",
+      meaning: "submarine volcano",
+    },
+  ],
+  submarine_canyon: [
+    {
+      pos: "noun_meaning",
+      meaning: "ocean canyon",
+    },
+  ],
+  hydrothermal_vent: [
+    {
+      pos: "noun_meaning",
+      meaning: "vent",
+    },
+  ],
+  cold_seep: [
+    {
+      pos: "noun_meaning",
+      meaning: "seep",
+    },
+  ],
+  abyssopelagic_zone: [
+    {
+      pos: "noun_meaning",
+      meaning: "deep zone",
+    },
+  ],
+  bathypelagic_zone: [
+    {
+      pos: "noun_meaning",
+      meaning: "deep zone",
+    },
+  ],
+  mesopelagic_zone: [
+    {
+      pos: "noun_meaning",
+      meaning: "twilight zone",
+    },
+  ],
+  epipelagic_zone: [
+    {
+      pos: "noun_meaning",
+      meaning: "sunlit zone",
+    },
+  ],
+  neritic_zone: [
+    {
+      pos: "noun_meaning",
+      meaning: "coastal zone",
+    },
+  ],
+  intertidal_zone: [
+    {
+      pos: "noun_meaning",
+      meaning: "shore zone",
+    },
+  ],
+  continental_shelf: [
+    {
+      pos: "noun_meaning",
+      meaning: "shelf",
+    },
+  ],
+  abyssal_trench: [
+    {
+      pos: "noun_meaning",
+      meaning: "trench",
+    },
+  ],
+  submarine_ridge: [
+    {
+      pos: "noun_meaning",
+      meaning: "ocean ridge",
+    },
+  ],
+  seagrass_bed: [
+    {
+      pos: "noun_meaning",
+      meaning: "grass bed",
+    },
+  ],
+  rocky_reef: [
+    {
+      pos: "noun_meaning",
+      meaning: "reef",
+    },
+  ],
+  kelp_bed: [
+    {
+      pos: "noun_meaning",
+      meaning: "kelp patch",
+    },
+  ],
+  floating_algae_mat: [
+    {
+      pos: "noun_meaning",
+      meaning: "floating mat",
+    },
+  ],
+  ocean_gyre: [
+    {
+      pos: "noun_meaning",
+      meaning: "great current",
+    },
+  ],
+  marine_snow: [
+    {
+      pos: "noun_meaning",
+      meaning: "falling detritus",
+    },
+  ],
+  plankton_bloom: [
+    {
+      pos: "noun_meaning",
+      meaning: "bloom",
+    },
+  ],
+  red_algae: [
+    {
+      pos: "noun_meaning",
+      meaning: "algae",
+    },
+  ],
+  green_algae: [
+    {
+      pos: "noun_meaning",
+      meaning: "algae",
+    },
+  ],
+  brown_algae: [
+    {
+      pos: "noun_meaning",
+      meaning: "algae",
+    },
+  ],
+  sea_lettuce: [
+    {
+      pos: "noun_meaning",
+      meaning: "green seaweed",
+    },
+  ],
+  moray_eel: [
+    {
+      pos: "noun_meaning",
+      meaning: "eel",
+    },
+  ],
+  flying_fish: [
+    {
+      pos: "noun_meaning",
+      meaning: "gliding fish",
+    },
+  ],
+  anglerfish_larva: [
+    {
+      pos: "noun_meaning",
+      meaning: "larva",
+    },
+  ],
+  lionfish_juvenile: [
+    {
+      pos: "noun_meaning",
+      meaning: "juvenile fish",
+    },
+  ],
+  paternal_kinsman: [
+    {
+      pos: "noun_meaning",
+      meaning: "relative",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "paternal uncle",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "paternal cousin",
+    },
+  ],
+  crows_nest: [
+    {
+      pos: "noun_meaning",
+      meaning: "watchpost",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "upper lookout",
+    },
+  ],
+  portolan_chart: [
+    {
+      pos: "noun_meaning",
+      meaning: "sea map",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "coast chart",
+    },
+  ],
+  become_known: [
+    {
+      pos: "verb_meaning",
+      meaning: "happen",
+    },
+  ],
+  emotive_state: [
+    {
+      pos: "noun_meaning",
+      meaning: "passion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "joy",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "anger",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "sadness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "impulsiveness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "irrationality",
+    },
+  ],
+  state_of_mind: [
+    {
+      pos: "noun_meaning",
+      meaning: "cheer",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "happiness",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "emotion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "feeling",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "thought",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "opinion",
+    },
+    {
+      pos: "noun_meaning",
+      meaning: "memory",
+    },
+  ],
+  drive_out: [
+    {
+      pos: "verb_meaning",
+      meaning: "explode",
+    },
+  ],
+  put_back_together: [
+    {
+      pos: "verb_meaning",
+      meaning: "assemble",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "bring order",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "glue",
+    },
+  ],
+  moor_verb: [
+    {
+      pos: "verb_meaning",
+      meaning: "tie up",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "secure",
+    },
+  ],
+  trim_sails: [
+    {
+      pos: "verb_meaning",
+      meaning: "adjust rig",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "set canvas",
+    },
+  ],
+  weigh_anchor: [
+    {
+      pos: "verb_meaning",
+      meaning: "set off",
+    },
+    {
+      pos: "verb_meaning",
+      meaning: "depart",
+    },
+  ],
+  catch_fire: [
+    {
+      pos: "verb_meaning",
+      meaning: "scuffle",
+    },
+  ],
+  look_at: [
+    {
+      pos: "verb_meaning",
+      meaning: "introspect",
+    },
+  ],
+  fall_down: [
+    {
+      pos: "verb_meaning",
+      meaning: "hit the target",
+    },
+  ],
+  make_noise: [
+    {
+      pos: "verb_meaning",
+      meaning: "rejoice",
+    },
+  ],
+  give_birth: [
+    {
+      pos: "verb_meaning",
+      meaning: "lay eggs",
+    },
+  ],
+  take_prisoner: [
+    {
+      pos: "verb_meaning",
+      meaning: "delight",
+    },
+  ],
+  close_ones_eyes: [
+    {
+      pos: "verb_meaning",
+      meaning: "clench one's fist",
+    },
+  ],
+  be_tied: [
+    {
+      pos: "verb_meaning",
+      meaning: "stutter",
+    },
+  ],
+  force_to_move_on: [
+    {
+      pos: "verb_meaning",
+      meaning: "plough",
+    },
+  ],
+  put_into: [
+    {
+      pos: "verb_meaning",
+      meaning: "switch on",
+    },
+  ],
+  get_tired: [
+    {
+      pos: "verb_meaning",
+      meaning: "unbend",
+    },
+  ],
+  fly_away: [
+    {
+      pos: "verb_meaning",
+      meaning: "go overripe",
+    },
+  ],
+  make_dirty: [
+    {
+      pos: "verb_meaning",
+      meaning: "dishonor",
+    },
+  ],
+  tear_off: [
+    {
+      pos: "verb_meaning",
+      meaning: "make empty",
+    },
+  ],
+  peel_off: [
+    {
+      pos: "verb_meaning",
+      meaning: "undress",
+    },
+  ],
+  make_scratches: [
+    {
+      pos: "verb_meaning",
+      meaning: "paint",
+    },
+  ],
+  lower_part: [
+    {
+      pos: "noun_meaning",
+      meaning: "floor",
+    },
+  ],
+  upper_part: [
+    {
+      pos: "noun_meaning",
+      meaning: "cream",
+    },
+  ],
+  go_down: [
+    {
+      pos: "verb_meaning",
+      meaning: "pretend",
+    },
+  ],
+  step_on: [
+    {
+      pos: "verb_meaning",
+      meaning: "begin",
+    },
+  ],
+  run_out: [
+    {
+      pos: "verb_meaning",
+      meaning: "delight",
+    },
+  ],
+  go_up: [
+    {
+      pos: "verb_meaning",
+      meaning: "mount a horse",
+    },
+  ],
+  stand_up: [
+    {
+      pos: "verb_meaning",
+      meaning: "recover from illness",
+    },
+  ],
+  be_able: [
+    {
+      pos: "adj_meaning",
+      meaning: "suitable",
+    },
+  ],
+  be_enough: [
+    {
+      pos: "verb_meaning",
+      meaning: "take possession",
+    },
+  ],
+  place_in_the_ground: [
+    {
+      pos: "verb_meaning",
+      meaning: "inoculate",
+    },
+  ],
+  get_dry: [
+    {
+      pos: "verb_meaning",
+      meaning: "disappear",
+    },
+  ],
+  make_sit: [
+    {
+      pos: "verb_meaning",
+      meaning: "circumcise",
+    },
+  ],
+  period_of_time: [
+    {
+      pos: "verb_meaning",
+      meaning: "harvest",
+    },
+  ],
+  emit_smoke: [
+    {
+      pos: "verb_meaning",
+      meaning: "tobacco",
+    },
+  ],
+  dream_while_sleeping: [
+    {
+      pos: "verb_meaning",
+      meaning: "seem",
+    },
+  ],
+  back_of_the_head: [
+    {
+      pos: "noun_meaning",
+      meaning: "heel",
+    },
+  ],
+  heat_up: [
+    {
+      pos: "verb_meaning",
+      meaning: "get angry",
+    },
+  ],
+  warm_up: [
+    {
+      pos: "verb_meaning",
+      meaning: "get angry",
+    },
+  ],
+  be_situated: [
+    {
+      pos: "verb_meaning",
+      meaning: "live",
+    },
+  ],
+  wooden_object: [
+    {
+      pos: "noun_meaning",
+      meaning: "corpse",
+    },
+  ],
+  become_visible: [
+    {
+      pos: "verb_meaning",
+      meaning: "exist",
+    },
+  ],
+  become_ready: [
+    {
+      pos: "verb_meaning",
+      meaning: "ripen",
+    },
+  ],
+  take_out: [
+    {
+      pos: "verb_meaning",
+      meaning: "create",
+    },
+  ],
+  go_away: [
+    {
+      pos: "verb_meaning",
+      meaning: "take a husband",
+    },
+  ],
+  tailors_thimble: [
+    {
+      pos: "noun_meaning",
+      meaning: "foxglove",
+    },
+  ],
+  swell_up: [
+    {
+      pos: "verb_meaning",
+      meaning: "become pregnant",
+    },
+  ],
+  get_on_well: [
+    {
+      pos: "verb_meaning",
+      meaning: "suit",
+    },
+  ],
+  be_on_good_terms: [
+    {
+      pos: "verb_meaning",
+      meaning: "suit",
+    },
+  ],
+  turn_round: [
+    {
+      pos: "verb_meaning",
+      meaning: "appear somewhere",
+    },
+  ],
+  lose_ones_way: [
+    {
+      pos: "verb_meaning",
+      meaning: "fornicate",
+    },
+  ],
+  body_part: [
+    {
+      pos: "noun_meaning",
+      meaning: "tribe",
+    },
+  ],
+  fall_asleep: [
+    {
+      pos: "verb_meaning",
+      meaning: "go out",
+    },
+  ],
+  old_man: [
+    {
+      pos: "noun_meaning",
+      meaning: "spirit",
+    },
+  ],
+  old_woman: [
+    {
+      pos: "noun_meaning",
+      meaning: "witch",
+    },
+  ],
+  perceive_smell: [
+    {
+      pos: "noun_meaning",
+      meaning: "nose",
+    },
+  ],
+  be_born: [
+    {
+      pos: "verb_meaning",
+      meaning: "arrive",
+    },
+  ],
+  sharp_point: [
+    {
+      pos: "noun_meaning",
+      meaning: "shrew",
+    },
+  ],
+  sink_into: [
+    {
+      pos: "noun_meaning",
+      meaning: "anchor",
+    },
+  ],
+  ask_for: [
+    {
+      pos: "verb_meaning",
+      meaning: "want",
+    },
+  ],
+  be_in_vertical_position: [
+    {
+      pos: "verb_meaning",
+      meaning: "stand still",
+    },
+  ],
+  hit_the_target: [
+    {
+      pos: "verb_meaning",
+      meaning: "find",
+    },
+  ],
+  move_quickly: [
+    {
+      pos: "verb_meaning",
+      meaning: "become ready",
+    },
+  ],
+  black_cloud: [
+    {
+      pos: "noun_meaning",
+      meaning: "sponge",
+    },
+  ],
+  emit_smell: [
+    {
+      pos: "verb_meaning",
+      meaning: "be afraid",
+    },
+  ],
+  go_in_various_directions: [
+    {
+      pos: "verb_meaning",
+      meaning: "spread",
+    },
+  ],
+  cool_down: [
+    {
+      pos: "verb_meaning",
+      meaning: "weaken",
+    },
+  ],
+  bearded_man: [
+    {
+      pos: "noun_meaning",
+      meaning: "man",
+    },
+  ],
+  feel_pain: [
+    {
+      pos: "verb_meaning",
+      meaning: "worry",
+    },
+  ],
+  be_surprised: [
+    {
+      pos: "verb_meaning",
+      meaning: "admire",
+    },
+  ],
+  dissolve_in_liquid: [
+    {
+      pos: "verb_meaning",
+      meaning: "solve",
+    },
+  ],
+  horned_animal: [
+    {
+      pos: "noun_meaning",
+      meaning: "insect",
+    },
+  ],
+  give_water: [
+    {
+      pos: "verb_meaning",
+      meaning: "water",
+    },
+  ],
+  come_near: [
+    {
+      pos: "verb_meaning",
+      meaning: "be enough",
+    },
+  ],
+  feel_thirsty: [
+    {
+      pos: "verb_meaning",
+      meaning: "want",
+    },
+  ],
+  feel_pity: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  turn_sour: [
+    {
+      pos: "noun_meaning",
+      meaning: "intestine",
+    },
+  ],
+  get_wet: [
+    {
+      pos: "verb_meaning",
+      meaning: "pester",
+    },
+  ],
+  the_layer_under_the_bark: [
+    {
+      pos: "noun_meaning",
+      meaning: "skull",
+    },
+  ],
+  sit_down: [
+    {
+      pos: "verb_meaning",
+      meaning: "bird etc.",
+    },
+  ],
+  lie_down: [
+    {
+      pos: "verb_meaning",
+      meaning: "get tired",
+    },
+  ],
+  shed_hair_or_feathers: [
+    {
+      pos: "verb_meaning",
+      meaning: "flow",
+    },
+  ],
+  become_mute: [
+    {
+      pos: "verb_meaning",
+      meaning: "grow numb",
+    },
+  ],
+  get_dirty: [
+    {
+      pos: "verb_meaning",
+      meaning: "become infected",
+    },
+  ],
+  change_clothes: [
+    {
+      pos: "verb_meaning",
+      meaning: "change",
+    },
+  ],
+  look_asquint: [
+    {
+      pos: "verb_meaning",
+      meaning: "disapprove",
+    },
+  ],
+  thorny_plant: [
+    {
+      pos: "noun_meaning",
+      meaning: "goldfinch",
+    },
+  ],
+  "go_after_smb.": [
+    {
+      pos: "verb_meaning",
+      meaning: "recompense",
+    },
+  ],
+  practice_witchcraft: [
+    {
+      pos: "verb_meaning",
+      meaning: "create",
+    },
+  ],
+  "fat_adj.": [
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+  ],
+  of_a_person: [
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+  ],
+  make_empty: [
+    {
+      pos: "verb_meaning",
+      meaning: "forgive",
+    },
+  ],
+  wake_up: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  be_in_a_hurry: [
+    {
+      pos: "verb_meaning",
+      meaning: "be afraid",
+    },
+  ],
+  take_away: [
+    {
+      pos: "verb_meaning",
+      meaning: "endure",
+    },
+  ],
+  carry_away: [
+    {
+      pos: "verb_meaning",
+      meaning: "endure",
+    },
+  ],
+  sheet_of_paper: [
+    {
+      pos: "noun_meaning",
+      meaning: "layer",
+    },
+  ],
+  under_age: [
+    {
+      pos: "adj_meaning",
+      meaning: "rude",
+    },
+  ],
+  turn_over: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  "turn_back_to_look_at_something.": [
+    {
+      pos: "verb_meaning",
+      meaning: "return",
+    },
+  ],
+  be_alive: [
+    {
+      pos: "verb_meaning",
+      meaning: "recover from illness",
+    },
+  ],
+  "rural_foot-wear": [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  catch_up_with: [
+    {
+      pos: "verb_meaning",
+      meaning: "become infected",
+    },
+  ],
+  female_calf: [
+    {
+      pos: "noun_meaning",
+      meaning: "girl",
+    },
+  ],
+  sated_with_food: [
+    {
+      pos: "verb_meaning",
+      meaning: "be fed up with",
+    },
+  ],
+  "ride_e.g.": [
+    {
+      pos: "adj_meaning",
+      meaning: "ready",
+    },
+  ],
+  a_horse: [
+    {
+      pos: "adj_meaning",
+      meaning: "ready",
+    },
+  ],
+  care_for: [
+    {
+      pos: "verb_meaning",
+      meaning: "have mercy",
+    },
+  ],
+  look_after: [
+    {
+      pos: "verb_meaning",
+      meaning: "have mercy",
+    },
+  ],
+  result_in: [
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  make_black: [
+    {
+      pos: "verb_meaning",
+      meaning: "slander",
+    },
+  ],
+  make_hard: [
+    {
+      pos: "verb_meaning",
+      meaning: "study",
+    },
+  ],
+  be_glad: [
+    {
+      pos: "verb_meaning",
+      meaning: "forget",
+    },
+  ],
+  become_full: [
+    {
+      pos: "verb_meaning",
+      meaning: "Sun",
+    },
+  ],
+  prop_up: [
+    {
+      pos: "verb_meaning",
+      meaning: "aid",
+    },
+  ],
+  lean_on: [
+    {
+      pos: "verb_meaning",
+      meaning: "moor",
+    },
+  ],
+  blood_vessel: [
+    {
+      pos: "noun_meaning",
+      meaning: "vein",
+    },
+  ],
+  rise_of_Moon: [
+    {
+      pos: "verb_meaning",
+      meaning: "be born",
+    },
+  ],
+  set_of_Moon: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  pass_by: [
+    {
+      pos: "verb_meaning",
+      meaning: "fit",
+    },
+  ],
+  make_a_mistake: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  be_wrong: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  get_accustomed: [
+    {
+      pos: "verb_meaning",
+      meaning: "love",
+    },
+  ],
+  be_afraid: [
+    {
+      pos: "verb_meaning",
+      meaning: "look after",
+    },
+  ],
+  be_separated: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  young_person: [
+    {
+      pos: "noun_meaning",
+      meaning: "soldier",
+    },
+  ],
+  common_bullfinch: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  become_dense: [
+    {
+      pos: "verb_meaning",
+      meaning: "keep silent",
+    },
+  ],
+  put_down: [
+    {
+      pos: "verb_meaning",
+      meaning: "kill",
+    },
+  ],
+  be_friends: [
+    {
+      pos: "verb_meaning",
+      meaning: "like",
+    },
+  ],
+  believe_in: [
+    {
+      pos: "noun_meaning",
+      meaning: "credit",
+    },
+  ],
+  precious_thing: [
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  pull_hair: [
+    {
+      pos: "verb_meaning",
+      meaning: "fight",
+    },
+  ],
+  place_name: [
+    {
+      pos: "noun_meaning",
+      meaning: "fish",
+    },
+  ],
+  "blood-sucking_insect": [
+    {
+      pos: "noun_meaning",
+      meaning: "summer",
+    },
+  ],
+  put_shoes_on: [
+    {
+      pos: "verb_meaning",
+      meaning: "deceive",
+    },
+  ],
+  go_around: [
+    {
+      pos: "verb_meaning",
+      meaning: "look after",
+    },
+  ],
+  set_upright: [
+    {
+      pos: "verb_meaning",
+      meaning: "stop doing something.",
+    },
+  ],
+  feel_hunger: [
+    {
+      pos: "verb_meaning",
+      meaning: "want",
+    },
+  ],
+  bad_weather: [
+    {
+      pos: "noun_meaning",
+      meaning: "mushroom",
+    },
+  ],
+  "storehouse;_depo": [
+    {
+      pos: "noun_meaning",
+      meaning: "shop",
+    },
+  ],
+  pull_up: [
+    {
+      pos: "verb_meaning",
+      meaning: "disagree",
+    },
+  ],
+  sizing_tool: [
+    {
+      pos: "noun_meaning",
+      meaning: "rule",
+    },
+  ],
+  make_big: [
+    {
+      pos: "verb_meaning",
+      meaning: "bring up",
+    },
+  ],
+  miss_the_target: [
+    {
+      pos: "verb_meaning",
+      meaning: "break a deadline",
+    },
+  ],
+  divide_into_several_parts: [
+    {
+      pos: "verb_meaning",
+      meaning: "gift",
+    },
+  ],
+  take_a_wife: [
+    {
+      pos: "verb_meaning",
+      meaning: "wife",
+    },
+  ],
+  calm_down: [
+    {
+      pos: "verb_meaning",
+      meaning: "pay",
+    },
+  ],
+  exchange_money: [
+    {
+      pos: "verb_meaning",
+      meaning: "change",
+    },
+  ],
+  leave_behind: [
+    {
+      pos: "verb_meaning",
+      meaning: "win",
+    },
+  ],
+  clench_ones_fist: [
+    {
+      pos: "verb_meaning",
+      meaning: "roll up a trunk",
+    },
+  ],
+  loach_fish: [
+    {
+      pos: "noun_meaning",
+      meaning: "eel",
+    },
+  ],
+  swimming_bird: [
+    {
+      pos: "noun_meaning",
+      meaning: "ship",
+    },
+  ],
+  measure_of_weight: [
+    {
+      pos: "noun_meaning",
+      meaning: "money",
+    },
+  ],
+  to_treat_with_a_sharp_instrument: [
+    {
+      pos: "verb_meaning",
+      meaning: "scold",
+    },
+  ],
+  tell_a_persons_fortune: [
+    {
+      pos: "verb_meaning",
+      meaning: "do nothing",
+    },
+  ],
+  get_mouldy: [
+    {
+      pos: "adj_meaning",
+      meaning: "angry",
+    },
+  ],
+  coniferous_tree: [
+    {
+      pos: "noun_meaning",
+      meaning: "horsetail",
+    },
+  ],
+  rein_in: [
+    {
+      pos: "verb_meaning",
+      meaning: "control one’s feelings",
+    },
+  ],
+  young_animal: [
+    {
+      pos: "noun_meaning",
+      meaning: "child",
+    },
+  ],
+  make_a_hole: [
+    {
+      pos: "verb_meaning",
+      meaning: "hit",
+    },
+  ],
+  let_go: [
+    {
+      pos: "verb_meaning",
+      meaning: "allow",
+    },
+  ],
+  draw_water: [
+    {
+      pos: "verb_meaning",
+      meaning: "imitate",
+    },
+  ],
+  be_ashamed: [
+    {
+      pos: "verb_meaning",
+      meaning: "respect",
+    },
+  ],
+  elder_brother: [
+    {
+      pos: "noun_meaning",
+      meaning: "uncle",
+    },
+  ],
+  elder_sister: [
+    {
+      pos: "noun_meaning",
+      meaning: "grandmother",
+    },
+  ],
+  name_of_person: [
+    {
+      pos: "noun_meaning",
+      meaning: "woman",
+    },
+  ],
+  hunt_down: [
+    {
+      pos: "noun_meaning",
+      meaning: "deer",
+    },
+  ],
+  get_angry: [
+    {
+      pos: "verb_meaning",
+      meaning: "growl",
+    },
+  ],
+  push_button: [
+    {
+      pos: "noun_meaning",
+      meaning: "bulb",
+    },
+  ],
+  shed_leaves: [
+    {
+      pos: "verb_meaning",
+      meaning: "shed hair or feathers",
+    },
+  ],
+  bee_swarm: [
+    {
+      pos: "noun_meaning",
+      meaning: "crowd",
+    },
+  ],
+  have_no_more: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  make_sausage: [
+    {
+      pos: "verb_meaning",
+      meaning: "kill",
+    },
+  ],
+  be_in_time: [
+    {
+      pos: "verb_meaning",
+      meaning: "ripen",
+    },
+  ],
+  go_through: [
+    {
+      pos: "verb_meaning",
+      meaning: "be in use",
+    },
+  ],
+  move_away: [
+    {
+      pos: "verb_meaning",
+      meaning: "annihilate",
+    },
+  ],
+  take_off: [
+    {
+      pos: "verb_meaning",
+      meaning: "move away",
+    },
+  ],
+  miss_somebogy: [
+    {
+      pos: "verb_meaning",
+      meaning: "invite",
+    },
+  ],
+  long_for: [
+    {
+      pos: "verb_meaning",
+      meaning: "invite",
+    },
+  ],
+  little_finger: [
+    {
+      pos: "noun_meaning",
+      meaning: "branch",
+    },
+  ],
+  go_upstream: [
+    {
+      pos: "verb_meaning",
+      meaning: "repatriate",
+    },
+  ],
+  younger_brother: [
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+  ],
+  sweet_potato: [
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+  ],
+  Amorphophallus_paeoniifolius: [
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+  ],
+  "sphere;_ball": [
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+  ],
+  younger_sister: [
+    {
+      pos: "noun_meaning",
+      meaning: "aunt",
+    },
+  ],
+  approach_suddenly: [
+    {
+      pos: "verb_meaning",
+      meaning: "attack",
+    },
+  ],
+  reflection_in_the_mirror: [
+    {
+      pos: "noun_meaning",
+      meaning: "mirror",
+    },
+  ],
+  metal_spike: [
+    {
+      pos: "noun_meaning",
+      meaning: "pike",
+    },
+  ],
+  weighing_machine: [
+    {
+      pos: "noun_meaning",
+      meaning: "testicle",
+    },
+  ],
+  top_of_the_head: [
+    {
+      pos: "noun_meaning",
+      meaning: "hill",
+    },
+  ],
+  put_on: [
+    {
+      pos: "verb_meaning",
+      meaning: "hope",
+    },
+  ],
+  get_into: [
+    {
+      pos: "verb_meaning",
+      meaning: "understand",
+    },
+  ],
+  blow_off: [
+    {
+      pos: "verb_meaning",
+      meaning: "cancel",
+    },
+  ],
+  shake_off: [
+    {
+      pos: "verb_meaning",
+      meaning: "get rid of",
+    },
+  ],
+  put_out: [
+    {
+      pos: "verb_meaning",
+      meaning: "subtract",
+    },
+  ],
+  mistress_of_a_house: [
+    {
+      pos: "noun_meaning",
+      meaning: "mistress",
+    },
+  ],
+  knock_down: [
+    {
+      pos: "verb_meaning",
+      meaning: "suppress",
+    },
+  ],
+  look_inside: [
+    {
+      pos: "verb_meaning",
+      meaning: "understand",
+    },
+  ],
+  breathe_heavily: [
+    {
+      pos: "adj_meaning",
+      meaning: "sick",
+    },
+  ],
+  enclosure_for_cattle: [
+    {
+      pos: "verb_meaning",
+      meaning: "herd",
+    },
+  ],
+  go_deaf: [
+    {
+      pos: "verb_meaning",
+      meaning: "fail",
+    },
+  ],
+  Tahitian_chestnut: [
+    {
+      pos: "noun_meaning",
+      meaning: "kidney",
+    },
+  ],
+  get_stuck: [
+    {
+      pos: "verb_meaning",
+      meaning: "stutter",
+    },
+  ],
+  wind_musical_instrument: [
+    {
+      pos: "noun_meaning",
+      meaning: "trunk",
+    },
+  ],
+  suffer_from_hunger: [
+    {
+      pos: "verb_meaning",
+      meaning: "whine",
+    },
+  ],
+  lose_colour: [
+    {
+      pos: "verb_meaning",
+      meaning: "lose fertility",
+    },
+  ],
+  sail_into_harbour: [
+    {
+      pos: "verb_meaning",
+      meaning: "copulate",
+    },
+  ],
+  not_to_look: [
+    {
+      pos: "verb_meaning",
+      meaning: "dislike",
+    },
+  ],
+  let_know: [
+    {
+      pos: "verb_meaning",
+      meaning: "blame",
+    },
+  ],
+  cousin_male: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  stand_still: [
+    {
+      pos: "verb_meaning",
+      meaning: "be in vertical position",
+    },
+  ],
+  priests_wife: [
+    {
+      pos: "noun_meaning",
+      meaning: "dandelion",
+    },
+  ],
+  clapper_of_a_bell: [
+    {
+      pos: "noun_meaning",
+      meaning: "penis",
+    },
+  ],
+  three_times: [
+    {
+      pos: "adv_meaning",
+      meaning: "very",
+    },
+  ],
+  make_deaf: [
+    {
+      pos: "verb_meaning",
+      meaning: "knock out",
+    },
+  ],
+  dry_season: [
+    {
+      pos: "noun_meaning",
+      meaning: "year",
+    },
+  ],
+  mountain_pass: [
+    {
+      pos: "noun_meaning",
+      meaning: "forest",
+    },
+  ],
+  blow_ones_nose: [
+    {
+      pos: "verb_meaning",
+      meaning: "snuff a candle",
+    },
+  ],
+  common_starling: [
+    {
+      pos: "noun_meaning",
+      meaning: "jay",
+    },
+  ],
+  corn_crake: [
+    {
+      pos: "noun_meaning",
+      meaning: "water rail",
+    },
+  ],
+  common_vole: [
+    {
+      pos: "noun_meaning",
+      meaning: "mole",
+    },
+  ],
+  female_breast: [
+    {
+      pos: "noun_meaning",
+      meaning: "crab",
+    },
+  ],
+  "third-person_singular": [
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+  ],
+  make_real: [
+    {
+      pos: "verb_meaning",
+      meaning: "understand",
+    },
+  ],
+  soured_milk: [
+    {
+      pos: "noun_meaning",
+      meaning: "cloud",
+    },
+  ],
+  animal_bladder: [
+    {
+      pos: "noun_meaning",
+      meaning: "glass",
+    },
+  ],
+  Coleus_rotundifolius: [
+    {
+      pos: "noun_meaning",
+      meaning: "potato",
+    },
+  ],
+  be_alike: [
+    {
+      pos: "verb_meaning",
+      meaning: "get along",
+    },
+  ],
+  put_together: [
+    {
+      pos: "verb_meaning",
+      meaning: "reconcile",
+    },
+  ],
+  wood_shavings: [
+    {
+      pos: "noun_meaning",
+      meaning: "moss",
+    },
+  ],
+  black_radish: [
+    {
+      pos: "noun_meaning",
+      meaning: "root vegetable",
+    },
+  ],
+  get_lost: [
+    {
+      pos: "verb_meaning",
+      meaning: "be screwed",
+    },
+  ],
+  make_soft: [
+    {
+      pos: "verb_meaning",
+      meaning: "persuade",
+    },
+  ],
+  ankle_bone_for_playing: [
+    {
+      pos: "noun_meaning",
+      meaning: "beam",
+    },
+  ],
+  "how_many?": [
+    {
+      pos: "pron_meaning",
+      meaning: "several",
+    },
+  ],
+  "put_out_one’s_toungue": [
+    {
+      pos: "verb_meaning",
+      meaning: "flame up",
+    },
+  ],
+  bone_marrow: [
+    {
+      pos: "noun_meaning",
+      meaning: "stone",
+    },
+  ],
+  back_of_the_axe_head: [
+    {
+      pos: "noun_meaning",
+      meaning: "heel",
+    },
+  ],
+  rough_wool: [
+    {
+      pos: "adj_meaning",
+      meaning: "rude",
+    },
+  ],
+  get_information: [
+    {
+      pos: "verb_meaning",
+      meaning: "understand",
+    },
+  ],
+  attach_to: [
+    {
+      pos: "verb_meaning",
+      meaning: "love",
+    },
+  ],
+  get_moving: [
+    {
+      pos: "verb_meaning",
+      meaning: "begin",
+    },
+  ],
+  stand_in_front: [
+    {
+      pos: "verb_meaning",
+      meaning: "hinder",
+    },
+  ],
+  place_in_front_of: [
+    {
+      pos: "verb_meaning",
+      meaning: "prefer",
+    },
+  ],
+  in_front_of: [
+    {
+      pos: "adj_meaning",
+      meaning: "old",
+    },
+  ],
+  fly_up: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  make_sb_look_at_something: [
+    {
+      pos: "verb_meaning",
+      meaning: "send",
+    },
+  ],
+  front_part_of_foot: [
+    {
+      pos: "noun_meaning",
+      meaning: "sock",
+    },
+  ],
+  drinking_vessel: [
+    {
+      pos: "verb_meaning",
+      meaning: "tobacco pipe",
+    },
+  ],
+  drink_alcohol: [
+    {
+      pos: "verb_meaning",
+      meaning: "ask in marriage",
+    },
+  ],
+  be_careful: [
+    {
+      pos: "adj_meaning",
+      meaning: "right",
+    },
+  ],
+  cover_ears: [
+    {
+      pos: "verb_meaning",
+      meaning: "misunderstand",
+    },
+  ],
+  tell_lies: [
+    {
+      pos: "verb_meaning",
+      meaning: "mock",
+    },
+  ],
+  put_in_order: [
+    {
+      pos: "verb_meaning",
+      meaning: "kill",
+    },
+  ],
+  have_opinion: [
+    {
+      pos: "verb_meaning",
+      meaning: "respect",
+    },
+  ],
+  fall_of_rain: [
+    {
+      pos: "verb_meaning",
+      meaning: "curse",
+    },
+  ],
+  Aloe_vera: [
+    {
+      pos: "noun_meaning",
+      meaning: "cypress",
+    },
+  ],
+  hazel_grouse: [
+    {
+      pos: "noun_meaning",
+      meaning: "partridge",
+    },
+  ],
+  make_stand: [
+    {
+      pos: "verb_meaning",
+      meaning: "plant",
+    },
+  ],
+  John_the_Baptist: [
+    {
+      pos: "noun_meaning",
+      meaning: "cockchafer",
+    },
+  ],
+  true_sedge: [
+    {
+      pos: "noun_meaning",
+      meaning: "swamp",
+    },
+  ],
+  cross_a_river: [
+    {
+      pos: "verb_meaning",
+      meaning: "cross a mountain range",
+    },
+  ],
+  tree_resin: [
+    {
+      pos: "noun_meaning",
+      meaning: "glue",
+    },
+  ],
+  become_flat: [
+    {
+      pos: "verb_meaning",
+      meaning: "fall down",
+    },
+  ],
+  make_smb: [
+    {
+      pos: "verb_meaning",
+      meaning: "urinate",
+    },
+  ],
+  something_light: [
+    {
+      pos: "verb_meaning",
+      meaning: "urinate",
+    },
+  ],
+  shoulder_pole: [
+    {
+      pos: "noun_meaning",
+      meaning: "clavicle",
+    },
+  ],
+  dress_someone: [
+    {
+      pos: "verb_meaning",
+      meaning: "offend",
+    },
+  ],
+  tall_person: [
+    {
+      pos: "noun_meaning",
+      meaning: "fool",
+    },
+  ],
+  foreign_country: [
+    {
+      pos: "noun_meaning",
+      meaning: "sugar",
+    },
+  ],
+  human_temper: [
+    {
+      pos: "noun_meaning",
+      meaning: "custom",
+    },
+  ],
+  guinea_fowl: [
+    {
+      pos: "noun_meaning",
+      meaning: "turkey",
+    },
+  ],
+  grow_up: [
+    {
+      pos: "verb_meaning",
+      meaning: "recover from illness",
+    },
+  ],
+  get_dark: [
+    {
+      pos: "verb_meaning",
+      meaning: "lose hope",
+    },
+  ],
+  come_loose_of_rope: [
+    {
+      pos: "verb_meaning",
+      meaning: "ripen",
+    },
+  ],
+  rear_up: [
+    {
+      pos: "verb_meaning",
+      meaning: "disagree",
+    },
+  ],
+  run_wild: [
+    {
+      pos: "verb_meaning",
+      meaning: "turn into an animal",
+    },
+  ],
+  have_fun: [
+    {
+      pos: "verb_meaning",
+      meaning: "linger",
+    },
+  ],
+  grow_heavy: [
+    {
+      pos: "verb_meaning",
+      meaning: "stand motionless",
+    },
+  ],
+  internal_monologue: [
+    {
+      pos: "verb_meaning",
+      meaning: "consider",
+    },
+  ],
+  vegetable_marrow: [
+    {
+      pos: "adj_meaning",
+      meaning: "bald",
+    },
+  ],
+  run_away: [
+    {
+      pos: "verb_meaning",
+      meaning: "violate an agreement",
+    },
+  ],
+  be_caught: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  stop_moving: [
+    {
+      pos: "verb_meaning",
+      meaning: "stop",
+    },
+  ],
+  move_down: [
+    {
+      pos: "verb_meaning",
+      meaning: "demote",
+    },
+  ],
+  dress_leather: [
+    {
+      pos: "verb_meaning",
+      meaning: "heal",
+    },
+  ],
+  feel_shy: [
+    {
+      pos: "verb_meaning",
+      meaning: "shut one's eyes",
+    },
+  ],
+  become_better: [
+    {
+      pos: "verb_meaning",
+      meaning: "recover from illness",
+    },
+  ],
+  go_blind: [
+    {
+      pos: "verb_meaning",
+      meaning: "be paid",
+    },
+  ],
+  extract_a_thorn: [
+    {
+      pos: "verb_meaning",
+      meaning: "comfort",
+    },
+  ],
+  sculpt_in_clay: [
+    {
+      pos: "verb_meaning",
+      meaning: "slander",
+    },
+  ],
+  throw_on_the_ground: [
+    {
+      pos: "verb_meaning",
+      meaning: "slander",
+    },
+  ],
+  stab_with_a_spear: [
+    {
+      pos: "verb_meaning",
+      meaning: "jump into the water",
+    },
+  ],
+  jump_into_the_water: [
+    {
+      pos: "verb_meaning",
+      meaning: "swim",
+    },
+  ],
+  pay_attention: [
+    {
+      pos: "verb_meaning",
+      meaning: "be careful",
+    },
+  ],
+  sober_up: [
+    {
+      pos: "verb_meaning",
+      meaning: "lose smell or taste",
+    },
+  ],
+  cut_ones_hair: [
+    {
+      pos: "verb_meaning",
+      meaning: "shave",
+    },
+  ],
+  bear_garlic: [
+    {
+      pos: "noun_meaning",
+      meaning: "onion",
+    },
+  ],
+  solid_crust_on_snow: [
+    {
+      pos: "noun_meaning",
+      meaning: "spring",
+    },
+  ],
+  flow_into: [
+    {
+      pos: "verb_meaning",
+      meaning: "influence",
+    },
+  ],
+  open_ones_mouth: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  emerge_from_the_water: [
+    {
+      pos: "verb_meaning",
+      meaning: "Sun",
+    },
+  ],
+  make_a_bonfire: [
+    {
+      pos: "verb_meaning",
+      meaning: "arrange a banquet",
+    },
+  ],
+  evil_spirit: [
+    {
+      pos: "noun_meaning",
+      meaning: "bear",
+    },
+  ],
+  from_land__to_shore: [
+    {
+      pos: "adv_meaning",
+      meaning: "downwards",
+    },
+  ],
+  launch_a_boat: [
+    {
+      pos: "verb_meaning",
+      meaning: "take down",
+    },
+  ],
+  bow_down: [
+    {
+      pos: "verb_meaning",
+      meaning: "worship",
+    },
+  ],
+  steer_a_vessel: [
+    {
+      pos: "verb_meaning",
+      meaning: "rule",
+    },
+  ],
+  turn_into: [
+    {
+      pos: "verb_meaning",
+      meaning: "appoint",
+    },
+  ],
+  behave_oneself: [
+    {
+      pos: "verb_meaning",
+      meaning: "be afraid",
+    },
+  ],
+  follow_each_other: [
+    {
+      pos: "verb_meaning",
+      meaning: "do something one after another",
+    },
+  ],
+  birds_foot: [
+    {
+      pos: "noun_meaning",
+      meaning: "rake",
+    },
+  ],
+  spoke_of_wheel: [
+    {
+      pos: "noun_meaning",
+      meaning: "radius",
+    },
+  ],
+  come_into_existence: [
+    {
+      pos: "verb_meaning",
+      meaning: "Sun",
+    },
+  ],
+  let_someone_get_ahead: [
+    {
+      pos: "noun_meaning",
+      meaning: "darling",
+    },
+  ],
+  become_clear: [
+    {
+      pos: "verb_meaning",
+      meaning: "sober up",
+    },
+  ],
+  in_this_way: [
+    {
+      pos: "verb_meaning",
+      meaning: "consequently",
+    },
+  ],
+  honey_badger: [
+    {
+      pos: "noun_meaning",
+      meaning: "badger",
+    },
+  ],
+  make_white: [
+    {
+      pos: "verb_meaning",
+      meaning: "castrate",
+    },
+  ],
+  steam_out: [
+    {
+      pos: "verb_meaning",
+      meaning: "be sultry",
+    },
+  ],
+  midday_meal: [
+    {
+      pos: "noun_meaning",
+      meaning: "dinner",
+    },
+  ],
+  cast_iron: [
+    {
+      pos: "noun_meaning",
+      meaning: "pot",
+    },
+  ],
+  fallow_deer: [
+    {
+      pos: "adj_meaning",
+      meaning: "brave",
+    },
+  ],
+  stand_near: [
+    {
+      pos: "verb_meaning",
+      meaning: "resign oneself",
+    },
+  ],
+  fellow_traveller: [
+    {
+      pos: "verb_meaning",
+      meaning: "support",
+    },
+  ],
+  not_believe_ones_eyes: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  lose_ones_mind: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  become_motionless: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  be_confused: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  be_struck_by_lightning: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  bite_ones_lip: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  palmyra_palm: [
+    {
+      pos: "noun_meaning",
+      meaning: "sugar",
+    },
+  ],
+  hit_by_axe: [
+    {
+      pos: "verb_meaning",
+      meaning: "thunder",
+    },
+  ],
+  go_downstream: [
+    {
+      pos: "verb_meaning",
+      meaning: "Sun",
+    },
+  ],
+  talk_nonsense: [
+    {
+      pos: "verb_meaning",
+      meaning: "go mad",
+    },
+  ],
+  have_equal_rights: [
+    {
+      pos: "verb_meaning",
+      meaning: "fall in love",
+    },
+  ],
+  far_away: [
+    {
+      pos: "adj_meaning",
+      meaning: "long",
+    },
+  ],
+  dairy_product: [
+    {
+      pos: "noun_meaning",
+      meaning: "butterfly",
+    },
+  ],
+  take_down: [
+    {
+      pos: "verb_meaning",
+      meaning: "haul to shore",
+    },
+  ],
+  opening_in_a_reef: [
+    {
+      pos: "noun_meaning",
+      meaning: "river",
+    },
+  ],
+  sound_of_kissing: [
+    {
+      pos: "noun_meaning",
+      meaning: "nipple",
+    },
+  ],
+  recover_from_illness: [
+    {
+      pos: "verb_meaning",
+      meaning: "have luck",
+    },
+  ],
+  take_part: [
+    {
+      pos: "verb_meaning",
+      meaning: "obey",
+    },
+  ],
+  male_animal: [
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+  ],
+  noble_rank: [
+    {
+      pos: "noun_meaning",
+      meaning: "husband",
+    },
+  ],
+  gall_bladder: [
+    {
+      pos: "noun_meaning",
+      meaning: "spleen",
+    },
+  ],
+  pericarp_of_a_lotus: [
+    {
+      pos: "noun_meaning",
+      meaning: "lung",
+    },
+  ],
+  urinary_bladder: [
+    {
+      pos: "noun_meaning",
+      meaning: "spleen",
+    },
+  ],
+  draught_animal: [
+    {
+      pos: "noun_meaning",
+      meaning: "wife",
+    },
+  ],
+  liquid_food: [
+    {
+      pos: "verb_meaning",
+      meaning: "benefit",
+    },
+  ],
+  bite_ones_finger: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  slap_ones_thighs: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  open_ones_eyes_wide: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  spread_ones_arms: [
+    {
+      pos: "verb_meaning",
+      meaning: "be surprised",
+    },
+  ],
+  surface_of_water: [
+    {
+      pos: "noun_meaning",
+      meaning: "mirror",
+    },
+  ],
+  crow_foot: [
+    {
+      pos: "noun_meaning",
+      meaning: "cross",
+    },
+  ],
+  bring_up: [
+    {
+      pos: "verb_meaning",
+      meaning: "rule",
+    },
+  ],
+  horse_collar: [
+    {
+      pos: "noun_meaning",
+      meaning: "clavicle",
+    },
+  ],
+  immerse_in_water: [
+    {
+      pos: "verb_meaning",
+      meaning: "baptize",
+    },
+  ],
+  lower_part_of_a_tree: [
+    {
+      pos: "noun_meaning",
+      meaning: "grandfather",
+    },
+  ],
+  get_caught: [
+    {
+      pos: "verb_meaning",
+      meaning: "stutter",
+    },
+  ],
+  take_clothes_off: [
+    {
+      pos: "verb_meaning",
+      meaning: "unharness",
+    },
+  ],
+  be_covered: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  become_sunburned: [
+    {
+      pos: "verb_meaning",
+      meaning: "become scalded",
+    },
+  ],
+  vigil_lamp: [
+    {
+      pos: "noun_meaning",
+      meaning: "columbine",
+    },
+  ],
+  lead_out: [
+    {
+      pos: "verb_meaning",
+      meaning: "consequently",
+    },
+  ],
+  pass_through: [
+    {
+      pos: "verb_meaning",
+      meaning: "die",
+    },
+  ],
+  brave_person: [
+    {
+      pos: "noun_meaning",
+      meaning: "warrior",
+    },
+  ],
+  lose_memory: [
+    {
+      pos: "verb_meaning",
+      meaning: "lose consciousness",
+    },
+  ],
+  perceive_touch: [
+    {
+      pos: "verb_meaning",
+      meaning: "know",
+    },
+  ],
+  lay_out: [
+    {
+      pos: "verb_meaning",
+      meaning: "teach",
+    },
+  ],
+  put_a_hat_on: [
+    {
+      pos: "verb_meaning",
+      meaning: "deceive",
+    },
+  ],
+  find_out: [
+    {
+      pos: "verb_meaning",
+      meaning: "study",
+    },
+  ],
+  form_in_the_mind: [
+    {
+      pos: "verb_meaning",
+      meaning: "become pregnant",
+    },
+  ],
+  become_pregnant: [
+    {
+      pos: "verb_meaning",
+      meaning: "form in the mind",
+    },
+  ],
+  become_light: [
+    {
+      pos: "verb_meaning",
+      meaning: "give birth",
+    },
+  ],
+  not_to_know: [
+    {
+      pos: "verb_meaning",
+      meaning: "long for",
+    },
+  ],
+  link_of_a_chain: [
+    {
+      pos: "noun_meaning",
+      meaning: "vertebra",
+    },
+  ],
+  step_off: [
+    {
+      pos: "verb_meaning",
+      meaning: "go mad",
+    },
+  ],
+  sharp_tool: [
+    {
+      pos: "verb_meaning",
+      meaning: "insult",
+    },
+  ],
+  rear_end: [
+    {
+      pos: "noun_meaning",
+      meaning: "back",
+    },
+  ],
+  feel_good: [
+    {
+      pos: "verb_meaning",
+      meaning: "wake up",
+    },
+  ],
+  get: [
+    { pos: "verb_meaning", meaning: "become" },
+    { pos: "verb_meaning", meaning: "have" },
+    { pos: "verb_meaning", meaning: "succeed" },
+    {
+      pos: "verb_meaning",
+      meaning: "give birth",
+    },
+  ],
+  recieve: [
+    { pos: "verb_meaning", meaning: "become" },
+    { pos: "verb_meaning", meaning: "have" },
+    { pos: "verb_meaning", meaning: "succeed" },
+  ],
+ 
+
+  
+};
+
+const newShifts = [];
+
+for (const shift in semanticDriftRules) {
+  const partOfSpeech = semanticDriftRules[shift][0].pos
+  const shifted = [];
+ semanticDriftRules[shift].forEach((shift) => {
+  shifted.push({
+    [shift.pos]: shift.meaning
+  });
+ })
+  const obj = {
+    [partOfSpeech]: shift,
+    shifted_meanings: shifted
+  }
+
+  newShifts.push(obj);
+}
+
+fs.writeFileSync(
+    "fixedSemanticShifts.txt",
+    JSON.stringify(newShifts, null, 2),
+    "utf8"
+  );
+

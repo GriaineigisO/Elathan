@@ -1,0 +1,117 @@
+Date : 2025-06-16 00:56:27
+Directory : c:\Users\awowi\Documents\GitHub\Elatha
+Total : 74 files,  23933 codes, 352 comments, 1838 blanks, all 26123 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| JavaScript JSX |         21 |     13,965 |        195 |      1,072 |     15,232 |
+| JSON           |          6 |      6,289 |          0 |          6 |      6,295 |
+| JavaScript     |         40 |      3,089 |        152 |        648 |      3,889 |
+| PostCSS        |          2 |        529 |          4 |        102 |        635 |
+| XML            |          3 |         38 |          1 |          2 |         41 |
+| HTML           |          1 |         16 |          0 |          2 |         18 |
+| Markdown       |          1 |          7 |          0 |          6 |         13 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                 | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                    |         74 |     23,933 |        352 |      1,838 |     26,123 |
+| . (Files)                                                                            |          1 |          8 |          0 |          1 |          9 |
+| backend                                                                              |         41 |      5,325 |        151 |        647 |      6,123 |
+| backend (Files)                                                                      |          4 |      2,375 |          6 |         18 |      2,399 |
+| backend\api                                                                          |          1 |          3 |          0 |          2 |          5 |
+| backend\api-routes                                                                   |         36 |      2,947 |        145 |        627 |      3,719 |
+| frontend                                                                             |         32 |     18,600 |        201 |      1,190 |     19,991 |
+| frontend (Files)                                                                     |          6 |      4,068 |          1 |         14 |      4,083 |
+| frontend\public                                                                      |          1 |          1 |          0 |          0 |          1 |
+| frontend\src                                                                         |         25 |     14,531 |        200 |      1,176 |     15,907 |
+| frontend\src (Files)                                                                 |          4 |        570 |          5 |        110 |        685 |
+| frontend\src\Components                                                              |         11 |      8,908 |         43 |        702 |      9,653 |
+| frontend\src\Pages                                                                   |          8 |      5,016 |        151 |        362 |      5,529 |
+| frontend\src\assets                                                                  |          2 |         37 |          1 |          2 |         40 |
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                             | language       | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\addEtymology.js            | JavaScript     |        114 |          4 |         23 |        141 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\addGroup.js                | JavaScript     |         62 |          5 |         15 |         82 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\addLanguage.js             | JavaScript     |        109 |          4 |         19 |        132 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\addWord.js                 | JavaScript     |        128 |          4 |         18 |        150 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\checkPermission.js         | JavaScript     |         33 |          3 |         11 |         47 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\checkPrivacy.js            | JavaScript     |         36 |          4 |         13 |         53 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\deleteGroup.js             | JavaScript     |         27 |          1 |          9 |         37 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\deleteLanguage.js          | JavaScript     |         27 |          1 |          9 |         37 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\deleteWord.js              | JavaScript     |         27 |          1 |          9 |         37 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\editGroup.js               | JavaScript     |         96 |          5 |         13 |        114 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\editLanguage.js            | JavaScript     |        154 |          6 |         25 |        185 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\editWord.js                | JavaScript     |        141 |          4 |         20 |        165 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getAllLanguages.js         | JavaScript     |         39 |          6 |         13 |         58 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getAllWords.js             | JavaScript     |         50 |          4 |         15 |         69 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getAllWordsForPrint.js     | JavaScript     |        510 |         13 |         81 |        604 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getCognates.js             | JavaScript     |        104 |          8 |         25 |        137 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getCollabGroups.js         | JavaScript     |         34 |          0 |         11 |         45 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getCollabLanguages.js      | JavaScript     |         34 |          0 |          9 |         43 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getDaughterLanguages.js    | JavaScript     |         50 |          4 |         14 |         68 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getDerivations.js          | JavaScript     |         93 |          6 |         20 |        119 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getDescendants.js          | JavaScript     |        124 |          9 |         25 |        158 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getEtymology.js            | JavaScript     |        126 |          9 |         28 |        163 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getGroup.js                | JavaScript     |         25 |          1 |          6 |         32 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getGroups.js               | JavaScript     |         26 |          1 |          9 |         36 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getLanguage.js             | JavaScript     |         78 |          5 |         18 |        101 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getLanguageName.js         | JavaScript     |         26 |          1 |         11 |         38 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getLanguages.js            | JavaScript     |         51 |          0 |         14 |         65 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getMotherLanguage.js       | JavaScript     |         67 |          4 |         16 |         87 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getSynonyms.js             | JavaScript     |        150 |          8 |         34 |        192 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getUser.js                 | JavaScript     |         31 |          1 |          8 |         40 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getUserInfo.js             | JavaScript     |         57 |          3 |         15 |         75 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getWord.js                 | JavaScript     |         49 |          4 |         13 |         66 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getWordCategories.js       | JavaScript     |         74 |          5 |         16 |         95 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getWordForms.js            | JavaScript     |         66 |          1 |         16 |         83 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\login.js                   | JavaScript     |         45 |          0 |         10 |         55 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\register.js                | JavaScript     |         84 |         10 |         16 |        110 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\api\index.js                          | JavaScript     |          3 |          0 |          2 |          5 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\package-lock.json                     | JSON           |      2,224 |          0 |          1 |      2,225 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\package.json                          | JSON           |         35 |          0 |          1 |         36 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\server.js                             | JavaScript     |        102 |          6 |         15 |        123 |
+| c:\Users\awowi\Documents\GitHub\Elatha\backend\vercel.json                           | JSON           |         14 |          0 |          1 |         15 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\README.md                            | Markdown       |          7 |          0 |          6 |         13 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\eslint.config.js                     | JavaScript     |         32 |          0 |          2 |         34 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\index.html                           | HTML           |         16 |          0 |          2 |         18 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\package-lock.json                    | JSON           |      3,974 |          0 |          1 |      3,975 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\package.json                         | JSON           |         34 |          0 |          1 |         35 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\public\vite.svg                      | XML            |          1 |          0 |          0 |          1 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\App.css                          | PostCSS        |        469 |          4 |         94 |        567 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\App.jsx                          | JavaScript JSX |         33 |          1 |          5 |         39 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\EditLanguageModal.jsx | JavaScript JSX |      1,198 |          6 |        110 |      1,314 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\addEtymologyModal.jsx | JavaScript JSX |        317 |          1 |         32 |        350 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\addGroupModal.jsx     | JavaScript JSX |        775 |          1 |         58 |        834 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\addLanguageModal.jsx  | JavaScript JSX |        966 |          5 |         79 |      1,050 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\addWordModal.jsx      | JavaScript JSX |      1,061 |          0 |         93 |      1,154 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\editGroupModal.jsx    | JavaScript JSX |      2,243 |          2 |        165 |      2,410 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\editWordModal.jsx     | JavaScript JSX |      1,866 |          3 |        106 |      1,975 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\groupSelector.jsx     | JavaScript JSX |         98 |          1 |         12 |        111 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\languageSelector.jsx  | JavaScript JSX |        120 |          1 |         14 |        135 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\navbar.jsx            | JavaScript JSX |        114 |         23 |         15 |        152 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\wordSelector.jsx      | JavaScript JSX |        150 |          0 |         18 |        168 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\dictionary.jsx             | JavaScript JSX |      2,400 |        133 |        127 |      2,660 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\group.jsx                  | JavaScript JSX |        101 |          1 |         13 |        115 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\home.jsx                   | JavaScript JSX |        440 |          2 |         46 |        488 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\login.jsx                  | JavaScript JSX |         71 |          1 |         10 |         82 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\register.jsx               | JavaScript JSX |         99 |          2 |         14 |        115 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\search.jsx                 | JavaScript JSX |         84 |          0 |         14 |         98 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\user.jsx                   | JavaScript JSX |        257 |          1 |         31 |        289 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\word.jsx                   | JavaScript JSX |      1,564 |         11 |        107 |      1,682 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\pencil-square.svg         | XML            |         36 |          1 |          2 |         39 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\react.svg                 | XML            |          1 |          0 |          0 |          1 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\index.css                        | PostCSS        |         60 |          0 |          8 |         68 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\main.jsx                         | JavaScript JSX |          8 |          0 |          3 |         11 |
+| c:\Users\awowi\Documents\GitHub\Elatha\frontend\vite.config.js                       | JavaScript     |          5 |          1 |          2 |          8 |
+| c:\Users\awowi\Documents\GitHub\Elatha\vercel.json                                   | JSON           |          8 |          0 |          1 |          9 |
+| Total                                                                                |                |     23,933 |        352 |      1,838 |     26,123 |
++--------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

@@ -1,0 +1,158 @@
+"filename", "language", "JSON", "Markdown", "JavaScript JSX", "JavaScript", "PostCSS", "XML", "JSON Lines", "comment", "blank", "total"
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\addEtymology.js", "JavaScript", 0, 0, 0, 92, 0, 0, 0, 1, 19, 112
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\addGroup.js", "JavaScript", 0, 0, 0, 62, 0, 0, 0, 5, 15, 82
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\addInterfaceLanguage.js", "JavaScript", 0, 0, 0, 37, 0, 0, 0, 1, 8, 46
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\addLanguage.js", "JavaScript", 0, 0, 0, 109, 0, 0, 0, 4, 19, 132
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\addNewSource.js", "JavaScript", 0, 0, 0, 40, 0, 0, 0, 1, 11, 52
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\addText.js", "JavaScript", 0, 0, 0, 41, 0, 0, 0, 2, 12, 55
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\addWord.js", "JavaScript", 0, 0, 0, 151, 0, 0, 0, 2, 14, 167
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\changePassword.js", "JavaScript", 0, 0, 0, 27, 0, 0, 0, 2, 8, 37
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\checkPermission.js", "JavaScript", 0, 0, 0, 33, 0, 0, 0, 4, 11, 48
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\checkPrivacy.js", "JavaScript", 0, 0, 0, 32, 0, 0, 0, 3, 11, 46
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\deleteEtymology.js", "JavaScript", 0, 0, 0, 26, 0, 0, 0, 1, 13, 40
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\deleteGroup.js", "JavaScript", 0, 0, 0, 27, 0, 0, 0, 1, 9, 37
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\deleteLanguage.js", "JavaScript", 0, 0, 0, 42, 0, 0, 0, 6, 21, 69
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\deleteSource.js", "JavaScript", 0, 0, 0, 35, 0, 0, 0, 2, 11, 48
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\deleteWord.js", "JavaScript", 0, 0, 0, 27, 0, 0, 0, 1, 9, 37
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\editEtymology.js", "JavaScript", 0, 0, 0, 87, 0, 0, 0, 1, 19, 107
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\editGroup.js", "JavaScript", 0, 0, 0, 96, 0, 0, 0, 5, 13, 114
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\editInterfaceLanguage.js", "JavaScript", 0, 0, 0, 34, 0, 0, 0, 1, 8, 43
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\editLanguage.js", "JavaScript", 0, 0, 0, 156, 0, 0, 0, 6, 25, 187
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\editSource.js", "JavaScript", 0, 0, 0, 40, 0, 0, 0, 1, 12, 53
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\editText.js", "JavaScript", 0, 0, 0, 41, 0, 0, 0, 2, 10, 53
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\editUserLanguage.js", "JavaScript", 0, 0, 0, 32, 0, 0, 0, 1, 8, 41
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\editWord.js", "JavaScript", 0, 0, 0, 164, 0, 0, 0, 2, 23, 189
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getAllInterfaceLanguages.js", "JavaScript", 0, 0, 0, 25, 0, 0, 0, 1, 9, 35
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getAllLanguages.js", "JavaScript", 0, 0, 0, 39, 0, 0, 0, 6, 13, 58
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getAllPhonologies.js", "JavaScript", 0, 0, 0, 20, 0, 0, 0, 2, 6, 28
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getAllWords.js", "JavaScript", 0, 0, 0, 37, 0, 0, 0, 1, 13, 51
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getAllWordsForPrint.js", "JavaScript", 0, 0, 0, 565, 0, 0, 0, 14, 95, 674
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getCognates.js", "JavaScript", 0, 0, 0, 105, 0, 0, 0, 8, 25, 138
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getCollabGroups.js", "JavaScript", 0, 0, 0, 34, 0, 0, 0, 0, 11, 45
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getCollabLanguages.js", "JavaScript", 0, 0, 0, 34, 0, 0, 0, 0, 9, 43
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getCorpus.js", "JavaScript", 0, 0, 0, 49, 0, 0, 0, 4, 15, 68
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getDaughterLanguages.js", "JavaScript", 0, 0, 0, 50, 0, 0, 0, 4, 14, 68
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getDerivations.js", "JavaScript", 0, 0, 0, 88, 0, 0, 0, 6, 15, 109
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getDescendants.js", "JavaScript", 0, 0, 0, 124, 0, 0, 0, 6, 21, 151
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getEtymology.js", "JavaScript", 0, 0, 0, 109, 0, 0, 0, 6, 25, 140
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getFrequencyList.js", "JavaScript", 0, 0, 0, 25, 0, 0, 0, 1, 6, 32
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getGrammar.js", "JavaScript", 0, 0, 0, 23, 0, 0, 0, 1, 8, 32
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getGroup.js", "JavaScript", 0, 0, 0, 25, 0, 0, 0, 1, 6, 32
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getGroups.js", "JavaScript", 0, 0, 0, 26, 0, 0, 0, 1, 9, 36
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getInterfaceLanguage.js", "JavaScript", 0, 0, 0, 25, 0, 0, 0, 0, 8, 33
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getInterfaceLanguages.js", "JavaScript", 0, 0, 0, 26, 0, 0, 0, 1, 9, 36
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getLanguage.js", "JavaScript", 0, 0, 0, 52, 0, 0, 0, 2, 17, 71
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getLanguageName.js", "JavaScript", 0, 0, 0, 26, 0, 0, 0, 1, 11, 38
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getLanguages.js", "JavaScript", 0, 0, 0, 51, 0, 0, 0, 0, 14, 65
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getLoanerLanguage.js", "JavaScript", 0, 0, 0, 46, 0, 0, 0, 1, 11, 58
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getMostLanguages.js", "JavaScript", 0, 0, 0, 43, 0, 0, 0, 5, 12, 60
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getMostWords.js", "JavaScript", 0, 0, 0, 43, 0, 0, 0, 5, 12, 60
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getMotherLanguage.js", "JavaScript", 0, 0, 0, 67, 0, 0, 0, 4, 16, 87
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getRootWord.js", "JavaScript", 0, 0, 0, 41, 0, 0, 0, 1, 14, 56
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getSources.js", "JavaScript", 0, 0, 0, 25, 0, 0, 0, 1, 6, 32
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getSynonyms.js", "JavaScript", 0, 0, 0, 139, 0, 0, 0, 5, 28, 172
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getTags.js", "JavaScript", 0, 0, 0, 42, 0, 0, 0, 2, 12, 56
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getText.js", "JavaScript", 0, 0, 0, 35, 0, 0, 0, 2, 12, 49
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getUser.js", "JavaScript", 0, 0, 0, 31, 0, 0, 0, 1, 8, 40
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getUserInfo.js", "JavaScript", 0, 0, 0, 69, 0, 0, 0, 3, 25, 97
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getUserLanguage.js", "JavaScript", 0, 0, 0, 27, 0, 0, 0, 1, 9, 37
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getWord.js", "JavaScript", 0, 0, 0, 70, 0, 0, 0, 4, 18, 92
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getWordCategories.js", "JavaScript", 0, 0, 0, 74, 0, 0, 0, 5, 16, 95
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\getWordForms.js", "JavaScript", 0, 0, 0, 66, 0, 0, 0, 1, 16, 83
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\handleEnglishWords.js", "JavaScript", 0, 0, 0, 28, 0, 0, 0, 7, 16, 51
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\login.js", "JavaScript", 0, 0, 0, 45, 0, 0, 0, 0, 10, 55
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\register.js", "JavaScript", 0, 0, 0, 84, 0, 0, 0, 10, 16, 110
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\saveConlang.js", "JavaScript", 0, 0, 0, 701, 0, 0, 0, 11, 72, 784
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\saveFrequencyList.js", "JavaScript", 0, 0, 0, 29, 0, 0, 0, 1, 11, 41
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\saveGrammar.js", "JavaScript", 0, 0, 0, 23, 0, 0, 0, 1, 8, 32
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api-routes\savePhonology.js", "JavaScript", 0, 0, 0, 42, 0, 0, 0, 2, 11, 55
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\api\index.js", "JavaScript", 0, 0, 0, 3, 0, 0, 0, 0, 2, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\englishWords.js", "JavaScript", 0, 0, 0, 696475, 0, 0, 0, 0, 87, 696562
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\package-lock.json", "JSON", 2231, 0, 0, 0, 0, 0, 0, 0, 1, 2232
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\package.json", "JSON", 36, 0, 0, 0, 0, 0, 0, 0, 1, 37
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\server.js", "JavaScript", 0, 0, 0, 164, 0, 0, 0, 8, 19, 191
+"c:\Users\awowi\Documents\GitHub\Elatha\backend\vercel.json", "JSON", 14, 0, 0, 0, 0, 0, 0, 0, 1, 15
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\package-lock.json", "JSON", 106, 0, 0, 0, 0, 0, 0, 0, 0, 106
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\package.json", "JSON", 8, 0, 0, 0, 0, 0, 0, 0, 0, 8
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\public\WordsToAddToDictionary.js", "JavaScript", 0, 0, 0, 1146776, 0, 0, 0, 0, 84, 1146860
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\public\affixDerivations.json", "JSON", 2899616, 0, 0, 0, 0, 0, 0, 0, 195, 2899811
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\public\coreEnglishWords.json", "JSON", 15171, 0, 0, 0, 0, 0, 0, 0, 321, 15492
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\App.css", "PostCSS", 0, 0, 0, 0, 147, 0, 0, 3, 42, 192
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\App.jsx", "JavaScript JSX", 0, 0, 14, 0, 0, 0, 0, 0, -2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\EditLanguageModal.jsx", "JavaScript JSX", 0, 0, 54, 0, 0, 0, 0, 0, 9, 63
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\ManageCompounds.jsx", "JavaScript JSX", 0, 0, 111, 0, 0, 0, 0, 0, 11, 122
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\ManageDerivationsModal.jsx", "JavaScript JSX", 0, 0, 93, 0, 0, 0, 0, 0, 15, 108
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\PaginateAffixes.jsx", "JavaScript JSX", 0, 0, 83, 0, 0, 0, 0, 0, 13, 96
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\PaginatedDerivations.jsx", "JavaScript JSX", 0, 0, 61, 0, 0, 0, 0, 0, 9, 70
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\PaginatedGeneratedLanguage.jsx", "JavaScript JSX", 0, 0, -391, 0, 0, 0, 0, 1, 8, -382
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\addGroupModal.jsx", "JavaScript JSX", 0, 0, 54, 0, 0, 0, 0, 0, 3, 57
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\addLanguageModal.jsx", "JavaScript JSX", 0, 0, 54, 0, 0, 0, 0, 0, 3, 57
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\addWordModal.jsx", "JavaScript JSX", 0, 0, 68, 0, 0, 0, 0, 0, 14, 82
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\dictionaryForMakeDaughter.jsx", "JavaScript JSX", 0, 0, 548, 0, 0, 0, 0, 0, 15, 563
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\editGroupModal.jsx", "JavaScript JSX", 0, 0, 171, 0, 0, 0, 0, 0, 25, 196
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\editWordModal.jsx", "JavaScript JSX", 0, 0, 150, 0, 0, 0, 0, 0, 6, 156
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\generateWord.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, -4, -4
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\languageSelector.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, -18, 0, -18
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\orthography.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 2, 1, 3
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\paginateDictionary.jsx", "JavaScript JSX", 0, 0, 100, 0, 0, 0, 0, 0, 2, 102
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\paginateMakeDaughter.jsx", "JavaScript JSX", 0, 0, 254, 0, 0, 0, 0, 71, 34, 359
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\parentLanguageModal.jsx", "JavaScript JSX", 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\printOptions.jsx", "JavaScript JSX", 0, 0, 3, 0, 0, 0, 0, 0, 0, 3
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\savePhonologyModal.jsx", "JavaScript JSX", 0, 0, 2, 0, 0, 0, 0, 0, 0, 2
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\scrollTabs.jsx", "JavaScript JSX", 0, 0, 43, 0, 0, 0, 0, 0, 9, 52
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\soundChangeMaker.jsx", "JavaScript JSX", 0, 0, 827, 0, 0, 0, 0, 12, 48, 887
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\spellingCreator.jsx", "JavaScript JSX", 0, 0, -1, 0, 0, 0, 0, 0, 1, 0
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\syllableCategories.jsx", "JavaScript JSX", 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\themeSelection.jsx", "JavaScript JSX", 0, 0, 58, 0, 0, 0, 0, 0, 7, 65
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\wordSelector.jsx", "JavaScript JSX", 0, 0, 2, 0, 0, 0, 0, 0, 0, 2
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\wordViewer.jsx", "JavaScript JSX", 0, 0, 77, 0, 0, 0, 0, 1, 8, 86
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\applyProsody.jsx", "JavaScript JSX", 0, 0, -186, 0, 0, 0, 0, -49, -51, -286
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\capitaliseFirstLetter.jsx", "JavaScript JSX", 0, 0, 6, 0, 0, 0, 0, 0, 2, 8
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\createDerivations.jsx", "JavaScript JSX", 0, 0, -12199, 0, 0, 0, 0, -10, -242, -12451
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\formatMeaning.jsx", "JavaScript JSX", 0, 0, 1, 0, 0, 0, 0, 0, 0, 1
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\grammaticalise.jsx", "JavaScript JSX", 0, 0, 148, 0, 0, 0, 0, 16, 29, 193
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\handleSelection.jsx", "JavaScript JSX", 0, 0, 8, 0, 0, 0, 0, 0, 1, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\phonologyWeight.jsx", "JavaScript JSX", 0, 0, -1, 0, 0, 0, 0, 1, 2, 2
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\prosody\applyProsody.jsx", "JavaScript JSX", 0, 0, 139, 0, 0, 0, 0, 22, 32, 193
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\prosody\removeNotation.js", "JavaScript", 0, 0, 0, 21, 0, 0, 0, 1, 6, 28
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\prosody\removeProsody.jsx", "JavaScript JSX", 0, 0, 10, 0, 0, 0, 0, 0, 5, 15
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\prosody\repairSyllables.jsx", "JavaScript JSX", 0, 0, 7, 0, 0, 0, 0, 2, 4, 13
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\prosody\segmentIPA.jsx", "JavaScript JSX", 0, 0, 27, 0, 0, 0, 0, 5, 11, 43
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\prosody\syllabify.jsx", "JavaScript JSX", 0, 0, 53, 0, 0, 0, 0, 12, 18, 83
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\removeNotation.js", "JavaScript", 0, 0, 0, -21, 0, 0, 0, -1, -6, -28
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\removeProsody.jsx", "JavaScript JSX", 0, 0, -8, 0, 0, 0, 0, 0, -1, -9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\semanticShift.jsx", "JavaScript JSX", 0, 0, -38582, 0, 0, 0, 0, 3, 12, -38567
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\soundChange.jsx", "JavaScript JSX", 0, 0, 236, 0, 0, 0, 0, 73, 91, 400
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\createLanguage.jsx", "JavaScript JSX", 0, 0, 751, 0, 0, 0, 0, 98, 83, 932
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\devTools.jsx", "JavaScript JSX", 0, 0, 917, 0, 0, 0, 0, 8, 124, 1049
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\dictionary.jsx", "JavaScript JSX", 0, 0, 30, 0, 0, 0, 0, 0, 4, 34
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\home.jsx", "JavaScript JSX", 0, 0, 12, 0, 0, 0, 0, 1, 5, 18
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\makeDaughter.jsx", "JavaScript JSX", 0, 0, -1359, 0, 0, 0, 0, 161, -28, -1226
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\thesaurus.jsx", "JavaScript JSX", 0, 0, 17, 0, 0, 0, 0, 0, 0, 17
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\word.jsx", "JavaScript JSX", 0, 0, 168, 0, 0, 0, 0, 51, -19, 200
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\affixArray.jsx", "JavaScript JSX", 0, 0, 32, 0, 0, 0, 0, 0, 3, 35
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\allVowels.jsx", "JavaScript JSX", 0, 0, 37, 0, 0, 0, 0, 0, 1, 38
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\automateDerivations\automateEnglishDerivations.js", "JavaScript", 0, 0, 0, 225467, 0, 0, 0, 29, 37, 225533
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\automateDerivations\automateTheseAffixes.js", "JavaScript", 0, 0, 0, 7205, 0, 0, 0, 0, 3, 7208
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\automateDerivations\extractedAffixes.js", "JavaScript", 0, 0, 0, 9068, 0, 0, 0, 1, 4, 9073
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\automateDerivations\formatedEnglishDerivations.js", "JavaScript", 0, 0, 0, 2870558, 0, 0, 0, 0, 0, 2870558
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\automatingSemanticShifts\fixedSemanticShifts.jsx", "JavaScript JSX", 0, 0, 39686, 0, 0, 0, 0, 0, 1, 39687
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\automatingSemanticShifts\reformatSemanticShifts.js", "JavaScript", 0, 0, 0, 38661, 0, 0, 0, 0, 15, 38676
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\clipboard.svg", "XML", 0, 0, 0, 0, 0, 4, 0, 0, 0, 4
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\compoundDerivations.jsx", "JavaScript JSX", 0, 0, 5879, 0, 0, 0, 0, 0, 196, 6075
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\gender\animate.jsx", "JavaScript JSX", 0, 0, 2, 0, 0, 0, 0, 0, 1, 3
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\gender\automateMascFemNeut.js", "JavaScript", 0, 0, 0, 75, 0, 0, 0, 12, 24, 111
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\gender\feminine.json", "JSON", 6796, 0, 0, 0, 0, 0, 0, 0, 0, 6796
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\gender\inanimate.jsx", "JavaScript JSX", 0, 0, 2, 0, 0, 0, 0, 0, 1, 3
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\gender\masculine.json", "JSON", 6437, 0, 0, 0, 0, 0, 0, 0, 0, 6437
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\gender\neuter.json", "JSON", 4581, 0, 0, 0, 0, 0, 0, 0, 0, 4581
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\grammaticalisations.jsx", "JavaScript JSX", 0, 0, 1154, 0, 0, 0, 0, 0, 8, 1162
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\meaningKeys.jsx", "JavaScript JSX", 0, 0, 15, 0, 0, 0, 0, 0, 1, 16
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\potentialAffixArray.jsx", "JavaScript JSX", 0, 0, 8790, 0, 0, 0, 0, 10, 38, 8838
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\semanticDrifts.jsx", "JavaScript JSX", 0, 0, 40130, 0, 0, 0, 0, 0, 3, 40133
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\themes.jsx", "JavaScript JSX", 0, 0, 160, 0, 0, 0, 0, 0, 15, 175
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\thesaurus.js", "JavaScript", 0, 0, 0, 20, 0, 0, 0, 0, 0, 20
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\wikiDictionaryDump\english_headwords_deduped.jsonl", "JSON Lines", 0, 0, 0, 0, 0, 0, -697990, 0, -2, -697992
+"c:\Users\awowi\Documents\GitHub\Elatha\notes.md", "Markdown", 0, 340, 0, 0, 0, 0, 0, 0, 67, 407
+"c:\Users\awowi\Documents\GitHub\Elatha\vercel.json", "JSON", 8, 0, 0, 0, 0, 0, 0, 0, 1, 9
+"Total", "-", 2935004, 340, 48519, 4999231, 147, 4, -697990, 720, 2514, 7288489

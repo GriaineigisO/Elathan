@@ -1,0 +1,72 @@
+Date : 2025-05-16 23:49:06
+Directory : c:\Users\marca\Documents\GitHub\Elatha
+Total : 37 files,  6061 codes, 133 comments, 359 blanks, all 6553 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| JavaScript JSX |         12 |      5,083 |        114 |        272 |      5,469 |
+| JavaScript     |         23 |        894 |         17 |         73 |        984 |
+| CSS            |          1 |         85 |          2 |         14 |        101 |
+| JSON           |          1 |         -1 |          0 |          0 |         -1 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                 | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                    |         37 |      6,061 |        133 |        359 |      6,553 |
+| backend                                                                              |         24 |        893 |         17 |         73 |        983 |
+| backend (Files)                                                                      |          2 |          3 |         -2 |         -6 |         -5 |
+| backend\api                                                                          |         22 |        890 |         19 |         79 |        988 |
+| frontend                                                                             |         13 |      5,168 |        116 |        286 |      5,570 |
+| frontend\src                                                                         |         13 |      5,168 |        116 |        286 |      5,570 |
+| frontend\src (Files)                                                                 |          1 |         85 |          2 |         14 |        101 |
+| frontend\src\Components                                                              |          9 |      3,855 |          9 |        256 |      4,120 |
+| frontend\src\Pages                                                                   |          3 |      1,228 |        105 |         16 |      1,349 |
++--------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                             | language       | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\addEtymology.js                   | JavaScript     |         21 |          0 |         -2 |         19 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\addGroup.js                       | JavaScript     |         -1 |          0 |         -1 |         -2 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\addLanguage.js                    | JavaScript     |         27 |          0 |          3 |         30 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\addWord.js                        | JavaScript     |         50 |          0 |          0 |         50 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\editGroup.js                      | JavaScript     |         65 |          4 |         14 |         83 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\editLanguage.js                   | JavaScript     |         57 |          2 |          5 |         64 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\editWord.js                       | JavaScript     |        112 |          4 |         15 |        131 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\getAllWords.js                    | JavaScript     |        403 |          9 |         57 |        469 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\getCognates.js                    | JavaScript     |          3 |          0 |          0 |          3 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\getDaughterLanguages.js           | JavaScript     |          4 |          0 |         -4 |          0 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\getDerivations.js                 | JavaScript     |         -8 |         -3 |         -5 |        -16 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\getDescendants.js                 | JavaScript     |          9 |          0 |         -2 |          7 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\getEtymology.js                   | JavaScript     |          3 |          0 |          0 |          3 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\getGroups.js                      | JavaScript     |          5 |          0 |         -3 |          2 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\getLanguage.js                    | JavaScript     |         33 |          1 |          0 |         34 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\getLanguageName.js                | JavaScript     |          3 |          0 |          0 |          3 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\getLanguages.js                   | JavaScript     |          4 |          0 |          0 |          4 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\getWord.js                        | JavaScript     |          4 |          0 |         -4 |          0 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\getWordCategories.js              | JavaScript     |         74 |          5 |         16 |         95 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\getWordForms.js                   | JavaScript     |         13 |         -3 |         -5 |          5 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\login.js                          | JavaScript     |          8 |          0 |         -4 |          4 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\api\register.js                       | JavaScript     |          1 |          0 |         -1 |          0 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\server.js                             | JavaScript     |          4 |         -2 |         -6 |         -4 |
+| c:\Users\marca\Documents\GitHub\Elatha\backend\vercel.json                           | JSON           |         -1 |          0 |          0 |         -1 |
+| c:\Users\marca\Documents\GitHub\Elatha\frontend\src\App.css                          | CSS            |         85 |          2 |         14 |        101 |
+| c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\EditLanguageModal.jsx | JavaScript JSX |        101 |          4 |          8 |        113 |
+| c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\EditWordModal.jsx     | JavaScript JSX |        985 |          0 |         69 |      1,054 |
+| c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\addEtymologyModal.jsx | JavaScript JSX |         18 |          0 |          0 |         18 |
+| c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\addLanguageModal.jsx  | JavaScript JSX |        103 |          4 |         13 |        120 |
+| c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\addWordModal.jsx      | JavaScript JSX |        496 |          0 |         22 |        518 |
+| c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\editGroupModal.jsx    | JavaScript JSX |      2,037 |          0 |        132 |      2,169 |
+| c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\groupSelector.jsx     | JavaScript JSX |         98 |          1 |         12 |        111 |
+| c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\languageSelector.jsx  | JavaScript JSX |          3 |          0 |          0 |          3 |
+| c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Components\wordSelector.jsx      | JavaScript JSX |         14 |          0 |          0 |         14 |
+| c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Pages\dictionary.jsx             | JavaScript JSX |      1,016 |        111 |          2 |      1,129 |
+| c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Pages\home.jsx                   | JavaScript JSX |         12 |          0 |          1 |         13 |
+| c:\Users\marca\Documents\GitHub\Elatha\frontend\src\Pages\word.jsx                   | JavaScript JSX |        200 |         -6 |         13 |        207 |
+| Total                                                                                |                |      6,061 |        133 |        359 |      6,553 |
++--------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

@@ -1,0 +1,322 @@
+"filename", "language", "JavaScript", "PostCSS", "JavaScript JSX", "XML", "TypeScript", "Markdown", "HTML", "JSON", "JSON Lines", "comment", "blank", "total"
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\README.md", "Markdown", 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 6, 13
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\eslint.config.js", "JavaScript", 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 34
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\index.html", "HTML", 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 2, 18
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\package-lock.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 7793, 0, 0, 1, 7794
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\package.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 45, 0, 0, 1, 46
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\public\vite.svg", "XML", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\App.css", "PostCSS", 0, 696, 0, 0, 0, 0, 0, 0, 0, 15, 158, 869
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\App.jsx", "JavaScript JSX", 0, 0, 57, 0, 0, 0, 0, 0, 0, 1, 6, 64
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\EditLanguageModal.jsx", "JavaScript JSX", 0, 0, 1369, 0, 0, 0, 0, 0, 0, 6, 130, 1505
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\ExtractExampleSentencesFromCorpus.jsx", "JavaScript JSX", 0, 0, 194, 0, 0, 0, 0, 0, 0, 11, 39, 244
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\PaginatedGeneratedLanguage.jsx", "JavaScript JSX", 0, 0, 550, 0, 0, 0, 0, 0, 0, 0, 15, 565
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\addEtymologyModal.jsx", "JavaScript JSX", 0, 0, 342, 0, 0, 0, 0, 0, 0, 5, 36, 383
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\addGroupModal.jsx", "JavaScript JSX", 0, 0, 777, 0, 0, 0, 0, 0, 0, 1, 58, 836
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\addInterfaceLanguageModal.jsx", "JavaScript JSX", 0, 0, 150, 0, 0, 0, 0, 0, 0, 1, 19, 170
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\addLanguageModal.jsx", "JavaScript JSX", 0, 0, 1024, 0, 0, 0, 0, 0, 0, 5, 84, 1113
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\addTextModal.jsx", "JavaScript JSX", 0, 0, 132, 0, 0, 0, 0, 0, 0, 0, 22, 154
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\addWordModal.jsx", "JavaScript JSX", 0, 0, 1288, 0, 0, 0, 0, 0, 0, 4, 121, 1413
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\collapsable.jsx", "JavaScript JSX", 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 5, 33
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\customToolbar.jsx", "JavaScript JSX", 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 2, 20
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\deleteEtymologyModal.jsx", "JavaScript JSX", 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 13, 102
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\editEtymologyModal.jsx", "JavaScript JSX", 0, 0, 345, 0, 0, 0, 0, 0, 0, 2, 34, 381
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\editGroupModal.jsx", "JavaScript JSX", 0, 0, 2241, 0, 0, 0, 0, 0, 0, 2, 166, 2409
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\editInterfaceLanguageModal.jsx", "JavaScript JSX", 0, 0, 174, 0, 0, 0, 0, 0, 0, 2, 23, 199
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\editTextModal.jsx", "JavaScript JSX", 0, 0, 157, 0, 0, 0, 0, 0, 0, 0, 29, 186
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\editWordModal.jsx", "JavaScript JSX", 0, 0, 2156, 0, 0, 0, 0, 0, 0, 4, 151, 2311
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\findWordsDescendants.jsx", "JavaScript JSX", 0, 0, 251, 0, 0, 0, 0, 0, 0, 2, 17, 270
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\generateWord.jsx", "JavaScript JSX", 0, 0, 275, 0, 0, 0, 0, 0, 0, 11, 30, 316
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\getDerivationRoots.jsx", "JavaScript JSX", 0, 0, 51, 0, 0, 0, 0, 0, 0, 0, 7, 58
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\groupSelector.jsx", "JavaScript JSX", 0, 0, 100, 0, 0, 0, 0, 0, 0, 1, 13, 114
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\languageSelector.jsx", "JavaScript JSX", 0, 0, 137, 0, 0, 0, 0, 0, 0, 20, 16, 173
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\makeSpelling.jsx", "JavaScript JSX", 0, 0, 23, 0, 0, 0, 0, 0, 0, 3, 6, 32
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\navbar.jsx", "JavaScript JSX", 0, 0, 139, 0, 0, 0, 0, 0, 0, 11, 17, 167
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\orthography.jsx", "JavaScript JSX", 0, 0, 38, 0, 0, 0, 0, 0, 0, 6, 15, 59
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\paginateDictionary.jsx", "JavaScript JSX", 0, 0, 2368, 0, 0, 0, 0, 0, 0, 121, 48, 2537
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\pagination.jsx", "JavaScript JSX", 0, 0, 53, 0, 0, 0, 0, 0, 0, 2, 12, 67
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\parentLanguageModal.jsx", "JavaScript JSX", 0, 0, 85, 0, 0, 0, 0, 0, 0, 0, 10, 95
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\printOptions.jsx", "JavaScript JSX", 0, 0, 305, 0, 0, 0, 0, 0, 0, 8, 59, 372
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\savePhonologyModal.jsx", "JavaScript JSX", 0, 0, 230, 0, 0, 0, 0, 0, 0, 0, 29, 259
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\selectPhonology.jsx", "JavaScript JSX", 0, 0, 93, 0, 0, 0, 0, 0, 0, 0, 16, 109
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\sourcesModal.jsx", "JavaScript JSX", 0, 0, 225, 0, 0, 0, 0, 0, 0, 0, 27, 252
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\spellingCreator.jsx", "JavaScript JSX", 0, 0, 51, 0, 0, 0, 0, 0, 0, 4, 12, 67
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\statModal.jsx", "JavaScript JSX", 0, 0, 73, 0, 0, 0, 0, 0, 0, 0, 5, 78
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\supabaseClient.jsx", "JavaScript JSX", 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 4, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\syllableCategories.jsx", "JavaScript JSX", 0, 0, 132, 0, 0, 0, 0, 0, 0, 5, 24, 161
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\syllableCategoriesAffix.jsx", "JavaScript JSX", 0, 0, 82, 0, 0, 0, 0, 0, 0, 5, 18, 105
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\wordRow.jsx", "JavaScript JSX", 0, 0, 112, 0, 0, 0, 0, 0, 0, 0, 20, 132
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\wordSelector.jsx", "JavaScript JSX", 0, 0, 155, 0, 0, 0, 0, 0, 0, 0, 19, 174
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Components\wordWithTooltip.jsx", "JavaScript JSX", 0, 0, 135, 0, 0, 0, 0, 0, 0, 1, 17, 153
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\TranslateUI.jsx", "JavaScript JSX", 0, 0, 102, 0, 0, 0, 0, 0, 0, 2, 28, 132
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\applyProsody.jsx", "JavaScript JSX", 0, 0, 186, 0, 0, 0, 0, 0, 0, 49, 51, 286
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\createDerivations.jsx", "JavaScript JSX", 0, 0, 12801, 0, 0, 0, 0, 0, 0, 42, 333, 13176
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\formatMeaning.jsx", "JavaScript JSX", 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, 8, 34
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\phonologyWeight.jsx", "JavaScript JSX", 0, 0, 19, 0, 0, 0, 0, 0, 0, 4, 8, 31
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\removeNotation.js", "JavaScript", 21, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 28
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\removeProsody.jsx", "JavaScript JSX", 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 1, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\removeTags.jsx", "JavaScript JSX", 0, 0, 13, 0, 0, 0, 0, 0, 0, 1, 2, 16
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\semanticShift.jsx", "JavaScript JSX", 0, 0, 38798, 0, 0, 0, 0, 0, 0, 18, 33, 38849
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\soundChange.jsx", "JavaScript JSX", 0, 0, 279, 0, 0, 0, 0, 0, 0, 15, 37, 331
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Functions\thesaurusList.jsx", "JavaScript JSX", 0, 0, 1339, 0, 0, 0, 0, 0, 0, 2, 15, 1356
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\Account.jsx", "JavaScript JSX", 0, 0, 203, 0, 0, 0, 0, 0, 0, 0, 32, 235
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\changePassword.jsx", "JavaScript JSX", 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 11, 75
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\corpus.jsx", "JavaScript JSX", 0, 0, 76, 0, 0, 0, 0, 0, 0, 0, 18, 94
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\corpusFrequencyList.jsx", "JavaScript JSX", 0, 0, 173, 0, 0, 0, 0, 0, 0, 3, 35, 211
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\corpusList.jsx", "JavaScript JSX", 0, 0, 98, 0, 0, 0, 0, 0, 0, 4, 33, 135
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\createLanguage.jsx", "JavaScript JSX", 0, 0, 1434, 0, 0, 0, 0, 0, 0, 9, 169, 1612
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\dictionary.jsx", "JavaScript JSX", 0, 0, 1617, 0, 0, 0, 0, 0, 0, 248, 208, 2073
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\frequencyList.jsx", "JavaScript JSX", 0, 0, 188, 0, 0, 0, 0, 0, 0, 1, 27, 216
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\grammar.jsx", "JavaScript JSX", 0, 0, 304, 0, 0, 0, 0, 0, 0, 1, 49, 354
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\group.jsx", "JavaScript JSX", 0, 0, 101, 0, 0, 0, 0, 0, 0, 1, 13, 115
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\home.jsx", "JavaScript JSX", 0, 0, 491, 0, 0, 0, 0, 0, 0, 6, 45, 542
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\login.jsx", "JavaScript JSX", 0, 0, 78, 0, 0, 0, 0, 0, 0, 1, 12, 91
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\makeDaughter.jsx", "JavaScript JSX", 0, 0, 2042, 0, 0, 0, 0, 0, 0, 11, 144, 2197
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\recoverPassword.jsx", "JavaScript JSX", 0, 0, 55, 0, 0, 0, 0, 0, 0, 2, 7, 64
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\register.jsx", "JavaScript JSX", 0, 0, 99, 0, 0, 0, 0, 0, 0, 2, 14, 115
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\search.jsx", "JavaScript JSX", 0, 0, 105, 0, 0, 0, 0, 0, 0, 0, 18, 123
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\thesaurus.jsx", "JavaScript JSX", 0, 0, 282, 0, 0, 0, 0, 0, 0, 0, 18, 300
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\user.jsx", "JavaScript JSX", 0, 0, 258, 0, 0, 0, 0, 0, 0, 1, 33, 292
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\welcome.jsx", "JavaScript JSX", 0, 0, 144, 0, 0, 0, 0, 0, 0, 0, 17, 161
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\Pages\word.jsx", "JavaScript JSX", 0, 0, 2060, 0, 0, 0, 0, 0, 0, 23, 173, 2256
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\automateThesaurus\automateThesaurus.js", "JavaScript", 105, 0, 0, 0, 0, 0, 0, 0, 0, 52, 32, 189
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\automatingSemanticShifts\automateSemanticShift.js", "JavaScript", 10110, 0, 0, 0, 0, 0, 0, 0, 0, 29, 58, 10197
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\automatingSemanticShifts\formatedSemanticShifts.js", "JavaScript", 76926, 0, 0, 0, 0, 0, 0, 0, 0, 5, 7, 76938
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\automatingSemanticShifts\mergedSemanticShifts.js", "JavaScript", 38573, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1932, 40505
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\downArrow.svg", "XML", 0, 0, 0, 32, 0, 0, 0, 0, 0, 1, 2, 35
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\ipaChars.jsx", "JavaScript JSX", 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 3, 18
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\pencil-square.svg", "XML", 0, 0, 0, 36, 0, 0, 0, 0, 0, 1, 2, 39
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\react.svg", "XML", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\thesaurus.js", "JavaScript", 43110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 43112
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\translationObj.jsx", "JavaScript JSX", 0, 0, 1826, 0, 0, 0, 0, 0, 0, 0, 1, 1827
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\trash-bin.svg", "XML", 0, 0, 0, 53, 0, 0, 0, 0, 0, 1, 2, 56
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\upArrow.svg", "XML", 0, 0, 0, 37, 0, 0, 0, 0, 0, 1, 2, 40
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\wikiDictionaryDump\english_headwords_deduped.jsonl", "JSON Lines", 0, 0, 0, 0, 0, 0, 0, 0, 697990, 0, 2, 697992
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\wikiDictionaryDump\filterEnglishWords.js", "JavaScript", 52, 0, 0, 0, 0, 0, 0, 0, 0, 11, 20, 83
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\assets\wikiDictionaryDump\formatWikiDictionary.js", "JavaScript", 44, 0, 0, 0, 0, 0, 0, 0, 0, 1, 16, 61
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\index.css", "PostCSS", 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 8, 68
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\main.jsx", "JavaScript JSX", 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 4, 15
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckEditor-build\App.css", "PostCSS", 0, 70, 0, 0, 0, 0, 0, 0, 0, 5, 13, 88
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckEditor-build\App.jsx", "JavaScript JSX", 0, 0, 267, 0, 0, 0, 0, 0, 0, 7, 18, 292
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\ckeditor5.css", "PostCSS", 0, 6847, 0, 0, 0, 0, 0, 0, 0, 2637, 1155, 10639
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\ckeditor5.js", "JavaScript", 60, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 66
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\af.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\af.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\af.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ar.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ar.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ar.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ast.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ast.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ast.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\az.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\az.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\az.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\be.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\be.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\be.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\bg.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\bg.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\bg.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\bn.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\bn.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\bn.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\bs.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\bs.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\bs.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ca.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ca.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ca.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\cs.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\cs.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\cs.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\da.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\da.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\da.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\de-ch.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\de-ch.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\de-ch.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\de.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\de.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\de.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\el.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\el.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\el.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\en-au.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\en-au.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\en-au.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\en-gb.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\en-gb.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\en-gb.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\en.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\en.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\en.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\eo.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\eo.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\eo.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\es-co.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\es-co.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\es-co.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\es.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\es.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\es.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\et.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\et.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\et.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\eu.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\eu.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\eu.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\fa.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\fa.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\fa.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\fi.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\fi.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\fi.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\fr.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\fr.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\fr.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\gl.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\gl.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\gl.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\gu.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\gu.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\gu.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\he.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\he.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\he.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\hi.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\hi.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\hi.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\hr.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\hr.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\hr.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\hu.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\hu.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\hu.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\hy.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\hy.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\hy.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\id.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\id.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\id.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\it.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\it.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\it.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ja.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ja.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ja.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\jv.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\jv.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\jv.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\kk.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\kk.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\kk.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\km.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\km.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\km.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\kn.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\kn.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\kn.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ko.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ko.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ko.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ku.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ku.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ku.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\lt.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\lt.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\lt.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\lv.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\lv.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\lv.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ms.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ms.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ms.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\nb.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\nb.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\nb.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ne.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ne.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ne.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\nl.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\nl.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\nl.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\no.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\no.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\no.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\oc.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\oc.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\oc.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\pl.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\pl.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\pl.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\pt-br.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\pt-br.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\pt-br.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\pt.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\pt.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\pt.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ro.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ro.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ro.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ru.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ru.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ru.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\si.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\si.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\si.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sk.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sk.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sk.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sl.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sl.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sl.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sq.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sq.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sq.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sr-latn.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sr-latn.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sr-latn.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sr.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sr.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sr.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sv.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sv.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\sv.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\th.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\th.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\th.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ti.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ti.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ti.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\tk.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\tk.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\tk.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\tr.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\tr.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\tr.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\tt.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\tt.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\tt.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ug.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ug.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ug.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\uk.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\uk.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\uk.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ur.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ur.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\ur.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\uz.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\uz.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\uz.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\vi.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\vi.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\vi.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\zh-cn.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\zh-cn.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\zh-cn.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\zh.d.ts", "TypeScript", 0, 0, 0, 0, 3, 0, 0, 0, 0, 4, 2, 9
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\zh.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\src\vendor\ckeditor5\translations\zh.umd.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 12
+"c:\Users\awowi\Documents\GitHub\Elatha\frontend\vite.config.js", "JavaScript", 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17
+"Total", "-", 169557, 7673, 81773, 160, 219, 7, 16, 7838, 697990, 4339, 6738, 976310
