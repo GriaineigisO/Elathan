@@ -206,9 +206,9 @@ const SemanticDriftModal = ({
         {noMatch && (<h2>{translate("There are no semantic shifts listed for this word")}</h2>)}
 
         <div className="thin-white-border">
-          {meaningKeysExpanded.map((key) => (
+          {meaningKeysExpanded.map((key, index) => (
             <>
-              <React.Fragment key={key.type}>
+              <React.Fragment key={index}>
                 {key.newMeanings.length > 0 && (
                   <>
                     <p>

@@ -361,7 +361,7 @@ const AddDescendantModal = ({
       ([type, [setSelections, setInputs, parentCategories]]) => {
         const filtered = wordCategories
           .flatMap((wordCategory) => wordCategory.word_categories)
-          .filter((cat) => cat.type === type);
+          .filter((cat) => cat.type === type);          
 
         const parentLookup = new Map(
           (parentCategories ?? []).map((cat) => [cat.category_name, cat]),

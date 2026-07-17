@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import EditEncyclopediaModal from "../Components/EditEncyclopediaModal.jsx";
 import AddEncyclopediaModal from "../Components/addEncyclopediaModal.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
+import { getEncyclopedias } from "../services/encyclopediaService.js";
 
 const Encyclopedias = () => {
   const [hasNoEncyclopedias, setHasNoEncyclopedias] = useState(false);
@@ -23,99 +24,27 @@ const Encyclopedias = () => {
   const { translate } = useTranslate();
 
 
-  const fetchUserInfo = async () => {
-    const userId = localStorage.getItem("userId");
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getUserInfo`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
-   
-      setUserName(data.username);
-      setTotalEntryCount(data.totalEntryCount);
-    } else {
-      console.error(`Error fetching user info: ${data.message}`);
-    }
-  };
  
 
   const fetchEncylopedias = async () => {
-    const userId = localStorage.getItem("userId");
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getEncyclopedias`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
+   let data = await window.electron.getEncyclopedias();
       setEncyclopediaList([...data]);
       setOriginalEncyclopediaList([...data]);
       setHasNoEncyclopedias(data.length === 0);
       setUserName();
-    } else {
-      console.error(`Error fetching Encyclopedias: ${data.message}`);
-    }
+    
   };
   useEffect(() => {
     fetchEncylopedias();
   }, [refreshEncyclopediasTrigger]);
-
-  // const fetchCollabEncyclopedias = async () => {
-  //   const userId = localStorage.getItem("userId");
-  //   const response = await fetch(
-  //     `${import.meta.env.VITE_BACKEND_URL}/api/getCollabEncyclopedias`,
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ userId }),
-  //     }
-  //   );
-
-  //   const data = await response.json();
-  //   if (response.ok) {
-  //     setCollabEncyclopediaList([...data]);
-  //     setOriginalCollabEncyclopediaList([...data]);
-  //   } else {
-  //     console.error(`Error fetching collab Encyclopedias: ${data.message}`);
-  //   }
-  // };
-  // useEffect(() => {
-  //   fetchCollabEncyclopedias();
-  // }, [refreshEncyclopediasTrigger]);
-
   
-
   const handleOpenEncyclopedia = (id) => {
-    window.open(
-      `${import.meta.env.VITE_FRONTEND_URL}/encyclopedia/${id}`,
-      "_blank"
-    );
+   window.location.href = `/encyclopedia/${id}`;
   };
 
-  const openCreateEncyclopediaPage = () => {
-    window.open(
-      `${import.meta.env.VITE_FRONTEND_URL}/createEncyclopedia`,
-      "_blank"
-    );
-  }
+   const openCreateEncyclopediaPage = (id) => {
+   window.location.href = `/createEncyclopedia`;
+  };
 
 
 
@@ -128,18 +57,6 @@ const Encyclopedias = () => {
     }
   };
 
-  // const handleEditCollabEncyclopedia = (EncyclopediaId) => {
-  //   // find the latest version of the Encyclopedia from the updated list
-  //   const latest = collabEncyclopediaList.find(
-  //     (lang) => lang.Encyclopedia_id === EncyclopediaId
-  //   );
-  //   if (latest) {
-  //     setEncyclopediaToEdit(latest);
-  //     setShowEditEncyclopediaModal(true);
-  //   }
-  // };
-
-
   const handleEncyclopediaAdded = () => {
     fetchEncyclopedias();
   };
@@ -151,15 +68,6 @@ const Encyclopedias = () => {
     );
     setEncyclopediaList(Encyclopedia);
   };
-
-  // const searchCollabEncyclopedia = (value) => {
-  //   const Encyclopedia = originalCollabEncyclopediaList.filter((Encyclopedia) =>
-  //     Encyclopedia.Encyclopedia_name.toLowerCase().startsWith(value.toLowerCase())
-  //   );
-  //   setCollabEncyclopediaList(Encyclopedia);
-  // };
-
- 
 
   return (
     <div className="home-div">

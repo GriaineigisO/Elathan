@@ -12,10 +12,14 @@ import ExtractExampleSentencesFromCorpus from "../Components/ExtractExampleSente
 import { useTranslate } from "../Functions/TranslateUI";
 import formatMeaning from "../Functions/formatMeaning";
 import AddDescendantModal from "../Components/addDescendantModal.jsx";
+import { getWordData } from "../services/dictionaryService.js";
+import { getEtymology } from "../services/etymologyService.js";
+import { getLanguage } from "../services/languageService.js";
 
 const Word = () => {
   const { id } = useParams();
   const { translate } = useTranslate();
+  const [canView, setCanView] = useState(false);
   const [word, setWord] = useState(null);
   const [languageName, setLanguageName] = useState();
   const [showAddDescendantModal, setShowAddDescendantModal] = useState(false);
@@ -52,49 +56,20 @@ const Word = () => {
   const [editorUsername, setEditorUsername] = useState();
   const [madeDate, setMadeDate] = useState();
   const [editedDate, setEditedDate] = useState();
-  const [canEdit, setCanEdit] = useState(false);
-  const [canView, setCanView] = useState(false);
-  const [privacy, setPrivacy] = useState(false);
   const [showPermissionMessage, setShowPermissionMessage] = useState(false);
   const [etymologyToEdit, setEtymologyToEdit] = useState();
   const [etymologyToDelete, setEtymologyToDelete] = useState();
   const [phrases, setPhrases] = useState([]);
   const [allWords, setAllWords] = useState([]);
-  const [username, setUsername] = useState();
 
   ////////////////////////////////////////////////
 
   const getWordData = async () => {
-    const userId = localStorage.getItem("userId");
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getWordData`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id, userId }),
-      },
-    );
-
-    let data = await response.json();
+    let data = await window.electron.getWordData(id);
     setWord(data.word.wordData);
-    setUsername(data.userInfo.username);
-
-    if (word && word.made_by) {
-      setAuthorUsername(word.made_by);
-    }
-
-    if (word && word.edited_by) {
-      setEditorUsername(word.edited_by);
-    }
-
     setLanguageName(data.word.languageData.language_name);
-    setPrivacy(data.word.privacy);
     setIsProto(data.word.languageData.is_proto);
     setLanguageId(data.word.languageData.language_id);
-    setCanView(data.word.privacy);
-    setCanEdit(data.word.permission);
     setAllWords(data.allWords);
     setMotherLanguage(data.motherLanguage);
     setCognates(data.cognates);
@@ -106,6 +81,7 @@ const Word = () => {
   useEffect(() => {
     if (id) {
       getWordData();
+      setCanView(true);
     }
   }, [id]);
 
@@ -131,33 +107,11 @@ const Word = () => {
     setProto,
     setId,
   ) => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getLanguageName`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ languageId }),
-      },
-    );
-    const data = await response.json();
+   let data = await window.electron.getLanguage(languageId);
     setName(data.language_name);
-    setPrivacy(data.privacy);
     setProto(data.is_proto);
     setId(data.language_id);
   };
-
-  // useEffect(() => {
-  //   if (word) {
-  //     getLanguageName(
-  //       word.language_id,
-  //       setLanguageName,
-  //       setIsProto,
-  //       setLanguageId,
-  //     );
-  //   }
-  // }, [word]);
 
   useEffect(() => {
     if (loanWord) {
@@ -170,19 +124,8 @@ const Word = () => {
     }
   }, [loanWord]);
 
-  const getEtymology = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getEtymology`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      },
-    );
-
-    let data = await response.json();
+  const fetchEtymology = async () => {
+    let data = await window.electron.getEtymology(id);
     setEtymology(data);
     //gets the loanword's details
     if (data[0] && data[0].etymology_type === "loaned") {
@@ -191,108 +134,10 @@ const Word = () => {
   };
 
   useEffect(() => {
-    getEtymology();
+    fetchEtymology();
   }, []);
 
-  // const getCognates = async () => {
-  //   const response = await fetch(
-  //     `${import.meta.env.VITE_BACKEND_URL}/api/getCognates`,
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ id }),
-  //     },
-  //   );
 
-  //   let data = await response.json();
-  //   setCognates(data);
-  // };
-
-  // useEffect(() => {
-  //   getCognates();
-  // }, []);
-
-  // useEffect(() => {
-  //   const getDerivations = async () => {
-  //     const response = await fetch(
-  //       `${import.meta.env.VITE_BACKEND_URL}/api/getDerivations`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ id }),
-  //       },
-  //     );
-
-  //     let data = await response.json();
-  //     setDerivations(data);
-  //   };
-  //   getDerivations();
-  // }, []);
-
-  // useEffect(() => {
-  //   const getSynonyms = async () => {
-  //     const response = await fetch(
-  //       `${import.meta.env.VITE_BACKEND_URL}/api/getSynonyms`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ id }),
-  //       },
-  //     );
-
-  //     let data = await response.json();
-
-  //     setsynonyms(data);
-  //   };
-  //   getSynonyms();
-  // }, []);
-
-  // useEffect(() => {
-  //   if (languageId) {
-  //     const getMotherLanguage = async () => {
-  //       const id = languageId;
-  //       const response = await fetch(
-  //         `${import.meta.env.VITE_BACKEND_URL}/api/getMotherLanguage`,
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify({ id }),
-  //         },
-  //       );
-
-  //       let data = await response.json();
-  //       setMotherLanguage(data[0]);
-  //     };
-  //     getMotherLanguage();
-  //   }
-  // }, [languageId]);
-
-  // useEffect(() => {
-  //   const getDescendants = async () => {
-  //     const response = await fetch(
-  //       `${import.meta.env.VITE_BACKEND_URL}/api/getDescendants`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ id }),
-  //       },
-  //     );
-
-  //     let data = await response.json();
-  //     setDescendants(data);
-  //   };
-  //   getDescendants();
-  // }, [id]);
 
   useEffect(() => {
     if (word) {
@@ -395,97 +240,12 @@ const Word = () => {
     );
   };
 
-  // const getUsername = async (id, setUsername) => {
-  //   if (id) {
-  //     const response = await fetch(
-  //       `${import.meta.env.VITE_BACKEND_URL}/api/getUserInfo`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ userId: id }),
-  //       },
-  //     );
-
-  //     const data = await response.json();
-  //     setUsername(data.username);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (word && word.made_by) {
-  //     getUsername(word.made_by, setAuthorUsername);
-  //   }
-
-  //   if (word && word.edited_by) {
-  //     getUsername(word.edited_by, setEditorUsername);
-  //   }
-  // }, [word]);
+ 
 
   const handleOpenUser = (id) => {
     window.open(`${import.meta.env.VITE_FRONTEND_URL}/user/${id}`, "_blank");
   };
 
-  // const checkPermission = async () => {
-  //   if (word) {
-  //     const userId = localStorage.getItem("userId");
-  //     const response = await fetch(
-  //       `${import.meta.env.VITE_BACKEND_URL}/api/checkPermission`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ id: word.language_id, userId }),
-  //       }
-  //     );
-  //     const data = await response.json();
-  //     setCanEdit(data);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   checkPermission();
-  // }, [word]);
-
-  // const checkPrivacy = async () => {
-  //   if (word) {
-  //     const userId = localStorage.getItem("userId");
-
-  //     //if user is not logged in
-  //     if (!userId && privacy === "private") {
-  //       setCanView(false);
-  //       return;
-  //     }
-
-  //     const response = await fetch(
-  //       `${import.meta.env.VITE_BACKEND_URL}/api/checkPrivacy`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ id: word.language_id, userId }),
-  //       }
-  //     );
-  //     const data = await response.json();
-
-  //     setCanView(data);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   checkPrivacy();
-  // }, [word]);
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setShowPermissionMessage(true);
-  //   }, 1000);
-
-  //   return () => clearTimeout(timer);
-  // }, []);
 
   const handleEditEtymology = (etymology) => {
     setEtymologyToEdit(etymology);
@@ -519,18 +279,7 @@ const Word = () => {
   useEffect(() => {
     const getPhrases = async () => {
       if (allWords) {
-        // const response = await fetch(
-        //   `${import.meta.env.VITE_BACKEND_URL}/api/getAllWords`,
-        //   {
-        //     method: "POST",
-        //     headers: {
-        //       "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify({ id: word.language_id }),
-        //   },
-        // );
-        // const allWords = await response.json();
-
+       
         allWords.forEach((entry) => {
           const phrase = entry.word.trim().split(/\s+/); //split string by whitespace incase the entry consists of multiple words divided by a whitespace i.e a phrase
 
@@ -632,7 +381,6 @@ const Word = () => {
                   languageId={word.language_id}
                   word={word}
                   name={languageName}
-                  word={word}
                   onSuccess={handleDescendantAdded}
                   languageName={languageName}
                 />
@@ -652,7 +400,7 @@ const Word = () => {
                   ) : (
                     <></>
                   )}
-                  {canEdit ? (
+                 
                     <img
                       style={{ marginLeft: "10px" }}
                       src={editIcon}
@@ -661,9 +409,7 @@ const Word = () => {
                         setShowEditWordModal(true);
                       }}
                     ></img>
-                  ) : (
-                    <></>
-                  )}
+                  
                 </h1>
 
                 <h2>{languageName}</h2>
@@ -672,7 +418,7 @@ const Word = () => {
                   <hr />
                   <div className="title-and-edit-button-div">
                     <h3>{translate("Etymology")}</h3>
-                    {canEdit ? (
+                    
                       <img
                         src={editIcon}
                         className="edit-button"
@@ -680,9 +426,7 @@ const Word = () => {
                           setShowAddEtymologyModal(true);
                         }}
                       ></img>
-                    ) : (
-                      <></>
-                    )}
+                   
                   </div>
 
                   {etymology.length > 1 ? (
@@ -920,7 +664,7 @@ const Word = () => {
                                   }}
                                 />
                               )}
-                              {canEdit && (
+                             
                                 <>
                                   <img
                                     style={{ marginLeft: "10px" }}
@@ -939,7 +683,7 @@ const Word = () => {
                                     }
                                   />
                                 </>
-                              )}
+                              
                             </li>
                           ))}
 
@@ -988,7 +732,7 @@ const Word = () => {
                                 />
                               )}
 
-                              {canEdit && (
+                             
                                 <img
                                   style={{ marginLeft: "10px" }}
                                   src={editIcon}
@@ -997,7 +741,7 @@ const Word = () => {
                                     handleEditEtymology(etymology[0])
                                   }
                                 />
-                              )}
+                             
                             </li>
                           ))}
                       </ol>
@@ -1100,7 +844,7 @@ const Word = () => {
                         />
                       )}
 
-                      {canEdit && (
+                      
                         <>
                           <img
                             style={{ marginLeft: "10px" }}
@@ -1115,7 +859,7 @@ const Word = () => {
                             onClick={() => handleDeleteEtymology(etymology[0])}
                           />
                         </>
-                      )}
+                      
                     </p>
                   ) : (
                     <></>
@@ -1219,7 +963,7 @@ const Word = () => {
                       )}
 
                       {/* Edit/Delete buttons */}
-                      {canEdit && (
+                     
                         <>
                           <img
                             style={{ marginLeft: "10px" }}
@@ -1234,7 +978,7 @@ const Word = () => {
                             onClick={() => handleDeleteEtymology(etymology[0])}
                           />
                         </>
-                      )}
+                     
                     </p>
                   ) : (
                     <></>
@@ -1332,7 +1076,7 @@ const Word = () => {
                       )}
 
                       {/* Edit/Delete buttons */}
-                      {canEdit && (
+                      
                         <>
                           <img
                             style={{ marginLeft: "10px" }}
@@ -1347,7 +1091,7 @@ const Word = () => {
                             onClick={() => handleDeleteEtymology(etymology[0])}
                           />
                         </>
-                      )}
+                      
                     </p>
                   ) : (
                     <></>
@@ -1365,7 +1109,7 @@ const Word = () => {
                       ) : (
                         <></>
                       )}
-                      {canEdit ? (
+                     
                         <>
                           <img
                             style={{ marginLeft: "10px" }}
@@ -1380,9 +1124,7 @@ const Word = () => {
                             onClick={() => handleDeleteEtymology(etymology[0])}
                           ></img>
                         </>
-                      ) : (
-                        <></>
-                      )}
+                     
                     </span>
                   ) : (
                     <></>
@@ -1554,7 +1296,7 @@ const Word = () => {
                         {Array.isArray(word.verb_word_categories) &&
                         word.verb_word_categories.length > 0 ? (
                           word.verb_word_categories.map((category, index) => (
-                            <span style={{ marginLeft: "10px" }}>
+                            <span key={index} style={{ marginLeft: "10px" }}>
                               {category.category_type !== "none" ? (
                                 <i>{category.category_type}</i>
                               ) : (
@@ -2184,7 +1926,7 @@ const Word = () => {
                   <div>
                     <div className="title-and-edit-button-div">
                       <h3>{translate("Descendant Terms")}</h3>
-                      {canEdit ? (
+                      
                         <img
                           src={editIcon}
                           className="edit-button"
@@ -2192,9 +1934,7 @@ const Word = () => {
                             setShowAddDescendantModal(true);
                           }}
                         ></img>
-                      ) : (
-                        <></>
-                      )}
+                     
                     </div>
                     {descendants.length > 0 && (
                       <ol>
@@ -2373,11 +2113,9 @@ const Word = () => {
 
                   <div className="title-and-edit-button-div">
                     <h3>{translate("Sources")}</h3>
-                    {canEdit ? (
+                    
                       <img src={editIcon} className="edit-button"></img>
-                    ) : (
-                      <></>
-                    )}
+                   
                   </div>
 
                   <hr />

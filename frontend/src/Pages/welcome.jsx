@@ -2,13 +2,18 @@ import { useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../App.css";
+import { rebuild } from "../services/databaseService.js";
 
 const Welcome = () => {
   const [mostWordsAdded, setMostWordsAdded] = useState([]);
   const [mostLanguagesAdded, setMostLanguagesAdded] = useState([]);
-
-   console.log("Backend URL:", import.meta.env.VITE_BACKEND_URL);
-
+  
+  //uncomment to rebuild the database. Remove when deploying
+  // useEffect(() => {
+  //   rebuild();
+  // }, [])
+  
+   
 
 
   const findMostWords = async () => {

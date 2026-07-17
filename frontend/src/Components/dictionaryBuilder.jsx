@@ -16,13 +16,18 @@ import PaginatedDictionary from "../Components/paginateDictionary.jsx";
 import EtymologyDictionaryPdf from "../Components/etymologyDictionaryPDF.jsx";
 import { pdf } from "@react-pdf/renderer";
 import DictionaryTitle from "./DictionaryTitle.jsx";
+import { getAllWords } from "../services/dictionaryService";
+import { getLanguage } from "../services/languageService";
+import { getTags } from "../services/languageService";
+import { getDerivations } from "../services/derivationService.js";
+import { getRootWord } from "../services/derivationService.js";
+import { getEtymologyTrees } from "../services/etymologyService.js";
 
-const DictionaryBuilder = ({id, dictionaryType}) => {
-
-  
+const DictionaryBuilder = ({ id, dictionaryType }) => {
   const { translate } = useTranslate();
   const [pdfUrl, setPdfUrl] = useState(null);
   const [pageSize, setPageSize] = useState(200);
+  const [canView, setCanView] = useState(false);
   const [gotEtymology, setGotEtymology] = useState(false);
   const [gotDerivations, setGotDerivation] = useState(false);
   const [etymologyTree, setEtymologyTree] = useState([]);
@@ -34,7 +39,7 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
   const [languageName, setLanguageName] = useState();
   const [wordType, setWordType] = useState();
   const [loanWord, setLoanWord] = useState();
-  const [motherLanguage, setMotherLanguage] = useState();
+  //const [motherLanguage, setMotherLanguage] = useState();
   const [word, setWord] = useState();
   const [showPrintedDictionary, setShowPrintedDictionary] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -45,13 +50,6 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
   const [allEnglishWords, setAllEnglishWords] = useState([]);
   const [allAffixes, setAllAffixes] = useState([]);
   const [synonyms, setsynonyms] = useState([]);
-  const [creatorUsername, setCreatorUsername] = useState();
-  const [creatorId, setCreatorId] = useState();
-  const [collaborators, setCollaborators] = useState([]);
-  const [canEdit, setCanEdit] = useState(false);
-  const [canView, setCanView] = useState(false);
-  const [privacy, setPrivacy] = useState(false);
-  const [showPermissionMessage, setShowPermissionMessage] = useState(false);
   const [tagGroups, setTagGroups] = useState([]);
   const [showStatModal, setShowStatModal] = useState(false);
   const [showSourcesModal, setShowSourcesModal] = useState(false);
@@ -216,7 +214,6 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
 
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
 
-  
   useEffect(() => {
     if (loading) {
       const interval = setInterval(() => {
@@ -231,6 +228,7 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
 
   const handleWordAdded = () => {
     getAllWords(); // refresh updated etymology
+    
   };
 
   // Process large arrays without blocking the main thread
@@ -249,91 +247,84 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
     return result;
   };
 
-  const getAllWords = async () => {
+  const fetchAllWords = async () => {
     try {
-      // 1️⃣ Fetch all words
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getAllWords`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id }),
-        },
-      );
-
-      let data = await response.json();
-
-      //filter by dictionary type
-      if (dictionaryType === "dictionary") {//normal dictionary
-
+      let words = await window.electron.getAllWords(id);
       
 
-      // 2️⃣ Add "to " for verbs
-      data = data.map((word) => {
-        if (word.verb_meaning) {
-          return {
-            ...word,
-            verb_meaning: word.verb_meaning.map((verb) =>
-              verb.startsWith("to ") || verb.startsWith("(")
-                ? verb
-                : `to ${verb}`,
-            ),
-          };
-        }
-        return word;
-      });
+      if (!words) return;
 
-      // 3️⃣ Separate affixes
-      const affixes = data.filter((word) =>
-        ["suffix", "prefix", "proclitic", "enclitic"].includes(word.word_type),
-      );
-      // 4️⃣ Fetch derivations in batches (limit concurrency)
-      const limit = pLimit(10); // adjust concurrency as needed
-      const MAX_DERIVATIONS = 300; // or whatever seems reasonable
+    
+      if (dictionaryType === "dictionary") {
+        //normal dictionary
 
-      const affixesWithDerivations = await Promise.all(
-        affixes.map((affix) =>
-          limit(async () => {
-            try {
-              const derivations = await withTimeout(
-                getDerivations(affix),
-                5000,
-              );
-              const trimmed = derivations.slice(0, MAX_DERIVATIONS);
-              if (derivations.length > MAX_DERIVATIONS)
-                return { ...affix, derivations: trimmed };
-            } catch (err) {
-              return { ...affix, derivations: [] };
-            }
-          }),
-        ),
-      );
+        // 2️⃣ Add "to " for verbs
+        words = words.map((word) => {
+          if (word.verb_meaning) {
+            return {
+              ...word,
+              verb_meaning: word.verb_meaning.map((verb) =>
+                verb.startsWith("to ") || verb.startsWith("(")
+                  ? verb
+                  : `to ${verb}`,
+              ),
+            };
+          }
+          return word;
+        });
 
-      // 5️⃣ Merge derivations back into main word array
-      const dataWithDerivations = data.map((word) => {
-        if (
-          ["suffix", "prefix", "proclitic", "enclitic"].includes(word.word_type)
-        ) {
-          const match = affixesWithDerivations.find((a) => a.id === word.id);
-          return match || word; // use derivations if found
-        }
-        return word;
-      });
+        // 3️⃣ Separate affixes
+        const affixes = words.filter((word) =>
+          ["suffix", "prefix", "proclitic", "enclitic"].includes(
+            word.word_type,
+          ),
+        );
+        // 4️⃣ Fetch derivations in batches (limit concurrency)
+        const limit = pLimit(10); // adjust concurrency as needed
+        const MAX_DERIVATIONS = 300; // or whatever seems reasonable
 
-      // 6️⃣ Update state
-      setAllWordsForThesaurus(dataWithDerivations);
-      setAllWords(dataWithDerivations);
-      setAllAffixes(affixesWithDerivations);
+        const affixesWithDerivations = await Promise.all(
+          affixes.map((affix) =>
+            limit(async () => {
+              try {
+                const derivations = await withTimeout(
+                  fetchDerivations(affix),
+                  5000,
+                );
+                const trimmed = derivations.slice(0, MAX_DERIVATIONS);
+                if (derivations.length > MAX_DERIVATIONS)
+                  return { ...affix, derivations: trimmed };
+              } catch (err) {
+                return { ...affix, derivations: [] };
+              }
+            }),
+          ),
+        );
 
-      // 7️⃣ Generate phrases after derivations are ready
-      const processed = addPhrasesToWords(data);
-      setVisibleWords(processed);
+        // 5️⃣ Merge derivations back into main word array
+        const dataWithDerivations = words.map((word) => {
+          if (
+            ["suffix", "prefix", "proclitic", "enclitic"].includes(
+              word.word_type,
+            )
+          ) {
+            const match = affixesWithDerivations.find((a) => a.id === word.id);
+            return match || word; // use derivations if found
+          }
+          return word;
+        });
 
+        // 6️⃣ Update state
+        setAllWordsForThesaurus(dataWithDerivations);
+        setAllWords(dataWithDerivations);
+        setAllAffixes(affixesWithDerivations);
+
+        // 7️⃣ Generate phrases after derivations are ready
+        const processed = addPhrasesToWords(words);
+        setVisibleWords(processed);
       } else {
-
-        const names = data.filter((word) => word.word_type === dictionaryType);
+        const names = words.filter((word) => word.word_type === dictionaryType);
         setVisibleWords(names);
-
       }
     } catch (err) {
       console.error("Error fetching or processing words:", err);
@@ -341,122 +332,31 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
   };
 
   useEffect(() => {
-    getAllWords();
+    fetchAllWords();
+    setCanView(true);
   }, [id]);
 
-  useEffect(() => {
-    if (visibleWords.length > 0) {
-      //getEtymologyGraph()
-      addEtymInfo(); 
-    }
-  }, [visibleWords]);
-
-  const addEtymInfo = async () => {
-
-    const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getAllEtymologies`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id, visibleWords  }),
-        },
-      );
-
-
-      const data = await response.json();
-      setVisibleWords(data)
+  const fetchDerivations = async (affix) => {
     
-    setGotEtymology(true);
-  };
-
-  const getDerivations = async (affix) => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getDerivations`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: affix.word_id }),
-      },
-    );
-    const data = await response.json();
+    let derivs = await window.electron.getDerivations(affix.word_id);
     setGotDerivation(true);
-    return data;
+    return derivs;
   };
-
-
 
   const getEtymologyGraph = async () => {
-
     const rootIds = visibleWords
-  .filter(word => word.etymology_type === "not_derived")
-  .map(word => word.word_id);
+      .filter((word) => word.etymology_type === "not_derived")
+      .map((word) => word.word_id);
 
-     const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getEtymologyDictionaryGraph`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id, rootIds  }),
-        },
-      );
-      const data = await response.json();
-
-      return data;
-  }
- 
-
-  const checkPermission = async () => {
-    const userId = localStorage.getItem("userId");
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/checkPermission`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id, userId }),
-      },
-    );
-    const data = await response.json();
-    setCanEdit(data);
+     let etymTree = await window.electron.getEtymologyTrees(id, rootIds);
+    return etymTree;
   };
 
-  useEffect(() => {
-    checkPermission();
-  }, [id]);
+  
 
-  const checkPrivacy = async () => {
-    const userId = localStorage.getItem("userId");
 
-    //if user is not logged in
-    if (!userId && privacy === "private") {
-      setCanView(false);
-      return;
-    }
 
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/checkPrivacy`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id, userId }),
-      },
-    );
-    const data = await response.json();
-    setCanView(data);
-  };
-
-  useEffect(() => {
-    checkPrivacy();
-  }, [id]);
+  
 
   useEffect(() => {
     const preloadResolvedAffixes = async () => {
@@ -471,7 +371,7 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
       // Await all derivation fetches
       const affixesWithDerivations = await Promise.all(
         affixes.map(async (affix) => {
-          const derivations = await getDerivations(affix);
+          const derivations = await fetchDerivations(affix);
           return { ...affix, derivations };
         }),
       );
@@ -585,124 +485,22 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
   }, [showPrintedDictionary]);
 
   const openWord = (word_id) => {
-    window.open(
-      `${import.meta.env.VITE_FRONTEND_URL}/word/${word_id}`,
-      "_blank",
-    );
+   window.location.href = `/word/${word_id}`;
   };
 
-  useEffect(() => {
-    const checkIfProto = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        },
-      );
 
-      let data = await response.json();
-      setPrivacy(data[0].privacy);
-      setLanguageName(data[0].language_name);
-      setIsProto(data[0].is_proto);
-      setCreatorId(data[0].user_id);
-      getUserInfo(data[0].user_id, setCreatorUsername);
-      setGrammar(data[0].grammar);
+
+  useEffect(() => {
+    const getLanguageData = async () => {
+      let language = await window.electron.getLanguage(id);
+      console.log(language)
+      setLanguageName(language[0].language_name);
+      setIsProto(language[0].is_proto);
+      setGrammar(language[0].grammar);
     };
-    checkIfProto();
-  }, [id]);
+    getLanguageData();
+  }, []);
 
-  const hasFetchedCollaborators = useRef(false);
-
-  useEffect(() => {
-    if (hasFetchedCollaborators.current) return;
-    hasFetchedCollaborators.current = true;
-
-    const getCollaborators = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        },
-      );
-
-      const data = await response.json();
-
-      if (!data[0]?.collaborators?.length) return;
-
-      const newCollaborators = [];
-
-      for (const collaborator of data[0].collaborators) {
-        const username = await getUsername(collaborator);
-        newCollaborators.push({
-          username: collaborator.username,
-          userId: collaborator.user_id,
-        });
-      }
-
-      setCollaborators((prev) => {
-        const existingIds = new Set(prev.map((c) => c.userId));
-        const filtered = newCollaborators.filter(
-          (c) => !existingIds.has(c.userId),
-        );
-        return [...prev, ...filtered];
-      });
-    };
-
-    getCollaborators();
-  }, [id]);
-
-  const getUserInfo = async (id, setUsername) => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getUserInfo`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: id }),
-      },
-    );
-    const data = await response.json();
-
-    if (setUsername === null) {
-      return data.username;
-    }
-
-    setUsername(data.username);
-  };
-
-  const getUsername = (id) => {
-    return getUserInfo(id, null);
-  };
-
-  useEffect(() => {
-    if (id) {
-      const getMotherLanguage = async () => {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/getMotherLanguage`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id }),
-          },
-        );
-
-        let data = await response.json();
-        setMotherLanguage(data[0]);
-      };
-      getMotherLanguage();
-    }
-  }, [id]);
 
   const searchLanguage = (searchTerm, searchSelect) => {
     let results = [];
@@ -840,24 +638,29 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
     setVisibleWords(results);
   };
 
-  const handleOpenUser = (id) => {
-    window.open(`${import.meta.env.VITE_FRONTEND_URL}/user/${id}`, "_blank");
-  };
-
   const openGrammar = (id) => {
     window.open(`${import.meta.env.VITE_FRONTEND_URL}/grammar/${id}`, "_blank");
   };
 
-   const openPlacenames = (id) => {
-    window.open(`${import.meta.env.VITE_FRONTEND_URL}/placenames/${id}`, "_blank");
+  const openPlacenames = (id) => {
+    window.open(
+      `${import.meta.env.VITE_FRONTEND_URL}/placenames/${id}`,
+      "_blank",
+    );
   };
 
-   const openPersonalnames = (id) => {
-    window.open(`${import.meta.env.VITE_FRONTEND_URL}/personalnames/${id}`, "_blank");
+  const openPersonalnames = (id) => {
+    window.open(
+      `${import.meta.env.VITE_FRONTEND_URL}/personalnames/${id}`,
+      "_blank",
+    );
   };
 
   const openDictionary = (id) => {
-    window.open(`${import.meta.env.VITE_FRONTEND_URL}/dictionary/${id}`, "_blank");
+    window.open(
+      `${import.meta.env.VITE_FRONTEND_URL}/dictionary/${id}`,
+      "_blank",
+    );
   };
 
   const openCorpus = (id) => {
@@ -881,27 +684,14 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
     );
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPermissionMessage(true);
-    }, 1000); // 3 seconds
-
-    return () => clearTimeout(timer); // cleanup
-  }, []);
+ 
 
   const getTags = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getTags`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ languageId: id }),
-      },
-    );
-    const data = await response.json();
-    setTagGroups(data[0].tags);
+
+
+   let tags = await window.electron.getTags(Number(id));
+
+    setTagGroups(tags[0].tags);
   };
 
   useEffect(() => {
@@ -946,29 +736,16 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
             }
 
             try {
-              const response = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/getRootWord`,
-                {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    id: derivation.derived_word_id,
-                    isFirstElement: derivation.is_first_element,
-                    isSecondElement: derivation.is_second_element,
-                    isThirdElement: derivation.is_third_element,
-                  }),
-                },
-              );
 
-              if (!response.ok) {
+              let rootWord = await window.electron.getRootWord(derivation.derived_word_id, derivation.is_first_element, derivation.is_second_element, derivation.is_third_element);
+
+              if (!rootWord) {
                 throw new Error(`Fetch failed: ${response.status}`);
               }
-
-              const data = await response.json();
               return {
                 ...derivation,
-                rootWord: data.word,
-                rootWordMeaning: formatMeaning(data),
+                rootWord: rootWord.word,
+                rootWordMeaning: formatMeaning(rootWord),
               };
             } catch (err) {
               console.error(
@@ -1188,27 +965,25 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
   };
 
   async function generatePdf() {
-  setLoading(true);
+    setLoading(true);
 
-  const data = await getEtymologyGraph();
+    const data = await getEtymologyGraph();
 
+    const blob = await pdf(
+      <EtymologyDictionaryPdf
+        visibleWords={visibleWords}
+        languageName={languageName}
+        isProto={isProto}
+        etymologyTree={data.trees}
+        languageData={data.languages}
+      />,
+    ).toBlob();
 
-  const blob = await pdf(
-    <EtymologyDictionaryPdf
-      visibleWords={visibleWords}
-      languageName={languageName}
-      creatorUsername={creatorUsername}
-      isProto={isProto}
-      etymologyTree={data.trees}
-      languageData={data.languages}
-    />
-  ).toBlob();
+    const url = URL.createObjectURL(blob);
 
-  const url = URL.createObjectURL(blob);
-
-  setPdfUrl(url);
-  setLoading(false);
-}
+    setPdfUrl(url);
+    setLoading(false);
+  }
 
   return (
     <div style={{ width: "100%", textAlign: "center" }}>
@@ -1228,7 +1003,7 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
             </div>
           ) : (
             <>
-              {canEdit ? (
+              
                 <button
                   className="hide-for-printing"
                   onClick={() => {
@@ -1237,23 +1012,19 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
                 >
                   {translate("Add Word")}
                 </button>
-              ) : (
-                <></>
-              )}
-
-             
+              
 
               {!pdfUrl ? (
-  <button onClick={generatePdf} disabled={loading}>
-    {loading
-      ? "Preparing Etymological Dictionary PDF..."
-      : "Generate Etymological Dictionary PDF"}
-  </button>
-) : (
-  <a href={pdfUrl} download={`${languageName}.pdf`}>
-    Download Etymological Dictionary PDF
-  </a>
-)}
+                <button onClick={generatePdf} disabled={loading}>
+                  {loading
+                    ? "Preparing Etymological Dictionary PDF..."
+                    : "Generate Etymological Dictionary PDF"}
+                </button>
+              ) : (
+                <a href={pdfUrl} download={`${languageName}.pdf`}>
+                  Download Etymological Dictionary PDF
+                </a>
+              )}
 
               <AddWordModal
                 show={showAddWordModal}
@@ -1261,8 +1032,6 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
                 languageId={id}
                 onSuccess={handleWordAdded}
               />
-
-            
 
               <StatModal
                 show={showStatModal}
@@ -1285,73 +1054,50 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
                     })}
                   </h1>
                 ) : (
-
-                    <DictionaryTitle languageName={languageName} dictionaryType={dictionaryType} />
-                 
-                  
+                  <DictionaryTitle
+                    languageName={languageName}
+                    dictionaryType={dictionaryType}
+                  />
                 )
               ) : (
-
-                <DictionaryTitle languageName={languageName} dictionaryType={dictionaryType} />
-
-
-
-             
-
-
-
-
-              )}
-
-              <p>
-                {translate("Created by")}{" "}
-                <span
-                  className="word-link"
-                  onClick={() => handleOpenUser(creatorId)}
-                >
-                  {creatorUsername}
-                </span>
-              </p>
-
-              {collaborators.length > 0 ? (
-                <p>
-                  {translate("Collaborators")}:{" "}
-                  {collaborators.map((collaborator) => (
-                    <span
-                      className="word-link"
-                      onClick={() => handleOpenUser(collaborator.userId)}
-                    >
-                      {collaborator.username}
-                    </span>
-                  ))}
-                </p>
-              ) : (
-                <></>
+                <DictionaryTitle
+                  languageName={languageName}
+                  dictionaryType={dictionaryType}
+                />
               )}
 
               {dictionaryType !== "place_name" && (
-               <p
-                className="word-link hide-for-printing"
-                onClick={() => openPlacenames(id)}
-              >
-                {translate("View {languageName} Placenames", { languageName })}
-              </p>)}
+                <p
+                  className="word-link hide-for-printing"
+                  onClick={() => openPlacenames(id)}
+                >
+                  {translate("View {languageName} Placenames", {
+                    languageName,
+                  })}
+                </p>
+              )}
 
               {dictionaryType !== "personal_name" && (
-               <p
-                className="word-link hide-for-printing"
-                onClick={() => openPersonalnames(id)}
-              >
-                {translate("View {languageName} Personal names", { languageName })}
-              </p>)}
+                <p
+                  className="word-link hide-for-printing"
+                  onClick={() => openPersonalnames(id)}
+                >
+                  {translate("View {languageName} Personal names", {
+                    languageName,
+                  })}
+                </p>
+              )}
 
-               {dictionaryType !== "dictionary" && (
-               <p
-                className="word-link hide-for-printing"
-                onClick={() => openDictionary(id)}
-              >
-                {translate("View {languageName} Dictionary", { languageName })}
-              </p>)}
+              {dictionaryType !== "dictionary" && (
+                <p
+                  className="word-link hide-for-printing"
+                  onClick={() => openDictionary(id)}
+                >
+                  {translate("View {languageName} Dictionary", {
+                    languageName,
+                  })}
+                </p>
+              )}
 
               <p
                 className="word-link hide-for-printing"
@@ -1861,13 +1607,9 @@ const DictionaryBuilder = ({id, dictionaryType}) => {
         </>
       ) : (
         <>
-          {showPermissionMessage ? (
-            <h2>
-              {translate("You do not have permission to view this dictionary")}
-            </h2>
-          ) : (
+          
             <h1>{translate("Loading...")}</h1>
-          )}
+          
         </>
       )}
     </div>

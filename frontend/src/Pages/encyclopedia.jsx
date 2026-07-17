@@ -7,6 +7,7 @@ import pLimit from "p-limit";
 import PaginatedEncyclopedia from "../Components/paginateEncyclopedia.jsx";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import DictionaryPdf from "../Components/EncyclopediaPDF.jsx";
+import { getEncyclopedia } from "../services/encyclopediaService.js";
 
 const Encyclopedia = () => {
   const { id } = useParams();
@@ -24,12 +25,8 @@ const Encyclopedia = () => {
   const [searchEnglishTerm, setSearchEnglishTerm] = useState();
   const [visibleEntries, setVisibleEntries] = useState([]);
   const [allEnglishEntries, setAllEnglishEntries] = useState([]);
-  const [creatorUsername, setCreatorUsername] = useState();
-  const [creatorId, setCreatorId] = useState();
-  const [collaborators, setCollaborators] = useState([]);
   const [canEdit, setCanEdit] = useState(true);
   const [canView, setCanView] = useState(true);
-  const [privacy, setPrivacy] = useState(false);
   const [showPermissionMessage, setShowPermissionMessage] = useState(false);
   const [tagGroups, setTagGroups] = useState([]);
   const [topics, setTopics] = useState([]);
@@ -234,7 +231,7 @@ const Encyclopedia = () => {
   }, [loading]);
 
   const handleEntryAdded = () => {
-    getAllEntries(); // refresh updated entries
+    getEncyclopedia(); // refresh updated entries
   };
 
   // Process large arrays without blocking the main thread
@@ -254,46 +251,14 @@ const Encyclopedia = () => {
   };
 
   const getEncyclopedia = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getEncyclopedia`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      },
-    );
-
-    let data = await response.json();
-    setPrivacy(data[0].privacy);
-    setEncyclopediaName(data[0].encyclopedia_name);
-    setTopics(data[0].topics);
-    setCreatorId(data[0].user_id);
-    getUserInfo(data[0].user_id, setCreatorUsername);
+   let data = await window.electron.getEncyclopedia(id);
+   console.log(data)
+    setEncyclopediaName(data.encyclopedia_name);
+    setTopics(data.topics);
+     setAllEntries(data.entries);
+      setVisibleEntries(data.entries);
   };
-
-  const getAllEntries = async () => {
-    try {
-      // 1️⃣ Fetch all words
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getAllEntries`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id }),
-        },
-      );
-
-      let data = await response.json();
-
-      setAllEntries(data);
-      setVisibleEntries(data);
-    } catch (err) {
-      console.error("Error fetching or processing entries:", err);
-    }
-  };
-
+  
   const countTopics = () => {
     //count amounts of entries for each topic
     if (topics.length > 0) {
@@ -317,328 +282,14 @@ const Encyclopedia = () => {
 
   useEffect(() => {
     getEncyclopedia();
-    getAllEntries();
+    // getAllEntries();
   }, [id]);
 
   useEffect(() => {
     countTopics();
   }, [topics]);
 
-  // const checkPermission = async () => {
-  //   const userId = localStorage.getItem("userId");
-  //   const response = await fetch(
-  //     `${import.meta.env.VITE_BACKEND_URL}/api/checkPermission`,
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ id, userId }),
-  //     }
-  //   );
-  //   const data = await response.json();
-  //   setCanEdit(data);
-  // };
-
-  // useEffect(() => {
-  //   checkPermission();
-  // }, [id]);
-
-  // const checkPrivacy = async () => {
-  //   const userId = localStorage.getItem("userId");
-
-  //   //if user is not logged in
-  //   if (!userId && privacy === "private") {
-  //     setCanView(false);
-  //     return;
-  //   }
-
-  //   const response = await fetch(
-  //     `${import.meta.env.VITE_BACKEND_URL}/api/checkPrivacy`,
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ id, userId }),
-  //     }
-  //   );
-  //   const data = await response.json();
-  //   setCanView(data);
-  // };
-
-  // useEffect(() => {
-  //   checkPrivacy();
-  // }, [id]);
-
-  // const getAllEntriesForPrint = async () => {
-  //   setLoading(true);
-
-  //   //prepare arrays to display the english > language part of the dictionary
-  //   let addedEnglishEntries = []; //all English words happened upon are stored in this array, so we can check if an english word has already been entered e.g in the case of synonyms
-
-  //   let fromEnglishDictionary = [];
-
-  //   const skipEntries = [
-  //     "a",
-  //     "-",
-  //     "/",
-  //     "an",
-  //     "the",
-  //     "has",
-  //     "you",
-  //     "I",
-  //     "us",
-  //     "him",
-  //     "her",
-  //     "them",
-  //   ];
-  //   const skipIfMultipleEntries = [
-  //     "who",
-  //     "that",
-  //     "which",
-  //     "or",
-  //     "of",
-  //     "is",
-  //     "to",
-  //     "at",
-  //     "for",
-  //     "be",
-  //     "you",
-  //     "one",
-  //     "was",
-  //     "we",
-  //     "you",
-  //     "I",
-  //     "us",
-  //     "he",
-  //     "she",
-  //     "it",
-  //     "him",
-  //     "her",
-  //     "they",
-  //     "them",
-  //     "where",
-  //     "and",
-  //   ];
-
-  //   const manageFromEnglishDictionary = (posMeaning, pos, word) => {
-  //     posMeaning.forEach((rawEnglishEntry) => {
-  //       let englishEntry = rawEnglishEntry.trim();
-
-  //       // Special case: remove "to " if it's a verb meaning
-  //       if (pos === "v" && englishEntry.toLowerCase().startsWith("to ")) {
-  //         englishEntry = englishEntry.slice(3).trim(); // remove "to "
-  //       }
-
-  //       if (englishEntry.startsWith("(")) return; //skip if the word is something like "(of rivers)"
-
-  //       if (!addedEnglishEntries.includes(englishEntry.toLowerCase())) {
-  //         const words = englishEntry.trim().split(/\s+/); //split string by whitespace incase the translation is made of several english words e.g "inhospitable place"
-
-  //         const hasMultipleEntries = words.length > 1;
-
-  //         if (hasMultipleEntries) {
-  //           words.forEach((splitEntry) => {
-  //             const lowerSplit = splitEntry.toLowerCase();
-
-  //             if (
-  //               skipEntries.includes(splitEntry) ||
-  //               skipIfMultipleEntries.includes(splitEntry)
-  //             )
-  //               return;
-
-  //             if (!addedEnglishEntries.includes(lowerSplit)) {
-  //               addedEnglishEntries.push(lowerSplit);
-
-  //               let obj = {
-  //                 english_word: lowerSplit,
-  //                 language_entries: [],
-  //                 phrases: [],
-  //               };
-
-  //               let phrase = {
-  //                 english: rawEnglishEntry
-  //                   .replace(splitEntry, "~")
-  //                   .replace(/^to\s+/i, ""),
-  //                 language_word: word.word,
-  //                 part_of_speech: [pos],
-  //               };
-
-  //               obj.phrases.push(phrase);
-  //               fromEnglishDictionary.push(obj);
-  //             } else {
-  //               // If already exists, update existing entry
-  //               fromEnglishDictionary.forEach((obj) => {
-  //                 if (obj.english_word === lowerSplit) {
-  //                   let phrase = {
-  //                     english: rawEnglishEntry
-  //                       .replace(splitEntry, "~")
-  //                       .replace(/^to\s+/i, ""),
-  //                     language_word: word.word,
-  //                     part_of_speech: [pos],
-  //                   };
-  //                   obj.phrases.push(phrase);
-  //                 }
-  //               });
-  //             }
-  //           });
-  //         } else {
-  //           if (skipEntries.includes(englishEntry.toLowerCase())) return;
-
-  //           addedEnglishEntries.push(englishEntry.toLowerCase());
-
-  //           let obj = {
-  //             english_word: englishEntry.toLowerCase(),
-  //             language_entries: [{ part_of_speech: pos, word: word.word }],
-  //             phrases: [],
-  //           };
-
-  //           fromEnglishDictionary.push(obj);
-  //         }
-  //       } else {
-  //         const words = englishEntry.trim().split(/\s+/); //split string by whitespace incase the translation is made of several english words e.g "inhospitable place"
-  //         const hasMultipleEntries = words.length > 1;
-
-  //         if (hasMultipleEntries) {
-  //           //find the object which already has the english word, add the language word to the phrases
-
-  //           words.forEach((splitEntry) => {
-  //             if (
-  //               skipEntries.includes(splitEntry) ||
-  //               skipIfMultipleEntries.includes(splitEntry)
-  //             )
-  //               return;
-
-  //             fromEnglishDictionary.forEach((obj) => {
-  //               if (obj.english_word === splitEntry.toLowerCase()) {
-  //                 let phrase = {
-  //                   english: rawEnglishEntry
-  //                     .replace(splitEntry, "~")
-  //                     .replace(/^to\s+/i, ""),
-  //                   language_word: word.word,
-  //                   part_of_speech: [pos],
-  //                 };
-
-  //                 obj.phrases.push(phrase);
-  //                 obj.part_of_speech.push(pos);
-  //               }
-  //             });
-  //           });
-  //         } else {
-  //           //find the object which already has the english word, add the language_word to the translation
-  //           fromEnglishDictionary.forEach((obj) => {
-  //             if (skipEntries.includes(englishEntry.toLowerCase())) return;
-
-  //             if (obj.english_word === englishEntry.toLowerCase()) {
-  //               obj.language_entries.push({
-  //                 part_of_speech: pos,
-  //                 word: word.word,
-  //               });
-
-  //               //obj.part_of_speech.push("n");
-  //             }
-  //           });
-  //         }
-  //       }
-  //     });
-  //   };
-
-  //   let affixesArr = [];
-
-  //   allEntries.forEach((word) => {
-  //     if (word.word_type === "word") {
-  //       if (word.noun_meaning) {
-  //         manageFromEnglishDictionary(word.noun_meaning, "n", word);
-  //       }
-  //       if (word.adj_meaning) {
-  //         manageFromEnglishDictionary(word.adj_meaning, "adj", word);
-  //       }
-  //       if (word.adv_meaning) {
-  //         manageFromEnglishDictionary(word.adv_meaning, "adv", word);
-  //       }
-  //       if (word.adp_meaning) {
-  //         manageFromEnglishDictionary(word.adp_meaning, "adp", word);
-  //       }
-  //       if (word.conj_meaning) {
-  //         manageFromEnglishDictionary(word.conj_meaning, "conj", word);
-  //       }
-  //       if (word.interj_meaning) {
-  //         manageFromEnglishDictionary(word.interj_meaning, "interj", word);
-  //       }
-  //       if (word.pron_meaning) {
-  //         manageFromEnglishDictionary(word.pron_meaning, "pron", word);
-  //       }
-  //       if (word.part_meaning) {
-  //         manageFromEnglishDictionary(word.part_meaning, "part", word);
-  //       }
-  //       if (word.affix_meaning) {
-  //         manageFromEnglishDictionary(word.affix_meaning, "affix", word);
-  //       }
-  //       if (word.verb_meaning) {
-  //         manageFromEnglishDictionary(word.verb_meaning, "v", word);
-  //       }
-  //     } else {
-  //       affixesArr.push(word);
-  //     }
-  //   });
-
-  //   fromEnglishDictionary.sort((a, b) =>
-  //     a.english_word.localeCompare(b.english_word)
-  //   );
-
-  //   setAllEnglishEntries(fromEnglishDictionary);
-
-  //   const response = await fetch(
-  //     `${import.meta.env.VITE_BACKEND_URL}/api/getAllEntriesForPrint`,
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ id }),
-  //     }
-  //   );
-
-  //   let data = await response.json();
-  //   if (data) {
-  //     setLoading(false);
-  //     if (showPrintedDictionary) {
-  //       setShowPrintedDictionary(false);
-  //     } else {
-  //       setShowPrintedDictionary(true);
-  //     }
-  //   }
-
-  //   //add "to " before each verb's translation
-  //   data = data.map((word) => {
-  //     if (word.verb_meaning) {
-  //       return {
-  //         ...word,
-  //         verb_meaning: word.verb_meaning.map((verb) => {
-  //           // Only add 'to ' if it doesn't already start with it
-  //           return verb.startsWith("to ") || verb.startsWith("(")
-  //             ? verb
-  //             : `to ${verb}`;
-  //         }),
-  //       };
-  //     }
-  //     return word;
-  //   });
-
-  //   const affixes = data.filter(
-  //     (word) => word.word_type === "suffix" || word.word_type === "prefix"
-  //   );
-
-  //   const words = data.filter((word) => word.word_type === "word");
-
-  //   const processed = addPhrasesToEntries(data);
-  //   setVisibleEntries(processed);
-
-  //   setShowPrintedDictionary(true);
-  //   setLoading(false);
-  // };
-
+  
   useEffect(() => {
     if (showPrintedDictionary) {
       // Let React render first, then open the print dialog
@@ -653,98 +304,6 @@ const Encyclopedia = () => {
       `${import.meta.env.VITE_FRONTEND_URL}/word/${word_id}`,
       "_blank",
     );
-  };
-
-  // useEffect(() => {
-  //   const getEncyclopedia = async () => {
-  //     const response = await fetch(
-  //       `${import.meta.env.VITE_BACKEND_URL}/api/getEncyclopedia`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ id }),
-  //       },
-  //     );
-
-  //     let data = await response.json();
-  //     console.log(data[0].topics)
-  //     setPrivacy(data[0].privacy);
-  //     setEncyclopediaName(data[0].encyclopedia_name);
-  //     setTopics(data[0].topics);
-  //     setCreatorId(data[0].user_id);
-  //     getUserInfo(data[0].user_id, setCreatorUsername);
-  //   };
-  //   getEncyclopedia();
-  // }, [id]);
-
-  //const hasFetchedCollaborators = useRef(false);
-
-  // useEffect(() => {
-  //   if (hasFetchedCollaborators.current) return;
-  //   hasFetchedCollaborators.current = true;
-
-  //   const getCollaborators = async () => {
-  //     const response = await fetch(
-  //       `${import.meta.env.VITE_BACKEND_URL}/api/getLanguage`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ id }),
-  //       },
-  //     );
-
-  //     const data = await response.json();
-
-  //     if (!data[0]?.collaborators?.length) return;
-
-  //     const newCollaborators = [];
-
-  //     for (const collaborator of data[0].collaborators) {
-  //       const username = await getUsername(collaborator);
-  //       newCollaborators.push({
-  //         username: collaborator.username,
-  //         userId: collaborator.user_id,
-  //       });
-  //     }
-
-  //     setCollaborators((prev) => {
-  //       const existingIds = new Set(prev.map((c) => c.userId));
-  //       const filtered = newCollaborators.filter(
-  //         (c) => !existingIds.has(c.userId),
-  //       );
-  //       return [...prev, ...filtered];
-  //     });
-  //   };
-
-  //   getCollaborators();
-  // }, [id]);
-
-  const getUserInfo = async (id, setUsername) => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getUserInfo`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: id }),
-      },
-    );
-    const data = await response.json();
-
-    if (setUsername === null) {
-      return data.username;
-    }
-
-    setUsername(data.username);
-  };
-
-  const getUsername = (id) => {
-    return getUserInfo(id, null);
   };
 
   const searchLanguage = (searchTerm, searchSelect) => {
@@ -960,7 +519,6 @@ const Encyclopedia = () => {
                     visibleEntries={visibleEntries}
                     encyclopediaName={encyclopediaName}
                     topicCounts={topicCounts}
-                    creatorUsername={creatorUsername}
                   />
                 }
                 fileName={`${encyclopediaName}.pdf`}
@@ -982,7 +540,7 @@ const Encyclopedia = () => {
                 {translate("{encyclopediaName}", { encyclopediaName })}
               </h1>
 
-              <p>
+              {/* <p>
                 {translate("Created by")}{" "}
                 <span
                   className="word-link"
@@ -990,23 +548,7 @@ const Encyclopedia = () => {
                 >
                   {creatorUsername}
                 </span>
-              </p>
-
-              {collaborators.length > 0 ? (
-                <p>
-                  {translate("Collaborators")}:{" "}
-                  {collaborators.map((collaborator) => (
-                    <span
-                      className="word-link"
-                      onClick={() => handleOpenUser(collaborator.userId)}
-                    >
-                      {collaborator.username}
-                    </span>
-                  ))}
-                </p>
-              ) : (
-                <></>
-              )}
+              </p> */}
 
               <p className="word-count">
                 {translate("{wordCount} entries.", {

@@ -169,7 +169,6 @@ export default function EtymologyDictionaryPdf({
   visibleWords,
   languageName,
   topicCounts,
-  creatorUsername,
   isProto,
   etymologyTree,
   languageData,
@@ -299,7 +298,6 @@ export default function EtymologyDictionaryPdf({
     <Document>
       <Page size="A5" style={styles.page}>
         <Text style={styles.heading}>{languageName}</Text>
-        <Text style={styles.author}>{creatorUsername}</Text>
         <Text
           style={styles.stats}
         >{`${numOfRoots.length.toLocaleString()} roots`}</Text>

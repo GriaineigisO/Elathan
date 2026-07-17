@@ -49,6 +49,7 @@ function PaginatedEncyclopedia({
                 </span>
               </b>
               <i style={{ marginLeft: "5px" }}>{entry.topic}</i>
+              {entry.entry_text && (
               <span
                 style={{ marginLeft: "10px" }}
                 dangerouslySetInnerHTML={{
@@ -56,8 +57,9 @@ function PaginatedEncyclopedia({
                     .replace(/^<p>/, "")
                     .replace(/<\/p>$/, ""),
                 }}
-              />
+              />)}
             </span>
+
           </div>
         </div>
       ))}
