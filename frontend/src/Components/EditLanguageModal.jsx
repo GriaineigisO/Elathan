@@ -7,6 +7,13 @@ import { useTranslate } from "../Functions/TranslateUI";
 import SoundChangeMaker from "./soundChangeMaker";
 import Collapsible from "./collapsable.jsx";
 import SpellingCreator from "./spellingCreator.jsx";
+import {
+  getDaughterLanguages,
+  getMotherLanguage,
+  getLanguage,
+  getWordForms,
+  deleteLanguage
+} from "../services/languageService.js";
 
 const EditLanguageModal = ({
   show,
@@ -55,9 +62,6 @@ const EditLanguageModal = ({
   const [preexistingGroups, setPreexistingGroups] = useState([]);
   const [groupsToBeRemoved, setGroupsToBeRemoved] = useState([]);
   const [newGroups, setNewGroups] = useState([]);
-  const [privacy, setPrivacy] = useState();
-  const [permission, setPermission] = useState();
-  const [currentUser, setCurrentUser] = useState();
   const [owner, setOwner] = useState();
   const [userSearch, setUserSearch] = useState();
   const [userSearchError, setUserSearchError] = useState(false);
@@ -73,11 +77,7 @@ const EditLanguageModal = ({
   const [selectedSoundChanges, setSelectedSoundChanges] = useState([]);
   const [allCategoryValues, setAllCategoryValues] = useState({});
   const [prosodyType, setProsodyType] = useState("stress");
-  const page = "languageModal"
-
-  useEffect(() => {
-    setCurrentUser(localStorage.getItem("userId"));
-  }, []);
+  const page = "languageModal";
 
   useEffect(() => {
     setIsProto(is_proto);
@@ -85,18 +85,7 @@ const EditLanguageModal = ({
 
   useEffect(() => {
     const getLanguages = async () => {
-      const userId = localStorage.getItem("userId");
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getDaughterLanguages`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId, id }),
-        },
-      );
-      const data = await response.json();
+      const data = await window.electron.getDaughterLanguages(id);
       setDaughterLanguages(data);
     };
     getLanguages();
@@ -104,49 +93,27 @@ const EditLanguageModal = ({
 
   useEffect(() => {
     const getLanguages = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getMotherLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        },
-      );
-      const data = await response.json();
+      const data = await window.electron.getMotherLanguage(id);
       setSelectedParentLanguage(data[0]);
     };
     getLanguages();
   }, [id]);
 
   useEffect(() => {
-    const getLanguage = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        },
-      );
-      const data = await response.json();
+    const fetchLanguage = async () => {
+      const data = await window.electron.getLanguage(id);
+
       setLanguage(data[0]);
       setSelectedSoundChanges(data[0].sound_changes ?? []);
-      setSpellings(data[0].spelling ?? [])
+      setSpellings(data[0].spelling ?? []);
       setOwner(data[0].user_id);
-      setPrivacy(data[0].privacy);
-      setPermission(data[0].permission);
-      setCollaborators(data[0].collaborators);
-      setAddedTagGroups(data[0].tags);
+      setAddedTagGroups(data[0].tags ? data[0].tags : []);
       if (data[0].groups) {
         setAddedGroups(data[0].groups);
         setPreexistingGroups(data[0].groups);
       }
     };
-    getLanguage();
+    fetchLanguage();
   }, [id]);
 
   useEffect(() => {
@@ -154,18 +121,7 @@ const EditLanguageModal = ({
   }, [name]);
 
   const getWordForms = async () => {
-    const languageId = id;
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getWordForms`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ languageId }),
-      },
-    );
-    const data = await response.json();
+    const data = await window.electron.getWordForms();
     setWordForms(Array.isArray(data) ? data : []);
   };
 
@@ -230,43 +186,31 @@ const EditLanguageModal = ({
     }
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/editLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id,
-            languageName,
-            motherLanguageId: selectedParentLanguage
-              ? selectedParentLanguage.language_id
-              : null,
-            daughterLanguageIds: daughterLanguages.map(
-              (lang) => lang.language_id,
-            ),
-            removedDaughterLanguageIds: removedDaughterLanguages,
-            isProto: isProto,
-            wordForms: wordForms,
-            addedGroups: addedGroups,
-            groupsToBeRemoved: groupsToBeRemoved,
-            newGroups: newGroups,
-            privacy,
-            permission,
-            collaborators,
-            addedTagGroups,
-            spelling: spellings,
-            selectedSoundChanges,
-            allCategoryValues
-          }),
-        },
+
+      const motherLanguageId = selectedParentLanguage ? selectedParentLanguage.language_id : null;
+      const daughterLanguageIds = daughterLanguages.map((lang) => lang.language_id);
+      const soundChanges = selectedSoundChanges ? selectedSoundChanges : null;
+      
+
+      const data = await window.electron.editLanguage(
+        id,
+        languageName,
+        JSON.stringify(motherLanguageId),
+        JSON.stringify(daughterLanguageIds),
+        JSON.stringify(removedDaughterLanguages),
+        JSON.stringify(isProto),
+        JSON.stringify(wordForms),
+        JSON.stringify(addedGroups),
+        JSON.stringify(groupsToBeRemoved),
+        JSON.stringify(newGroups),
+        JSON.stringify(addedTagGroups),
+        JSON.stringify(spellings),
+        JSON.stringify(selectedSoundChanges),
+        JSON.stringify(allCategoryValues)
       );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error(`Error ${response.status}: ${data.message}`);
+      
+      if (!data.success) {
+        console.error(`Errorediting language`);
       } else {
         if (typeof onSuccess === "function") {
           await onSuccess();
@@ -381,67 +325,11 @@ const EditLanguageModal = ({
     setGroupsToBeRemoved(tempGroups2);
   };
 
-  const handlePrivacychange = (value) => {
-    setPrivacy(value);
-  };
 
-  const handlePermissionChange = (value) => {
-    setPermission(value);
-  };
+  const deleteLang = async () => {
+    const data = await window.electron.deleteLanguage(language.language_id)
 
-  const handleUserSearch = async (username) => {
-    if (!username) {
-      setUserSearchError(true);
-      return;
-    }
-
-    if (userSearchError) {
-      setUserSearchError(false);
-    }
-
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getUser`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username }),
-      },
-    );
-    const data = await response.json();
-
-    if (!data.username) {
-      setNoMatchingUsername(true);
-    }
-
-    if (noMatchingUsername) {
-      setNoMatchingUsername(false);
-      return;
-    }
-
-    if (data.username) {
-      setCollaborators((prev) => [...prev, data]);
-    }
-  };
-
-  const deleteLanguage = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/deleteLanguage`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id,
-        }),
-      },
-    );
-
-    if (response.status !== 200) {
-      console.error(`Error ${response.status}`);
-    }
-
-    if (response.ok) {
+    if (data.success) {
       if (typeof triggerRefresh === "function") {
         triggerRefresh();
       }
@@ -578,7 +466,7 @@ const EditLanguageModal = ({
                   style={{
                     marginTop: "10px",
                     display: "flex",
-                    alignContent: "center"
+                    alignContent: "center",
                   }}
                 >
                   <Collapsible title={"Sound Changes Applier"}>
@@ -1517,109 +1405,10 @@ const EditLanguageModal = ({
                   <></>
                 )}
               </div>
-
-              <div className="thin-white-border">
-                <b>{translate("Privacy")}</b>
-
-                <p>
-                  {translate(
-                    "Decide who can view {name}. Unlisted languages will not be shown in public searches but collaborators and anyone with a link can view them.",
-                    { name },
-                  )}
-                </p>
-
-                <select
-                  value={privacy}
-                  onChange={(e) => handlePrivacychange(e.target.value)}
-                >
-                  <option value="public">{translate("Public")}</option>
-                  <option value="unlisted">{translate("Unlisted")}</option>
-                  <option value="private">{translate("Private")}</option>
-                </select>
-              </div>
-
-              {/*Only the creator of the language may edit permissions*/}
-              {Number(owner) == currentUser ? (
-                <div className="thin-white-border">
-                  <b>{translate("Permissions")}</b>
-
-                  <p>{translate("Decide who can edit {name}.", { name })}</p>
-
-                  <select
-                    value={permission}
-                    onChange={(e) => handlePermissionChange(e.target.value)}
-                  >
-                    <option value="onlyme">{translate("Only Me")}</option>
-                    <option value="collaborators">
-                      {translate("Me and Collaborators")}
-                    </option>
-                  </select>
-
-                  {permission === "collaborators" ? (
-                    <div className="thin-white-border">
-                      <b>{translate("Collaborators")}</b>
-
-                      <div className="input-and-button-one-row">
-                        <input
-                          onChange={(e) => setUserSearch(e.target.value)}
-                        />
-
-                        <button onClick={() => handleUserSearch(userSearch)}>
-                          {translate("Add User")}
-                        </button>
-                      </div>
-
-                      {userSearchError ? (
-                        <p className="warning">
-                          {translate("Please enter a username")}
-                        </p>
-                      ) : (
-                        <></>
-                      )}
-
-                      {noMatchingUsername ? (
-                        <p className="warning">
-                          {translate(
-                            "There are no users with that username. Please check spelling. Usernames are case-sensitive.",
-                          )}
-                          "
-                        </p>
-                      ) : (
-                        <></>
-                      )}
-
-                      <div className="thin-white-border">
-                        <p>{translate("Added Collaborators")}</p>
-
-                        <div className="word-form-container">
-                          {collaborators.map((collaborator, index) => (
-                            <div className="word-form-list" key={index}>
-                              {collaborator.username}
-                              <button
-                                onClick={() => removeCollaborator(index)}
-                                className="btn-close btn-close-white extra-small-x-button"
-                              ></button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              ) : (
-                <></>
-              )}
-
-              {/*only the creator may delete the dictionary*/}
-              {Number(owner) == currentUser ? (
-                <button onClick={deleteLanguage} className="delete-button">
+                <button onClick={deleteLang} className="delete-button">
                   {translate("Delete {name}", { name })}
                 </button>
-              ) : (
-                <></>
-              )}
+             
             </div>
           </div>
         </div>

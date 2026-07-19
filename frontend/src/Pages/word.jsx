@@ -66,6 +66,7 @@ const Word = () => {
 
   const getWordData = async () => {
     let data = await window.electron.getWordData(id);
+    console.log(data.word.wordData)
     setWord(data.word.wordData);
     setLanguageName(data.word.languageData.language_name);
     setIsProto(data.word.languageData.is_proto);
@@ -2032,11 +2033,11 @@ const Word = () => {
                   )}
 
                   <div>
-                    {word.tags.length > 0 && (
+                    {JSON.parse(word.tags).length > 0 && (
                       <>
                         <h3>{translate("Tags")}</h3>
                         <ul>
-                          {word.tags.map((tag, index) => (
+                          {JSON.parse(word.tags).map((tag, index) => (
                             <li
                               className="word-form-list"
                               style={{ display: "inline" }}

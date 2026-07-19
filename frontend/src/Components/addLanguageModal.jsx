@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import LanguageSelector from "./languageSelector";
 import MyEditor from "../vendor/ckEditor-build/App.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
+import { addLanguage } from "../services/languageService";
 
 import GroupSelector from "./groupSelector";
 
@@ -105,40 +106,26 @@ const AddLanguageModal = ({
     });
 
     try {
-      const userId = localStorage.getItem("userId");
       const id = idRef.current;
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/addLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId,
-            id,
-            languageName,
-            motherLanguageId: selectedParentLanguage
-              ? selectedParentLanguage.language_id
-              : null,
-            daughterLanguageIds: daughterLanguages.map(
+      const wordFrms =
+        Array.isArray(wordForms) && wordForms.length > 0 ? wordForms : null;
+      const motherLanguageId = selectedParentLanguage ? selectedParentLanguage.language_id : null;
+      const daughterLanguageIds = daughterLanguages.map(
               (lang) => lang.language_id
-            ),
-            removedDaughterLanguageIds: removedDaughterLanguages,
-            isProto: isProto,
-            wordForms: wordForms,
-            addedGroups: addedGroups,
-          }),
-        }
+            );
+      const data = await window.electron.addLanguage(
+        id,
+        languageName,
+        motherLanguageId,
+        JSON.stringify(daughterLanguageIds),
+        JSON.stringify(isProto),
+        JSON.stringify(wordFrms),
+        JSON.stringify(addedGroups),
       );
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error(`Error ${response.status}: ${data.message}`);
-      }
-
-      if (response.ok) {
+      if (!data.success) {
+        console.error(`Error adding language`);
+      } else {
         showToast("Changes saved ✅");
         if (onSuccess) onSuccess(); // trigger parent's refresh
         close();
@@ -171,7 +158,7 @@ const AddLanguageModal = ({
 
   const removeDaughterLanguage = (id) => {
     const temp = daughterLanguages.filter(
-      (language) => language.language_id !== id
+      (language) => language.language_id !== id,
     );
     setDaughterLanguages(temp);
     setRemovedDaughterLanguages((prev) => [...prev, id]);
@@ -211,7 +198,7 @@ const AddLanguageModal = ({
 
   const removeWordForm = (indexToRemove) => {
     setWordForms((prevForms) =>
-      prevForms.filter((_, i) => i !== indexToRemove)
+      prevForms.filter((_, i) => i !== indexToRemove),
     );
   };
 
@@ -277,7 +264,9 @@ const AddLanguageModal = ({
               }}
             ></input>
             {showWarning && !languageName ? (
-              <p className="warning">{translate("Please enter the language's name!")}</p>
+              <p className="warning">
+                {translate("Please enter the language's name!")}
+              </p>
             ) : (
               <></>
             )}
@@ -311,8 +300,10 @@ const AddLanguageModal = ({
                 className="thin-white-border"
               >
                 <span>
-                  <span style={{ fontWeight: "600" }}>{translate("Parent Language")}</span>:{" "}
-                  {selectedParentLanguage.language_name}
+                  <span style={{ fontWeight: "600" }}>
+                    {translate("Parent Language")}
+                  </span>
+                  : {selectedParentLanguage.language_name}
                 </span>{" "}
                 <button
                   className="btn-close btn-close-white small-x-button"
@@ -379,7 +370,9 @@ const AddLanguageModal = ({
                 </div>
                 <p>
                   <i>
-                    {translate("This will automatically prefix * before all words in this language")}
+                    {translate(
+                      "This will automatically prefix * before all words in this language",
+                    )}
                   </i>
                 </p>
               </div>
@@ -389,9 +382,12 @@ const AddLanguageModal = ({
               <b>{translate("Groups")}</b>
               <p>
                 <i>
-                  {translate("Assign {languageName} to a language family, sprachbund etc", {
-                    languageName
-                  })}
+                  {translate(
+                    "Assign {languageName} to a language family, sprachbund etc",
+                    {
+                      languageName,
+                    },
+                  )}
                 </i>
               </p>
               <div className="thin-white-border">
@@ -459,7 +455,9 @@ const AddLanguageModal = ({
               </p>
               <p>
                 <i>
-                  {translate("Specify specific forms of a word in the dictionary entries")}
+                  {translate(
+                    "Specify specific forms of a word in the dictionary entries",
+                  )}
                 </i>
               </p>
 
@@ -494,7 +492,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             nounWordFormName,
                             setNounWordFormName,
-                            "noun"
+                            "noun",
                           );
                         }
                       }}
@@ -507,7 +505,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             nounWordFormName,
                             setNounWordFormName,
-                            "noun"
+                            "noun",
                           )
                         }
                       >
@@ -549,7 +547,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             verbWordFormName,
                             setVerbWordFormName,
-                            "verb"
+                            "verb",
                           );
                         }
                       }}
@@ -562,7 +560,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             verbWordFormName,
                             setVerbWordFormName,
-                            "verb"
+                            "verb",
                           )
                         }
                       >
@@ -604,7 +602,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             adjWordFormName,
                             setAdjWordFormName,
-                            "adj"
+                            "adj",
                           );
                         }
                       }}
@@ -617,7 +615,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             adjWordFormName,
                             setAdjWordFormName,
-                            "adj"
+                            "adj",
                           )
                         }
                       >
@@ -644,7 +642,7 @@ const AddLanguageModal = ({
                   </>
                 </div>
 
-                 <div style={{ display: "flex", flexDirection: "row" }}>
+                <div style={{ display: "flex", flexDirection: "row" }}>
                   <>
                     <label htmlFor="num" style={{ marginRight: "5px" }}>
                       {translate("Number")}
@@ -674,7 +672,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             numWordFormName,
                             setNumWordFormName,
-                            "num"
+                            "num",
                           );
                         }
                       }}
@@ -687,7 +685,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             numWordFormName,
                             setNumWordFormName,
-                            "num"
+                            "num",
                           )
                         }
                       >
@@ -714,7 +712,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             advWordFormName,
                             setAdvWordFormName,
-                            "adv"
+                            "adv",
                           );
                         }
                       }}
@@ -727,7 +725,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             advWordFormName,
                             setAdvWordFormName,
-                            "adv"
+                            "adv",
                           )
                         }
                       >
@@ -769,7 +767,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             adpWordFormName,
                             setAdpWordFormName,
-                            "adp"
+                            "adp",
                           );
                         }
                       }}
@@ -782,7 +780,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             adpWordFormName,
                             setAdpWordFormName,
-                            "adp"
+                            "adp",
                           )
                         }
                       >
@@ -824,7 +822,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             conjWordFormName,
                             setConjWordFormName,
-                            "conj"
+                            "conj",
                           );
                         }
                       }}
@@ -837,7 +835,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             conjWordFormName,
                             setConjWordFormName,
-                            "conj"
+                            "conj",
                           )
                         }
                       >
@@ -879,7 +877,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             interjWordFormName,
                             setInterjWordFormName,
-                            "interj"
+                            "interj",
                           );
                         }
                       }}
@@ -892,7 +890,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             interjWordFormName,
                             setInterjWordFormName,
-                            "interj"
+                            "interj",
                           )
                         }
                       >
@@ -934,7 +932,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             partWordFormName,
                             setPartWordFormName,
-                            "part"
+                            "part",
                           );
                         }
                       }}
@@ -947,7 +945,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             partWordFormName,
                             setPartWordFormName,
-                            "part"
+                            "part",
                           )
                         }
                       >
@@ -989,7 +987,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             affixWordFormName,
                             setAffixWordFormName,
-                            "affix"
+                            "affix",
                           );
                         }
                       }}
@@ -1002,7 +1000,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             affixWordFormName,
                             setAffixWordFormName,
-                            "affix"
+                            "affix",
                           )
                         }
                       >
@@ -1044,7 +1042,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             cliticWordFormName,
                             setCliticWordFormName,
-                            "clitic"
+                            "clitic",
                           );
                         }
                       }}
@@ -1057,7 +1055,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             cliticWordFormName,
                             setCliticWordFormName,
-                            "clitic"
+                            "clitic",
                           )
                         }
                       >
@@ -1099,7 +1097,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             pronWordFormName,
                             setPronWordFormName,
-                            "pron"
+                            "pron",
                           );
                         }
                       }}
@@ -1112,7 +1110,7 @@ const AddLanguageModal = ({
                           addWordForm(
                             pronWordFormName,
                             setPronWordFormName,
-                            "pron"
+                            "pron",
                           )
                         }
                       >
@@ -1145,8 +1143,6 @@ const AddLanguageModal = ({
                 <></>
               )}
             </div>
-
-           
           </div>
         </div>
       </Modal.Body>

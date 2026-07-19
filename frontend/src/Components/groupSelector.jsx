@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslate } from "../Functions/TranslateUI";
+import { getGroups } from "../services/languageService";
 
 const GroupSelector = ({ name, id, onGroupSelect, loanerLanguage }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,18 +14,7 @@ const GroupSelector = ({ name, id, onGroupSelect, loanerLanguage }) => {
 
   useEffect(() => {
     const getGroups = async () => {
-      const userId = localStorage.getItem("userId");
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getGroups`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId }),
-        }
-      );
-      const data = await response.json();
+     const data = await window.electron.getGroups();
       setAllGroups(data);
     };
     getGroups();

@@ -7,6 +7,8 @@ import WordSelector from "./wordSelector";
 import LanguageSelector from "./languageSelector";
 import React from "react";
 import Collapsible from "./collapsable.jsx";
+import { addWord, getWordForms, getWordCategories } from "../services/languageService.js";
+import { addEtymology } from "../services/etymologyService.js";
 
 const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   const { translate } = useTranslate();
@@ -100,25 +102,9 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
     if (!languageId) return;
 
     const load = async () => {
-      const [languageRes, motherRes] = await Promise.all([
-        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/getLanguageName`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ languageId: Number(languageId) }),
-        }),
-        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/getMotherLanguage`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: Number(languageId) }),
-        }),
-      ]);
 
-      const languageData = await languageRes.json();
-      const motherData = await motherRes.json();
+      const languageData = await window.electron.getLanguage(languageId);
+      const motherData = await window.electron.getMotherLanguage(languageId);
 
       setLanguageName(languageData.language_name);
       setSelectedParentLanguage(motherData[0] ?? null);
@@ -226,7 +212,6 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   };
 
   const handleMeaningChange = (id, value) => {
-    
     setMeaningStrings((prev) => ({ ...prev, [id]: value }));
   };
 
@@ -275,17 +260,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   };
 
   const getWordForms = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getWordForms`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ languageId }),
-      },
-    );
-    const data = await response.json();
+  const data = await window.electron.getWordForms(languageId);
 
     const unique = data.filter(
       (item, index, self) =>
@@ -300,17 +275,8 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   }, []);
 
   const getWordCategories = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getWordCategories`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ languageId }),
-      },
-    );
-    const data = await response.json();
+   const data = await window.electron.getWordCategories(Number(languageId))
+   console.log(data)
     setWordCategories(data);
   };
 
@@ -396,101 +362,81 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
     const date = new Date();
     const wordId = Date.now();
 
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/addWord`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          date,
-          wordId,
-          userId,
-          languageId,
-          word,
-          meanings: makeMeaningArrays(),
-          wordType: wordType,
-          note: note,
-          pronunciation: pronunciation,
-          adjWordFormInputs: adjWordFormInputs,
-          nounWordFormInputs: nounWordFormInputs,
-          numWordFormInputs: numWordFormInputs,
-          verbWordFormInputs: verbWordFormInputs,
-          advWordFormInputs: advWordFormInputs,
-          adpWordFormInputs: adpWordFormInputs,
-          partWordFormInputs: partWordFormInputs,
-          conjWordFormInputs: conjWordFormInputs,
-          interjWordFormInputs: interjWordFormInputs,
-          affixWordFormInputs: affixWordFormInputs,
-          cliticWordFormInputs: cliticWordFormInputs,
-          pronWordFormInputs: pronWordFormInputs,
-
-          adjWordCategoryInputs: adjWordCategoryInputs,
-          nounWordCategoryInputs: nounWordCategoryInputs,
-          numWordCategoryInputs: numWordCategoryInputs,
-          verbWordCategoryInputs: verbWordCategoryInputs,
-          advWordCategoryInputs: advWordCategoryInputs,
-          adpWordCategoryInputs: adpWordCategoryInputs,
-          partWordCategoryInputs: partWordCategoryInputs,
-          conjWordCategoryInputs: conjWordCategoryInputs,
-          interjWordCategoryInputs: interjWordCategoryInputs,
-          affixWordCategoryInputs: affixWordCategoryInputs,
-          cliticWordCategoryInputs: cliticWordCategoryInputs,
-          pronWordCategoryInputs: pronWordCategoryInputs,
-          tagInputs: tagInputs,
-          variants,
-          thesaurusDomains: selectedTerms,
-        }),
-      },
+    const data = await window.electron.addWord(
+      date,
+      wordId,
+      languageId,
+      word,
+      makeMeaningArrays(),
+      wordType,
+      note,
+      pronunciation,
+      adjWordFormInputs,
+      nounWordFormInputs,
+      numWordFormInputs,
+      verbWordFormInputs,
+      advWordFormInputs,
+      adpWordFormInputs,
+      partWordFormInputs,
+      conjWordFormInputs,
+      interjWordFormInputs,
+      affixWordFormInputs,
+      cliticWordFormInputs,
+      pronWordFormInputs,
+      adjWordCategoryInputs,
+      nounWordCategoryInputs,
+      numWordCategoryInputs,
+      verbWordCategoryInputs,
+      advWordCategoryInputs,
+      adpWordCategoryInputs,
+      partWordCategoryInputs,
+      conjWordCategoryInputs,
+      interjWordCategoryInputs,
+      affixWordCategoryInputs,
+      cliticWordCategoryInputs,
+      pronWordCategoryInputs,
+      JSON.stringify(tagInputs),
+      variants,
+      JSON.stringify(selectedTerms)
     );
 
-    if (response.status !== 200) {
-      console.error(`Error ${response.status}`);
+    if (!data.success) {
+      console.error(`Error adding word`);
+      return;
     }
 
-    if (response.ok) {
-      if (selectedEtymOption) {
-        try {
-          
-          const response = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/api/addEtymology`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                languageId,
-                word_id: wordId,
-                etymologyType: selectedEtymOption,
-                motherWord: selectedMotherLanguageWord,
-                firstElementId: firstElementId,
-                secondElementId: secondElementId,
-                thirdElementId: thirdElementId,
-                loanWordId: loanWord ? loanWord.word_id : null,
-                note: etymNote,
-              }),
-            },
-          );
+    if (selectedEtymOption) {
+      try {
+        const loan = loanWord ? loanWord.word_id : null;
 
-          const data = await response.json();
+        const data = await window.electron.addEtymology(
+          languageId,
+          wordId,
+          selectedEtymOption,
+          selectedMotherLanguageWord,
+          firstElementId,
+          secondElementId,
+          thirdElementId,
+          loan,
+          etymNote,
+        );
 
-          if (response.ok) {
-            showToast("Changes saved ✅");
-            if (onSuccess) onSuccess(); // trigger parent's refresh
-            close();
-            //now reset all input values
-            resetState();
-          }
-        } catch (error) {
-          console.error("Fetch failed:", error);
+        if (data.success) {
+          showToast("Changes saved ✅");
+          if (onSuccess) onSuccess(); // trigger parent's refresh
+          close();
+          //now reset all input values
+          resetState();
         }
-      } else {
-        showToast(translate("Changes saved"));
-        if (onSuccess) onSuccess(); // trigger parent's refresh
-        close();
-        //now reset all input values
-        resetState();
+      } catch (error) {
+        console.error("Fetch failed:", error);
       }
+    } else {
+      showToast(translate("Changes saved"));
+      if (onSuccess) onSuccess(); // trigger parent's refresh
+      close();
+      //now reset all input values
+      resetState();
     }
   };
 
@@ -564,17 +510,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   };
 
   const getTags = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getTags`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ languageId }),
-      },
-    );
-    const data = await response.json();
+   const data = await window.electron.getTags(languageId);
     setTagGroups(data[0].tags);
   };
 
@@ -656,8 +592,8 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
             <option value="suffix">{translate("suffix")}</option>
             <option value="proclitic">{translate("proclitic")}</option>
             <option value="enclitic">{translate("enclitic")}</option>
-             <option value="place_name">{translate("place name")}</option>
-              <option value="personal_name">{translate("personal name")}</option>
+            <option value="place_name">{translate("place name")}</option>
+            <option value="personal_name">{translate("personal name")}</option>
           </select>
         </div>
 
@@ -1232,7 +1168,6 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
           </div>
         </div>
 
-
         <div className="thin-white-border">
           <h4>{translate("Meaning")}</h4>
           <p style={{ marginTop: "20px" }}>
@@ -1240,7 +1175,9 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
           </p>
 
           {partsOfSpeech.map((part) =>
-            (wordType === "word" || wordType === "personal_name" || wordType === "place_name")  ? (
+            wordType === "word" ||
+            wordType === "personal_name" ||
+            wordType === "place_name" ? (
               <div
                 key={part.id}
                 style={{
@@ -1365,10 +1302,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
                           placeholder={translate("{label} meaning(s)", {
                             label: part.label.toLowerCase(),
                           })}
-                          value={
-                            meaningStrings[part.id] ||
-                            ""
-                          }
+                          value={meaningStrings[part.id] || ""}
                           onChange={(e) =>
                             handleMeaningChange(part.id, e.target.value)
                           }
@@ -1412,194 +1346,195 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
         </div>
 
         <div className="thin-white-border">
-           <Collapsible title={translate("Variants")}>
-           
-         
-
-          <input
-            placeholder={translate("enter variants")}
-            onChange={(e) => handleVariants(e.target.value)}
-          />
-          <p style={{ marginLeft: "5px", fontSize: "12px" }}>
-            <i>{translate("Divide each variant with a comma")}</i>
-          </p>
-       </Collapsible> </div>
+          <Collapsible title={translate("Variants")}>
+            <input
+              placeholder={translate("enter variants")}
+              onChange={(e) => handleVariants(e.target.value)}
+            />
+            <p style={{ marginLeft: "5px", fontSize: "12px" }}>
+              <i>{translate("Divide each variant with a comma")}</i>
+            </p>
+          </Collapsible>{" "}
+        </div>
 
         <div className="thin-white-border">
-           <Collapsible title={translate("Word Forms")}>
-          <h4>{translate("Word Forms")}</h4>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {shownParts["noun"] &&
-              wordForms.map((wordForm, index) =>
-                wordForm.type === "noun" ? (
-                  <input
-                    key={index}
-                    style={{ marginBottom: "10px", width: "300px" }}
-                    placeholder={wordForm.name}
-                    onChange={(e) =>
-                      handleWordFormInput(e, wordForm.name, "noun", index)
-                    }
-                  />
-                ) : null,
-              )}
+          <Collapsible title={translate("Word Forms")}>
+            <h4>{translate("Word Forms")}</h4>
+            <div style={{ display: "flex", flexDirection: "column" }}>
 
-            {shownParts["verb"] &&
-              wordForms.map((wordForm, index) =>
-                wordForm.type === "verb" ? (
-                  <input
-                    key={index}
-                    style={{ marginBottom: "10px", width: "300px" }}
-                    placeholder={wordForm.name}
-                    onChange={(e) =>
-                      handleWordFormInput(e, wordForm.name, "verb", index)
-                    }
-                  />
-                ) : null,
-              )}
+              {shownParts["noun"] &&
+                wordForms.map((wordForm, index) =>
+                  wordForm.type === "noun" ? (
+                  
+                    <input
+                      key={index}
+                      style={{ marginBottom: "10px", width: "300px" }}
+                      placeholder={wordForm.name}
+                      onChange={(e) =>
+                        handleWordFormInput(e, wordForm.name, "noun", index)
+                      }
+                    />
+                  ) : null,
+                )}
 
-            {shownParts["adj"] &&
-              wordForms.map((wordForm, index) =>
-                wordForm.type === "adj" ? (
-                  <input
-                    key={index}
-                    style={{ marginBottom: "10px", width: "300px" }}
-                    placeholder={wordForm.name}
-                    onChange={(e) =>
-                      handleWordFormInput(e, wordForm.name, "adj", index)
-                    }
-                  />
-                ) : null,
-              )}
+              {shownParts["verb"] &&
+                wordForms.map((wordForm, index) =>
+                  wordForm.type === "verb" ? (
+                    <input
+                      key={index}
+                      style={{ marginBottom: "10px", width: "300px" }}
+                      placeholder={wordForm.name}
+                      onChange={(e) =>
+                        handleWordFormInput(e, wordForm.name, "verb", index)
+                      }
+                    />
+                  ) : null,
+                )}
 
-            {shownParts["num"] &&
-              wordForms.map((wordForm, index) =>
-                wordForm.type === "num" ? (
-                  <input
-                    key={index}
-                    style={{ marginBottom: "10px", width: "300px" }}
-                    placeholder={wordForm.name}
-                    onChange={(e) =>
-                      handleWordFormInput(e, wordForm.name, "num", index)
-                    }
-                  />
-                ) : null,
-              )}
+              {shownParts["adj"] &&
+                wordForms.map((wordForm, index) =>
+                  wordForm.type === "adj" ? (
+                    <input
+                      key={index}
+                      style={{ marginBottom: "10px", width: "300px" }}
+                      placeholder={wordForm.name}
+                      onChange={(e) =>
+                        handleWordFormInput(e, wordForm.name, "adj", index)
+                      }
+                    />
+                  ) : null,
+                )}
 
-            {shownParts["adv"] &&
-              wordForms.map((wordForm, index) =>
-                wordForm.type === "adv" ? (
-                  <input
-                    key={index}
-                    style={{ marginBottom: "10px", width: "300px" }}
-                    placeholder={wordForm.name}
-                    onChange={(e) =>
-                      handleWordFormInput(e, wordForm.name, "adv", index)
-                    }
-                  />
-                ) : null,
-              )}
+              {shownParts["num"] &&
+                wordForms.map((wordForm, index) =>
+                  wordForm.type === "num" ? (
+                    <input
+                      key={index}
+                      style={{ marginBottom: "10px", width: "300px" }}
+                      placeholder={wordForm.name}
+                      onChange={(e) =>
+                        handleWordFormInput(e, wordForm.name, "num", index)
+                      }
+                    />
+                  ) : null,
+                )}
 
-            {shownParts["adp"] &&
-              wordForms.map((wordForm, index) =>
-                wordForm.type === "adp" ? (
-                  <input
-                    key={index}
-                    style={{ marginBottom: "10px", width: "300px" }}
-                    placeholder={wordForm.name}
-                    onChange={(e) =>
-                      handleWordFormInput(e, wordForm.name, "adp", index)
-                    }
-                  />
-                ) : null,
-              )}
+              {shownParts["adv"] &&
+                wordForms.map((wordForm, index) =>
+                  wordForm.type === "adv" ? (
+                    <input
+                      key={index}
+                      style={{ marginBottom: "10px", width: "300px" }}
+                      placeholder={wordForm.name}
+                      onChange={(e) =>
+                        handleWordFormInput(e, wordForm.name, "adv", index)
+                      }
+                    />
+                  ) : null,
+                )}
 
-            {shownParts["part"] &&
-              wordForms.map((wordForm, index) =>
-                wordForm.type === "part" ? (
-                  <input
-                    key={index}
-                    style={{ marginBottom: "10px", width: "300px" }}
-                    placeholder={wordForm.name}
-                    onChange={(e) =>
-                      handleWordFormInput(e, wordForm.name, "part", index)
-                    }
-                  />
-                ) : null,
-              )}
+              {shownParts["adp"] &&
+                wordForms.map((wordForm, index) =>
+                  wordForm.type === "adp" ? (
+                    <input
+                      key={index}
+                      style={{ marginBottom: "10px", width: "300px" }}
+                      placeholder={wordForm.name}
+                      onChange={(e) =>
+                        handleWordFormInput(e, wordForm.name, "adp", index)
+                      }
+                    />
+                  ) : null,
+                )}
 
-            {shownParts["interj"] &&
-              wordForms.map((wordForm, index) =>
-                wordForm.type === "interj" ? (
-                  <input
-                    key={index}
-                    style={{ marginBottom: "10px", width: "300px" }}
-                    placeholder={wordForm.name}
-                    onChange={(e) =>
-                      handleWordFormInput(e, wordForm.name, "interj", index)
-                    }
-                  />
-                ) : null,
-              )}
+              {shownParts["part"] &&
+                wordForms.map((wordForm, index) =>
+                  wordForm.type === "part" ? (
+                    <input
+                      key={index}
+                      style={{ marginBottom: "10px", width: "300px" }}
+                      placeholder={wordForm.name}
+                      onChange={(e) =>
+                        handleWordFormInput(e, wordForm.name, "part", index)
+                      }
+                    />
+                  ) : null,
+                )}
 
-            {shownParts["conj"] &&
-              wordForms.map((wordForm, index) =>
-                wordForm.type === "conj" ? (
-                  <input
-                    key={index}
-                    style={{ marginBottom: "10px", width: "300px" }}
-                    placeholder={wordForm.name}
-                    onChange={(e) =>
-                      handleWordFormInput(e, wordForm.name, "conj", index)
-                    }
-                  />
-                ) : null,
-              )}
+              {shownParts["interj"] &&
+                wordForms.map((wordForm, index) =>
+                  wordForm.type === "interj" ? (
+                    <input
+                      key={index}
+                      style={{ marginBottom: "10px", width: "300px" }}
+                      placeholder={wordForm.name}
+                      onChange={(e) =>
+                        handleWordFormInput(e, wordForm.name, "interj", index)
+                      }
+                    />
+                  ) : null,
+                )}
 
-            {shownParts["affix"] &&
-              wordForms.map((wordForm, index) =>
-                wordForm.type === "affix" ? (
-                  <input
-                    key={index}
-                    style={{ marginBottom: "10px", width: "300px" }}
-                    placeholder={wordForm.name}
-                    onChange={(e) =>
-                      handleWordFormInput(e, wordForm.name, "affix", index)
-                    }
-                  />
-                ) : null,
-              )}
+              {shownParts["conj"] &&
+                wordForms.map((wordForm, index) =>
+                  wordForm.type === "conj" ? (
+                    <input
+                      key={index}
+                      style={{ marginBottom: "10px", width: "300px" }}
+                      placeholder={wordForm.name}
+                      onChange={(e) =>
+                        handleWordFormInput(e, wordForm.name, "conj", index)
+                      }
+                    />
+                  ) : null,
+                )}
 
-            {shownParts["clitic"] &&
-              wordForms.map((wordForm, index) =>
-                wordForm.type === "clitic" ? (
-                  <input
-                    key={index}
-                    style={{ marginBottom: "10px", width: "300px" }}
-                    placeholder={wordForm.name}
-                    onChange={(e) =>
-                      handleWordFormInput(e, wordForm.name, "clitic", index)
-                    }
-                  />
-                ) : null,
-              )}
+              {shownParts["affix"] &&
+                wordForms.map((wordForm, index) =>
+                  wordForm.type === "affix" ? (
+                    <input
+                      key={index}
+                      style={{ marginBottom: "10px", width: "300px" }}
+                      placeholder={wordForm.name}
+                      onChange={(e) =>
+                        handleWordFormInput(e, wordForm.name, "affix", index)
+                      }
+                    />
+                  ) : null,
+                )}
 
-            {shownParts["pron"] &&
-              wordForms.map((wordForm, index) =>
-                wordForm.type === "pron" ? (
-                  <input
-                    key={index}
-                    style={{ marginBottom: "10px", width: "300px" }}
-                    placeholder={wordForm.name}
-                    onChange={(e) =>
-                      handleWordFormInput(e, wordForm.name, "pron", index)
-                    }
-                  />
-                ) : null,
-              )}
-          </div>
-        </Collapsible></div>
+              {shownParts["clitic"] &&
+                wordForms.map((wordForm, index) =>
+                  wordForm.type === "clitic" ? (
+                    <input
+                      key={index}
+                      style={{ marginBottom: "10px", width: "300px" }}
+                      placeholder={wordForm.name}
+                      onChange={(e) =>
+                        handleWordFormInput(e, wordForm.name, "clitic", index)
+                      }
+                    />
+                  ) : null,
+                )}
 
-          <div className="thin-white-border">
+              {shownParts["pron"] &&
+                wordForms.map((wordForm, index) =>
+                  wordForm.type === "pron" ? (
+                    <input
+                      key={index}
+                      style={{ marginBottom: "10px", width: "300px" }}
+                      placeholder={wordForm.name}
+                      onChange={(e) =>
+                        handleWordFormInput(e, wordForm.name, "pron", index)
+                      }
+                    />
+                  ) : null,
+                )}
+            </div>
+          </Collapsible>
+        </div>
+
+        <div className="thin-white-border">
           <Collapsible title={translate("Etymology")}>
             <div className="etymology-checklist">
               {[
@@ -1772,61 +1707,57 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
             </div>
 
             {loanerLanguage && (
-              
-            <WordSelector
-              id={languageId}
-              onWordSelect={handleLoanWord}
-              motherLanguageName={loanerLanguage.language_name}
-              motherLanguageId={loanerLanguage.language_id}
-            />)}
+              <WordSelector
+                id={languageId}
+                onWordSelect={handleLoanWord}
+                motherLanguageName={loanerLanguage.language_name}
+                motherLanguageId={loanerLanguage.language_id}
+              />
+            )}
 
             <div className="thin-white-border">
               <Collapsible title={translate("Etymology Note")}>
-          
-
-              <MyEditor
-                value={note || ""}
-                onChange={(content) => setEtymNote(content)}
-              />
+                <MyEditor
+                  value={note || ""}
+                  onChange={(content) => setEtymNote(content)}
+                />
               </Collapsible>
-              
             </div>
           </Collapsible>
         </div>
 
-              
         <div className="thin-white-border">
-               <Collapsible title={translate("Thesaurus")}>
+          <Collapsible title={translate("Thesaurus")}>
+            <p>
+              {translate(
+                "Assign <i>{word}</i> to a semantic domain within the thesaurus.",
+                { word },
+              )}
+            </p>
 
-         
-          <p>
-            {translate(
-              "Assign <i>{word}</i> to a semantic domain within the thesaurus.",
-              { word },
-            )}
-          </p>
-
-          <ul style={{ listStyle: "none" }}>
-            {
-              <PopulateThesaurusList
-                selectedTerms={selectedTerms}
-                setSelectedTerms={setSelectedTerms}
-              />
-            }
-          </ul>
-        </Collapsible>
+            <ul style={{ listStyle: "none" }}>
+              {
+                <PopulateThesaurusList
+                  selectedTerms={selectedTerms}
+                  setSelectedTerms={setSelectedTerms}
+                />
+              }
+            </ul>
+          </Collapsible>
         </div>
 
         <div className="thin-white-border">
-           <Collapsible title={translate("Note")}>
-          <h4>{translate("Note")}</h4>
-          <p>{translate("Enter any additional notes about this word here")}</p>
+          <Collapsible title={translate("Note")}>
+            <h4>{translate("Note")}</h4>
+            <p>
+              {translate("Enter any additional notes about this word here")}
+            </p>
 
-          <MyEditor
-            value={etymNote || ""}
-            onChange={(content) => setEtymNote(content)}
-          />
-       </Collapsible>
+            <MyEditor
+              value={etymNote || ""}
+              onChange={(content) => setEtymNote(content)}
+            />
+          </Collapsible>
         </div>
       </Modal.Body>
       <Modal.Footer>

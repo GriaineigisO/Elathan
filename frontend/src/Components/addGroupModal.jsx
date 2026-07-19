@@ -2,6 +2,7 @@ import { Modal, Button } from "react-bootstrap";
 import { useState, useEffect, useCallback } from "react";
 import LanguageSelector from "./languageSelector";
 import { useTranslate } from "../Functions/TranslateUI";
+import { addGroup} from "../services/languageService.js";
 
 const AddGroupModal = ({ show, setShow, onSuccess }) => {
   const { translate } = useTranslate();
@@ -65,30 +66,11 @@ const AddGroupModal = ({ show, setShow, onSuccess }) => {
       return;
     }
     try {
-      const userId = localStorage.getItem("userId");
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/addGroup`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId,
-            addedLanguages,
-            wordForms,
-            groupName,
-          }),
-        }
-      );
+      const data = await window.electron.addGroup(groupName, JSON.stringify(wordForms), JSON.stringify(addedLanguages));
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error(`Error ${response.status}: ${data.message}`);
-      }
-
-      if (response.ok) {
+      if (!data.success) {
+        console.error(`Error adding group`);
+      } else {
         showToast("Changes saved ✅");
         if (onSuccess) onSuccess(); // trigger parent's refresh
         close();

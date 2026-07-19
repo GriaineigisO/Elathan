@@ -22,6 +22,7 @@ const Encyclopedias = () => {
   const [userName, setUserName] = useState();
   const [totalEntryCount, setTotalEntryCount] = useState();
   const { translate } = useTranslate();
+  const [encyclopediaCount, setEncyclopediaCount] = useState(0);
 
 
  
@@ -156,6 +157,7 @@ const Encyclopedias = () => {
                 <p>{translate("{EncyclopediaCount} Encyclopedias", {
                   EncyclopediaCount: originalEncyclopediaList.length.toLocaleString()
                 })}</p>
+               
                 <input
                   placeholder={translate("search Encyclopedias")}
                   onChange={(e) => searchEncyclopedia(e.target.value)}

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import MyEditor from "../vendor/ckEditor-build/App.jsx";
 import { PopulateThesaurusList } from "../Functions/thesaurusList.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
+import { deleteWord } from "../services/languageService.js";
 
 const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
   const { translate } = useTranslate();
@@ -77,25 +78,25 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
   const [tagGroups, setTagGroups] = useState([]);
 
   const [nounSentenceExampleInputs, setNounSentenceExampleInputs] = useState(
-    []
+    [],
   );
   const [numSentenceExampleInputs, setNumSentenceExampleInputs] = useState([]);
   const [verbSentenceExampleInputs, setVerbSentenceExampleInputs] = useState(
-    []
+    [],
   );
   const [adjSentenceExampleInputs, setAdjSentenceExampleInputs] = useState([]);
   const [advSentenceExampleInputs, setAdvSentenceExampleInputs] = useState([]);
   const [adpSentenceExampleInputs, setAdpSentenceExampleInputs] = useState([]);
   const [conjSentenceExampleInputs, setConjSentenceExampleInputs] = useState(
-    []
+    [],
   );
   const [partSentenceExampleInputs, setPartSentenceExampleInputs] = useState(
-    []
+    [],
   );
   const [interjSentenceExampleInputs, setInterjSentenceExampleInputs] =
     useState([]);
   const [pronSentenceExampleInputs, setPronSentenceExampleInputs] = useState(
-    []
+    [],
   );
 
   const [nounSentenceExamples, setNounSentenceExamples] = useState([]);
@@ -185,214 +186,222 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
     { id: "pron", label: "Pronoun" },
   ]);
 
-  
-
   const getWord = async () => {
     const id = wordData.word_id;
     const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getWord`, 
-      { method: "POST", headers: { "Content-Type": "application/json", }, 
-      body: JSON.stringify({ id }), } );
+      `${import.meta.env.VITE_BACKEND_URL}/api/getWord`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      },
+    );
     let data = await response.json();
     setWord(data.wordData.word);
-setPronunciation(data.wordData.ipa);
-setWordType(data.wordData.word_type);
-setNote(data.wordData.word_note);
-setLanguage(data.wordData.language_id);
-setInflection(data.wordData.inflection);
+    setPronunciation(data.wordData.ipa);
+    setWordType(data.wordData.word_type);
+    setNote(data.wordData.word_note);
+    setLanguage(data.wordData.language_id);
+    setInflection(data.wordData.inflection);
 
     data.wordData.thesaurus && setSelectedTerms(data.wordData.thesaurus);
 
-    if (data.wordData.word_type === "enclitic" || data.wordData.word_type === "proclitic") {
+    if (
+      data.wordData.word_type === "enclitic" ||
+      data.wordData.word_type === "proclitic"
+    ) {
       setPartsOfSpeech((prev) => [...prev, { id: "clitic", label: "Clitic" }]);
     }
 
-    if (data.wordData.word_type === "prefix" || data.wordData.word_type === "suffix") {
+    if (
+      data.wordData.word_type === "prefix" ||
+      data.wordData.word_type === "suffix"
+    ) {
       setPartsOfSpeech((prev) => [...prev, { id: "affix", label: "Affix" }]);
     }
 
     setNounWordForms((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.noun_word_forms ?? []
+        : (wordData.noun_word_forms ?? []),
     );
     setNumWordForms((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.num_word_forms ?? []
+        : (wordData.num_word_forms ?? []),
     );
     setVerbWordForms((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.verb_word_forms ?? []
+        : (wordData.verb_word_forms ?? []),
     );
     setAdjWordForms((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.adj_word_forms ?? []
+        : (wordData.adj_word_forms ?? []),
     );
     setAdvWordForms((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.adv_word_forms ?? []
+        : (wordData.adv_word_forms ?? []),
     );
     setAdpWordForms((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.adp_word_forms ?? []
+        : (wordData.adp_word_forms ?? []),
     );
     setConjWordForms((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.conj_word_forms ?? []
+        : (wordData.conj_word_forms ?? []),
     );
     setInterjWordForms((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.interj_word_forms ?? []
+        : (wordData.interj_word_forms ?? []),
     );
     setPronWordForms((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.pron_word_forms ?? []
+        : (wordData.pron_word_forms ?? []),
     );
     setPartWordForms((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.part_word_forms ?? []
+        : (wordData.part_word_forms ?? []),
     );
     setAffixWordForms((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.affix_word_forms ?? []
+        : (wordData.affix_word_forms ?? []),
     );
     setCliticWordForms((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.clitic_word_forms ?? []
+        : (wordData.clitic_word_forms ?? []),
     );
 
     setNounWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.noun_word_categories ?? []
+        : (wordData.noun_word_categories ?? []),
     );
 
     setNumWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.num_word_categories ?? []
+        : (wordData.num_word_categories ?? []),
     );
 
     setVerbWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.verb_word_categories ?? []
+        : (wordData.verb_word_categories ?? []),
     );
     setAdjWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.adj_word_categories ?? []
+        : (wordData.adj_word_categories ?? []),
     );
     setAdvWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.adv_word_categories ?? []
+        : (wordData.adv_word_categories ?? []),
     );
     setAdpWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.adp_word_categories ?? []
+        : (wordData.adp_word_categories ?? []),
     );
     setConjWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.conj_word_categories ?? []
+        : (wordData.conj_word_categories ?? []),
     );
     setInterjWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.interj_word_categories ?? []
+        : (wordData.interj_word_categories ?? []),
     );
     setPronWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.pron_word_categories ?? []
+        : (wordData.pron_word_categories ?? []),
     );
     setPartWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.part_word_categories ?? []
+        : (wordData.part_word_categories ?? []),
     );
     setAffixWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.affix_word_categories ?? []
+        : (wordData.affix_word_categories ?? []),
     );
     setCliticWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.clitic_word_categories ?? []
+        : (wordData.clitic_word_categories ?? []),
     );
 
     setNounSentenceExamples((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.noun_sentence_examples ?? []
+        : (wordData.noun_sentence_examples ?? []),
     );
 
     setNumSentenceExamples((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.num_sentence_examples ?? []
+        : (wordData.num_sentence_examples ?? []),
     );
 
     setVerbSentenceExamples((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.verb_sentence_examples ?? []
+        : (wordData.verb_sentence_examples ?? []),
     );
 
     setAdjSentenceExamples((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.adj_sentence_examples ?? []
+        : (wordData.adj_sentence_examples ?? []),
     );
 
     setAdvSentenceExamples((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.adv_sentence_examples ?? []
+        : (wordData.adv_sentence_examples ?? []),
     );
 
     setAdpSentenceExamples((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.adp_sentence_examples ?? []
+        : (wordData.adp_sentence_examples ?? []),
     );
 
     setConjSentenceExamples((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.conj_sentence_examples ?? []
+        : (wordData.conj_sentence_examples ?? []),
     );
 
     setInterjSentenceExamples((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.interj_sentence_examples ?? []
+        : (wordData.interj_sentence_examples ?? []),
     );
 
     setPartSentenceExamples((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.part_sentence_examples ?? []
+        : (wordData.part_sentence_examples ?? []),
     );
 
     setPronSentenceExamples((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
-        : wordData.pron_sentence_examples ?? []
+        : (wordData.pron_sentence_examples ?? []),
     );
   };
 
@@ -434,7 +443,7 @@ setInflection(data.wordData.inflection);
       });
     } else {
       const filtered = partsOfSpeech.filter(
-        (part) => part.id !== "clitic" || part.id !== "affix"
+        (part) => part.id !== "clitic" || part.id !== "affix",
       );
       setPartShown(value, true);
       setPartShown("affix", false);
@@ -476,13 +485,13 @@ setInflection(data.wordData.inflection);
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ languageId }),
-      }
+      },
     );
     const data = await response.json();
     const unique = data.filter(
       (item, index, self) =>
         index ===
-        self.findIndex((t) => t.name === item.name && t.type === item.type)
+        self.findIndex((t) => t.name === item.name && t.type === item.type),
     );
 
     setWordForms(unique);
@@ -502,7 +511,7 @@ setInflection(data.wordData.inflection);
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ languageId }),
-      }
+      },
     );
     const data = await response.json();
     setWordCategories(data);
@@ -522,7 +531,7 @@ setInflection(data.wordData.inflection);
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ languageId }),
-      }
+      },
     );
     const data = await response.json();
     setTagGroups(data[0].tags);
@@ -620,7 +629,7 @@ setInflection(data.wordData.inflection);
           pronSentenceExamples: pronSentenceExamples,
           thesaurusDomains: selectedTerms,
         }),
-      }
+      },
     );
 
     if (response.status !== 200) {
@@ -664,33 +673,31 @@ setInflection(data.wordData.inflection);
       const existingIndex = prev.findIndex((f) => f.name === name);
 
       if (ipa) {
- if (existingIndex !== -1) {
-        const updated = [...prev];
-        updated[existingIndex] = {
-          ...updated[existingIndex],
-          ipa: value,
-        };
-        return updated;
-      }
+        if (existingIndex !== -1) {
+          const updated = [...prev];
+          updated[existingIndex] = {
+            ...updated[existingIndex],
+            ipa: value,
+          };
+          return updated;
+        }
       } else {
- if (existingIndex !== -1) {
-        const updated = [...prev];
-        updated[existingIndex] = {
-          ...updated[existingIndex],
-          word: value,
-        };
-        return updated;
+        if (existingIndex !== -1) {
+          const updated = [...prev];
+          updated[existingIndex] = {
+            ...updated[existingIndex],
+            word: value,
+          };
+          return updated;
+        }
       }
-      }
-     
 
       // If it's a new entry
       if (ipa) {
- return [...prev, { name, ipa: value,type }];
+        return [...prev, { name, ipa: value, type }];
       } else {
-         return [...prev, { name, word: value,type }];
+        return [...prev, { name, word: value, type }];
       }
-     
     });
   };
 
@@ -700,7 +707,7 @@ setInflection(data.wordData.inflection);
     type,
     index,
     selectedName,
-    abbreviation
+    abbreviation,
   ) => {
     const setMap = {
       noun: setNounWordCategoryInputs,
@@ -741,28 +748,14 @@ setInflection(data.wordData.inflection);
     });
   };
 
-  const deleteWord = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/deleteWord`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: wordData.word_id,
-        }),
-      }
-    );
+  const delWord = async () => {
+    const data = await window.electron.deleteWord(wordData.word_id);
 
-    if (response.status !== 200) {
-      console.error(`Error ${response.status}`);
-    }
-
-    if (response.ok) {
+    if (!data.success) {
+      console.error(`Error deleting word`);
+    } else {
       if (onSuccess)
-        (window.location.href = `${
-          import.meta.env.VITE_FRONTEND_URL
-        }/dictionary/${language}`),
-          "_blank";
+       window.location.href = `/dictionary/${wordData.language_id}`
       showToast("Word deleted ✅");
     }
   };
@@ -771,7 +764,7 @@ setInflection(data.wordData.inflection);
     setCategoryState((prev) => {
       const updated = [...prev];
       const existingIndex = updated.findIndex(
-        (entry) => entry.category_name === cat.name
+        (entry) => entry.category_name === cat.name,
       );
 
       const abbreviation =
@@ -797,7 +790,7 @@ setInflection(data.wordData.inflection);
     setTagState((prev) => {
       const updated = [...prev];
       const existingIndex = updated.findIndex(
-        (entry) => entry.name === group.name
+        (entry) => entry.name === group.name,
       );
 
       const newEntry = {
@@ -881,7 +874,7 @@ setInflection(data.wordData.inflection);
             <option value="proclitic">proclitic</option>
             <option value="enclitic">enclitic</option>
             <option value="place_name">{translate("place name")}</option>
-              <option value="personal_name">{translate("personal name")}</option>
+            <option value="personal_name">{translate("personal name")}</option>
           </select>
         </div>
 
@@ -928,7 +921,7 @@ setInflection(data.wordData.inflection);
                         key={index}
                         value={
                           nounWordCategories.find(
-                            (entry) => entry.category_name === cat.name
+                            (entry) => entry.category_name === cat.name,
                           )?.category_type ||
                           cat.categories.name[0] ||
                           ""
@@ -943,7 +936,7 @@ setInflection(data.wordData.inflection);
                           handleWordCategorySelect(
                             e.target.value,
                             cat,
-                            setNounWordCategories
+                            setNounWordCategories,
                           );
                           handleWordCategoryInput(
                             e,
@@ -951,7 +944,7 @@ setInflection(data.wordData.inflection);
                             "noun",
                             index,
                             selectedName,
-                            selectedAbbreviation
+                            selectedAbbreviation,
                           );
                         }}
                       >
@@ -960,12 +953,12 @@ setInflection(data.wordData.inflection);
                             <option key={index} value={name}>
                               {name}
                             </option>
-                          )
+                          ),
                         )}
                       </select>
                     </div>
-                  ) : null
-                )
+                  ) : null,
+                ),
               )}
 
             {shownParts["verb"] &&
@@ -978,7 +971,7 @@ setInflection(data.wordData.inflection);
                         key={index}
                         value={
                           verbWordCategories.find(
-                            (entry) => entry.category_name === cat.name
+                            (entry) => entry.category_name === cat.name,
                           )?.category_type ||
                           cat.categories.name[0] ||
                           ""
@@ -993,7 +986,7 @@ setInflection(data.wordData.inflection);
                           handleWordCategorySelect(
                             e.target.value,
                             cat,
-                            setVerbWordCategories
+                            setVerbWordCategories,
                           );
                           handleWordCategoryInput(
                             e,
@@ -1001,7 +994,7 @@ setInflection(data.wordData.inflection);
                             "verb",
                             index,
                             selectedName,
-                            selectedAbbreviation
+                            selectedAbbreviation,
                           );
                         }}
                       >
@@ -1012,8 +1005,8 @@ setInflection(data.wordData.inflection);
                         ))}
                       </select>
                     </div>
-                  ) : null
-                )
+                  ) : null,
+                ),
               )}
 
             {shownParts["adj"] &&
@@ -1026,7 +1019,7 @@ setInflection(data.wordData.inflection);
                         key={index}
                         value={
                           adjWordCategories.find(
-                            (entry) => entry.category_name === cat.name
+                            (entry) => entry.category_name === cat.name,
                           )?.category_type ||
                           cat.categories.name[0] ||
                           ""
@@ -1040,7 +1033,7 @@ setInflection(data.wordData.inflection);
                           handleWordCategorySelect(
                             e.target.value,
                             cat,
-                            setAdjWordCategories
+                            setAdjWordCategories,
                           );
                           handleWordCategoryInput(
                             e,
@@ -1048,7 +1041,7 @@ setInflection(data.wordData.inflection);
                             "adj",
                             index,
                             selectedName,
-                            selectedAbbreviation
+                            selectedAbbreviation,
                           );
                         }}
                       >
@@ -1059,8 +1052,8 @@ setInflection(data.wordData.inflection);
                         ))}
                       </select>
                     </div>
-                  ) : null
-                )
+                  ) : null,
+                ),
               )}
 
             {shownParts["num"] &&
@@ -1074,7 +1067,7 @@ setInflection(data.wordData.inflection);
                         key={index}
                         value={
                           numWordCategories.find(
-                            (entry) => entry.category_name === cat.name
+                            (entry) => entry.category_name === cat.name,
                           )?.category_type ||
                           cat.categories.name[0] ||
                           ""
@@ -1089,7 +1082,7 @@ setInflection(data.wordData.inflection);
                           handleWordCategorySelect(
                             e.target.value,
                             cat,
-                            setNumWordCategories
+                            setNumWordCategories,
                           );
                           handleWordCategoryInput(
                             e,
@@ -1097,7 +1090,7 @@ setInflection(data.wordData.inflection);
                             "num",
                             index,
                             selectedName,
-                            selectedAbbreviation
+                            selectedAbbreviation,
                           );
                         }}
                       >
@@ -1106,12 +1099,12 @@ setInflection(data.wordData.inflection);
                             <option key={index} value={name}>
                               {name}
                             </option>
-                          )
+                          ),
                         )}
                       </select>
                     </div>
-                  ) : null
-                )
+                  ) : null,
+                ),
               )}
 
             {shownParts["adv"] &&
@@ -1124,7 +1117,7 @@ setInflection(data.wordData.inflection);
                         key={index}
                         value={
                           advWordCategories.find(
-                            (entry) => entry.category_name === cat.name
+                            (entry) => entry.category_name === cat.name,
                           )?.category_type ||
                           cat.categories.name[0] ||
                           ""
@@ -1138,7 +1131,7 @@ setInflection(data.wordData.inflection);
                           handleWordCategorySelect(
                             e.target.value,
                             cat,
-                            setAdvWordCategories
+                            setAdvWordCategories,
                           );
                           handleWordCategoryInput(
                             e,
@@ -1146,7 +1139,7 @@ setInflection(data.wordData.inflection);
                             "adv",
                             index,
                             selectedName,
-                            selectedAbbreviation
+                            selectedAbbreviation,
                           );
                         }}
                       >
@@ -1157,8 +1150,8 @@ setInflection(data.wordData.inflection);
                         ))}
                       </select>
                     </div>
-                  ) : null
-                )
+                  ) : null,
+                ),
               )}
 
             {shownParts["adp"] &&
@@ -1171,7 +1164,7 @@ setInflection(data.wordData.inflection);
                         key={index}
                         value={
                           adpWordCategories.find(
-                            (entry) => entry.category_name === cat.name
+                            (entry) => entry.category_name === cat.name,
                           )?.category_type ||
                           cat.categories.name[0] ||
                           ""
@@ -1185,7 +1178,7 @@ setInflection(data.wordData.inflection);
                           handleWordCategorySelect(
                             e.target.value,
                             cat,
-                            setAdpWordCategories
+                            setAdpWordCategories,
                           );
                           handleWordCategoryInput(
                             e,
@@ -1193,7 +1186,7 @@ setInflection(data.wordData.inflection);
                             "adp",
                             index,
                             selectedName,
-                            selectedAbbreviation
+                            selectedAbbreviation,
                           );
                         }}
                       >
@@ -1204,8 +1197,8 @@ setInflection(data.wordData.inflection);
                         ))}
                       </select>
                     </div>
-                  ) : null
-                )
+                  ) : null,
+                ),
               )}
 
             {shownParts["part"] &&
@@ -1218,7 +1211,7 @@ setInflection(data.wordData.inflection);
                         key={index}
                         value={
                           partWordCategories.find(
-                            (entry) => entry.category_name === cat.name
+                            (entry) => entry.category_name === cat.name,
                           )?.category_type ||
                           cat.categories.name[0] ||
                           ""
@@ -1232,7 +1225,7 @@ setInflection(data.wordData.inflection);
                           handleWordCategorySelect(
                             e.target.value,
                             cat,
-                            setPartWordCategories
+                            setPartWordCategories,
                           );
                           handleWordCategoryInput(
                             e,
@@ -1240,7 +1233,7 @@ setInflection(data.wordData.inflection);
                             "part",
                             index,
                             selectedName,
-                            selectedAbbreviation
+                            selectedAbbreviation,
                           );
                         }}
                       >
@@ -1251,8 +1244,8 @@ setInflection(data.wordData.inflection);
                         ))}
                       </select>
                     </div>
-                  ) : null
-                )
+                  ) : null,
+                ),
               )}
 
             {shownParts["interj"] &&
@@ -1265,7 +1258,7 @@ setInflection(data.wordData.inflection);
                         key={index}
                         value={
                           interjWordCategories.find(
-                            (entry) => entry.category_name === cat.name
+                            (entry) => entry.category_name === cat.name,
                           )?.category_type ||
                           cat.categories.name[0] ||
                           ""
@@ -1279,7 +1272,7 @@ setInflection(data.wordData.inflection);
                           handleWordCategorySelect(
                             e.target.value,
                             cat,
-                            setInterjWordCategories
+                            setInterjWordCategories,
                           );
                           handleWordCategoryInput(
                             e,
@@ -1287,7 +1280,7 @@ setInflection(data.wordData.inflection);
                             "interj",
                             index,
                             selectedName,
-                            selectedAbbreviation
+                            selectedAbbreviation,
                           );
                         }}
                       >
@@ -1298,8 +1291,8 @@ setInflection(data.wordData.inflection);
                         ))}
                       </select>
                     </div>
-                  ) : null
-                )
+                  ) : null,
+                ),
               )}
 
             {shownParts["conj"] &&
@@ -1312,7 +1305,7 @@ setInflection(data.wordData.inflection);
                         key={index}
                         value={
                           conjWordCategories.find(
-                            (entry) => entry.category_name === cat.name
+                            (entry) => entry.category_name === cat.name,
                           )?.category_type ||
                           cat.categories.name[0] ||
                           ""
@@ -1326,7 +1319,7 @@ setInflection(data.wordData.inflection);
                           handleWordCategorySelect(
                             e.target.value,
                             cat,
-                            setConjWordCategories
+                            setConjWordCategories,
                           );
                           handleWordCategoryInput(
                             e,
@@ -1334,7 +1327,7 @@ setInflection(data.wordData.inflection);
                             "conj",
                             index,
                             selectedName,
-                            selectedAbbreviation
+                            selectedAbbreviation,
                           );
                         }}
                       >
@@ -1345,8 +1338,8 @@ setInflection(data.wordData.inflection);
                         ))}
                       </select>
                     </div>
-                  ) : null
-                )
+                  ) : null,
+                ),
               )}
 
             {shownParts["affix"] &&
@@ -1359,7 +1352,7 @@ setInflection(data.wordData.inflection);
                         key={index}
                         value={
                           affixWordCategories.find(
-                            (entry) => entry.category_name === cat.name
+                            (entry) => entry.category_name === cat.name,
                           )?.category_type ||
                           cat.categories.name[0] ||
                           ""
@@ -1373,7 +1366,7 @@ setInflection(data.wordData.inflection);
                           handleWordCategorySelect(
                             e.target.value,
                             cat,
-                            setAffixWordCategories
+                            setAffixWordCategories,
                           );
                           handleWordCategoryInput(
                             e,
@@ -1381,7 +1374,7 @@ setInflection(data.wordData.inflection);
                             "affix",
                             index,
                             selectedName,
-                            selectedAbbreviation
+                            selectedAbbreviation,
                           );
                         }}
                       >
@@ -1392,8 +1385,8 @@ setInflection(data.wordData.inflection);
                         ))}
                       </select>
                     </div>
-                  ) : null
-                )
+                  ) : null,
+                ),
               )}
 
             {shownParts["clitic"] &&
@@ -1406,7 +1399,7 @@ setInflection(data.wordData.inflection);
                         key={index}
                         value={
                           cliticWordCategories.find(
-                            (entry) => entry.category_name === cat.name
+                            (entry) => entry.category_name === cat.name,
                           )?.category_type ||
                           cat.categories.name[0] ||
                           ""
@@ -1420,7 +1413,7 @@ setInflection(data.wordData.inflection);
                           handleWordCategorySelect(
                             e.target.value,
                             cat,
-                            setCliticWordCategories
+                            setCliticWordCategories,
                           );
                           handleWordCategoryInput(
                             e,
@@ -1428,7 +1421,7 @@ setInflection(data.wordData.inflection);
                             "clitic",
                             index,
                             selectedName,
-                            selectedAbbreviation
+                            selectedAbbreviation,
                           );
                         }}
                       >
@@ -1439,8 +1432,8 @@ setInflection(data.wordData.inflection);
                         ))}
                       </select>
                     </div>
-                  ) : null
-                )
+                  ) : null,
+                ),
               )}
 
             {shownParts["pron"] &&
@@ -1453,7 +1446,7 @@ setInflection(data.wordData.inflection);
                         key={index}
                         value={
                           pronWordCategories.find(
-                            (entry) => entry.category_name === cat.name
+                            (entry) => entry.category_name === cat.name,
                           )?.category_type ||
                           cat.categories.name[0] ||
                           ""
@@ -1467,7 +1460,7 @@ setInflection(data.wordData.inflection);
                           handleWordCategorySelect(
                             e.target.value,
                             cat,
-                            setPronWordCategories
+                            setPronWordCategories,
                           );
                           handleWordCategoryInput(
                             e,
@@ -1475,7 +1468,7 @@ setInflection(data.wordData.inflection);
                             "pron",
                             index,
                             selectedName,
-                            selectedAbbreviation
+                            selectedAbbreviation,
                           );
                         }}
                       >
@@ -1486,8 +1479,8 @@ setInflection(data.wordData.inflection);
                         ))}
                       </select>
                     </div>
-                  ) : null
-                )
+                  ) : null,
+                ),
               )}
           </div>
         </div>
@@ -1667,7 +1660,7 @@ setInflection(data.wordData.inflection);
                   ) : null}
                 </>
               </div>
-            )
+            ),
           )}
         </div>
 
@@ -1691,40 +1684,30 @@ setInflection(data.wordData.inflection);
                 wordForm.type === "noun" ? (
                   <div key={index}>
                     <>
-                    <input
-                      placeholder={wordForm.name}
-                      value={
-                        nounWordForms.find((f) => f.name === wordForm.name)
-                          ?.word ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "noun")
-                      }
-                    />
+                      <input
+                        placeholder={wordForm.name}
+                        value={
+                          nounWordForms.find((f) => f.name === wordForm.name)
+                            ?.word ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "noun")
+                        }
+                      />
 
-                    <input
-                      placeholder={`${wordForm.name} IPA`}
-                      value={
-                        nounWordForms.find((f) => f.name === wordForm.name)
-                          ?.ipa ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "noun", "ipa")
-                      }
-                    />
-
-
-
-
-
-
-                    
-                    
+                      <input
+                        placeholder={`${wordForm.name} IPA`}
+                        value={
+                          nounWordForms.find((f) => f.name === wordForm.name)
+                            ?.ipa ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "noun", "ipa")
+                        }
+                      />
                     </>
-                    
-                    
                   </div>
-                ) : null
+                ) : null,
               )}
 
             {shownParts["verb"] &&
@@ -1732,122 +1715,97 @@ setInflection(data.wordData.inflection);
                 wordForm.type === "verb" ? (
                   <div key={index}>
                     <>
-                    <input
-                      placeholder={wordForm.name}
-                      value={
-                        verbWordForms.find((f) => f.name === wordForm.name)
-                          ?.word ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "verb")
-                      }
-                    />
+                      <input
+                        placeholder={wordForm.name}
+                        value={
+                          verbWordForms.find((f) => f.name === wordForm.name)
+                            ?.word ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "verb")
+                        }
+                      />
 
-                    <input
-                      placeholder={`${wordForm.name} IPA`}
-                      value={
-                        verbWordForms.find((f) => f.name === wordForm.name)
-                          ?.ipa ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "verb", "ipa")
-                      }
-                    />
-
-
-
-
-
-
-                    
-                    
+                      <input
+                        placeholder={`${wordForm.name} IPA`}
+                        value={
+                          verbWordForms.find((f) => f.name === wordForm.name)
+                            ?.ipa ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "verb", "ipa")
+                        }
+                      />
                     </>
-                    
-                    
                   </div>
-                ) : null
+                ) : null,
               )}
 
-           {shownParts["adj"] &&
+            {shownParts["adj"] &&
               wordForms.map((wordForm, index) =>
                 wordForm.type === "adjective" ? (
                   <div key={index}>
                     <>
-                    <input
-                      placeholder={wordForm.name}
-                      value={
-                        adjWordForms.find((f) => f.name === wordForm.name)
-                          ?.word ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "adjective")
-                      }
-                    />
+                      <input
+                        placeholder={wordForm.name}
+                        value={
+                          adjWordForms.find((f) => f.name === wordForm.name)
+                            ?.word ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "adjective")
+                        }
+                      />
 
-                    <input
-                      placeholder={`${wordForm.name} IPA`}
-                      value={
-                        adjWordForms.find((f) => f.name === wordForm.name)
-                          ?.ipa ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "adjective", "ipa")
-                      }
-                    />
-
-
-
-
-
-
-                    
-                    
+                      <input
+                        placeholder={`${wordForm.name} IPA`}
+                        value={
+                          adjWordForms.find((f) => f.name === wordForm.name)
+                            ?.ipa ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(
+                            e,
+                            wordForm.name,
+                            "adjective",
+                            "ipa",
+                          )
+                        }
+                      />
                     </>
-                    
-                    
                   </div>
-                ) : null
+                ) : null,
               )}
 
-           {shownParts["num"] &&
+            {shownParts["num"] &&
               wordForms.map((wordForm, index) =>
                 wordForm.type === "number" ? (
                   <div key={index}>
                     <>
-                    <input
-                      placeholder={wordForm.name}
-                      value={
-                        numWordForms.find((f) => f.name === wordForm.name)
-                          ?.word ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "number")
-                      }
-                    />
+                      <input
+                        placeholder={wordForm.name}
+                        value={
+                          numWordForms.find((f) => f.name === wordForm.name)
+                            ?.word ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "number")
+                        }
+                      />
 
-                    <input
-                      placeholder={`${wordForm.name} IPA`}
-                      value={
-                        numWordForms.find((f) => f.name === wordForm.name)
-                          ?.ipa ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "number", "ipa")
-                      }
-                    />
-
-
-
-
-
-
-                    
-                    
+                      <input
+                        placeholder={`${wordForm.name} IPA`}
+                        value={
+                          numWordForms.find((f) => f.name === wordForm.name)
+                            ?.ipa ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "number", "ipa")
+                        }
+                      />
                     </>
-                    
-                    
                   </div>
-                ) : null
+                ) : null,
               )}
 
             {shownParts["adv"] &&
@@ -1855,40 +1813,30 @@ setInflection(data.wordData.inflection);
                 wordForm.type === "adverb" ? (
                   <div key={index}>
                     <>
-                    <input
-                      placeholder={wordForm.name}
-                      value={
-                        advWordForms.find((f) => f.name === wordForm.name)
-                          ?.word ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "adverb")
-                      }
-                    />
+                      <input
+                        placeholder={wordForm.name}
+                        value={
+                          advWordForms.find((f) => f.name === wordForm.name)
+                            ?.word ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "adverb")
+                        }
+                      />
 
-                    <input
-                      placeholder={`${wordForm.name} IPA`}
-                      value={
-                        advWordForms.find((f) => f.name === wordForm.name)
-                          ?.ipa ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "adverb", "ipa")
-                      }
-                    />
-
-
-
-
-
-
-                    
-                    
+                      <input
+                        placeholder={`${wordForm.name} IPA`}
+                        value={
+                          advWordForms.find((f) => f.name === wordForm.name)
+                            ?.ipa ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "adverb", "ipa")
+                        }
+                      />
                     </>
-                    
-                    
                   </div>
-                ) : null
+                ) : null,
               )}
 
             {shownParts["adp"] &&
@@ -1896,40 +1844,35 @@ setInflection(data.wordData.inflection);
                 wordForm.type === "adposition" ? (
                   <div key={index}>
                     <>
-                    <input
-                      placeholder={wordForm.name}
-                      value={
-                        adpWordForms.find((f) => f.name === wordForm.name)
-                          ?.word ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "adposition")
-                      }
-                    />
+                      <input
+                        placeholder={wordForm.name}
+                        value={
+                          adpWordForms.find((f) => f.name === wordForm.name)
+                            ?.word ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "adposition")
+                        }
+                      />
 
-                    <input
-                      placeholder={`${wordForm.name} IPA`}
-                      value={
-                        adpWordForms.find((f) => f.name === wordForm.name)
-                          ?.ipa ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "adposition", "ipa")
-                      }
-                    />
-
-
-
-
-
-
-                    
-                    
+                      <input
+                        placeholder={`${wordForm.name} IPA`}
+                        value={
+                          adpWordForms.find((f) => f.name === wordForm.name)
+                            ?.ipa ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(
+                            e,
+                            wordForm.name,
+                            "adposition",
+                            "ipa",
+                          )
+                        }
+                      />
                     </>
-                    
-                    
                   </div>
-                ) : null
+                ) : null,
               )}
 
             {shownParts["part"] &&
@@ -1937,40 +1880,35 @@ setInflection(data.wordData.inflection);
                 wordForm.type === "particle" ? (
                   <div key={index}>
                     <>
-                    <input
-                      placeholder={wordForm.name}
-                      value={
-                        partWordForms.find((f) => f.name === wordForm.name)
-                          ?.word ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "particle")
-                      }
-                    />
+                      <input
+                        placeholder={wordForm.name}
+                        value={
+                          partWordForms.find((f) => f.name === wordForm.name)
+                            ?.word ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "particle")
+                        }
+                      />
 
-                    <input
-                      placeholder={`${wordForm.name} IPA`}
-                      value={
-                        partWordForms.find((f) => f.name === wordForm.name)
-                          ?.ipa ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "particle", "ipa")
-                      }
-                    />
-
-
-
-
-
-
-                    
-                    
+                      <input
+                        placeholder={`${wordForm.name} IPA`}
+                        value={
+                          partWordForms.find((f) => f.name === wordForm.name)
+                            ?.ipa ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(
+                            e,
+                            wordForm.name,
+                            "particle",
+                            "ipa",
+                          )
+                        }
+                      />
                     </>
-                    
-                    
                   </div>
-                ) : null
+                ) : null,
               )}
 
             {shownParts["interj"] &&
@@ -1978,40 +1916,35 @@ setInflection(data.wordData.inflection);
                 wordForm.type === "interjection" ? (
                   <div key={index}>
                     <>
-                    <input
-                      placeholder={wordForm.name}
-                      value={
-                        interjWordForms.find((f) => f.name === wordForm.name)
-                          ?.word ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "interjection")
-                      }
-                    />
+                      <input
+                        placeholder={wordForm.name}
+                        value={
+                          interjWordForms.find((f) => f.name === wordForm.name)
+                            ?.word ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "interjection")
+                        }
+                      />
 
-                    <input
-                      placeholder={`${wordForm.name} IPA`}
-                      value={
-                        interjWordForms.find((f) => f.name === wordForm.name)
-                          ?.ipa ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "interjection", "ipa")
-                      }
-                    />
-
-
-
-
-
-
-                    
-                    
+                      <input
+                        placeholder={`${wordForm.name} IPA`}
+                        value={
+                          interjWordForms.find((f) => f.name === wordForm.name)
+                            ?.ipa ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(
+                            e,
+                            wordForm.name,
+                            "interjection",
+                            "ipa",
+                          )
+                        }
+                      />
                     </>
-                    
-                    
                   </div>
-                ) : null
+                ) : null,
               )}
 
             {shownParts["conj"] &&
@@ -2019,81 +1952,66 @@ setInflection(data.wordData.inflection);
                 wordForm.type === "conjunction" ? (
                   <div key={index}>
                     <>
-                    <input
-                      placeholder={wordForm.name}
-                      value={
-                        conjWordForms.find((f) => f.name === wordForm.name)
-                          ?.word ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "conjunction")
-                      }
-                    />
+                      <input
+                        placeholder={wordForm.name}
+                        value={
+                          conjWordForms.find((f) => f.name === wordForm.name)
+                            ?.word ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "conjunction")
+                        }
+                      />
 
-                    <input
-                      placeholder={`${wordForm.name} IPA`}
-                      value={
-                        conjWordForms.find((f) => f.name === wordForm.name)
-                          ?.ipa ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "conjunction", "ipa")
-                      }
-                    />
-
-
-
-
-
-
-                    
-                    
+                      <input
+                        placeholder={`${wordForm.name} IPA`}
+                        value={
+                          conjWordForms.find((f) => f.name === wordForm.name)
+                            ?.ipa ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(
+                            e,
+                            wordForm.name,
+                            "conjunction",
+                            "ipa",
+                          )
+                        }
+                      />
                     </>
-                    
-                    
                   </div>
-                ) : null
+                ) : null,
               )}
 
-           {shownParts["affix"] &&
+            {shownParts["affix"] &&
               wordForms.map((wordForm, index) =>
                 wordForm.type === "affix" ? (
                   <div key={index}>
                     <>
-                    <input
-                      placeholder={wordForm.name}
-                      value={
-                        affixWordForms.find((f) => f.name === wordForm.name)
-                          ?.word ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "affix")
-                      }
-                    />
+                      <input
+                        placeholder={wordForm.name}
+                        value={
+                          affixWordForms.find((f) => f.name === wordForm.name)
+                            ?.word ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "affix")
+                        }
+                      />
 
-                    <input
-                      placeholder={`${wordForm.name} IPA`}
-                      value={
-                        affixWordForms.find((f) => f.name === wordForm.name)
-                          ?.ipa ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "affix", "ipa")
-                      }
-                    />
-
-
-
-
-
-
-                    
-                    
+                      <input
+                        placeholder={`${wordForm.name} IPA`}
+                        value={
+                          affixWordForms.find((f) => f.name === wordForm.name)
+                            ?.ipa ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "affix", "ipa")
+                        }
+                      />
                     </>
-                    
-                    
                   </div>
-                ) : null
+                ) : null,
               )}
 
             {shownParts["clitic"] &&
@@ -2101,40 +2019,30 @@ setInflection(data.wordData.inflection);
                 wordForm.type === "clitic" ? (
                   <div key={index}>
                     <>
-                    <input
-                      placeholder={wordForm.name}
-                      value={
-                        cliticWordForms.find((f) => f.name === wordForm.name)
-                          ?.word ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "clitic")
-                      }
-                    />
+                      <input
+                        placeholder={wordForm.name}
+                        value={
+                          cliticWordForms.find((f) => f.name === wordForm.name)
+                            ?.word ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "clitic")
+                        }
+                      />
 
-                    <input
-                      placeholder={`${wordForm.name} IPA`}
-                      value={
-                        cliticWordForms.find((f) => f.name === wordForm.name)
-                          ?.ipa ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "clitic", "ipa")
-                      }
-                    />
-
-
-
-
-
-
-                    
-                    
+                      <input
+                        placeholder={`${wordForm.name} IPA`}
+                        value={
+                          cliticWordForms.find((f) => f.name === wordForm.name)
+                            ?.ipa ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "clitic", "ipa")
+                        }
+                      />
                     </>
-                    
-                    
                   </div>
-                ) : null
+                ) : null,
               )}
 
             {shownParts["pron"] &&
@@ -2142,40 +2050,35 @@ setInflection(data.wordData.inflection);
                 wordForm.type === "pronoun" ? (
                   <div key={index}>
                     <>
-                    <input
-                      placeholder={wordForm.name}
-                      value={
-                        pronWordForms.find((f) => f.name === wordForm.name)
-                          ?.word ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "pronoun")
-                      }
-                    />
+                      <input
+                        placeholder={wordForm.name}
+                        value={
+                          pronWordForms.find((f) => f.name === wordForm.name)
+                            ?.word ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(e, wordForm.name, "pronoun")
+                        }
+                      />
 
-                    <input
-                      placeholder={`${wordForm.name} IPA`}
-                      value={
-                        pronWordForms.find((f) => f.name === wordForm.name)
-                          ?.ipa ?? ""
-                      }
-                      onChange={(e) =>
-                        handleWordFormInput(e, wordForm.name, "pronoun", "ipa")
-                      }
-                    />
-
-
-
-
-
-
-                    
-                    
+                      <input
+                        placeholder={`${wordForm.name} IPA`}
+                        value={
+                          pronWordForms.find((f) => f.name === wordForm.name)
+                            ?.ipa ?? ""
+                        }
+                        onChange={(e) =>
+                          handleWordFormInput(
+                            e,
+                            wordForm.name,
+                            "pronoun",
+                            "ipa",
+                          )
+                        }
+                      />
                     </>
-                    
-                    
                   </div>
-                ) : null
+                ) : null,
               )}
           </div>
         </div>
@@ -2231,7 +2134,7 @@ setInflection(data.wordData.inflection);
                           "sentence",
                           e.target.value,
                           nounSentenceExamples,
-                          setNounSentenceExamples
+                          setNounSentenceExamples,
                         )
                       }
                     />
@@ -2243,7 +2146,7 @@ setInflection(data.wordData.inflection);
                           "translation",
                           e.target.value,
                           nounSentenceExamples,
-                          setNounSentenceExamples
+                          setNounSentenceExamples,
                         )
                       }
                     />
@@ -2255,7 +2158,7 @@ setInflection(data.wordData.inflection);
                       removeExample(
                         example.id,
                         nounSentenceExampleInputs,
-                        setNounSentenceExampleInputs
+                        setNounSentenceExampleInputs,
                       )
                     }
                   ></button>
@@ -2283,7 +2186,7 @@ setInflection(data.wordData.inflection);
                           "sentence",
                           e.target.value,
                           verbSentenceExamples,
-                          setVerbSentenceExamples
+                          setVerbSentenceExamples,
                         )
                       }
                     />
@@ -2295,7 +2198,7 @@ setInflection(data.wordData.inflection);
                           "translation",
                           e.target.value,
                           verbSentenceExamples,
-                          setVerbSentenceExamples
+                          setVerbSentenceExamples,
                         )
                       }
                     />
@@ -2307,7 +2210,7 @@ setInflection(data.wordData.inflection);
                       removeExample(
                         example.id,
                         verbSentenceExampleInputs,
-                        setVerbSentenceExampleInputs
+                        setVerbSentenceExampleInputs,
                       )
                     }
                   ></button>
@@ -2335,7 +2238,7 @@ setInflection(data.wordData.inflection);
                           "sentence",
                           e.target.value,
                           adjSentenceExamples,
-                          setAdjSentenceExamples
+                          setAdjSentenceExamples,
                         )
                       }
                     />
@@ -2347,7 +2250,7 @@ setInflection(data.wordData.inflection);
                           "translation",
                           e.target.value,
                           adjSentenceExamples,
-                          setAdjSentenceExamples
+                          setAdjSentenceExamples,
                         )
                       }
                     />
@@ -2359,7 +2262,7 @@ setInflection(data.wordData.inflection);
                       removeExample(
                         example.id,
                         adjSentenceExampleInputs,
-                        setAdjSentenceExampleInputs
+                        setAdjSentenceExampleInputs,
                       )
                     }
                   ></button>
@@ -2387,7 +2290,7 @@ setInflection(data.wordData.inflection);
                           "sentence",
                           e.target.value,
                           numSentenceExamples,
-                          setNumSentenceExamples
+                          setNumSentenceExamples,
                         )
                       }
                     />
@@ -2399,7 +2302,7 @@ setInflection(data.wordData.inflection);
                           "translation",
                           e.target.value,
                           numSentenceExamples,
-                          setNumSentenceExamples
+                          setNumSentenceExamples,
                         )
                       }
                     />
@@ -2411,7 +2314,7 @@ setInflection(data.wordData.inflection);
                       removeExample(
                         example.id,
                         numSentenceExampleInputs,
-                        setNumSentenceExampleInputs
+                        setNumSentenceExampleInputs,
                       )
                     }
                   ></button>
@@ -2439,7 +2342,7 @@ setInflection(data.wordData.inflection);
                           "sentence",
                           e.target.value,
                           advSentenceExamples,
-                          setAdvSentenceExamples
+                          setAdvSentenceExamples,
                         )
                       }
                     />
@@ -2451,7 +2354,7 @@ setInflection(data.wordData.inflection);
                           "translation",
                           e.target.value,
                           advSentenceExamples,
-                          setAdvSentenceExamples
+                          setAdvSentenceExamples,
                         )
                       }
                     />
@@ -2463,7 +2366,7 @@ setInflection(data.wordData.inflection);
                       removeExample(
                         example.id,
                         advSentenceExampleInputs,
-                        setAdvSentenceExampleInputs
+                        setAdvSentenceExampleInputs,
                       )
                     }
                   ></button>
@@ -2491,7 +2394,7 @@ setInflection(data.wordData.inflection);
                           "sentence",
                           e.target.value,
                           adpSentenceExamples,
-                          setAdpSentenceExamples
+                          setAdpSentenceExamples,
                         )
                       }
                     />
@@ -2503,7 +2406,7 @@ setInflection(data.wordData.inflection);
                           "translation",
                           e.target.value,
                           adpSentenceExamples,
-                          setAdpSentenceExamples
+                          setAdpSentenceExamples,
                         )
                       }
                     />
@@ -2515,7 +2418,7 @@ setInflection(data.wordData.inflection);
                       removeExample(
                         example.id,
                         adpSentenceExampleInputs,
-                        setAdpSentenceExampleInputs
+                        setAdpSentenceExampleInputs,
                       )
                     }
                   ></button>
@@ -2543,7 +2446,7 @@ setInflection(data.wordData.inflection);
                           "sentence",
                           e.target.value,
                           partSentenceExamples,
-                          setPartSentenceExamples
+                          setPartSentenceExamples,
                         )
                       }
                     />
@@ -2555,7 +2458,7 @@ setInflection(data.wordData.inflection);
                           "translation",
                           e.target.value,
                           partSentenceExamples,
-                          setPartSentenceExamples
+                          setPartSentenceExamples,
                         )
                       }
                     />
@@ -2567,7 +2470,7 @@ setInflection(data.wordData.inflection);
                       removeExample(
                         example.id,
                         partSentenceExampleInputs,
-                        setPartSentenceExampleInputs
+                        setPartSentenceExampleInputs,
                       )
                     }
                   ></button>
@@ -2595,7 +2498,7 @@ setInflection(data.wordData.inflection);
                           "sentence",
                           e.target.value,
                           interjSentenceExamples,
-                          setInterjSentenceExamples
+                          setInterjSentenceExamples,
                         )
                       }
                     />
@@ -2607,7 +2510,7 @@ setInflection(data.wordData.inflection);
                           "translation",
                           e.target.value,
                           interjSentenceExamples,
-                          setInterjSentenceExamples
+                          setInterjSentenceExamples,
                         )
                       }
                     />
@@ -2619,7 +2522,7 @@ setInflection(data.wordData.inflection);
                       removeExample(
                         example.id,
                         interjSentenceExampleInputs,
-                        setInterjSentenceExampleInputs
+                        setInterjSentenceExampleInputs,
                       )
                     }
                   ></button>
@@ -2649,7 +2552,7 @@ setInflection(data.wordData.inflection);
                           "sentence",
                           e.target.value,
                           conjSentenceExamples,
-                          setConjSentenceExamples
+                          setConjSentenceExamples,
                         )
                       }
                     />
@@ -2661,7 +2564,7 @@ setInflection(data.wordData.inflection);
                           "translation",
                           e.target.value,
                           conjSentenceExamples,
-                          setConjSentenceExamples
+                          setConjSentenceExamples,
                         )
                       }
                     />
@@ -2673,7 +2576,7 @@ setInflection(data.wordData.inflection);
                       removeExample(
                         example.id,
                         conjSentenceExampleInputs,
-                        setConjSentenceExampleInputs
+                        setConjSentenceExampleInputs,
                       )
                     }
                   ></button>
@@ -2701,7 +2604,7 @@ setInflection(data.wordData.inflection);
                           "sentence",
                           e.target.value,
                           pronSentenceExamples,
-                          setPronSentenceExamples
+                          setPronSentenceExamples,
                         )
                       }
                     />
@@ -2713,7 +2616,7 @@ setInflection(data.wordData.inflection);
                           "translation",
                           e.target.value,
                           pronSentenceExamples,
-                          setPronSentenceExamples
+                          setPronSentenceExamples,
                         )
                       }
                     />
@@ -2725,7 +2628,7 @@ setInflection(data.wordData.inflection);
                       removeExample(
                         example.id,
                         pronSentenceExampleInputs,
-                        setPronSentenceExampleInputs
+                        setPronSentenceExampleInputs,
                       )
                     }
                   ></button>
@@ -2741,7 +2644,7 @@ setInflection(data.wordData.inflection);
           )}
         </div>
 
-        <button className="delete-button" onClick={deleteWord}>
+        <button className="delete-button" onClick={delWord}>
           Delete <i>{wordData.word}</i>
         </button>
       </Modal.Body>

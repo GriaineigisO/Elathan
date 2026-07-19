@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslate } from "../Functions/TranslateUI";
+import { getLanguages, getDaughterLanguages } from "../services/languageService";
 
 const LanguageSelector = ({
   name,
@@ -22,51 +23,14 @@ const LanguageSelector = ({
 
   //gets all of a user's languages
   const getLanguages = async () => {
-    const userId = localStorage.getItem("userId");
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getLanguages`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId }),
-      },
-    );
-    const data = await response.json();
+    const data = await window.electron.getLanguages();
     setAllLanguages(data);
   };
 
-  //gets all public languages regardless of owner
-  const getAllLanguages = async () => {
-    const userId = localStorage.getItem("userId");
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getAllLanguages`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    const data = await response.json();
-    setAllLanguages(data);
-  };
 
   //gets only the daughter languages a given language
   const getDaughterLanguages = async () => {
-    const userId = localStorage.getItem("userId");
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getDaughterLanguages`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      },
-    );
-    const data = await response.json();
+    const data = await window.electron.getDaughterLanguages();
     setAllLanguages(data);
   };
 
@@ -76,18 +40,16 @@ const LanguageSelector = ({
       setSearchTerm(defaultTerm);
     }
 
-    if (!selectPublicLanguages) {
+    
       if (loanOrInherit === "fromMother") {
 
         getDaughterLanguages();
       } else {
         getLanguages();
       }
-    }
+    
 
-    if (selectPublicLanguages) {
-      getAllLanguages();
-    }
+
   }, [loanOrInherit]);
 
   const filteredLanguages = id

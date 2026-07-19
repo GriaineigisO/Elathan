@@ -24,66 +24,31 @@ export const TranslationProvider = ({ children }) => {
         console.warn("Corrupt cached translations, ignoring...");
       }
     }
-
-    fetchUserInfo();
   }, []);
 
-  const fetchUserInfo = async () => {
-
+  const fetchInterfaceLanguage = async () => {
     try {
-      const userId = localStorage.getItem("userId");
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getUserInfo`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId }),
-        }
-      );
+      const data = await window.electron.getInterfaceLanguage();
+      if (data) {
+        
+        setLanguageName(data.language_name);
 
-      const data = await response.json();
+        const dict = {};
+        data.translations.forEach((t) => {
+          dict[t.phrase.toLowerCase()] = t.translation;
+        });
 
-      if (data.userLanguage) {
-        setUserLanguage(data.userLanguage);
+        setTranslations(dict);
+
+        localStorage.setItem("cachedUserLanguage", data.language_id);
+        localStorage.setItem("cachedTranslations", JSON.stringify(dict));
+        localStorage.setItem("cachedLanguageName", data.language_name);
       } else {
-        // user is logged out → fallback to English UI, no need to block rendering
+        //fallback to English UI, no need to block rendering
         setUserLanguage("English");
         setTranslations(null);
         setLoading(false);
       }
-    } catch (error) {
-      console.error("Error fetching user info:", error);
-    }
-  };
-
-  const getInterfaceLanguage = async (langId) => {
-
-
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getInterfaceLanguage`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: langId }),
-        }
-      );
-
-      const data = await response.json();
-
-
-      setLanguageName(data.language_name);
-
-      const dict = {};
-      data.translations.forEach((t) => {
-        dict[t.phrase.toLowerCase()] = t.translation;
-      });
-
-      setTranslations(dict);
-
-      localStorage.setItem("cachedUserLanguage", langId);
-      localStorage.setItem("cachedTranslations", JSON.stringify(dict));
-      localStorage.setItem("cachedLanguageName", data.language_name);
     } catch (error) {
       console.error("Error fetching interface language:", error);
     } finally {
@@ -92,7 +57,7 @@ export const TranslationProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (userLanguage) getInterfaceLanguage(userLanguage);
+    if (userLanguage) fetchInterfaceLanguage();
   }, [userLanguage]);
 
   const capitalizeFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -103,7 +68,7 @@ export const TranslationProvider = ({ children }) => {
     if (!values) return template;
     return template.replace(
       /\{(\w+)\}/g,
-      (_, key) => values[key] ?? `{${key}}`
+      (_, key) => values[key] ?? `{${key}}`,
     );
   };
 

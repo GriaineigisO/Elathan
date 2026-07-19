@@ -5,49 +5,12 @@ import "../App.css";
 import { rebuild } from "../services/databaseService.js";
 
 const Welcome = () => {
-  const [mostWordsAdded, setMostWordsAdded] = useState([]);
-  const [mostLanguagesAdded, setMostLanguagesAdded] = useState([]);
-  
-  //uncomment to rebuild the database. Remove when deploying
+   //uncomment to rebuild the database. Remove when deploying
   // useEffect(() => {
   //   rebuild();
   // }, [])
   
-   
 
-
-  const findMostWords = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getMostWords`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    const data = await response.json();
-    setMostWordsAdded(data);
-  };
-
-  const findMostLanguages = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getMostLanguages`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    const data = await response.json();
-    setMostLanguagesAdded(data);
-  };
-
-  useEffect(() => {
-    findMostWords();
-    findMostLanguages();
-  }, []);
-
-  const handleOpenUser = (id) => {
-    window.open(`${import.meta.env.VITE_FRONTEND_URL}/user/${id}`, "_blank");
-  };
 
   return (
     <div className="welcome-page" style={{ textAlign: "center" }}>
@@ -100,63 +63,7 @@ const Welcome = () => {
           Elatha User Guide
         </a>
 
-        <div className="thin-white-border">
-          <h4>Scoreboard</h4>
-          <hr />
-          <div className="scoreboard-div">
-            <div className="left-scoreboard">
-              <h6>Most Words Added</h6>
-
-              <table className="scoreboard-table">
-                <tbody>
-                  {mostWordsAdded.map((row, index) => (
-                    <tr key={index}>
-                      <td style={{ width: "50px", textAlign: "right" }}>
-                        #{index + 1}
-                      </td>
-                      <td
-                        className="word-link"
-                        style={{ width: "100px", textAlign: "left" }}
-                        onClick={() => handleOpenUser(row.user_id)}
-                      >
-                        {row.username}
-                      </td>
-                      <td style={{ width: "120px", textAlign: "right" }}>
-                        {row.words_added.toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="right-scoreboard">
-              <h6>Most Languages Added</h6>
-
-              <table className="scoreboard-table">
-                <tbody>
-                  {mostLanguagesAdded.map((row, index) => (
-                    <tr key={index}>
-                      <td style={{ width: "50px", textAlign: "right" }}>
-                        #{index + 1}
-                      </td>
-                      <td
-                        className="word-link"
-                        style={{ width: "100px", textAlign: "left" }}
-                        onClick={() => handleOpenUser(row.user_id)}
-                      >
-                        {row.username}
-                      </td>
-                      <td style={{ width: "120px", textAlign: "right" }}>
-                        {row.languages_added.toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        
       </p>
     </div>
   );

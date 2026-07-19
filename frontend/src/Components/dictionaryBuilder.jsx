@@ -227,7 +227,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   }, [loading]);
 
   const handleWordAdded = () => {
-    getAllWords(); // refresh updated etymology
+    fetchAllWords(); // refresh updated etymology
     
   };
 
@@ -493,7 +493,6 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   useEffect(() => {
     const getLanguageData = async () => {
       let language = await window.electron.getLanguage(id);
-      console.log(language)
       setLanguageName(language[0].language_name);
       setIsProto(language[0].is_proto);
       setGrammar(language[0].grammar);

@@ -249,3 +249,105 @@ export async function getEtymology(id) {
     console.error(`error getting etymology: ${error}`);
   }
 }
+
+export function addEtymology(
+  languageId,
+  word_id,
+  etymologyType,
+  motherWord,
+  firstElementId,
+  secondElementId,
+  thirdElementId,
+  loanWordId,
+  note,
+) {
+  if (etymologyType === "fromMother") {
+    try {
+      const addEtymStmt = db.prepare(`
+          INSERT INTO etymology
+        (etymology_id, word_id, note, etymology_type, mother_word_id)
+          VALUES(?, ?, ?, ?, ?)
+          `);
+
+      const addEtym = addEtymStmt.run(
+        Date.now(),
+        word_id,
+        note,
+        etymologyType,
+        motherWord.word_id,
+      );
+
+      if (addEtym.changes > 0) return { success: true };
+    } catch (error) {
+      console.error(`error adding fromMother: ${error}`);
+    }
+  }
+
+  if (etymologyType === "derived") {
+    try {
+      const addEtymStmt = db.prepare(`
+          INSERT INTO etymology
+        (etymology_id, word_id, note, etymology_type, first_element_id, second_element_id, third_element_id)
+          VALUES(?, ?, ?, ?,?,?,?)
+          `);
+
+      const addEtym = addEtymStmt.run(
+        Date.now(),
+        word_id,
+        note,
+        etymologyType,
+        firstElementId,
+        secondElementId,
+        thirdElementId,
+      );
+
+      if (addEtym.changes > 0) return { success: true };
+    } catch (error) {
+      console.error(`error adding derived: ${error}`);
+    }
+  }
+
+  if (etymologyType === "loaned") {
+    try {
+      const addEtymStmt = db.prepare(`
+          INSERT INTO etymology
+        (etymology_id, word_id, note, etymology_type, loanword_id)
+          VALUES(?, ?, ?, ?,?,?,?)
+          `);
+
+      const addEtym = addEtymStmt.run(
+        Date.now(),
+        word_id,
+        note,
+        etymologyType,
+        loanWordId,
+      );
+
+      if (addEtym.changes > 0) return { success: true };
+    } catch (error) {
+      console.error(`error adding loan: ${error}`);
+    }
+  }
+
+  if (etymologyType === "other") {
+    try {
+      const addEtymStmt = db.prepare(`
+          INSERT INTO etymology
+        (etymology_id, word_id, note, etymology_type, mother_word_id)
+          VALUES(?, ?, ?, ?,?,?,?)
+          `);
+
+      const addEtym = addEtymStmt.run(
+        Date.now(),
+        word_id,
+        note,
+        etymologyType,
+        null,
+      );
+
+      if (addEtym.changes > 0) return { success: true };
+    } catch (error) {
+      console.error(`error adding other: ${error}`);
+    }
+  }
+}

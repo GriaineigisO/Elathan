@@ -2,7 +2,7 @@ import { Modal, Button } from "react-bootstrap";
 import { useState, useEffect, useCallback } from "react";
 import LanguageSelector from "./languageSelector";
 import { useTranslate } from "../Functions/TranslateUI";
-
+import { getGroup, deleteGroup } from "../services/languageService";
 
 const EditGroupModal = ({
   id,
@@ -70,17 +70,15 @@ const EditGroupModal = ({
 
   const [nounCategories, setNounCategories] = useState([]);
   const [nounCategoryAbbreviations, setNounCategoryAbbreviations] = useState(
-    []
+    [],
   );
 
   const [numCategories, setNumCategories] = useState([]);
-  const [numCategoryAbbreviations, setNumCategoryAbbreviations] = useState(
-    []
-  );
+  const [numCategoryAbbreviations, setNumCategoryAbbreviations] = useState([]);
 
   const [verbCategories, setVerbCategories] = useState([]);
   const [verbCategoryAbbreviations, setVerbCategoryAbbreviations] = useState(
-    []
+    [],
   );
 
   const [adjCategories, setAdjCategories] = useState([]);
@@ -94,7 +92,7 @@ const EditGroupModal = ({
 
   const [conjCategories, setConjCategories] = useState([]);
   const [conjCategoryAbbreviations, setConjCategoryAbbreviations] = useState(
-    []
+    [],
   );
 
   const [interjCategories, setInterjCategories] = useState([]);
@@ -103,33 +101,22 @@ const EditGroupModal = ({
 
   const [pronCategories, setPronCategories] = useState([]);
   const [pronCategoryAbbreviations, setPronCategoryAbbreviations] = useState(
-    []
+    [],
   );
 
   const [affixCategories, setAffixCategories] = useState([]);
   const [affixCategoryAbbreviations, setAffixCategoryAbbreviations] = useState(
-    []
+    [],
   );
 
   const [partCategories, setPartCategories] = useState([]);
   const [partCategoryAbbreviations, setPartCategoryAbbreviations] = useState(
-    []
+    [],
   );
 
-  const [privacy, setPrivacy] = useState();
-  const [permission, setPermission] = useState();
   const [currentUser, setCurrentUser] = useState();
   const [userSearch, setUserSearch] = useState();
   const [userSearchError, setUserSearchError] = useState(false);
-  const [noMatchingUsername, setNoMatchingUsername] = useState(false);
-  const [collaborators, setCollaborators] = useState([]);
-  const [owner, setOwner] = useState();
-  const [removedCollaborators, setRemovedCollaborators] = useState([]);
-
-  useEffect(() => {
-    setCurrentUser(localStorage.getItem("userId"));
-    setPermission(group.permission);
-  }, []);
 
   useEffect(() => {
     setAddedLanguages(assignedLanguages || []);
@@ -140,29 +127,13 @@ const EditGroupModal = ({
   useEffect(() => {
     const getGroup = async () => {
       if (group.group_id) {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/getGroup`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id: group.group_id }),
-          }
-        );
-        const data = await response.json();
-        setOwner(data[0].user_id);
-        setPrivacy(data[0].privacy);
-        setPermission(data[0].permission);
-        setCollaborators(data[0].collaborators);
-        if (data[0].groups) {
-          setAddedGroups(data[0].groups);
-          setPreexistingGroups(data[0].groups);
-        }
+        const data = await window.electron.getGroup(group.group_id);
+
+        setAddedLanguages(JSON.parse(data[0].languages));
       }
     };
     getGroup();
-  }, [id]);
+  }, []);
 
   const showToast = (message) => {
     const toastContainer = document.getElementById("toastContainer");
@@ -219,43 +190,23 @@ const EditGroupModal = ({
       setShowWarning(true);
       return;
     }
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/editGroup`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id,
-            addedLanguages,
-            wordForms,
-            groupName,
-            wordCategories,
-            privacy,
-            permission,
-            collaborators,
-            removedCollaborators,
-          }),
-        }
-      );
 
-      const data = await response.json();
+    const data = await window.electron.editGroup(
+      groupName,
+      JSON.stringify(wordForms),
+      JSON.stringify(wordCategories),
+      JSON.stringify(addedLanguages),
+      id,
+    );
 
-      if (!response.ok) {
-        console.error(`Error ${response.status}: ${data.message}`);
+    if (!data.success) {
+      console.error(`Error editing group`);
+    } else {
+      showToast("Changes saved ✅");
+      if (typeof triggerRefresh === "function") {
+        triggerRefresh();
       }
-
-      if (response.ok) {
-        showToast("Changes saved ✅");
-        if (typeof triggerRefresh === "function") {
-          triggerRefresh();
-        }
-        close();
-      }
-    } catch (error) {
-      console.error("Fetch failed:", error);
+      close();
     }
   };
 
@@ -264,25 +215,12 @@ const EditGroupModal = ({
   };
 
   const deleteGroup = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/deleteGroup`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: group.group_id,
-        }),
-      }
-    );
+    const data = await window.electron.deleteGroup(group.group_id);
 
-    if (response.status !== 200) {
-      console.error(`Error ${response.status}`);
-    }
-
-    if (response.ok) {
+    if (data.success) {
       if (typeof triggerRefresh === "function") {
-          triggerRefresh();
-        }
+        triggerRefresh();
+      }
       close();
       showDeleteToast("Group deleted ✅");
     }
@@ -314,7 +252,7 @@ const EditGroupModal = ({
 
   const removeWordForm = (indexToRemove) => {
     setWordForms((prevForms) =>
-      prevForms.filter((_, i) => i !== indexToRemove)
+      prevForms.filter((_, i) => i !== indexToRemove),
     );
   };
 
@@ -337,7 +275,7 @@ const EditGroupModal = ({
     categories,
     setCategories,
     abbreviations,
-    setAbbreviations
+    setAbbreviations,
   ) => {
     if (wordCategoryName) {
       const wordCategory = {
@@ -358,7 +296,7 @@ const EditGroupModal = ({
 
   const removeWordCategory = (indexToRemove) => {
     setWordCategories((prevForms) =>
-      prevForms.filter((_, i) => i !== indexToRemove)
+      prevForms.filter((_, i) => i !== indexToRemove),
     );
   };
 
@@ -368,7 +306,7 @@ const EditGroupModal = ({
 
   const removeLanguage = (language) => {
     const tempLanguages = addedLanguages.filter(
-      (lang) => lang.language_id !== language.language_id
+      (lang) => lang.language_id !== language.language_id,
     );
 
     setAddedLanguages(tempLanguages);
@@ -390,7 +328,7 @@ const EditGroupModal = ({
     setCategory((prev) => prev.filter((_, index) => index !== indexToRemove));
 
     setCategoryAbb((prev) =>
-      prev.filter((_, index) => index !== indexToRemove)
+      prev.filter((_, index) => index !== indexToRemove),
     );
   };
 
@@ -400,61 +338,10 @@ const EditGroupModal = ({
     setCategories(updated);
   };
 
-  const handlePrivacychange = (value) => {
-    setPrivacy(value);
-  };
-
-  const handlePermissionChange = (value) => {
-    setPermission(value);
-  };
-
-  const handleUserSearch = async (username) => {
-    if (!username) {
-      setUserSearchError(true);
-      return;
-    }
-
-    if (userSearchError) {
-      setUserSearchError(false);
-    }
-
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getUser`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username }),
-      }
-    );
-    const data = await response.json();
-
-    if (!data.username) {
-      setNoMatchingUsername(true);
-    }
-
-    if (noMatchingUsername) {
-      setNoMatchingUsername(false);
-      return;
-    }
-
-    if (data.username) {
-      setCollaborators((prev) => [...prev, data]);
-    }
-  };
-
-  const removeCollaborator = (indexToRemove, collaborator) => {
-    setCollaborators((prevForms) =>
-      prevForms.filter((_, i) => i !== indexToRemove)
-    );
-    setRemovedCollaborators((prev) => [...prev, collaborator]);
-  };
-
   return (
     <Modal show={show} onHide={close} backdrop={true}>
       <Modal.Header closeButton>
-        <Modal.Title>{translate("Edit {name}", {name})}</Modal.Title>
+        <Modal.Title>{translate("Edit {name}", { name })}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="input-modal">
@@ -474,7 +361,9 @@ const EditGroupModal = ({
               }}
             ></input>
             {showWarning && !groupName ? (
-              <p className="warning">{translate("Please enter the group's name!")}</p>
+              <p className="warning">
+                {translate("Please enter the group's name!")}
+              </p>
             ) : (
               <></>
             )}
@@ -540,7 +429,9 @@ const EditGroupModal = ({
               </p>
               <p>
                 <i>
-                  {translate("Specify specific forms of a word in the dictionary entries")}
+                  {translate(
+                    "Specify specific forms of a word in the dictionary entries",
+                  )}
                 </i>
               </p>
 
@@ -575,7 +466,7 @@ const EditGroupModal = ({
                           addWordForm(
                             nounWordFormName,
                             setNounWordFormName,
-                            "noun"
+                            "noun",
                           );
                         }
                       }}
@@ -588,7 +479,7 @@ const EditGroupModal = ({
                           addWordForm(
                             nounWordFormName,
                             setNounWordFormName,
-                            "noun"
+                            "noun",
                           )
                         }
                       >
@@ -630,7 +521,7 @@ const EditGroupModal = ({
                           addWordForm(
                             verbWordFormName,
                             setVerbWordFormName,
-                            "verb"
+                            "verb",
                           );
                         }
                       }}
@@ -643,7 +534,7 @@ const EditGroupModal = ({
                           addWordForm(
                             verbWordFormName,
                             setVerbWordFormName,
-                            "verb"
+                            "verb",
                           )
                         }
                       >
@@ -685,7 +576,7 @@ const EditGroupModal = ({
                           addWordForm(
                             adjWordFormName,
                             setAdjWordFormName,
-                            "adj"
+                            "adj",
                           );
                         }
                       }}
@@ -698,7 +589,7 @@ const EditGroupModal = ({
                           addWordForm(
                             adjWordFormName,
                             setAdjWordFormName,
-                            "adj"
+                            "adj",
                           )
                         }
                       >
@@ -710,9 +601,7 @@ const EditGroupModal = ({
                   <></>
                 )}
 
-
-
-<div style={{ display: "flex", flexDirection: "row" }}>
+                <div style={{ display: "flex", flexDirection: "row" }}>
                   <>
                     <label htmlFor="num" style={{ marginRight: "5px" }}>
                       {translate("Number")}
@@ -742,7 +631,7 @@ const EditGroupModal = ({
                           addWordForm(
                             numWordFormName,
                             setNumWordFormName,
-                            "num"
+                            "num",
                           );
                         }
                       }}
@@ -755,7 +644,7 @@ const EditGroupModal = ({
                           addWordForm(
                             numWordFormName,
                             setNumWordFormName,
-                            "num"
+                            "num",
                           )
                         }
                       >
@@ -766,9 +655,6 @@ const EditGroupModal = ({
                 ) : (
                   <></>
                 )}
-
-
-
 
                 <div style={{ display: "flex", flexDirection: "row" }}>
                   <>
@@ -800,7 +686,7 @@ const EditGroupModal = ({
                           addWordForm(
                             advWordFormName,
                             setAdvWordFormName,
-                            "adv"
+                            "adv",
                           );
                         }
                       }}
@@ -813,7 +699,7 @@ const EditGroupModal = ({
                           addWordForm(
                             advWordFormName,
                             setAdvWordFormName,
-                            "adv"
+                            "adv",
                           )
                         }
                       >
@@ -855,7 +741,7 @@ const EditGroupModal = ({
                           addWordForm(
                             adpWordFormName,
                             setAdpWordFormName,
-                            "adp"
+                            "adp",
                           );
                         }
                       }}
@@ -868,7 +754,7 @@ const EditGroupModal = ({
                           addWordForm(
                             adpWordFormName,
                             setAdpWordFormName,
-                            "adp"
+                            "adp",
                           )
                         }
                       >
@@ -910,7 +796,7 @@ const EditGroupModal = ({
                           addWordForm(
                             conjWordFormName,
                             setConjWordFormName,
-                            "conj"
+                            "conj",
                           );
                         }
                       }}
@@ -923,7 +809,7 @@ const EditGroupModal = ({
                           addWordForm(
                             conjWordFormName,
                             setConjWordFormName,
-                            "conj"
+                            "conj",
                           )
                         }
                       >
@@ -965,7 +851,7 @@ const EditGroupModal = ({
                           addWordForm(
                             interjWordFormName,
                             setInterjWordFormName,
-                            "interj"
+                            "interj",
                           );
                         }
                       }}
@@ -978,7 +864,7 @@ const EditGroupModal = ({
                           addWordForm(
                             interjWordFormName,
                             setInterjWordFormName,
-                            "interj"
+                            "interj",
                           )
                         }
                       >
@@ -1020,7 +906,7 @@ const EditGroupModal = ({
                           addWordForm(
                             partWordFormName,
                             setPartWordFormName,
-                            "part"
+                            "part",
                           );
                         }
                       }}
@@ -1033,7 +919,7 @@ const EditGroupModal = ({
                           addWordForm(
                             partWordFormName,
                             setPartWordFormName,
-                            "part"
+                            "part",
                           )
                         }
                       >
@@ -1075,7 +961,7 @@ const EditGroupModal = ({
                           addWordForm(
                             affixWordFormName,
                             setAffixWordFormName,
-                            "affix"
+                            "affix",
                           );
                         }
                       }}
@@ -1088,7 +974,7 @@ const EditGroupModal = ({
                           addWordForm(
                             affixWordFormName,
                             setAffixWordFormName,
-                            "affix"
+                            "affix",
                           )
                         }
                       >
@@ -1130,7 +1016,7 @@ const EditGroupModal = ({
                           addWordForm(
                             pronWordFormName,
                             setPronWordFormName,
-                            "pron"
+                            "pron",
                           );
                         }
                       }}
@@ -1143,7 +1029,7 @@ const EditGroupModal = ({
                           addWordForm(
                             pronWordFormName,
                             setPronWordFormName,
-                            "pron"
+                            "pron",
                           )
                         }
                       >
@@ -1183,7 +1069,9 @@ const EditGroupModal = ({
               </p>
               <p>
                 <i>
-                  {translate("Specify specific categories of a word (e.g gender) in the dictionary entries")}
+                  {translate(
+                    "Specify specific categories of a word (e.g gender) in the dictionary entries",
+                  )}
                 </i>
               </p>
 
@@ -1191,7 +1079,7 @@ const EditGroupModal = ({
                 <div style={{ display: "flex", flexDirection: "row" }}>
                   <>
                     <label htmlFor="noun" style={{ marginRight: "5px" }}>
-                     {translate("Noun")}
+                      {translate("Noun")}
                     </label>
                     <input
                       type="checkbox"
@@ -1199,7 +1087,7 @@ const EditGroupModal = ({
                       onChange={() =>
                         handleShowCategories(
                           showNounCategories,
-                          setShowNounCategories
+                          setShowNounCategories,
                         )
                       }
                     ></input>
@@ -1221,7 +1109,7 @@ const EditGroupModal = ({
                           addWordForm(
                             nounWordCategoryName,
                             setNounWordCategoryName,
-                            "noun"
+                            "noun",
                           );
                         }
                       }}
@@ -1240,7 +1128,9 @@ const EditGroupModal = ({
                             <div key={index}>
                               <input
                                 type="text"
-                                placeholder={translate("Category {number}", {number: index + 1})}
+                                placeholder={translate("Category {number}", {
+                                  number: index + 1,
+                                })}
                                 value={category}
                                 style={{ marginTop: "10px" }}
                                 onChange={(e) =>
@@ -1248,7 +1138,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     nounCategories,
-                                    setNounCategories
+                                    setNounCategories,
                                   )
                                 }
                               />
@@ -1262,7 +1152,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     nounCategoryAbbreviations,
-                                    setNounCategoryAbbreviations
+                                    setNounCategoryAbbreviations,
                                   )
                                 }
                               />
@@ -1271,7 +1161,7 @@ const EditGroupModal = ({
                                   removeCategory(
                                     setNounCategories,
                                     setNounCategoryAbbreviations,
-                                    index
+                                    index,
                                   )
                                 }
                                 className="btn-close btn-close-white extra-small-x-button"
@@ -1291,7 +1181,7 @@ const EditGroupModal = ({
                               nounCategories,
                               setNounCategories,
                               nounCategoryAbbreviations,
-                              setNounCategoryAbbreviations
+                              setNounCategoryAbbreviations,
                             )
                           }
                         >
@@ -1315,7 +1205,7 @@ const EditGroupModal = ({
                       onChange={() =>
                         handleShowCategories(
                           showVerbCategories,
-                          setShowVerbCategories
+                          setShowVerbCategories,
                         )
                       }
                     ></input>
@@ -1337,7 +1227,7 @@ const EditGroupModal = ({
                           addWordCategory(
                             verbWordCategoryName,
                             setVerbWordCategoryName,
-                            "verb"
+                            "verb",
                           );
                         }
                       }}
@@ -1364,7 +1254,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     verbCategories,
-                                    setVerbCategories
+                                    setVerbCategories,
                                   )
                                 }
                               />
@@ -1378,7 +1268,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     verbCategoryAbbreviations,
-                                    setVerbCategoryAbbreviations
+                                    setVerbCategoryAbbreviations,
                                   )
                                 }
                               />
@@ -1387,7 +1277,7 @@ const EditGroupModal = ({
                                   removeCategory(
                                     setVerbCategories,
                                     setVerbCategoryAbbreviations,
-                                    index
+                                    index,
                                   )
                                 }
                                 className="btn-close btn-close-white extra-small-x-button"
@@ -1407,7 +1297,7 @@ const EditGroupModal = ({
                               verbCategories,
                               setVerbCategories,
                               verbCategoryAbbreviations,
-                              setVerbCategoryAbbreviations
+                              setVerbCategoryAbbreviations,
                             )
                           }
                         >
@@ -1431,7 +1321,7 @@ const EditGroupModal = ({
                       onChange={() =>
                         handleShowCategories(
                           showAdjCategories,
-                          setShowAdjCategories
+                          setShowAdjCategories,
                         )
                       }
                     ></input>
@@ -1442,7 +1332,9 @@ const EditGroupModal = ({
                   <>
                     <input
                       type="text"
-                      placeholder={translate("add word category for adjectives")}
+                      placeholder={translate(
+                        "add word category for adjectives",
+                      )}
                       value={adjWordCategoryName}
                       onChange={(e) =>
                         handleWordCategoryName(e, setAdjWordCategoryName)
@@ -1453,7 +1345,7 @@ const EditGroupModal = ({
                           addWordCategory(
                             adjWordCategoryName,
                             setAdjWordCategoryName,
-                            "adj"
+                            "adj",
                           );
                         }
                       }}
@@ -1470,7 +1362,9 @@ const EditGroupModal = ({
                             <div key={index}>
                               <input
                                 type="text"
-                                placeholder={translate("Category {number}", {number: index + 1})}
+                                placeholder={translate("Category {number}", {
+                                  number: index + 1,
+                                })}
                                 value={category}
                                 style={{ marginTop: "10px" }}
                                 onChange={(e) =>
@@ -1478,7 +1372,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     adjCategories,
-                                    setAdjCategories
+                                    setAdjCategories,
                                   )
                                 }
                               />
@@ -1492,7 +1386,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     adjCategoryAbbreviations,
-                                    setAdjCategoryAbbreviations
+                                    setAdjCategoryAbbreviations,
                                   )
                                 }
                               />
@@ -1501,7 +1395,7 @@ const EditGroupModal = ({
                                   removeCategory(
                                     setAdjCategories,
                                     setAdjCategoryAbbreviations,
-                                    index
+                                    index,
                                   )
                                 }
                                 className="btn-close btn-close-white extra-small-x-button"
@@ -1521,7 +1415,7 @@ const EditGroupModal = ({
                               adjCategories,
                               setAdjCategories,
                               adjCategoryAbbreviations,
-                              setAdjCategoryAbbreviations
+                              setAdjCategoryAbbreviations,
                             )
                           }
                         >
@@ -1534,14 +1428,10 @@ const EditGroupModal = ({
                   <></>
                 )}
 
-
-
-
-
-<div style={{ display: "flex", flexDirection: "row" }}>
+                <div style={{ display: "flex", flexDirection: "row" }}>
                   <>
                     <label htmlFor="num" style={{ marginRight: "5px" }}>
-                     {translate("Number")}
+                      {translate("Number")}
                     </label>
                     <input
                       type="checkbox"
@@ -1549,7 +1439,7 @@ const EditGroupModal = ({
                       onChange={() =>
                         handleShowCategories(
                           showNumCategories,
-                          setShowNumCategories
+                          setShowNumCategories,
                         )
                       }
                     ></input>
@@ -1571,7 +1461,7 @@ const EditGroupModal = ({
                           addWordForm(
                             numWordCategoryName,
                             setNumWordCategoryName,
-                            "num"
+                            "num",
                           );
                         }
                       }}
@@ -1580,9 +1470,7 @@ const EditGroupModal = ({
                     <div className="button-container">
                       <div style={{ display: "flex", flexDirection: "column" }}>
                         <div>
-                          <button
-                            onClick={() => addCategory(setNumCategories)}
-                          >
+                          <button onClick={() => addCategory(setNumCategories)}>
                             {translate("Add Category")}
                           </button>
 
@@ -1590,7 +1478,9 @@ const EditGroupModal = ({
                             <div key={index}>
                               <input
                                 type="text"
-                                placeholder={translate("Category {number}", {number: index + 1})}
+                                placeholder={translate("Category {number}", {
+                                  number: index + 1,
+                                })}
                                 value={category}
                                 style={{ marginTop: "10px" }}
                                 onChange={(e) =>
@@ -1598,7 +1488,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     numCategories,
-                                    setNumCategories
+                                    setNumCategories,
                                   )
                                 }
                               />
@@ -1612,7 +1502,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     numCategoryAbbreviations,
-                                    setNumCategoryAbbreviations
+                                    setNumCategoryAbbreviations,
                                   )
                                 }
                               />
@@ -1621,7 +1511,7 @@ const EditGroupModal = ({
                                   removeCategory(
                                     setNumCategories,
                                     setNumCategoryAbbreviations,
-                                    index
+                                    index,
                                   )
                                 }
                                 className="btn-close btn-close-white extra-small-x-button"
@@ -1641,7 +1531,7 @@ const EditGroupModal = ({
                               numCategories,
                               setNumCategories,
                               numCategoryAbbreviations,
-                              setNumCategoryAbbreviations
+                              setNumCategoryAbbreviations,
                             )
                           }
                         >
@@ -1654,13 +1544,6 @@ const EditGroupModal = ({
                   <></>
                 )}
 
-
-
-
-
-
-
-
                 <div style={{ display: "flex", flexDirection: "row" }}>
                   <>
                     <label htmlFor="adv" style={{ marginRight: "5px" }}>
@@ -1672,7 +1555,7 @@ const EditGroupModal = ({
                       onChange={() =>
                         handleShowCategories(
                           showAdvCategories,
-                          setShowAdvCategories
+                          setShowAdvCategories,
                         )
                       }
                     ></input>
@@ -1694,7 +1577,7 @@ const EditGroupModal = ({
                           addWordCategory(
                             advWordCategoryName,
                             setAdvWordCategoryName,
-                            "adv"
+                            "adv",
                           );
                         }
                       }}
@@ -1711,7 +1594,9 @@ const EditGroupModal = ({
                             <div key={index}>
                               <input
                                 type="text"
-                                placeholder={translate("Category {number}", {number: index + 1})}
+                                placeholder={translate("Category {number}", {
+                                  number: index + 1,
+                                })}
                                 value={category}
                                 style={{ marginTop: "10px" }}
                                 onChange={(e) =>
@@ -1719,7 +1604,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     advCategories,
-                                    setAdvCategories
+                                    setAdvCategories,
                                   )
                                 }
                               />
@@ -1733,7 +1618,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     advCategoryAbbreviations,
-                                    setAdvCategoryAbbreviations
+                                    setAdvCategoryAbbreviations,
                                   )
                                 }
                               />
@@ -1742,7 +1627,7 @@ const EditGroupModal = ({
                                   removeCategory(
                                     setAdvCategories,
                                     setAdvCategoryAbbreviations,
-                                    index
+                                    index,
                                   )
                                 }
                                 className="btn-close btn-close-white extra-small-x-button"
@@ -1762,7 +1647,7 @@ const EditGroupModal = ({
                               advCategories,
                               setAdvCategories,
                               advCategoryAbbreviations,
-                              setAdvCategoryAbbreviations
+                              setAdvCategoryAbbreviations,
                             )
                           }
                         >
@@ -1786,7 +1671,7 @@ const EditGroupModal = ({
                       onChange={() =>
                         handleShowCategories(
                           showAdpCategories,
-                          setShowAdpCategories
+                          setShowAdpCategories,
                         )
                       }
                     ></input>
@@ -1808,7 +1693,7 @@ const EditGroupModal = ({
                           addWordCategory(
                             adpWordCategoryName,
                             setAdpWordCategoryName,
-                            "adp"
+                            "adp",
                           );
                         }
                       }}
@@ -1825,7 +1710,9 @@ const EditGroupModal = ({
                             <div key={index}>
                               <input
                                 type="text"
-                                placeholder={translate("Category {number}", {number: index + 1})}
+                                placeholder={translate("Category {number}", {
+                                  number: index + 1,
+                                })}
                                 value={category}
                                 style={{ marginTop: "10px" }}
                                 onChange={(e) =>
@@ -1833,7 +1720,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     adpCategories,
-                                    setAdpCategories
+                                    setAdpCategories,
                                   )
                                 }
                               />
@@ -1847,7 +1734,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     adpCategoryAbbreviations,
-                                    setAdpCategoryAbbreviations
+                                    setAdpCategoryAbbreviations,
                                   )
                                 }
                               />
@@ -1856,7 +1743,7 @@ const EditGroupModal = ({
                                   removeCategory(
                                     setAdpCategories,
                                     setAdpCategoryAbbreviations,
-                                    index
+                                    index,
                                   )
                                 }
                                 className="btn-close btn-close-white extra-small-x-button"
@@ -1876,7 +1763,7 @@ const EditGroupModal = ({
                               adpCategories,
                               setAdpCategories,
                               adpCategoryAbbreviations,
-                              setAdpCategoryAbbreviations
+                              setAdpCategoryAbbreviations,
                             )
                           }
                         >
@@ -1900,7 +1787,7 @@ const EditGroupModal = ({
                       onChange={() =>
                         handleShowCategories(
                           showConjCategories,
-                          setShowConjCategories
+                          setShowConjCategories,
                         )
                       }
                     ></input>
@@ -1922,7 +1809,7 @@ const EditGroupModal = ({
                           addWordCategory(
                             conjWordCategoryName,
                             setConjWordCategoryName,
-                            "conj"
+                            "conj",
                           );
                         }
                       }}
@@ -1941,7 +1828,9 @@ const EditGroupModal = ({
                             <div key={index}>
                               <input
                                 type="text"
-                                placeholder={translate("Category {number}", {number: index + 1})}
+                                placeholder={translate("Category {number}", {
+                                  number: index + 1,
+                                })}
                                 value={category}
                                 style={{ marginTop: "10px" }}
                                 onChange={(e) =>
@@ -1949,7 +1838,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     conjCategories,
-                                    setConjCategories
+                                    setConjCategories,
                                   )
                                 }
                               />
@@ -1963,7 +1852,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     conjCategoryAbbreviations,
-                                    setConjCategoryAbbreviations
+                                    setConjCategoryAbbreviations,
                                   )
                                 }
                               />
@@ -1972,7 +1861,7 @@ const EditGroupModal = ({
                                   removeCategory(
                                     setConjCategories,
                                     setConjCategoryAbbreviations,
-                                    index
+                                    index,
                                   )
                                 }
                                 className="btn-close btn-close-white extra-small-x-button"
@@ -1992,7 +1881,7 @@ const EditGroupModal = ({
                               conjCategories,
                               setConjCategories,
                               conjCategoryAbbreviations,
-                              setConjCategoryAbbreviations
+                              setConjCategoryAbbreviations,
                             )
                           }
                         >
@@ -2016,7 +1905,7 @@ const EditGroupModal = ({
                       onChange={() =>
                         handleShowCategories(
                           showInterjCategories,
-                          setShowInterjCategories
+                          setShowInterjCategories,
                         )
                       }
                     ></input>
@@ -2038,7 +1927,7 @@ const EditGroupModal = ({
                           addWordCategory(
                             interjWordCategoryName,
                             setInterjWordCategoryName,
-                            "interj"
+                            "interj",
                           );
                         }
                       }}
@@ -2057,7 +1946,9 @@ const EditGroupModal = ({
                             <div key={index}>
                               <input
                                 type="text"
-                                placeholder={translate("Category ${number}", {number: index + 1})}
+                                placeholder={translate("Category ${number}", {
+                                  number: index + 1,
+                                })}
                                 value={category}
                                 style={{ marginTop: "10px" }}
                                 onChange={(e) =>
@@ -2065,7 +1956,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     interjCategories,
-                                    setInterjCategories
+                                    setInterjCategories,
                                   )
                                 }
                               />
@@ -2079,7 +1970,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     interjCategoryAbbreviations,
-                                    setInterjCategoryAbbreviations
+                                    setInterjCategoryAbbreviations,
                                   )
                                 }
                               />
@@ -2088,7 +1979,7 @@ const EditGroupModal = ({
                                   removeCategory(
                                     setInterjCategories,
                                     setInterjCategoryAbbreviations,
-                                    index
+                                    index,
                                   )
                                 }
                                 className="btn-close btn-close-white extra-small-x-button"
@@ -2108,7 +1999,7 @@ const EditGroupModal = ({
                               interjCategories,
                               setInterjCategories,
                               interjCategoryAbbreviations,
-                              setInterjCategoryAbbreviations
+                              setInterjCategoryAbbreviations,
                             )
                           }
                         >
@@ -2132,7 +2023,7 @@ const EditGroupModal = ({
                       onChange={() =>
                         handleShowCategories(
                           showPartCategories,
-                          setShowPartCategories
+                          setShowPartCategories,
                         )
                       }
                     ></input>
@@ -2154,7 +2045,7 @@ const EditGroupModal = ({
                           addWordCategory(
                             partWordCategoryName,
                             setPartWordCategoryName,
-                            "part"
+                            "part",
                           );
                         }
                       }}
@@ -2173,7 +2064,9 @@ const EditGroupModal = ({
                             <div key={index}>
                               <input
                                 type="text"
-                                placeholder={translate("Category {number}", {number: index + 1})}
+                                placeholder={translate("Category {number}", {
+                                  number: index + 1,
+                                })}
                                 value={category}
                                 style={{ marginTop: "10px" }}
                                 onChange={(e) =>
@@ -2181,7 +2074,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     partCategories,
-                                    setPartCategories
+                                    setPartCategories,
                                   )
                                 }
                               />
@@ -2195,7 +2088,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     partCategoryAbbreviations,
-                                    setPartCategoryAbbreviations
+                                    setPartCategoryAbbreviations,
                                   )
                                 }
                               />
@@ -2204,7 +2097,7 @@ const EditGroupModal = ({
                                   removeCategory(
                                     setPartCategories,
                                     setPartCategoryAbbreviations,
-                                    index
+                                    index,
                                   )
                                 }
                                 className="btn-close btn-close-white extra-small-x-button"
@@ -2224,7 +2117,7 @@ const EditGroupModal = ({
                               partCategories,
                               setPartCategories,
                               partCategoryAbbreviations,
-                              setPartCategoryAbbreviations
+                              setPartCategoryAbbreviations,
                             )
                           }
                         >
@@ -2248,7 +2141,7 @@ const EditGroupModal = ({
                       onChange={() =>
                         handleShowCategories(
                           showAffixCategories,
-                          setShowAffixCategories
+                          setShowAffixCategories,
                         )
                       }
                     ></input>
@@ -2270,7 +2163,7 @@ const EditGroupModal = ({
                           addWordCategory(
                             affixWordCategoryName,
                             setAffixWordCategoryName,
-                            "affix"
+                            "affix",
                           );
                         }
                       }}
@@ -2289,7 +2182,9 @@ const EditGroupModal = ({
                             <div key={index}>
                               <input
                                 type="text"
-                                placeholder={translate("Category {number}", {number: index + 1})}
+                                placeholder={translate("Category {number}", {
+                                  number: index + 1,
+                                })}
                                 value={category}
                                 style={{ marginTop: "10px" }}
                                 onChange={(e) =>
@@ -2297,7 +2192,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     affixCategories,
-                                    setAffixCategories
+                                    setAffixCategories,
                                   )
                                 }
                               />
@@ -2311,7 +2206,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     affixCategoryAbbreviations,
-                                    setAffixCategoryAbbreviations
+                                    setAffixCategoryAbbreviations,
                                   )
                                 }
                               />
@@ -2320,7 +2215,7 @@ const EditGroupModal = ({
                                   removeCategory(
                                     setAffixCategories,
                                     setAffixCategoryAbbreviations,
-                                    index
+                                    index,
                                   )
                                 }
                                 className="btn-close btn-close-white extra-small-x-button"
@@ -2340,7 +2235,7 @@ const EditGroupModal = ({
                               affixCategories,
                               setAffixCategories,
                               affixCategoryAbbreviations,
-                              setAffixCategoryAbbreviations
+                              setAffixCategoryAbbreviations,
                             )
                           }
                         >
@@ -2364,7 +2259,7 @@ const EditGroupModal = ({
                       onChange={() =>
                         handleShowCategories(
                           showPronCategories,
-                          setShowPronCategories
+                          setShowPronCategories,
                         )
                       }
                     ></input>
@@ -2386,7 +2281,7 @@ const EditGroupModal = ({
                           addWordCategory(
                             pronWordCategoryName,
                             setPronWordCategoryName,
-                            "affix"
+                            "affix",
                           );
                         }
                       }}
@@ -2405,7 +2300,9 @@ const EditGroupModal = ({
                             <div key={index}>
                               <input
                                 type="text"
-                                placeholder={translate("Category {number}", {number: index + 1})}
+                                placeholder={translate("Category {number}", {
+                                  number: index + 1,
+                                })}
                                 value={category}
                                 style={{ marginTop: "10px" }}
                                 onChange={(e) =>
@@ -2413,7 +2310,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     pronCategories,
-                                    setPronCategories
+                                    setPronCategories,
                                   )
                                 }
                               />
@@ -2427,7 +2324,7 @@ const EditGroupModal = ({
                                     index,
                                     e.target.value,
                                     pronCategoryAbbreviations,
-                                    setPronCategoryAbbreviations
+                                    setPronCategoryAbbreviations,
                                   )
                                 }
                               />
@@ -2436,7 +2333,7 @@ const EditGroupModal = ({
                                   removeCategory(
                                     setPronCategories,
                                     setPronCategoryAbbreviations,
-                                    index
+                                    index,
                                   )
                                 }
                                 className="btn-close btn-close-white extra-small-x-button"
@@ -2456,7 +2353,7 @@ const EditGroupModal = ({
                               pronCategories,
                               setPronCategories,
                               pronCategoryAbbreviations,
-                              setPronCategoryAbbreviations
+                              setPronCategoryAbbreviations,
                             )
                           }
                         >
@@ -2494,96 +2391,9 @@ const EditGroupModal = ({
           </div>
         </div>
 
-        <div className="thin-white-border">
-          <b>{translate("Privacy")}</b>
-
-          <p>
-            {translate("Decide who can view {name}. Unlisted languages will not be shown in public searches but collaborators and anyone with a link can view them.", {name})}
-          </p>
-
-          <select
-            value={privacy}
-            onChange={(e) => handlePrivacychange(e.target.value)}
-          >
-            <option value="public">{translate("Public")}</option>
-            <option value="unlisted">{translate("Unlisted")}</option>
-            <option value="private">{translate("Private")}</option>
-          </select>
-        </div>
-
-        {/*Only the creator of the language may edit permissions*/}
-        {Number(owner) == currentUser ? (
-          <div className="thin-white-border">
-            <b>{translate("Permissions")}</b>
-
-            <p>{translate("Decide who can edit {name}.", {name})}</p>
-
-            <select
-              value={permission}
-              onChange={(e) => handlePermissionChange(e.target.value)}
-            >
-              <option value="onlyme">{translate("Only Me")}</option>
-              <option value="collaborators">{translate("Me and Collaborators")}</option>
-            </select>
-
-            {permission === "collaborators" ? (
-              <div className="thin-white-border">
-                <b>{translate("Collaborators")}</b>
-
-                <div className="input-and-button-one-row">
-                  <input onChange={(e) => setUserSearch(e.target.value)} />
-
-                  <button onClick={() => handleUserSearch(userSearch)}>
-                    {translate("Add User")}
-                  </button>
-                </div>
-
-                {userSearchError ? (
-                  <p className="warning">{translate("Please enter a username")}</p>
-                ) : (
-                  <></>
-                )}
-
-                {noMatchingUsername ? (
-                  <p className="warning">
-                    {translate("There are no users with that username. Please check spelling. Usernames are case-sensitive.")}
-                  </p>
-                ) : (
-                  <></>
-                )}
-
-                <div className="thin-white-border">
-                  <p>{translate("Added Collaborators")}</p>
-
-                  <div className="word-form-container">
-                    {collaborators.map((collaborator, index) => (
-                      <div className="word-form-list" key={index}>
-                        {collaborator.username}
-                        <button
-                          onClick={() =>
-                            removeCollaborator(index, collaborator)
-                          }
-                          className="btn-close btn-close-white extra-small-x-button"
-                        ></button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
-          </div>
-        ) : (
-          <></>
-        )}
-
-        {/*only the creator may delete the dictionary*/}
-        {Number(owner) == currentUser ? (
-          <button onClick={deleteGroup} className="delete-button">{translate("Delete {name}", {name})}</button>
-        ) : (
-          <></>
-        )}
+        <button onClick={deleteGroup} className="delete-button">
+          {translate("Delete {name}", { name })}
+        </button>
       </Modal.Body>
       <Modal.Footer>
         <div className="modal-footer-buttons">

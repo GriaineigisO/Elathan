@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { getEtymologyTrees, getEtymology } from "../repositories/EtymologyRepository.js";
+import { getEtymologyTrees, getEtymology, addEtymology } from "../repositories/EtymologyRepository.js";
 
 export function registerEtymologyHandlers() {
 
@@ -11,6 +11,12 @@ export function registerEtymologyHandlers() {
     ipcMain.handle(
         "etymology:getEtymology",
         (_, id) => getEtymology(id)
+    );
+
+
+     ipcMain.handle(
+        "etymology:addEtymology",
+        (_, languageId, word_id, etymologyType, motherWord, firstElementId, secondElementId, thirdElementId, loanWordId, note) => addEtymology(languageId, word_id, etymologyType, motherWord, firstElementId, secondElementId, thirdElementId, loanWordId, note)
     );
 
   

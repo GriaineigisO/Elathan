@@ -70,7 +70,7 @@ export function createSchema() {
             word_categories TEXT DEFAULT NULL,
             frequency_list TEXT DEFAULT NULL,
             grammar TEXT DEFAULT NULL,
-            is_proto BOOL DEFAULT NULL,
+            is_proto BOOLEAN DEFAULT FALSE,
             corpus TEXT DEFAULT NULL,
             sources TEXT DEFAULT NULL,
             sound_changes TEXT DEFAULT NULL,
@@ -89,7 +89,7 @@ export function createSchema() {
             mother_word_id INTEGER DEFAULT NULL,
             loanword_id INTEGER DEFAULT NULL,
             note TEXT DEFAULT NULL,
-            uncertain BOOL DEFAULT FALSE,
+            uncertain BOOLEAN DEFAULT FALSE,
             word_id INTEGER
         );
     `);
@@ -98,6 +98,7 @@ export function createSchema() {
         CREATE TABLE IF NOT EXISTS interfaceLanguages (
             id INTEGER PRIMARY KEY,
             language_name TEXT DEFAULT NULL,
+            is_chosen BOOLEAN DEFAULT FALSE,
             translations TEXT DEFAULT NULL
         );
     `);
