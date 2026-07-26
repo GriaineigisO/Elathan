@@ -13,6 +13,90 @@ body {
   font-size: 18px;
 }
 
+******************************
+IPA KEYBOARD
+
+.keyboard {
+  margin-top: 10px
+}
+
+.keyboard-background {
+  background-color: #141414;
+  padding: 10px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-top-right-radius: 5px;
+  
+}
+
+.letter-board {
+display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.keyboard-button-left {
+ border-top-left-radius: 5px;
+  font-size: 15px;
+}
+
+.keyboard-button-right {
+  border-top-right-radius: 5px;
+   font-size: 15px;
+}
+
+
+
+.letter-section {
+  background-color: #2a8a4c;
+  padding: 5px;
+  width: fit-content;
+  border-radius: 5px;
+  margin-right: 5px;
+  margin-top: 5px;
+}
+
+.letter {
+  margin-left: 5px;
+  padding: 5px;
+}
+
+.diacritic {
+  margin-left: 5px;
+  padding: 5px;
+  font-size: 20px;
+}
+
+
+.letter:hover {
+  padding: 5px;
+   background-color: #141414;
+    cursor: pointer;
+}
+
+.diacritic:hover {
+  padding: 5px;
+   background-color: #141414;
+    cursor: pointer;
+}
+
+.letter-title {
+  background-color: #141414;
+  padding: 5px;
+  border-radius: 100px;
+}
+
+******************************
+
+.nav-button {
+  width: 40px !important;
+}
+
+.nav-button:hover {
+ cursor: pointer;
+width: 60px !important
+}
+
 .compound-input {
   display: flex;
   justify-content: end;

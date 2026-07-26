@@ -662,18 +662,14 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
     );
   };
 
+
+
   const openCorpus = (id) => {
-    window.open(
-      `${import.meta.env.VITE_FRONTEND_URL}/corpusList/${id}`,
-      "_blank",
-    );
+   window.location.href = `/corpusList/${id}`;
   };
 
   const openThesaurus = (id) => {
-    window.open(
-      `${import.meta.env.VITE_FRONTEND_URL}/thesaurus/${id}`,
-      "_blank",
-    );
+    window.location.href = `/thesaurus/${id}`;
   };
 
   const openFrequencyList = (id) => {
@@ -690,7 +686,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
 
    let tags = await window.electron.getTags(Number(id));
 
-    setTagGroups(tags[0].tags);
+    setTagGroups(tags[0].tags ?? []);
   };
 
   useEffect(() => {

@@ -9,6 +9,7 @@ import React from "react";
 import Collapsible from "./collapsable.jsx";
 import { addWord, getWordForms, getWordCategories } from "../services/languageService.js";
 import { addEtymology } from "../services/etymologyService.js";
+import { IPAkeyboard } from "./IPAkeyboard.jsx";
 
 const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   const { translate } = useTranslate();
@@ -106,7 +107,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
       const languageData = await window.electron.getLanguage(languageId);
       const motherData = await window.electron.getMotherLanguage(languageId);
 
-      setLanguageName(languageData.language_name);
+      setLanguageName(languageData[0].language_name);
       setSelectedParentLanguage(motherData[0] ?? null);
     };
 
@@ -276,7 +277,6 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
 
   const getWordCategories = async () => {
    const data = await window.electron.getWordCategories(Number(languageId))
-   console.log(data)
     setWordCategories(data);
   };
 
@@ -410,7 +410,6 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
         const loan = loanWord ? loanWord.word_id : null;
 
         const data = await window.electron.addEtymology(
-          languageId,
           wordId,
           selectedEtymOption,
           selectedMotherLanguageWord,
@@ -511,7 +510,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
 
   const getTags = async () => {
    const data = await window.electron.getTags(languageId);
-    setTagGroups(data[0].tags);
+    setTagGroups(data[0].tags ?? []);
   };
 
   useEffect(() => {
@@ -619,8 +618,8 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
         )}
 
         <div className="thin-white-border">
-          <h4>{translate("Pronunciation")}</h4>
-          <input onChange={(e) => setPronunciation(e.target.value)}></input>
+
+          <IPAkeyboard inputVal={""} setInputVal={setPronunciation} />
         </div>
 
         <div className="thin-white-border">
@@ -1622,6 +1621,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
               )}
 
               {selectedEtymOption === "derived" ? (
+                
                 <>
                   <span style={{ marginRight: "5px", fontWeight: "600" }}>
                     {translate("Select First Element")}

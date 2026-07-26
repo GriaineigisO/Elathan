@@ -251,7 +251,6 @@ export async function getEtymology(id) {
 }
 
 export function addEtymology(
-  languageId,
   word_id,
   etymologyType,
   motherWord,
@@ -265,7 +264,7 @@ export function addEtymology(
     try {
       const addEtymStmt = db.prepare(`
           INSERT INTO etymology
-        (etymology_id, word_id, note, etymology_type, mother_word_id)
+        (etymology_id, word_id, note, mother_word_id,etymology_type)
           VALUES(?, ?, ?, ?, ?)
           `);
 
@@ -273,11 +272,14 @@ export function addEtymology(
         Date.now(),
         word_id,
         note,
-        etymologyType,
         motherWord.word_id,
+        etymologyType
       );
 
-      if (addEtym.changes > 0) return { success: true };
+      if (addEtym.changes === 0) return { "success": false };
+
+      return { "success": true };
+
     } catch (error) {
       console.error(`error adding fromMother: ${error}`);
     }
@@ -287,21 +289,23 @@ export function addEtymology(
     try {
       const addEtymStmt = db.prepare(`
           INSERT INTO etymology
-        (etymology_id, word_id, note, etymology_type, first_element_id, second_element_id, third_element_id)
-          VALUES(?, ?, ?, ?,?,?,?)
+        (etymology_id, word_id, note, first_element_id, second_element_id, third_element_id, etymology_type)
+          VALUES(?, ?, ?, ?,?,?, ?)
           `);
 
       const addEtym = addEtymStmt.run(
         Date.now(),
         word_id,
         note,
-        etymologyType,
         firstElementId,
         secondElementId,
         thirdElementId,
+        etymologyType
       );
 
-      if (addEtym.changes > 0) return { success: true };
+       if (addEtym.changes === 0) return { "success": false };
+
+      return { "success": true };
     } catch (error) {
       console.error(`error adding derived: ${error}`);
     }
@@ -311,19 +315,21 @@ export function addEtymology(
     try {
       const addEtymStmt = db.prepare(`
           INSERT INTO etymology
-        (etymology_id, word_id, note, etymology_type, loanword_id)
-          VALUES(?, ?, ?, ?,?,?,?)
+        (etymology_id, word_id, note, loanword_id, etymology_type)
+          VALUES(?, ?, ?, ?, ?)
           `);
 
       const addEtym = addEtymStmt.run(
         Date.now(),
         word_id,
         note,
-        etymologyType,
         loanWordId,
+        etymologyType
       );
 
-      if (addEtym.changes > 0) return { success: true };
+       if (addEtym.changes === 0) return { "success": false };
+
+      return { "success": true };
     } catch (error) {
       console.error(`error adding loan: ${error}`);
     }
@@ -333,21 +339,36 @@ export function addEtymology(
     try {
       const addEtymStmt = db.prepare(`
           INSERT INTO etymology
-        (etymology_id, word_id, note, etymology_type, mother_word_id)
-          VALUES(?, ?, ?, ?,?,?,?)
+        (etymology_id, word_id, note, mother_word_id, etymology_type)
+          VALUES(?, ?, ?, ?, ?)
           `);
 
       const addEtym = addEtymStmt.run(
         Date.now(),
         word_id,
         note,
-        etymologyType,
         null,
+        etymologyType
       );
 
-      if (addEtym.changes > 0) return { success: true };
+       if (addEtym.changes === 0) return { "success": false };
+
+      return { "success": true };
     } catch (error) {
       console.error(`error adding other: ${error}`);
     }
   }
+}
+
+export function deleteEtymology(id) {
+  const delEtymStmt = db.prepare(`
+    DELETE FROM etymology
+    WHERE etymology_id = ?
+    `);
+
+    const delEtym = delEtymStmt.run(id);
+
+    if (delEtym.changes === 0) return {"success": false};
+
+    return {"success": true};
 }

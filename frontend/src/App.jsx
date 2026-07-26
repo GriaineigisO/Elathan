@@ -4,8 +4,6 @@ import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import Navbar from "./Components/navbar.jsx";
-import Login from "./Pages/login.jsx";
-import Register from "./Pages/register.jsx";
 import Home from "./Pages/home.jsx";
 import Encyclopedias from "./Pages/encyclopedias.jsx";
 import Dictionary from "./Pages/dictionary.jsx";
@@ -25,8 +23,6 @@ import CorpusFrequencyList from "./Pages/corpusFrequencyList.jsx";
 import Thesaurus from "./Pages/thesaurus.jsx";
 import Welcome from "./Pages/welcome.jsx";
 import Account from "./Pages/Account.jsx";
-import ChangePassword from "./Pages/changePassword.jsx";
-import RecoverPassword from "./Pages/recoverPassword.jsx";
 import CreateLanguage from "./Pages/createLanguage.jsx";
 import MakeDaughter from "./Pages/makeDaughter.jsx";
 import DevTools from "./Pages/devTools.jsx";
@@ -38,8 +34,6 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Welcome />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
          <Route path="/encyclopedias" element={<Encyclopedias />} />
           <Route path="/encyclopedia/:id" element={<Encyclopedia />} />
@@ -57,8 +51,6 @@ function App() {
         <Route path="/corpusFrequency/:id/" element={<CorpusFrequencyList />} />
         <Route path="/thesaurus/:id/" element={<Thesaurus />} />
         <Route path="/:id/" element={<Account />} />
-        <Route path="/changepassword" element={<ChangePassword />} />
-        <Route path="/recoverPassword" element={<RecoverPassword />} />
         <Route
           path="/createLanguage"
           element={

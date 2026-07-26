@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import MyEditor from "../vendor/ckEditor-build/App.jsx";
 import { PopulateThesaurusList } from "../Functions/thesaurusList.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
-import { deleteWord } from "../services/languageService.js";
+import { deleteWord, editWord, getWord } from "../services/languageService.js";
+import { IPAkeyboard } from "./IPAkeyboard.jsx";
 
 const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
   const { translate } = useTranslate();
@@ -186,36 +187,27 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
     { id: "pron", label: "Pronoun" },
   ]);
 
-  const getWord = async () => {
-    const id = wordData.word_id;
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getWord`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
-      },
-    );
-    let data = await response.json();
-    setWord(data.wordData.word);
-    setPronunciation(data.wordData.ipa);
-    setWordType(data.wordData.word_type);
-    setNote(data.wordData.word_note);
-    setLanguage(data.wordData.language_id);
-    setInflection(data.wordData.inflection);
+  const getWrd = async () => {
+    const data = await window.electron.getWord(wordData.word_id)
+    setWord(data.word);
+    setPronunciation(data.ipa);
+    setWordType(data.word_type);
+    setNote(data.word_note);
+    setLanguage(data.language_id);
+    setInflection(data.inflection);
 
-    data.wordData.thesaurus && setSelectedTerms(data.wordData.thesaurus);
+    data.thesaurus && setSelectedTerms(data.thesaurus);
 
     if (
-      data.wordData.word_type === "enclitic" ||
-      data.wordData.word_type === "proclitic"
+      data.word_type === "enclitic" ||
+      data.word_type === "proclitic"
     ) {
       setPartsOfSpeech((prev) => [...prev, { id: "clitic", label: "Clitic" }]);
     }
 
     if (
-      data.wordData.word_type === "prefix" ||
-      data.wordData.word_type === "suffix"
+      data.word_type === "prefix" ||
+      data.word_type === "suffix"
     ) {
       setPartsOfSpeech((prev) => [...prev, { id: "affix", label: "Affix" }]);
     }
@@ -406,7 +398,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
   };
 
   useEffect(() => {
-    getWord();
+    getWrd();
   }, []);
 
   const setPartShown = (id, isShown) => {
@@ -476,18 +468,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
     return result;
   };
 
-  const getWordForms = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getWordForms`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ languageId }),
-      },
-    );
-    const data = await response.json();
+  const getWrdForms = async () => {
+
+    const data = await window.electron.getWordForms(languageId)
     const unique = data.filter(
       (item, index, self) =>
         index ===
@@ -498,47 +481,26 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
   };
 
   useEffect(() => {
-    getWordForms();
+    getWrdForms();
   }, []);
 
-  const getWordCategories = async () => {
-    const languageId = wordData.language_id;
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getWordCategories`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ languageId }),
-      },
-    );
-    const data = await response.json();
+  const fetchWordCategories = async () => {
+    const data = await window.electron.getWordCategories(languageId);
     setWordCategories(data);
   };
 
   useEffect(() => {
-    getWordCategories();
+    fetchWordCategories();
   }, []);
 
-  const getTags = async () => {
-    const languageId = wordData.language_id;
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getTags`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ languageId }),
-      },
-    );
-    const data = await response.json();
+  const fetchTags = async () => {
+   
+    const data = await window.electron.getTags(languageId)
     setTagGroups(data[0].tags);
   };
 
   useEffect(() => {
-    getTags();
+    fetchTags();
   }, []);
 
   const showToast = (message) => {
@@ -572,71 +534,51 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
       return;
     }
 
-    const userId = localStorage.getItem("userId");
-
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/editWord`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: userId,
-          id: wordData.word_id,
+    const data = await window.electron.editWord(
+          wordData.word_id,
+          wordData.language_id,
           word,
-          meanings: makeMeaningArrays(),
-          wordType: wordType,
-          pronunciation: pronunciation,
-          note: note,
-          inflection,
-          adjWordFormInputs: adjWordForms,
-          nounWordFormInputs: nounWordForms,
-          numWordFormInputs: numWordForms,
-          verbWordFormInputs: verbWordForms,
-          advWordFormInputs: advWordForms,
-          adpWordFormInputs: adpWordForms,
-          partWordFormInputs: partWordForms,
-          conjWordFormInputs: conjWordForms,
-          interjWordFormInputs: interjWordForms,
-          affixWordFormInputs: affixWordForms,
-          cliticWordFormInputs: cliticWordForms,
-          pronWordFormInputs: pronWordForms,
+          makeMeaningArrays(),
+          wordType,
+          pronunciation,
+          note,
+          adjWordForms,
+          nounWordForms,
+          numWordForms,
+          verbWordForms,
+          advWordForms,
+          adpWordForms,
+          partWordForms,
+          conjWordForms,
+          interjWordForms,
+          affixWordForms,
+          cliticWordForms,
+          pronWordForms,
 
-          adjWordCategoryInputs: adjWordCategoryInputs,
-          nounWordCategoryInputs: nounWordCategoryInputs,
-          numWordCategoryInputs: numWordCategoryInputs,
-          verbWordCategoryInputs: verbWordCategoryInputs,
-          advWordCategoryInputs: advWordCategoryInputs,
-          adpWordCategoryInputs: adpWordCategoryInputs,
-          partWordCategoryInputs: partWordCategoryInputs,
-          conjWordCategoryInputs: conjWordCategoryInputs,
-          interjWordCategoryInputs: interjWordCategoryInputs,
-          affixWordCategoryInputs: affixWordCategoryInputs,
-          cliticWordCategoryInputs: cliticWordCategoryInputs,
-          pronWordCategoryInputs: pronWordCategoryInputs,
+          adjWordCategoryInputs,
+          nounWordCategoryInputs,
+          numWordCategoryInputs,
+          verbWordCategoryInputs,
+          advWordCategoryInputs,
+          adpWordCategoryInputs,
+          partWordCategoryInputs,
+          conjWordCategoryInputs,
+          interjWordCategoryInputs,
+          affixWordCategoryInputs,
+          cliticWordCategoryInputs,
+          pronWordCategoryInputs,
 
-          tagInputs: tagInputs,
-          variants: variants,
+          tagInputs,
+          variants,
+          selectedTerms)
 
-          nounSentenceExamples: nounSentenceExamples,
-          numSentenceExamples: numSentenceExamples,
-          verbSentenceExamples: verbSentenceExamples,
-          adjSentenceExamples: adjSentenceExamples,
-          advSentenceExamples: advSentenceExamples,
-          adpSentenceExamples: adpSentenceExamples,
-          conjSentenceExamples: conjSentenceExamples,
-          partSentenceExamples: partSentenceExamples,
-          interjSentenceExamples: interjSentenceExamples,
-          pronSentenceExamples: pronSentenceExamples,
-          thesaurusDomains: selectedTerms,
-        }),
-      },
-    );
 
-    if (response.status !== 200) {
-      console.error(`Error ${response.status}`);
+
+    if (!data.success) {
+      console.error(`Error editing word`);
     }
 
-    if (response.ok) {
+    if (data.success) {
       showToast("Changes saved ✅");
       if (onSuccess) onSuccess(); // trigger parent's refresh
       close();
@@ -670,7 +612,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
     if (!updater) return;
 
     updater((prev) => {
-      const existingIndex = prev.findIndex((f) => f.name === name);
+      const existingIndex = prev.findIndex((f) => f && f.name === name);
 
       if (ipa) {
         if (existingIndex !== -1) {
@@ -831,6 +773,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
   };
 
   useEffect(() => {
+    if (!tagGroups) return;
     tagGroups.forEach((group, index) => {
       const alreadyInitialized = initializedGroups.includes(group.name);
       const hasStoredValue = !!group.category_type;
@@ -900,11 +843,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
         )}
 
         <div className="thin-white-border">
-          <h4>Pronunciation</h4>
-          <input
-            onChange={(e) => setPronunciation(e.target.value)}
-            value={pronunciation}
-          ></input>
+
+
+           <IPAkeyboard inputVal={pronunciation} setInputVal={setPronunciation} />
         </div>
 
         <div className="thin-white-border">
@@ -1488,7 +1429,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
         <div className="thin-white-border">
           <h4>Tags</h4>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            {tagGroups.map((group, index) => {
+            {tagGroups && tagGroups.map((group, index) => {
               const selectedValue = group.category_type || group.tags[0];
 
               return (
@@ -1687,7 +1628,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={wordForm.name}
                         value={
-                          nounWordForms.find((f) => f.name === wordForm.name)
+                          nounWordForms.find((f) => f && f.name === wordForm.name)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
@@ -1698,7 +1639,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          nounWordForms.find((f) => f.name === wordForm.name)
+                          nounWordForms.find((f) => f && f.name === wordForm.name)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>
@@ -1718,7 +1659,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={wordForm.name}
                         value={
-                          verbWordForms.find((f) => f.name === wordForm.name)
+                          verbWordForms.find((f) => f && f.name === wordForm.name)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
@@ -1729,7 +1670,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          verbWordForms.find((f) => f.name === wordForm.name)
+                          verbWordForms.find((f) =>  f && f.name === wordForm.name)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>
@@ -1749,7 +1690,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={wordForm.name}
                         value={
-                          adjWordForms.find((f) => f.name === wordForm.name)
+                          adjWordForms.find((f) => f && f.name === wordForm.name)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
@@ -1760,7 +1701,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          adjWordForms.find((f) => f.name === wordForm.name)
+                          adjWordForms.find((f) => f && f.name === wordForm.name)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>
@@ -1785,7 +1726,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={wordForm.name}
                         value={
-                          numWordForms.find((f) => f.name === wordForm.name)
+                          numWordForms.find((f) => f && f.name === wordForm.name)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
@@ -1796,7 +1737,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          numWordForms.find((f) => f.name === wordForm.name)
+                          numWordForms.find((f) => f && f.name === wordForm.name)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>
@@ -1816,7 +1757,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={wordForm.name}
                         value={
-                          advWordForms.find((f) => f.name === wordForm.name)
+                          advWordForms.find((f) => f && f.name === wordForm.name)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
@@ -1827,7 +1768,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          advWordForms.find((f) => f.name === wordForm.name)
+                          advWordForms.find((f) => f && f.name === wordForm.name)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>
@@ -1847,7 +1788,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={wordForm.name}
                         value={
-                          adpWordForms.find((f) => f.name === wordForm.name)
+                          adpWordForms.find((f) => f && f.name === wordForm.name)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
@@ -1858,7 +1799,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          adpWordForms.find((f) => f.name === wordForm.name)
+                          adpWordForms.find((f) => f && f.name === wordForm.name)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>
@@ -1883,7 +1824,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={wordForm.name}
                         value={
-                          partWordForms.find((f) => f.name === wordForm.name)
+                          partWordForms.find((f) => f && f.name === wordForm.name)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
@@ -1894,7 +1835,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          partWordForms.find((f) => f.name === wordForm.name)
+                          partWordForms.find((f) => f && f.name === wordForm.name)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>
@@ -1919,7 +1860,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={wordForm.name}
                         value={
-                          interjWordForms.find((f) => f.name === wordForm.name)
+                          interjWordForms.find((f) => f && f.name === wordForm.name)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
@@ -1930,7 +1871,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          interjWordForms.find((f) => f.name === wordForm.name)
+                          interjWordForms.find((f) => f && f.name === wordForm.name)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>
@@ -1955,7 +1896,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={wordForm.name}
                         value={
-                          conjWordForms.find((f) => f.name === wordForm.name)
+                          conjWordForms.find((f) => f && f.name === wordForm.name)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
@@ -1966,7 +1907,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          conjWordForms.find((f) => f.name === wordForm.name)
+                          conjWordForms.find((f) => f && f.name === wordForm.name)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>
@@ -1991,7 +1932,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={wordForm.name}
                         value={
-                          affixWordForms.find((f) => f.name === wordForm.name)
+                          affixWordForms.find((f) => f && f.name === wordForm.name)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
@@ -2002,7 +1943,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          affixWordForms.find((f) => f.name === wordForm.name)
+                          affixWordForms.find((f) => f && f.name === wordForm.name)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>
@@ -2022,7 +1963,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={wordForm.name}
                         value={
-                          cliticWordForms.find((f) => f.name === wordForm.name)
+                          cliticWordForms.find((f) => f && f.name === wordForm.name)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
@@ -2033,7 +1974,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          cliticWordForms.find((f) => f.name === wordForm.name)
+                          cliticWordForms.find((f) => f && f.name === wordForm.name)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>
@@ -2053,7 +1994,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={wordForm.name}
                         value={
-                          pronWordForms.find((f) => f.name === wordForm.name)
+                          pronWordForms.find((f) => f && f.name === wordForm.name)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
@@ -2064,7 +2005,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          pronWordForms.find((f) => f.name === wordForm.name)
+                          pronWordForms.find((f) => f && f.name === wordForm.name)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>

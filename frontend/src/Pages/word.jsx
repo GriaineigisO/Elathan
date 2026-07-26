@@ -61,13 +61,14 @@ const Word = () => {
   const [etymologyToDelete, setEtymologyToDelete] = useState();
   const [phrases, setPhrases] = useState([]);
   const [allWords, setAllWords] = useState([]);
+  const [tags, setTags] = useState([]);
 
   ////////////////////////////////////////////////
 
   const getWordData = async () => {
     let data = await window.electron.getWordData(id);
-    console.log(data.word.wordData)
     setWord(data.word.wordData);
+    setTags(typeof data.word.wordData.tags === "object" ? data.word.wordData.tags : [])
     setLanguageName(data.word.languageData.language_name);
     setIsProto(data.word.languageData.is_proto);
     setLanguageId(data.word.languageData.language_id);
@@ -89,12 +90,12 @@ const Word = () => {
   /////////////////////////////////////////////////////
 
   const handleEtymologyAdded = () => {
-    getEtymology(); // refresh updated etymology
+    fetchEtymology(); // refresh updated etymology
     //getWord(id, setWord); // optional: refresh word in case anything changed
   };
 
   const handleWordEdited = () => {
-    getEtymology(); // refresh updated etymology
+    fetchEtymology(); // refresh updated etymology
     getWordData();
   };
 
@@ -109,21 +110,20 @@ const Word = () => {
     setId,
   ) => {
    let data = await window.electron.getLanguage(languageId);
+   console.log(data.language_name)
     setName(data.language_name);
     setProto(data.is_proto);
     setId(data.language_id);
   };
 
-  useEffect(() => {
-    if (loanWord) {
-      getLoanerLanguageName(
-        loanWord.language_id,
-        setLoanerLanguageName,
-        setLoanerLanguageIsProto,
-        setLoanerLanguageId,
-      );
-    }
-  }, [loanWord]);
+  async function getWord(id, setWord) {
+    const data = await window.electron.getWordData(id);
+    setLoanWord(data)
+    setLoanerLanguageName(data.language.language_name);
+        setLoanerLanguageIsProto(data.language.is_proto);
+        setLoanerLanguageId(data.language.language_id);
+  }
+
 
   const fetchEtymology = async () => {
     let data = await window.electron.getEtymology(id);
@@ -2033,11 +2033,11 @@ const Word = () => {
                   )}
 
                   <div>
-                    {JSON.parse(word.tags).length > 0 && (
+                    {tags.length > 0 && (
                       <>
                         <h3>{translate("Tags")}</h3>
                         <ul>
-                          {JSON.parse(word.tags).map((tag, index) => (
+                          {tags.map((tag, index) => (
                             <li
                               className="word-form-list"
                               style={{ display: "inline" }}
@@ -2051,7 +2051,10 @@ const Word = () => {
                       </>
                     )}
 
+
+                    {word.thesaurus && (<h3>{translate("Thesaurus")}</h3>)}
                     {word.thesaurus &&
+                    
                       Object.entries(word.thesaurus).map(([domain, val]) => {
                         if (!val.bool) return;
 
@@ -2067,7 +2070,7 @@ const Word = () => {
 
                         return (
                           <div>
-                            <h3>{translate("Thesaurus")}</h3>
+                            
                             <div
                               key={domain}
                               style={{
@@ -2076,7 +2079,7 @@ const Word = () => {
                               }}
                             >
                               <span>
-                                {domain}:
+                                <span style={{fontWeight:"bold", textDecoration:"underline"}}>{domain}</span>:
                                 {matchingWords.map((matchedWord, index) => (
                                   <span
                                     key={matchedWord.word_id}
@@ -2106,10 +2109,11 @@ const Word = () => {
                                 ))}
                               </span>
                             </div>
-                            <hr />
+                           
                           </div>
                         );
                       })}
+                       <hr />
                   </div>
 
                   <div className="title-and-edit-button-div">

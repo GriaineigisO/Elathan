@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslate } from "../Functions/TranslateUI";
+import leftArrow from "../assets/caret-left-fill.svg";
+import rightArrow from "../assets/caret-right-fill.svg";
 
 const Navbar = ({ onLogin, onLogout }) => {
   // ---------- State ----------
@@ -15,6 +17,23 @@ const Navbar = ({ onLogin, onLogout }) => {
     setMounted(true);
   }, [])
  
+  function NavigationButtons() {
+  const navigate = useNavigate();
+
+  return (
+    <div className="nav-controls">
+      {/* Passing -1 goes back one page in history */}
+      <img className="nav-button" style={{width:"40px"}} onClick={() => navigate(-1)} src={leftArrow}>
+       
+      </img>
+      
+      {/* Passing 1 goes forward one page in history */}
+      <img className="nav-button"  style={{width:"40px"}} onClick={() => navigate(1)} src={rightArrow}>
+       
+      </img>
+    </div>
+  );
+}
 
   // ---------- Event handlers ----------
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
@@ -56,6 +75,7 @@ const Navbar = ({ onLogin, onLogout }) => {
     <>
       {/* Desktop Navbar */}
       <div id="navbar">
+        <div style={{display: "flex", flexDirection: "row"}}>
         <div className="title-logo">
           <h1 className="uncial-antiqua-regular">
             <Link className="dark-link" to="/">
@@ -63,9 +83,12 @@ const Navbar = ({ onLogin, onLogout }) => {
             </Link>
           </h1>
         </div>
+          <NavigationButtons />
+          </div>
         <ul className="nav-ul">{links}</ul>
       </div>
 
+     
       {/* Mobile Navbar */}
       <div id="mobile-navbar">
         <div className="mobile-header">

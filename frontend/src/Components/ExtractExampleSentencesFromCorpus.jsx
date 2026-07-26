@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import removeTags from "../Functions/removeTags";
+import { getLanguage } from "../services/languageService";
 
 const ExtractExampleSentencesFromCorpus = ({
   languageId,
@@ -13,18 +14,8 @@ const ExtractExampleSentencesFromCorpus = ({
   useEffect(() => {
     const getCorpus = async () => {
       if (languageId) {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getCorpus`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: languageId }),
-        }
-      );
 
-      let data = await response.json();
+      let data = await window.electron.getLanguage(languageId);
       setCorpus(data[0].corpus);
     };
   }

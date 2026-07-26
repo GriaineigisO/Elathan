@@ -1,4 +1,5 @@
 import { Modal, Button } from "react-bootstrap";
+import { deleteEtymology } from "../services/etymologyService";
 
 const DeleteEtymologyModal = ({
   show,
@@ -35,21 +36,11 @@ const DeleteEtymologyModal = ({
   const save = async () => {
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/deleteEtymology`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            etymologyId: etymology.etymology_id,
-          }),
-        }
-      );
 
-      if (response.ok) {
-        showToast("Etymolog Deleted ✅");
+      const data = await window.electron.deleteEtymology(etymology.etymology_id)
+
+      if (data.success) {
+        showToast("Etymology Deleted ✅");
         if (onSuccess) onSuccess(); // trigger parent's refresh
         close();
       }

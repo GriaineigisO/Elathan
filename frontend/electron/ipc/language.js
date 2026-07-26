@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { getLanguage, getLanguages, getDaughterLanguages, getGroups, getGroup, getTags, getInterfaceLanguage, getMotherLanguage, getWordForms, editGroup, deleteGroup, editLanguage, deleteLanguage, addLanguage, addGroup, addWord, getWordCategories, deleteWord } from "../repositories/languageRepository.js";
+import { getLanguage, getLanguages, getDaughterLanguages, getGroups, getGroup, getTags, getInterfaceLanguage, getMotherLanguage, getWordForms, editGroup, deleteGroup, editLanguage, deleteLanguage, addLanguage, addGroup, addWord, getWordCategories, deleteWord, getWord, editWord, getText, getToolTipWord, editText } from "../repositories/languageRepository.js";
 
 export function registerLanguageHandlers() {
 
@@ -13,10 +13,99 @@ export function registerLanguageHandlers() {
         (_, id) => deleteWord(id)
     );
 
+
+
+    ipcMain.handle(
+        "language:editWord",
+        (_,wordId,
+  languageId,
+  word,
+  meanings,
+  wordType,
+  pronunciation,
+  note,
+  adjWordFormInputs,
+  nounWordFormInputs,
+  numWordFormInputs,
+  verbWordFormInputs,
+  advWordFormInputs,
+  adpWordFormInputs,
+  partWordFormInputs,
+  conjWordFormInputs,
+  interjWordFormInputs,
+  affixWordFormInputs,
+  cliticWordFormInputs,
+  pronWordFormInputs,
+  adjWordCategoryInputs,
+  nounWordCategoryInputs,
+  numWordCategoryInputs,
+  verbWordCategoryInputs,
+  advWordCategoryInputs,
+  adpWordCategoryInputs,
+  partWordCategoryInputs,
+  conjWordCategoryInputs,
+  interjWordCategoryInputs,
+  affixWordCategoryInputs,
+  cliticWordCategoryInputs,
+  pronWordCategoryInputs,
+  tagInputs,
+  variants,
+  thesaurusDomains) => editWord(wordId,
+  languageId,
+  word,
+  meanings,
+  wordType,
+  pronunciation,
+  note,
+  adjWordFormInputs,
+  nounWordFormInputs,
+  numWordFormInputs,
+  verbWordFormInputs,
+  advWordFormInputs,
+  adpWordFormInputs,
+  partWordFormInputs,
+  conjWordFormInputs,
+  interjWordFormInputs,
+  affixWordFormInputs,
+  cliticWordFormInputs,
+  pronWordFormInputs,
+  adjWordCategoryInputs,
+  nounWordCategoryInputs,
+  numWordCategoryInputs,
+  verbWordCategoryInputs,
+  advWordCategoryInputs,
+  adpWordCategoryInputs,
+  partWordCategoryInputs,
+  conjWordCategoryInputs,
+  interjWordCategoryInputs,
+  affixWordCategoryInputs,
+  cliticWordCategoryInputs,
+  pronWordCategoryInputs,
+  tagInputs,
+  variants,
+  thesaurusDomains)
+    );
+
      ipcMain.handle(
         "language:getLanguages",
         (_,) => getLanguages()
     );
+
+    
+     ipcMain.handle(
+        "language:getText",
+        (_, textId, languageId) => getText(textId, languageId)
+    );
+
+      ipcMain.handle(
+        "language:editText",
+        (_, textId, languageId, title, text, translation) => editText(textId, languageId, title, text, translation)
+    );
+
+
+    
+
+
 
     ipcMain.handle(
         "language:deleteLanguage",
@@ -82,6 +171,17 @@ export function registerLanguageHandlers() {
     ipcMain.handle(
         "language:getWordForms",
         (_, languageId) => getWordForms(languageId)
+    );
+
+     ipcMain.handle(
+        "language:getWord",
+        (_, id) => getWord(id)
+    );
+
+
+    ipcMain.handle(
+        "language:getToolTipWord",
+        (_, word, languageId) => getToolTipWord(word, languageId)
     );
 
     ipcMain.handle(

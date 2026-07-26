@@ -90,7 +90,8 @@ export function createSchema() {
             loanword_id INTEGER DEFAULT NULL,
             note TEXT DEFAULT NULL,
             uncertain BOOLEAN DEFAULT FALSE,
-            word_id INTEGER
+            word_id INTEGER,
+            etymology_type TEXT
         );
     `);
 

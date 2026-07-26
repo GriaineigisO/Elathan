@@ -63,7 +63,7 @@ export function getWordData(id) {
     return fetchAllWords;
   }
 
-  function getCognates() {
+  function getCognates(id) {
     // Step 1: find the ancestor of the word if it is not derived
     const getEtymologyStmt = db.prepare(`
             SELECT * 
@@ -89,9 +89,9 @@ export function getWordData(id) {
       const cognatesStmt = db.prepare(`
             SELECT * 
             FROM etymology
-            WHERE mother_word_id = ?
-                OR loanword_id = ?
-                AND word_id IS NOT ?
+            WHERE (mother_word_id = ?
+                OR loanword_id = ?)
+                AND word_id != ?
             `);
 
       const cognates = cognatesStmt.all(
@@ -99,6 +99,7 @@ export function getWordData(id) {
         getEtymology[0].mother_word_id,
         id,
       );
+
 
       const wordIds = cognates.map((row) => row.word_id);
 
@@ -108,7 +109,7 @@ export function getWordData(id) {
             WHERE word_id IN (${wordIds})
             `);
 
-      const words = wordsStmt.all(...wordIds).map(parseDictionary);
+      const words = wordsStmt.all().map(parseDictionary);
       let languageNameArr = [];
       const languageIds = [...new Set(words.map((w) => w.language_id))];
 
@@ -118,7 +119,7 @@ export function getWordData(id) {
             WHERE language_id IN (${languageIds})
             `);
 
-      const languages = languagesStmt.all(...languageIds).map(parseLanguage);
+      const languages = languagesStmt.all().map(parseLanguage);
       const languageLookup = {};
 
       languages.forEach((lang) => {
@@ -191,7 +192,7 @@ export function getWordData(id) {
     WHERE word_id IN (${wordIds})
             `);
 
-    const allEntries = allEntriesStmt.all(...wordIds).map(parseDictionary);
+    const allEntries = allEntriesStmt.all().map(parseDictionary);
 
     // Step 3: Map by ID for quick lookup
     const entryMap = new Map(allEntries.map((e) => [e.word_id, e]));
@@ -447,7 +448,7 @@ export function getWordData(id) {
       WHERE word_id IN (${wordIds})
             `);
 
-    const words = wordsStmt.all(...wordIds).map(parseDictionary);
+    const words = wordsStmt.all().map(parseDictionary);
 
     const languageIds = [...new Set(words.map((w) => w.language_id))];
 
@@ -457,7 +458,7 @@ export function getWordData(id) {
             WHERE language_id in (${languageIds})
             `);
 
-    const languages = languagesStmt.all(...languageIds).map(parseLanguage);
+    const languages = languagesStmt.all().map(parseLanguage);
 
     const wordLookup = {};
 
@@ -531,7 +532,7 @@ export function getWordData(id) {
   const word = fetchWord();
   const language = lang;
   const allWords = getAllWords();
-  const cognates = getCognates();
+  const cognates = getCognates(word.wordData.word_id);
   const derivations = getDerivations();
   const synonyms = getSynonyms(word);
   const motherLanguage = getMotherLanguage(lang);
@@ -549,4 +550,65 @@ export function getWordData(id) {
   };
 };
 
+export function getWordsForms(id) {
+  const wordForms = [];
+  const getFormsStmt = db.prepare(`
+    SELECT noun_word_forms, verb_word_forms, adv_word_forms, adp_word_forms, adj_word_forms, conj_word_forms, part_word_forms, pron_word_forms, interj_word_forms, affix_word_forms, clitic_word_forms, num_word_forms
+    FROM dictionary
+    WHERE word_id = ?
+    `);
+
+    const getForms = getFormsStmt.all(id).map(parseDictionary);
+
+   
+      if (getForms[0].noun_word_forms.length > 0) {
+        wordForms.push(getForms[0].noun_word_forms)
+      }
+
+      if (getForms[0].verb_word_forms.length > 0) {
+        wordForms.push(getForms[0].verb_word_forms)
+      }
+
+      if (getForms[0].adj_word_forms.length > 0) {
+        wordForms.push(getForms[0].adj_word_forms)
+      }
+
+      if (getForms[0].adv_word_forms.length > 0) {
+        wordForms.push(getForms[0].adv_word_forms)
+      }
+
+      if (getForms[0].conj_word_forms.length > 0) {
+        wordForms.push(getForms[0].conj_word_forms)
+      }
+
+      if (getForms[0].num_word_forms.length > 0) {
+        wordForms.push(getForms[0].num_word_forms)
+      }
+
+      if (getForms[0].interj_word_forms.length > 0) {
+        wordForms.push(getForms[0].interj_word_forms)
+      }
+
+      if (getForms[0].part_word_forms.length > 0) {
+        wordForms.push(getForms[0].part_word_forms)
+      }
+
+       if (getForms[0].pron_word_forms.length > 0) {
+        wordForms.push(getForms[0].pron_word_forms)
+      }
+
+      if (getForms[0].affix_word_forms.length > 0) {
+        wordForms.push(getForms[0].noun_word_forms)
+      }
+
+      if (getForms[0].adp_word_forms.length > 0) {
+        wordForms.push(getForms[0].adp_word_forms)
+      }
+
+      if (getForms[0].clitic_word_forms.length > 0) {
+        wordForms.push(getForms[0].clitic_word_forms)
+      }
+    
+    return wordForms;
+}
 

@@ -2,6 +2,7 @@ import { Modal, Button } from "react-bootstrap";
 import { useState, useEffect, useCallback, useRef } from "react";
 import MyEditor from "../vendor/ckEditor-build/App.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
+import { addEncyclopedia} from "../services/encyclopediaService.js";
 
 
 const AddEncyclopediaModal = ({
@@ -62,31 +63,13 @@ const AddEncyclopediaModal = ({
    
 
     try {
-      const userId = localStorage.getItem("userId");
-      const id = idRef.current;
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/addEncyclopedia`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id,
-            userId,
-            encyclopediaName,
-            topics: topics,
-          }),
-        }
-      );
+      const data = await window.electron.addEncyclopedia(Date.now(), encyclopediaName, topics)
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error(`Error ${response.status}: ${data.message}`);
+      if (!data.success) {
+        console.error(`Error adding encyclopedia`);
       }
 
-      if (response.ok) {
+      if (data.success) {
         showToast("Changes saved ✅");
         if (onSuccess) onSuccess(); 
         close();

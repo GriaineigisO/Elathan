@@ -153,7 +153,7 @@ const Home = () => {
         group={groupToEdit ? groupToEdit : ""}
         assignedLanguages={groupToEdit ? groupToEdit.languages : ""}
         assignedWordForms={groupToEdit ? groupToEdit.word_forms : ""}
-        assignedWordCategories={groupToEdit ? JSON.parse(groupToEdit.word_categories) : ""}
+        assignedWordCategories={groupToEdit ? groupToEdit.word_categories : ""}
         triggerRefresh={() => setRefreshGroupsTrigger((prev) => prev + 1)}
       />
 

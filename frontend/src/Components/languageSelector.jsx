@@ -30,7 +30,7 @@ const LanguageSelector = ({
 
   //gets only the daughter languages a given language
   const getDaughterLanguages = async () => {
-    const data = await window.electron.getDaughterLanguages();
+    const data = await window.electron.getDaughterLanguages(id);
     setAllLanguages(data);
   };
 

@@ -3,6 +3,8 @@ import { useState, useEffect, useCallback } from "react";
 import WordSelector from "./wordSelector";
 import LanguageSelector from "./languageSelector";
 import MyEditor from "../vendor/ckEditor-build/App.jsx";
+import { getLanguage, getMotherLanguage } from "../services/languageService.js";
+
 
 const EditEtymologyModal = ({
   show,
@@ -37,18 +39,8 @@ const EditEtymologyModal = ({
 
   useEffect(() => {
     const getLanguages = async () => {
-      const languageId = id;
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getLanguageName`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ languageId }),
-        }
-      );
-      const data = await response.json();
+
+      const data = await window.electron.getLanguage(id);
       setLanguageName(data.language_name);
     };
     getLanguages();
@@ -57,17 +49,8 @@ const EditEtymologyModal = ({
   useEffect(() => {
     const getLanguages = async () => {
       if (!id) return; // no id = no request
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getMotherLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        }
-      );
-      const data = await response.json();
+
+      const data = await window.electron.getMotherLanguage(id);
       setSelectedParentLanguage(data[0]);
     };
 if (id) {

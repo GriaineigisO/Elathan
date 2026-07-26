@@ -4,6 +4,7 @@ import MyEditor from "../vendor/ckEditor-build/App.jsx";
 import {PopulateThesaurusList} from "../Functions/thesaurusList.jsx"
 import { useTranslate } from "../Functions/TranslateUI";
 import { _toPrecision } from "ckeditor5";
+import { addEntry } from "../services/encyclopediaService.js";
 
 
 const AddEntryModal = ({ show, setShow, encyclopediaId, onSuccess, topics }) => {
@@ -77,27 +78,13 @@ const [entryText, setEntryText] = useState("");
       return;
     }
 
-    const userId = localStorage.getItem("userId");
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/addEntry`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId,
-          encyclopediaId,
-          headword,
-          entryText,
-          entryTopic
-        }),
-      }
-    );
+   const data = await window.electron.addEntry(encyclopediaId, headword, entryText, entryTopic)
 
-    if (response.status !== 200) {
-      console.error(`Error ${response.status}`);
+    if (!data.success) {
+      console.error(`Error adding entry`);
     }
 
-    if (response.ok) {
+    if (data.success) {
       showToast(translate("Changes saved"));
       if (onSuccess) onSuccess(); // trigger parent's refresh
       close();

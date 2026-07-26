@@ -1,4 +1,4 @@
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Col } from "react-bootstrap";
 import { useState, useEffect, useCallback } from "react";
 import MyEditor from "../vendor/ckEditor-build/App.jsx";
 import { PopulateThesaurusList } from "../Functions/thesaurusList.jsx";
@@ -12,6 +12,15 @@ import SemanticDriftModal from "./semanticDriftModal.jsx";
 import applySoundChange from "../Functions/soundChange.jsx";
 import spell from "../Components/orthography.jsx";
 import { IconPaperClip } from "ckeditor5";
+import {
+  getWordForms,
+  getTags,
+  getWordCategories,
+  addWord,
+} from "../services/languageService.js";
+import { addEtymology } from "../services/etymologyService.js";
+import { getWordsForms } from "../services/dictionaryService.js";
+import { IPAkeyboard } from "./IPAkeyboard.jsx";
 
 const AddDescendantModal = ({
   show,
@@ -164,6 +173,8 @@ const AddDescendantModal = ({
     { id: "part", label: translate("Particle") },
     { id: "interj", label: translate("Interjection") },
     { id: "pron", label: translate("Pronoun") },
+    { id: "affix", label: translate("Affix") },
+    { id: "clitic", label: translate("Clitic") },
   ]);
 
   const togglePart = (id) => {
@@ -228,19 +239,9 @@ const AddDescendantModal = ({
   };
 
   const getWordForms = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getWordForms`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ languageId: Number(languageId) }),
-      },
-    );
-    const data = await response.json();
+    const data = await window.electron.getWordsForms(word.word_id);
 
-    const unique = data.filter(
+    const unique = data[0].filter(
       (item, index, self) =>
         index ===
         self.findIndex((t) => t.name === item.name && t.type === item.type),
@@ -251,17 +252,9 @@ const AddDescendantModal = ({
   const getSoundChanges = async () => {
     if (!descendantLanguage) return;
 
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getLanguage`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: Number(descendantLanguage.language_id) }),
-      },
+    const data = await window.electron.getLanguage(
+      Number(descendantLanguage.language_id),
     );
-    const data = await response.json();
     setSelectedSoundChanges(data[0].sound_changes ?? []);
     setAllCategoryValues(data[0].category_values ?? []);
     setSpellings(data[0].spelling ?? []);
@@ -272,17 +265,7 @@ const AddDescendantModal = ({
   }, []);
 
   const getWordCategories = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getWordCategories`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ languageId: Number(languageId) }),
-      },
-    );
-    const data = await response.json();
+    const data = await window.electron.getWordCategories(Number(languageId));
 
     setWordCategories(data);
   };
@@ -361,7 +344,7 @@ const AddDescendantModal = ({
       ([type, [setSelections, setInputs, parentCategories]]) => {
         const filtered = wordCategories
           .flatMap((wordCategory) => wordCategory.word_categories)
-          .filter((cat) => cat.type === type);          
+          .filter((cat) => cat.type === type);
 
         const parentLookup = new Map(
           (parentCategories ?? []).map((cat) => [cat.category_name, cat]),
@@ -425,7 +408,7 @@ const AddDescendantModal = ({
         ),
     }));
 
-     const verbFormsToSave = verbWordFormInputs.map((form) => ({
+    const verbFormsToSave = verbWordFormInputs.map((form) => ({
       ...form,
       ipa:
         form.ipaOverride ??
@@ -446,7 +429,7 @@ const AddDescendantModal = ({
         ),
     }));
 
-     const adjFormsToSave = adjWordFormInputs.map((form) => ({
+    const adjFormsToSave = adjWordFormInputs.map((form) => ({
       ...form,
       ipa:
         form.ipaOverride ??
@@ -467,7 +450,7 @@ const AddDescendantModal = ({
         ),
     }));
 
-     const advFormsToSave = advWordFormInputs.map((form) => ({
+    const advFormsToSave = advWordFormInputs.map((form) => ({
       ...form,
       ipa:
         form.ipaOverride ??
@@ -488,7 +471,7 @@ const AddDescendantModal = ({
         ),
     }));
 
-     const adpFormsToSave = adpWordFormInputs.map((form) => ({
+    const adpFormsToSave = adpWordFormInputs.map((form) => ({
       ...form,
       ipa:
         form.ipaOverride ??
@@ -509,7 +492,7 @@ const AddDescendantModal = ({
         ),
     }));
 
-     const partFormsToSave = partWordFormInputs.map((form) => ({
+    const partFormsToSave = partWordFormInputs.map((form) => ({
       ...form,
       ipa:
         form.ipaOverride ??
@@ -530,7 +513,7 @@ const AddDescendantModal = ({
         ),
     }));
 
-     const pronFormsToSave = pronWordFormInputs.map((form) => ({
+    const pronFormsToSave = pronWordFormInputs.map((form) => ({
       ...form,
       ipa:
         form.ipaOverride ??
@@ -551,7 +534,7 @@ const AddDescendantModal = ({
         ),
     }));
 
-     const conjFormsToSave = conjWordFormInputs.map((form) => ({
+    const conjFormsToSave = conjWordFormInputs.map((form) => ({
       ...form,
       ipa:
         form.ipaOverride ??
@@ -572,7 +555,7 @@ const AddDescendantModal = ({
         ),
     }));
 
-     const interjFormsToSave = interjWordFormInputs.map((form) => ({
+    const interjFormsToSave = interjWordFormInputs.map((form) => ({
       ...form,
       ipa:
         form.ipaOverride ??
@@ -593,7 +576,7 @@ const AddDescendantModal = ({
         ),
     }));
 
-     const affixFormsToSave = affixWordFormInputs.map((form) => ({
+    const affixFormsToSave = affixWordFormInputs.map((form) => ({
       ...form,
       ipa:
         form.ipaOverride ??
@@ -614,7 +597,7 @@ const AddDescendantModal = ({
         ),
     }));
 
-     const cliticFormsToSave = cliticWordFormInputs.map((form) => ({
+    const cliticFormsToSave = cliticWordFormInputs.map((form) => ({
       ...form,
       ipa:
         form.ipaOverride ??
@@ -635,7 +618,7 @@ const AddDescendantModal = ({
         ),
     }));
 
-     const numFormsToSave = numWordFormInputs.map((form) => ({
+    const numFormsToSave = numWordFormInputs.map((form) => ({
       ...form,
       ipa:
         form.ipaOverride ??
@@ -673,100 +656,84 @@ const AddDescendantModal = ({
     const date = new Date();
     const wordId = Date.now();
 
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/addWord`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          date,
-          wordId,
-          userId,
-          languageId: descendantLanguage.language_id,
-          word:
-            newWord === word.word
-              ? spell(
-                  applySoundChange(
-                    word.ipa,
-                    selectedSoundChanges,
-                    allCategoryValues,
-                  ),
-                  spellings,
-                )
-              : newWord,
-          meanings: makeMeaningArrays(),
-          wordType: descendantWordType,
-          note: note,
-          pronunciation:
-            pronunciation === word.ipa
-              ? applySoundChange(
-                  word.ipa,
-                  selectedSoundChanges,
-                  allCategoryValues,
-                )
-              : pronunciation,
-          adjWordFormInputs,
-          nounWordFormInputs: nounFormsToSave,
-          numWordFormInputs: numFormsToSave,
-          verbWordFormInputs: verbFormsToSave,
-          advWordFormInputs: advFormsToSave,
-          adpWordFormInputs: adpFormsToSave,
-          partWordFormInputs: partFormsToSave,
-          conjWordFormInputs: conjFormsToSave,
-          interjWordFormInputs: interjFormsToSave,
-          affixWordFormInputs: affixFormsToSave,
-          cliticWordFormInputs: cliticFormsToSave,
-          pronWordFormInputs: pronFormsToSave,
+    let chosenWord =
+      newWord === word.word
+        ? spell(
+            applySoundChange(word.ipa, selectedSoundChanges, allCategoryValues),
+            spellings,
+          )
+        : newWord;
 
-          adjWordCategoryInputs: adjCategorySelections,
-          nounWordCategoryInputs: nounCategorySelections,
-          numWordCategoryInputs: numCategorySelections,
-          verbWordCategoryInputs: verbCategorySelections,
-          advWordCategoryInputs: advCategorySelections,
-          adpWordCategoryInputs: adpCategorySelections,
-          partWordCategoryInputs: partCategorySelections,
-          conjWordCategoryInputs: conjCategorySelections,
-          interjWordCategoryInputs: interjCategorySelections,
-          affixWordCategoryInputs: affixCategorySelections,
-          cliticWordCategoryInputs: cliticCategorySelections,
-          pronWordCategoryInputs: pronCategorySelections,
-          tagInputs: tagInputs,
-          variants,
-          thesaurusDomains: selectedTerms,
-        }),
-      },
+    let chosenIPA =
+      pronunciation === word.ipa
+        ? applySoundChange(word.ipa, selectedSoundChanges, allCategoryValues)
+        : pronunciation;
+
+    const spelledWord =
+      spellings.length > 0
+        ? spell(displayedIpa, spellings)
+        : newWordOverride
+          ? newWordOverride
+          : displayedIpa;
+
+    const data = await window.electron.addWord(
+      date,
+      wordId,
+      descendantLanguage.language_id,
+      spelledWord,
+
+      makeMeaningArrays(),
+      descendantWordType,
+      note,
+      displayedIpa,
+      adjWordFormInputs,
+      nounFormsToSave,
+      numFormsToSave,
+      verbFormsToSave,
+      advFormsToSave,
+      adpFormsToSave,
+      partFormsToSave,
+      conjFormsToSave,
+      interjFormsToSave,
+      affixFormsToSave,
+      cliticFormsToSave,
+      pronFormsToSave,
+
+      adjCategorySelections,
+      nounCategorySelections,
+      numCategorySelections,
+      verbCategorySelections,
+      advCategorySelections,
+      adpCategorySelections,
+      partCategorySelections,
+      conjCategorySelections,
+      interjCategorySelections,
+      affixCategorySelections,
+      cliticCategorySelections,
+      pronCategorySelections,
+      tagInputs,
+      variants,
+      selectedTerms,
     );
 
-    if (response.status !== 200) {
+    if (!data.success) {
       console.error(`Error ${response.status}`);
     }
 
-    if (response.ok) {
+    if (data.success) {
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/addEtymology`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              languageId: descendant.language_id,
-              word_id: wordId,
-              etymologyType: descendantType,
-              motherWord: selectedMotherLanguageWord,
-              firstElementId: null,
-              secondElementId: null,
-              thirdElementId: null,
-              loanWordId: selectedMotherLanguageWord.word_id,
-              note: etymNote,
-            }),
-          },
+        const data = await window.electron.addEtymology(
+          wordId,
+          descendantType,
+          selectedMotherLanguageWord,
+          null,
+          null,
+          null,
+          null,
+          etymNote,
         );
 
-        const data = await response.json();
-
-        if (response.ok) {
+        if (data.success) {
           showToast("Changes saved ✅");
           if (onSuccess) onSuccess(); // trigger parent's refresh
           close();
@@ -841,17 +808,7 @@ const AddDescendantModal = ({
   };
 
   const getTags = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getTags`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ languageId: Number(languageId) }),
-      },
-    );
-    const data = await response.json();
+    const data = await window.electron.getTags(Number(languageId));
     setTagGroups(data[0].tags);
   };
 
@@ -1040,9 +997,6 @@ const AddDescendantModal = ({
               <div className="thin-white-border">
                 <h4>{translate("Enter Word")}</h4>
                 <input
-                  type="text"
-                  className="modal-input"
-                  placeholder={translate("word")}
                   value={newWordOverride ?? spell(displayedIpa, spellings)}
                   onChange={(e) => setNewWordOverride(e.target.value)}
                 />
@@ -1055,14 +1009,11 @@ const AddDescendantModal = ({
               )}
 
               <div className="thin-white-border">
-                <h4>{translate("Pronunciation")}</h4>
-                <input
-                  type="text"
-                  className="modal-input"
-                  placeholder={translate("IPA")}
-                  value={displayedIpa}
-                  onChange={(e) => setNewWordOverride(e.target.value)}
-                />
+                
+
+                <div className="keyboard">
+                    <IPAkeyboard inputVal={displayedIpa} setInputVal={setPronunciationOverride} />
+                </div>
               </div>
 
               <div className="thin-white-border">
@@ -1938,6 +1889,8 @@ const AddDescendantModal = ({
                             ))
                           : "";
 
+                        console.log(wordForm);
+
                         return wordForm.type === "verb" ? (
                           <div key={index}>
                             <>
@@ -2047,7 +2000,7 @@ const AddDescendantModal = ({
                         ) : null;
                       })}
 
-                   {shownParts["num"] &&
+                    {shownParts["num"] &&
                       wordForms.map((wordForm, index) => {
                         const form = numWordFormInputs.find(
                           (f) => f.name === wordForm.name,
@@ -2109,7 +2062,7 @@ const AddDescendantModal = ({
                         ) : null;
                       })}
 
-                   {shownParts["adv"] &&
+                    {shownParts["adv"] &&
                       wordForms.map((wordForm, index) => {
                         const form = advWordFormInputs.find(
                           (f) => f.name === wordForm.name,
@@ -2171,7 +2124,7 @@ const AddDescendantModal = ({
                         ) : null;
                       })}
 
-                   {shownParts["adp"] &&
+                    {shownParts["adp"] &&
                       wordForms.map((wordForm, index) => {
                         const form = adpWordFormInputs.find(
                           (f) => f.name === wordForm.name,
@@ -2357,7 +2310,7 @@ const AddDescendantModal = ({
                         ) : null;
                       })}
 
-                   {shownParts["conj"] &&
+                    {shownParts["conj"] &&
                       wordForms.map((wordForm, index) => {
                         const form = conjWordFormInputs.find(
                           (f) => f.name === wordForm.name,
@@ -2419,7 +2372,7 @@ const AddDescendantModal = ({
                         ) : null;
                       })}
 
-                   {shownParts["affix"] &&
+                    {shownParts["affix"] &&
                       wordForms.map((wordForm, index) => {
                         const form = affixWordFormInputs.find(
                           (f) => f.name === wordForm.name,
@@ -2543,7 +2496,7 @@ const AddDescendantModal = ({
                         ) : null;
                       })}
 
-                   {shownParts["pron"] &&
+                    {shownParts["pron"] &&
                       wordForms.map((wordForm, index) => {
                         const form = pronWordFormInputs.find(
                           (f) => f.name === wordForm.name,

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { getAllWords } from "../services/dictionaryService";
 
 const WordSelector = ({
   name,
@@ -25,17 +26,7 @@ const WordSelector = ({
     }
 
     const getLanguages = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getAllWords`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: motherLanguageId }),
-        }
-      );
-      const data = await response.json();
+      const data = await window.electron.getAllWords(motherLanguageId);
       setAllWords(data);
     };
     getLanguages();

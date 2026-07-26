@@ -1,5 +1,6 @@
 import { Modal, Button } from "react-bootstrap";
 import { useState, useEffect, useCallback, useRef } from "react";
+import { getText, editText } from "../services/languageService.js";
 
 import MyEditor from "../vendor/ckEditor-build/App.jsx";
 
@@ -10,33 +11,16 @@ const EditTextModal = ({ languageId, textId, show, setShow, onSuccess }) => {
   const [translation, setTranslation] = useState();
   const [title, setTitle] = useState();
 
-   const getText = async () => {
-    const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getText`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            textId,
-            languageId,
-            title,
-            text,
-            translation
-          }),
-        }
-      );
-
-      const data = await response.json();
-      setText(data.text);
-      setTranslation(data.translation)
-      setTitle(data.title);
-  }
+  const getText = async () => {
+    const data = await window.electron.getText(textId, languageId);
+    setText(data.text);
+    setTranslation(data.translation);
+    setTitle(data.title);
+  };
 
   useEffect(() => {
     getText();
-  }, [textId])
+  }, [textId]);
 
   const showToast = (message) => {
     const toastContainer = document.getElementById("toastContainer");
@@ -76,36 +60,24 @@ const EditTextModal = ({ languageId, textId, show, setShow, onSuccess }) => {
 
     try {
 
-     const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/editText`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            textId,
-            languageId,
-            title,
-            text,
-            translation
-          }),
-        }
+      const data = await window.electron.editText(
+        textId,
+        languageId,
+        title,
+        text,
+        translation,
       );
 
-      const data = await response.json();
-
-
-      if (!response.ok) {
-        console.error(`Error ${response.status}: ${data.message}`);
+      if (!data.success) {
+        console.error(`Error editing text`);
+        return
       }
 
-      if (response.ok) {
+    
         showToast("New text Added ✅");
         if (onSuccess) onSuccess(); // trigger parent's refresh
         close();
-      }
-
+      
     } catch (error) {
       console.error("Fetch failed:", error);
     }
@@ -114,8 +86,6 @@ const EditTextModal = ({ languageId, textId, show, setShow, onSuccess }) => {
   const close = () => {
     setShow(false);
   };
-
- 
 
   return (
     <Modal
@@ -131,17 +101,26 @@ const EditTextModal = ({ languageId, textId, show, setShow, onSuccess }) => {
       <Modal.Body>
         <div className="input-modal">
           <div>
-
-        <div className="thin-white-border">
-          <input
-          value={title}
-          placeholder="Add Title"
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
+            <div className="thin-white-border">
+              <input
+                value={title}
+                placeholder="Add Title"
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
 
             <div className="thin-white-border">
-              <p>Add the text in the language here. If any words in the text do not appear as their dictionary form, e.g they are inflected, then suffix the word with "=" followed by the dicitonary form; e.g iabhís=abhís. This will allow the inflected word to correctly matched with the word as it appears in the dicitonary. If you wish to add a translation of the inflected word as it appears in the text, further suffix the word with "~" after which you can provide the English translation. Be sure to include a "-" between each English word instead of a space.</p>
+              <p>
+                Add the text in the language here. If any words in the text do
+                not appear as their dictionary form, e.g they are inflected,
+                then suffix the word with "=" followed by the dicitonary form;
+                e.g iabhís=abhís. This will allow the inflected word to
+                correctly matched with the word as it appears in the dicitonary.
+                If you wish to add a translation of the inflected word as it
+                appears in the text, further suffix the word with "~" after
+                which you can provide the English translation. Be sure to
+                include a "-" between each English word instead of a space.
+              </p>
               <MyEditor
                 value={text || ""}
                 onChange={(content) => setText(content)}

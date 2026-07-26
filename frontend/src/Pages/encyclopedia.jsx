@@ -252,7 +252,6 @@ const Encyclopedia = () => {
 
   const getEncyclopedia = async () => {
    let data = await window.electron.getEncyclopedia(id);
-   console.log(data)
     setEncyclopediaName(data.encyclopedia_name);
     setTopics(data.topics);
      setAllEntries(data.entries);
@@ -267,7 +266,6 @@ const Encyclopedia = () => {
       (entry) => entry.topic === topic.name
     ).length;
 
-    console.log(topicCount)
 
     return {
       topicName: topicCount > 1 ? topic.name_plural : topic.name,
@@ -539,6 +537,8 @@ const Encyclopedia = () => {
               <h1 className="dictionary-title">
                 {translate("{encyclopediaName}", { encyclopediaName })}
               </h1>
+
+
 
               {/* <p>
                 {translate("Created by")}{" "}

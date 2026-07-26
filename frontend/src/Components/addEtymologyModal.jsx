@@ -5,6 +5,7 @@ import LanguageSelector from "./languageSelector";
 import MyEditor from "../vendor/ckEditor-build/App.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
 import React from "react";
+import { addEtymology} from "../services/etymologyService.js";
 
 const AddEtymologyModal = ({ show, setShow, name, id, word, onSuccess }) => {
   const { translate } = useTranslate();
@@ -92,36 +93,17 @@ const AddEtymologyModal = ({ show, setShow, name, id, word, onSuccess }) => {
     setShowLoanWordWarning(false); // clear warning if proceeding
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/addEtymology`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id,
-            word_id: word.word_id,
-            etymologyType: selectedOption,
-            motherWord: selectedMotherLanguageWord,
-            firstElementId: firstElementId,
-            secondElementId: secondElementId,
-            thirdElementId: thirdElementId,
-            loanWordId: loanWord ? loanWord.word_id : null,
-            note: note,
-          }),
-        },
-      );
 
-      const data = await response.json();
+    
+      const data = await window.electron.addEtymology(word.word_id, selectedOption, selectedMotherLanguageWord, firstElementId, secondElementId, thirdElementId, loanWord ? loanWord.word_id : null, note);
 
-      if (response.ok) {
+      if (data.success) {
         showToast("Changes saved ✅");
         if (onSuccess) onSuccess(); // trigger parent's refresh
         close();
       }
     } catch (error) {
-      console.error("Fetch failed:", error);
+      console.error("error adding etymology:", error);
     }
   };
 

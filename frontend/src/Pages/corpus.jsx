@@ -6,6 +6,7 @@ import ParagraphWithTooltips from "../Components/wordWithTooltip";
 import EditTextModal from "../Components/editTextModal"
 import removeTags from "../Functions/removeTags";
 import { useTranslate } from "../Functions/TranslateUI";
+import {getText}  from "../services/languageService.js";
 
 
 const Corpus = () => {
@@ -17,21 +18,9 @@ const Corpus = () => {
 
   
     const getText = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getText`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            textId,
-            languageId,
-          }),
-        }
-      );
+      
 
-      let data = await response.json();
+      let data = await window.electron.getText(textId, languageId)
       setText(data);
     };
     

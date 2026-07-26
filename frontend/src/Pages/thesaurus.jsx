@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import formatMeaning from "../Functions/formatMeaning";
 import { thesaurusJson } from "../Functions/thesaurusList";
+import { getLanguage } from "../services/languageService.js";
+import { getAllWords } from "../services/dictionaryService.js";
 
 const Thesaurus = () => {
   const { id } = useParams();
@@ -18,18 +20,8 @@ const Thesaurus = () => {
 
   useEffect(() => {
     const getLanguage = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        }
-      );
-
-      let data = await response.json();
+    
+      let data = await window.electron.getLanguage(id);
       setLanguage(data[0]);
     };
     getLanguage();
@@ -37,21 +29,12 @@ const Thesaurus = () => {
 
   useEffect(() => {
     const getThesaurus = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getAllWords`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        }
-      );
-      const data = await response.json();
+      
+      const data = await window.electron.getAllWords(id);
       setAllWords(data);
     };
     getThesaurus();
-  }, []);
+  }, [id]);
 
   const handleOpenWord = (word_id) => {
     window.open(

@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import MyEditor from "../vendor/ckEditor-build/App.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
 import { _toPrecision } from "ckeditor5";
-import handleImageUpload from "./imageUpload.jsx";
 import supabase from "../Components/supabaseClient.jsx";
+import { editEntry, getEntry, deleteEntry } from "../services/encyclopediaService.js";
 
 const EditEntryModal = ({ show, setShow, onSuccess, id, topics }) => {
   const { translate } = useTranslate();
@@ -12,11 +12,34 @@ const EditEntryModal = ({ show, setShow, onSuccess, id, topics }) => {
   const [entryText, setEntryText] = useState("");
   const [entryTopic, setEntryTopic] = useState("");
   const [headword, setHeadWord] = useState("");
-  const [images, setImages] = useState([]);
-  const [imagesWithURLS, setImagesWithURLS] = useState([]);
 
   const resetState = () => {
     setShowWordWarning(false);
+  };
+
+  const showDeleteToast = (message) => {
+    const toastContainer = document.getElementById("toastContainer");
+    const toast = document.createElement("div");
+    toast.className =
+      "toast align-items-center text-white bg-success border-0 show";
+    toast.role = "alert";
+    toast.ariaLive = "assertive";
+    toast.ariaAtomic = "true";
+
+    toast.innerHTML = `
+      <div class="d-flex">
+        <div class="toast-body">
+          ${message}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    `;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
   };
 
   const showToast = (message) => {
@@ -45,46 +68,11 @@ const EditEntryModal = ({ show, setShow, onSuccess, id, topics }) => {
   };
 
   const getEntry = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getEntry`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id,
-        }),
-      },
-    );
-    const data = await response.json();
+    const data = await window.electron.getEntry(id);
     setHeadWord(data.headword);
     setEntryTopic(data.topic);
     setEntryText(data.entry_text);
 
-    const { data: fetchedImages, error } = await supabase
-      .from("encyclopedia_entry_images")
-      .select("*")
-      .eq("entry_id", data.entry_id)
-      .order("display_order");
-    setImages(fetchedImages);
-
-    const urls = await Promise.all(
-      fetchedImages.map(async (image) => {
-        const { data: imageData, error: urlError } = await supabase.storage
-          .from("encyclopedia_images")
-          .createSignedUrl(image.storage_path, 3600);
-
-        if (urlError) {
-          return null;
-        }
-
-        return {
-          ...image,
-          url: imageData.signedUrl,
-        };
-      }),
-    );
-
-    setImagesWithURLS(urls.filter(Boolean));
   };
 
   useEffect(() => {
@@ -97,25 +85,13 @@ const EditEntryModal = ({ show, setShow, onSuccess, id, topics }) => {
       return;
     }
 
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/editEntry`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          headword,
-          entryText,
-          entryTopic,
-          id,
-        }),
-      },
-    );
+   const data = await window.electron.editEntry(headword, entryText, entryTopic, id);
 
-    if (response.status !== 200) {
-      console.error(`Error ${response.status}`);
+    if (!data.succees) {
+      console.error(`Error editing entry`);
     }
 
-    if (response.ok) {
+    if (data.success) {
       showToast(translate("Changes saved"));
       if (onSuccess) onSuccess(); // trigger parent's refresh
       close();
@@ -126,6 +102,16 @@ const EditEntryModal = ({ show, setShow, onSuccess, id, topics }) => {
 
   const close = () => {
     setShow(false);
+  };
+
+  const delEntry = async () => {
+    const data = await window.electron.deleteEntry(id);
+
+    if (data.success) {
+      showDeleteToast("Entry deleted ✅");
+      if (onSuccess) onSuccess();
+      close();
+    }
   };
 
   return (
@@ -174,29 +160,17 @@ const EditEntryModal = ({ show, setShow, onSuccess, id, topics }) => {
         </div>
 
         <div className="thin-white-border">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleImageUpload(e, id)}
-          />
-          {imagesWithURLS.map((image) => (
-            <img
-              key={image.image_id}
-              src={image.url}
-              alt={image.caption}
-              style={{ width: 150 }}
-            />
-          ))}
-        </div>
-
-        <div className="thin-white-border">
           <p>{translate("Add Entry Text")}</p>
           <MyEditor
             value={entryText || ""}
             onChange={(content) => setEntryText(content)}
           />
         </div>
+         <button onClick={delEntry} className="delete-button">
+                  {translate("Delete {headword}", { headword })}
+                </button>
       </Modal.Body>
+     
       <Modal.Footer>
         <div className="modal-footer-buttons">
           <div className="non-delete-buttons">

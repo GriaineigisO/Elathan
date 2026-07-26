@@ -53,9 +53,32 @@ export async function getTags(languageId) {
     return await window.electron.getTags(languageId);
 }
 
+export async function getText(textId, languageId) {
+
+    return await window.electron.getText(textId, languageId);
+}
+
+export async function editText(textId, languageId, title, text, translation) {
+
+    return await window.electron.editText(textId, languageId, title, text, translation);
+}
+
+
+
+
 export async function getWordCategories(languageId) {
 
     return await window.electron.getWordCategories(languageId);
+}
+
+export async function getWord(id) {
+
+    return await window.electron.getWord(id);
+}
+
+export async function getToolTipWord(word, languageId) {
+
+    return await window.electron.getToolTipWord(word, languageId);
 }
 
 export async function getInterfaceLanguage(languageId) {
@@ -71,6 +94,77 @@ export async function getWordForms(languageId) {
 export async function deleteWord(id) {
 
     return await window.electron.deleteWord(id);
+}
+
+export async function editWord(wordId,
+  languageId,
+  word,
+  meanings,
+  wordType,
+  pronunciation,
+  note,
+  adjWordFormInputs,
+  nounWordFormInputs,
+  numWordFormInputs,
+  verbWordFormInputs,
+  advWordFormInputs,
+  adpWordFormInputs,
+  partWordFormInputs,
+  conjWordFormInputs,
+  interjWordFormInputs,
+  affixWordFormInputs,
+  cliticWordFormInputs,
+  pronWordFormInputs,
+  adjWordCategoryInputs,
+  nounWordCategoryInputs,
+  numWordCategoryInputs,
+  verbWordCategoryInputs,
+  advWordCategoryInputs,
+  adpWordCategoryInputs,
+  partWordCategoryInputs,
+  conjWordCategoryInputs,
+  interjWordCategoryInputs,
+  affixWordCategoryInputs,
+  cliticWordCategoryInputs,
+  pronWordCategoryInputs,
+  tagInputs,
+  variants,
+  thesaurusDomains) {
+
+    return await window.electron.editWord(wordId,
+  languageId,
+  word,
+  meanings,
+  wordType,
+  pronunciation,
+  note,
+  adjWordFormInputs,
+  nounWordFormInputs,
+  numWordFormInputs,
+  verbWordFormInputs,
+  advWordFormInputs,
+  adpWordFormInputs,
+  partWordFormInputs,
+  conjWordFormInputs,
+  interjWordFormInputs,
+  affixWordFormInputs,
+  cliticWordFormInputs,
+  pronWordFormInputs,
+  adjWordCategoryInputs,
+  nounWordCategoryInputs,
+  numWordCategoryInputs,
+  verbWordCategoryInputs,
+  advWordCategoryInputs,
+  adpWordCategoryInputs,
+  partWordCategoryInputs,
+  conjWordCategoryInputs,
+  interjWordCategoryInputs,
+  affixWordCategoryInputs,
+  cliticWordCategoryInputs,
+  pronWordCategoryInputs,
+  tagInputs,
+  variants,
+  thesaurusDomains);
 }
 
 export async function addLanguage(id, languageName, motherLanguageId, daughterLanguageIds, isProto, wordForms, addedGroups) {

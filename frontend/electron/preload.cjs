@@ -1,4 +1,3 @@
-
 const { contextBridge, ipcRenderer } = require("electron");
 
 const api = {};
@@ -6,184 +5,424 @@ const api = {};
 api.getVersion = () => ipcRenderer.invoke("get-version");
 
 api.rebuild = () => {
-    return ipcRenderer.invoke("database:rebuild");
+  return ipcRenderer.invoke("database:rebuild");
 };
 
 api.getAllWords = (languageId) => {
-    return ipcRenderer.invoke("dictionary:getAllWords", languageId);
+  return ipcRenderer.invoke("dictionary:getAllWords", languageId);
 };
 
+
 api.deleteWord = (id) => {
-    return ipcRenderer.invoke("language:deleteWord", id);
+  return ipcRenderer.invoke("language:deleteWord", id);
 };
 
 api.getWordData = (id) => {
-    return ipcRenderer.invoke("dictionary:getWordData", id);
+  return ipcRenderer.invoke("dictionary:getWordData", id);
 };
+
+api.getWordsForms = (id) => {
+  return ipcRenderer.invoke("dictionary:getWordsForms", id);
+};
+
+api.getText = (textId, languageId) => {
+  return ipcRenderer.invoke("language:getText", textId, languageId);
+};
+
+api.editText = (textId, languageId, title, text, translation) => {
+  return ipcRenderer.invoke("language:editText", textId, languageId, title, text, translation);
+};
+
 
 api.getLanguage = (languageId) => {
-    return ipcRenderer.invoke("language:getLanguage", languageId);
+  return ipcRenderer.invoke("language:getLanguage", languageId);
 };
 
-api.editLanguage = (id, languageName, motherLanguageId, daughterLanguageIds, removedDaughterLanguageIds, isProto, wordForms,  addedGroups, groupsToBeRemoved, newGroups, addedTagGroups, spelling, selectedSoundChanges, allCategoryValues) => {
-    return ipcRenderer.invoke("language:editLanguage", id, languageName, motherLanguageId, daughterLanguageIds, removedDaughterLanguageIds, isProto, wordForms,  addedGroups, groupsToBeRemoved, newGroups, addedTagGroups, spelling, selectedSoundChanges, allCategoryValues);
+api.editLanguage = (
+  id,
+  languageName,
+  motherLanguageId,
+  daughterLanguageIds,
+  removedDaughterLanguageIds,
+  isProto,
+  wordForms,
+  addedGroups,
+  groupsToBeRemoved,
+  newGroups,
+  addedTagGroups,
+  spelling,
+  selectedSoundChanges,
+  allCategoryValues,
+) => {
+  return ipcRenderer.invoke(
+    "language:editLanguage",
+    id,
+    languageName,
+    motherLanguageId,
+    daughterLanguageIds,
+    removedDaughterLanguageIds,
+    isProto,
+    wordForms,
+    addedGroups,
+    groupsToBeRemoved,
+    newGroups,
+    addedTagGroups,
+    spelling,
+    selectedSoundChanges,
+    allCategoryValues,
+  );
 };
 
 api.getLanguages = () => {
-    return ipcRenderer.invoke("language:getLanguages")
+  return ipcRenderer.invoke("language:getLanguages");
 };
 
 api.getDaughterLanguages = (id) => {
-    return ipcRenderer.invoke("language:getDaughterLanguages", id)
+  return ipcRenderer.invoke("language:getDaughterLanguages", id);
 };
 
 api.getMotherLanguage = (id) => {
-    return ipcRenderer.invoke("language:getMotherLanguage", id)
+  return ipcRenderer.invoke("language:getMotherLanguage", id);
 };
 
 api.getInterfaceLanguage = () => {
-    return ipcRenderer.invoke("language:getInterfaceLanguage")
+  return ipcRenderer.invoke("language:getInterfaceLanguage");
 };
 
 api.getGroups = () => {
-    return ipcRenderer.invoke("language:getGroups")
+  return ipcRenderer.invoke("language:getGroups");
 };
 
 api.getGroup = () => {
-    return ipcRenderer.invoke("language:getGroup")
+  return ipcRenderer.invoke("language:getGroup");
 };
 
 api.editGroup = (groupName, wordForms, wordCategories, addedLanguages, id) => {
-    return ipcRenderer.invoke("language:editGroup", groupName, wordForms, wordCategories, addedLanguages, id)
+  return ipcRenderer.invoke(
+    "language:editGroup",
+    groupName,
+    wordForms,
+    wordCategories,
+    addedLanguages,
+    id,
+  );
 };
 
 api.deleteGroup = (id) => {
-    return ipcRenderer.invoke("language:deleteGroup", id)
+  return ipcRenderer.invoke("language:deleteGroup", id);
 };
 
 api.deleteLanguage = (id) => {
-    return ipcRenderer.invoke("language:deleteLanguage", id)
+  return ipcRenderer.invoke("language:deleteLanguage", id);
 };
 
-api.addLanguage = (id, languageName, motherLanguageId, daughterLanguageIds, isProto, wordForms, addedGroups) => {
-    return ipcRenderer.invoke("language:addLanguage", id, languageName, motherLanguageId, daughterLanguageIds, isProto, wordForms, addedGroups)
+api.addLanguage = (
+  id,
+  languageName,
+  motherLanguageId,
+  daughterLanguageIds,
+  isProto,
+  wordForms,
+  addedGroups,
+) => {
+  return ipcRenderer.invoke(
+    "language:addLanguage",
+    id,
+    languageName,
+    motherLanguageId,
+    daughterLanguageIds,
+    isProto,
+    wordForms,
+    addedGroups,
+  );
 };
 
 api.addGroup = (groupName, wordForms, addedLanguages) => {
-    return ipcRenderer.invoke("language:addGroup", groupName, wordForms, addedLanguages)
+  return ipcRenderer.invoke(
+    "language:addGroup",
+    groupName,
+    wordForms,
+    addedLanguages,
+  );
 };
 
 api.getTags = (languageId) => {
-    return ipcRenderer.invoke("language:getTags", languageId);
+  return ipcRenderer.invoke("language:getTags", languageId);
 };
 
 api.getWordCategories = (languageId) => {
-    return ipcRenderer.invoke("language:getWordCategories", languageId);
+  return ipcRenderer.invoke("language:getWordCategories", languageId);
+};
+
+api.getWord = (id) => {
+  return ipcRenderer.invoke("language:getWord", id);
+};
+
+api.getToolTipWord = (word, languageId) => {
+  return ipcRenderer.invoke("language:getToolTipWord", word, languageId);
 };
 
 api.getDerivations = (id) => {
-    return ipcRenderer.invoke("derivation:getDerivations", id);
+  return ipcRenderer.invoke("derivation:getDerivations", id);
 };
 
 api.getRootWord = (id, isFirstElement, isSecondElement, isThirdElement) => {
-    return ipcRenderer.invoke("derivation:getRootWord", id, isFirstElement, isSecondElement, isThirdElement);
+  return ipcRenderer.invoke(
+    "derivation:getRootWord",
+    id,
+    isFirstElement,
+    isSecondElement,
+    isThirdElement,
+  );
 };
 
 api.getEtymologyTrees = (id, rootIds) => {
-    return ipcRenderer.invoke("etymology:getEtymologyTrees", id, rootIds);
+  return ipcRenderer.invoke("etymology:getEtymologyTrees", id, rootIds);
 };
 
 api.getEtymology = (id) => {
-    return ipcRenderer.invoke("etymology:getEtymology", id);
+  return ipcRenderer.invoke("etymology:getEtymology", id);
 };
 
-api.addEtymology = (languageId, word_id, etymologyType, motherWord, firstElementId, secondElementId, thirdElementId, loanWordId, note) => {
-    return ipcRenderer.invoke("etymology:addEtymology", languageId, word_id, etymologyType, motherWord, firstElementId, secondElementId, thirdElementId, loanWordId, note);
+api.deleteEtymology = (id) => {
+  return ipcRenderer.invoke("etymology:deleteEtymology", id);
+};
+
+api.addEncyclopedia = (id, encyclopediaName, topics) => {
+  return ipcRenderer.invoke(
+    "encyclopedia:addEncyclopedia",
+    id,
+    encyclopediaName,
+    topics,
+  );
+};
+
+api.deleteEncyclopedia = (id) => {
+  return ipcRenderer.invoke("encyclopedia:deleteEncyclopedia", id);
+};
+
+api.editEncyclopedia = (id, encyclopediaName, topics) => {
+  return ipcRenderer.invoke(
+    "encyclopedia:editEncyclopedia",
+    id,
+    encyclopediaName,
+    topics,
+  );
+};
+
+api.addEntry = (encyclopediaId, headword, entryText, entryTopic) => {
+  return ipcRenderer.invoke(
+    "encyclopedia:addEntry",
+    encyclopediaId,
+    headword,
+    entryText,
+    entryTopic,
+  );
+};
+
+api.addEtymology = (
+  word_id,
+  etymologyType,
+  motherWord,
+  firstElementId,
+  secondElementId,
+  thirdElementId,
+  loanWordId,
+  note,
+) => {
+  return ipcRenderer.invoke(
+    "etymology:addEtymology",
+    word_id,
+    etymologyType,
+    motherWord,
+    firstElementId,
+    secondElementId,
+    thirdElementId,
+    loanWordId,
+    note,
+  );
 };
 
 api.getEncyclopedias = (id) => {
-    return ipcRenderer.invoke("encyclopedia:getEncyclopedias", id);
+  return ipcRenderer.invoke("encyclopedia:getEncyclopedias", id);
 };
 
 api.getEncyclopedia = (id) => {
-    return ipcRenderer.invoke("encyclopedia:getEncyclopedia", id);
+  return ipcRenderer.invoke("encyclopedia:getEncyclopedia", id);
+};
+
+api.deleteEntry = (id) => {
+  return ipcRenderer.invoke("encyclopedia:deleteEntry", id);
 };
 
 api.getWordForms = (languageId) => {
-    return ipcRenderer.invoke("language:getWordForms", languageId);
+  return ipcRenderer.invoke("language:getWordForms", languageId);
 };
 
-api.addWord = (date,
-        wordId,
-        languageId,
-        word,
-        meanings,
-        wordType,
-        note,
-        pronunciation,
-        adjWordFormInputs,
-        nounWordFormInputs,
-        numWordFormInputs,
-        verbWordFormInputs,
-        advWordFormInputs,
-        adpWordFormInputs,
-        partWordFormInputs,
-        conjWordFormInputs,
-        interjWordFormInputs,
-        affixWordFormInputs,
-        cliticWordFormInputs,
-        pronWordFormInputs,
-        adjWordCategoryInputs,
-        nounWordCategoryInputs,
-        numWordCategoryInputs,
-        verbWordCategoryInputs,
-        advWordCategoryInputs,
-        adpWordCategoryInputs,
-        partWordCategoryInputs,
-        conjWordCategoryInputs,
-        interjWordCategoryInputs,
-        affixWordCategoryInputs,
-        pronWordCategoryInputs,
-        cliticWordCategoryInputs,
-        tagInputs,
-        variants,
-        thesaurusDomains) => {
-    return ipcRenderer.invoke("language:addWord", date,
-        wordId,
-        languageId,
-        word,
-        meanings,
-        wordType,
-        note,
-        pronunciation,
-        adjWordFormInputs,
-        nounWordFormInputs,
-        numWordFormInputs,
-        verbWordFormInputs,
-        advWordFormInputs,
-        adpWordFormInputs,
-        partWordFormInputs,
-        conjWordFormInputs,
-        interjWordFormInputs,
-        affixWordFormInputs,
-        cliticWordFormInputs,
-        pronWordFormInputs,
-        adjWordCategoryInputs,
-        nounWordCategoryInputs,
-        numWordCategoryInputs,
-        verbWordCategoryInputs,
-        advWordCategoryInputs,
-        adpWordCategoryInputs,
-        partWordCategoryInputs,
-        conjWordCategoryInputs,
-        interjWordCategoryInputs,
-        affixWordCategoryInputs,
-        pronWordCategoryInputs,
-        cliticWordCategoryInputs,
-        tagInputs,
-        variants,
-        thesaurusDomains);
+api.editWord = (
+  wordId,
+  languageId,
+  word,
+  meanings,
+  wordType,
+  pronunciation,
+  note,
+  adjWordFormInputs,
+  nounWordFormInputs,
+  numWordFormInputs,
+  verbWordFormInputs,
+  advWordFormInputs,
+  adpWordFormInputs,
+  partWordFormInputs,
+  conjWordFormInputs,
+  interjWordFormInputs,
+  affixWordFormInputs,
+  cliticWordFormInputs,
+  pronWordFormInputs,
+  adjWordCategoryInputs,
+  nounWordCategoryInputs,
+  numWordCategoryInputs,
+  verbWordCategoryInputs,
+  advWordCategoryInputs,
+  adpWordCategoryInputs,
+  partWordCategoryInputs,
+  conjWordCategoryInputs,
+  interjWordCategoryInputs,
+  affixWordCategoryInputs,
+  cliticWordCategoryInputs,
+  pronWordCategoryInputs,
+  tagInputs,
+  variants,
+  thesaurusDomains,
+) => {
+  return ipcRenderer.invoke(
+    "language:editWord",
+    wordId,
+    languageId,
+    word,
+    meanings,
+    wordType,
+    pronunciation,
+    note,
+    adjWordFormInputs,
+    nounWordFormInputs,
+    numWordFormInputs,
+    verbWordFormInputs,
+    advWordFormInputs,
+    adpWordFormInputs,
+    partWordFormInputs,
+    conjWordFormInputs,
+    interjWordFormInputs,
+    affixWordFormInputs,
+    cliticWordFormInputs,
+    pronWordFormInputs,
+    adjWordCategoryInputs,
+    nounWordCategoryInputs,
+    numWordCategoryInputs,
+    verbWordCategoryInputs,
+    advWordCategoryInputs,
+    adpWordCategoryInputs,
+    partWordCategoryInputs,
+    conjWordCategoryInputs,
+    interjWordCategoryInputs,
+    affixWordCategoryInputs,
+    cliticWordCategoryInputs,
+    pronWordCategoryInputs,
+    tagInputs,
+    variants,
+    thesaurusDomains,
+  );
+};
+
+api.editEntry = (headword, entryText, entryTopic, id) => {
+  return ipcRenderer.invoke(
+    "encyclopedia:editEntry",
+    headword,
+    entryText,
+    entryTopic,
+    id,
+  );
+};
+
+api.getEntry = (id) => {
+  return ipcRenderer.invoke("encyclopedia:getEntry", id);
+};
+
+api.addWord = (
+  date,
+  wordId,
+  languageId,
+  word,
+  meanings,
+  wordType,
+  note,
+  pronunciation,
+  adjWordFormInputs,
+  nounWordFormInputs,
+  numWordFormInputs,
+  verbWordFormInputs,
+  advWordFormInputs,
+  adpWordFormInputs,
+  partWordFormInputs,
+  conjWordFormInputs,
+  interjWordFormInputs,
+  affixWordFormInputs,
+  cliticWordFormInputs,
+  pronWordFormInputs,
+  adjWordCategoryInputs,
+  nounWordCategoryInputs,
+  numWordCategoryInputs,
+  verbWordCategoryInputs,
+  advWordCategoryInputs,
+  adpWordCategoryInputs,
+  partWordCategoryInputs,
+  conjWordCategoryInputs,
+  interjWordCategoryInputs,
+  affixWordCategoryInputs,
+  pronWordCategoryInputs,
+  cliticWordCategoryInputs,
+  tagInputs,
+  variants,
+  thesaurusDomains,
+) => {
+  return ipcRenderer.invoke(
+    "language:addWord",
+    date,
+    wordId,
+    languageId,
+    word,
+    meanings,
+    wordType,
+    note,
+    pronunciation,
+    adjWordFormInputs,
+    nounWordFormInputs,
+    numWordFormInputs,
+    verbWordFormInputs,
+    advWordFormInputs,
+    adpWordFormInputs,
+    partWordFormInputs,
+    conjWordFormInputs,
+    interjWordFormInputs,
+    affixWordFormInputs,
+    cliticWordFormInputs,
+    pronWordFormInputs,
+    adjWordCategoryInputs,
+    nounWordCategoryInputs,
+    numWordCategoryInputs,
+    verbWordCategoryInputs,
+    advWordCategoryInputs,
+    adpWordCategoryInputs,
+    partWordCategoryInputs,
+    conjWordCategoryInputs,
+    interjWordCategoryInputs,
+    affixWordCategoryInputs,
+    pronWordCategoryInputs,
+    cliticWordCategoryInputs,
+    tagInputs,
+    variants,
+    thesaurusDomains,
+  );
 };
 
 contextBridge.exposeInMainWorld("electron", api);
-

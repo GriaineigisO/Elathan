@@ -26,11 +26,12 @@ export const TranslationProvider = ({ children }) => {
     }
   }, []);
 
+
   const fetchInterfaceLanguage = async () => {
     try {
       const data = await window.electron.getInterfaceLanguage();
+
       if (data) {
-        
         setLanguageName(data.language_name);
 
         const dict = {};
@@ -72,19 +73,14 @@ export const TranslationProvider = ({ children }) => {
     );
   };
 
-  const translate = (phrase, values = null, options = {}) => {
-    const { capitalize, capitalizeAll } = options;
-    if (!translations) return phrase;
+ const translate = (...args) => {
 
-    const lower = phrase.toLowerCase();
-    const translated = translations[lower] || translations[phrase] || phrase;
+  const [phrase, values = null, options = {}] = args;
 
-    let result = interpolate(translated, values);
-    if (capitalizeAll) result = capitalizeAllWords(result);
-    else if (capitalize) result = capitalizeFirst(result);
+  const translated = translations?.[phrase.toLowerCase()] || phrase;
 
-    return result;
-  };
+  return interpolate(translated, values);
+};
 
   return (
     <TranslationContext.Provider value={{ translate, languageName }}>

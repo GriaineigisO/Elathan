@@ -45,8 +45,9 @@ const jsonColumns = [
 
     // Misc
     "inflection",
-    "theaurus",
-    "tags"
+    "thesaurus",
+    "tags",
+    "date_added"
 ];
 
 export function parseDictionary(row) {

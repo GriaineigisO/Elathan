@@ -639,6 +639,8 @@ export function addWord(
   thesaurusDomains,
 ) {
   const removeNulls = (arr) => {
+    console.log(arr)
+    console.log(typeof arr)
     if (!Array.isArray(arr)) return null;
     return JSON.stringify(arr.filter((obj) => obj !== null));
   };
@@ -751,6 +753,8 @@ export function addWord(
     );
 
     if (addWords.changes === 0) return { success: false };
+
+    return { success: true };
   } catch (error) {
     console.error(`error adding word: ${error}`);
     return { success: false };
@@ -840,9 +844,9 @@ export function deleteWord(id) {
         `);
 
       const delWord = delWordStmt.run(id);
-      if (delWord.changes === 0) return { "success": false };
+      if (delWord.changes === 0) return { success: false };
     } catch (error) {
-      console.log(`error deleting word from dictionary: ${error}`);
+      console.error(`error deleting word from dictionary: ${error}`);
     }
 
     try {
@@ -856,7 +860,7 @@ export function deleteWord(id) {
         )
         .run(id);
     } catch (error) {
-      console.log(`error deleting etymology: ${error}`);
+      console.error(`error deleting etymology: ${error}`);
     }
 
     try {
@@ -874,11 +878,325 @@ export function deleteWord(id) {
         )
         .run(id);
     } catch (error) {
-      console.log(`error deleting descendant etymologies: ${error}`);
+      console.error(`error deleting descendant etymologies: ${error}`);
     }
 
-    return { "success": true };
+    return { success: true };
   } catch (error) {
     console.error(`errer deleting word: ${error}`);
   }
+}
+
+export function editWord(
+  wordId,
+  languageId,
+  word,
+  meanings,
+  wordType,
+  pronunciation,
+  note,
+  adjWordFormInputs,
+  nounWordFormInputs,
+  numWordFormInputs,
+  verbWordFormInputs,
+  advWordFormInputs,
+  adpWordFormInputs,
+  partWordFormInputs,
+  conjWordFormInputs,
+  interjWordFormInputs,
+  affixWordFormInputs,
+  cliticWordFormInputs,
+  pronWordFormInputs,
+  adjWordCategoryInputs,
+  nounWordCategoryInputs,
+  numWordCategoryInputs,
+  verbWordCategoryInputs,
+  advWordCategoryInputs,
+  adpWordCategoryInputs,
+  partWordCategoryInputs,
+  conjWordCategoryInputs,
+  interjWordCategoryInputs,
+  affixWordCategoryInputs,
+  cliticWordCategoryInputs,
+  pronWordCategoryInputs,
+  tagInputs,
+  variants,
+  thesaurusDomains,
+) {
+  const removeNulls = (arr) => {
+     console.log(arr)
+    console.log(typeof arr)
+    if (!Array.isArray(arr)) return null;
+    return JSON.stringify(arr.filter((obj) => obj !== null));
+  };
+
+  const thes = thesaurusDomains ? thesaurusDomains : {};
+
+  const nounMeaning = Array.isArray(meanings.noun)
+    ? JSON.stringify(meanings.noun)
+    : null;
+  const verbMeaning = Array.isArray(meanings.verb)
+    ? JSON.stringify(meanings.verb)
+    : null;
+  const adjMeaning = Array.isArray(meanings.adj)
+    ? JSON.stringify(meanings.adj)
+    : null;
+  const advMeaning = Array.isArray(meanings.adv)
+    ? JSON.stringify(meanings.adv)
+    : null;
+  const adpMeaning = Array.isArray(meanings.adp)
+    ? JSON.stringify(meanings.adp)
+    : null;
+  const partMeaning = Array.isArray(meanings.part)
+    ? JSON.stringify(meanings.part)
+    : null;
+  const pronMeaning = Array.isArray(meanings.pron)
+    ? JSON.stringify(meanings.pron)
+    : null;
+  const conjMeaning = Array.isArray(meanings.conj)
+    ? JSON.stringify(meanings.conj)
+    : null;
+  const interjMeaning = Array.isArray(meanings.interj)
+    ? JSON.stringify(meanings.interj)
+    : null;
+  const affixMeaning = Array.isArray(meanings.affix)
+    ? JSON.stringify(meanings.affix)
+    : null;
+  const numMeaning = Array.isArray(meanings.num)
+    ? JSON.stringify(meanings.num)
+    : null;
+  const cliticMeaning = Array.isArray(meanings.clitic)
+    ? JSON.stringify(meanings.clitic)
+    : null;
+
+  const nounWordForms = removeNulls(nounWordFormInputs);
+  const verbWordForms = removeNulls(verbWordFormInputs);
+  const adjWordForms = removeNulls(adjWordFormInputs);
+  const advWordForms = removeNulls(advWordFormInputs);
+  const adpWordForms = removeNulls(adpWordFormInputs);
+  const partWordForms = removeNulls(partWordFormInputs);
+  const pronWordForms = removeNulls(pronWordFormInputs);
+  const conjWordForms = removeNulls(conjWordFormInputs);
+  const interjWordForms = removeNulls(interjWordFormInputs);
+  const affixWordForms = removeNulls(affixWordFormInputs);
+  const numWordForms = removeNulls(numWordFormInputs);
+  const cliticWordForms = removeNulls(cliticWordFormInputs);
+
+  const editWrdStmt = db.prepare(`
+      UPDATE dictionary
+      SET
+       word =?, word_type =?, word_note =?, ipa =?, noun_meaning =?, verb_meaning =?, adj_meaning =?, adv_meaning =?, adp_meaning =?, part_meaning =?, pron_meaning =?, conj_meaning =?, interj_meaning =?, affix_meaning =?, num_meaning =?, clitic_meaning =?, noun_word_forms =?, verb_word_forms =?, adj_word_forms =?, adv_word_forms =?, adp_word_forms =?, part_word_forms =?, pron_word_forms =?, conj_word_forms =?, interj_word_forms =?, affix_word_forms =?, num_word_forms =?, clitic_word_forms =?,   noun_word_categories =?, verb_word_categories =?, adj_word_categories =?, adv_word_categories =?, adp_word_categories =?, part_word_categories =?, pron_word_categories =?, conj_word_categories =?, interj_word_categories =?, affix_word_categories =?, num_word_categories =?, clitic_word_categories =?, tags =?, thesaurus =?, date_edited = ?
+       WHERE word_id = ?
+      
+          `);
+
+  const editWrd = editWrdStmt.run(
+    word,
+    wordType ?? null,
+    note ?? null,
+    pronunciation ?? null,
+    nounMeaning,
+    verbMeaning,
+    adjMeaning,
+    advMeaning,
+    adpMeaning,
+    partMeaning,
+    pronMeaning,
+    conjMeaning,
+    interjMeaning,
+    affixMeaning,
+    numMeaning,
+    cliticMeaning,
+    nounWordForms,
+    verbWordForms,
+    adjWordForms,
+    advWordForms,
+    adpWordForms,
+    partWordForms,
+    pronWordForms,
+    conjWordForms,
+    interjWordForms,
+    affixWordForms,
+    numWordForms,
+    cliticWordForms,
+    removeNulls(nounWordCategoryInputs) ?? null,
+    removeNulls(verbWordCategoryInputs) ?? null,
+    removeNulls(adjWordCategoryInputs) ?? null,
+    removeNulls(advWordCategoryInputs) ?? null,
+    removeNulls(adpWordCategoryInputs) ?? null,
+    removeNulls(partWordCategoryInputs) ?? null,
+    removeNulls(pronWordCategoryInputs) ?? null,
+    removeNulls(conjWordCategoryInputs) ?? null,
+    removeNulls(interjWordCategoryInputs) ?? null,
+    removeNulls(affixWordCategoryInputs) ?? null,
+    removeNulls(numWordCategoryInputs) ?? null,
+    removeNulls(cliticWordCategoryInputs) ?? null,
+    JSON.stringify(tagInputs) ?? null,
+    JSON.stringify(thes) ?? null,
+    Date.now(),
+    wordId,
+  );
+
+  if (editWrd.changes === 0) return { success: false };
+
+  //now, manage the variants
+  if (variants) {
+    let variantArr = variants.split(", ");
+
+    for (let i = 0; i < variantArr.length; i++) {
+      const addWordStmt = db.prepare(`
+          INSERT INTO dictionary
+        (variant_of, word_id, language_id, word, word_type, word_note, ipa, noun_meaning, verb_meaning, adj_meaning, adv_meaning, adp_meaning, part_meaning, pron_meaning, conj_meaning, interj_meaning, affix_meaning, num_meaning, clitic_meaning, noun_word_forms, verb_word_forms, adj_word_forms, adv_word_forms, adp_word_forms, part_word_forms, pron_word_forms, conj_word_forms, interj_word_forms, affix_word_forms, num_word_forms, clitic_word_forms,   noun_word_categories, verb_word_categories, adj_word_categories, adv_word_categories, adp_word_categories, part_word_categories, pron_word_categories, conj_word_categories, interj_word_categories, affix_word_categories, num_word_categories, clitic_word_categories, date_added, tags, thesaurus )
+          VALUES(?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?, ?, ?)
+          `);
+
+      const addWords = addWordStmt.run(
+        wordId,
+        Date.now(),
+        languageId,
+        word,
+        wordType ?? null,
+        note ?? null,
+        pronunciation ?? null,
+        nounMeaning ?? null,
+        verbMeaning ?? null,
+        adjMeaning ?? null,
+        advMeaning ?? null,
+        adpMeaning ?? null,
+        partMeaning ?? null,
+        pronMeaning ?? null,
+        conjMeaning ?? null,
+        interjMeaning ?? null,
+        affixMeaning ?? null,
+        numMeaning ?? null,
+        cliticMeaning ?? null,
+        nounWordForms ?? null,
+        verbWordForms ?? null,
+        adjWordForms ?? null,
+        advWordForms ?? null,
+        adpWordForms ?? null,
+        partWordForms ?? null,
+        pronWordForms ?? null,
+        conjWordForms ?? null,
+        interjWordForms ?? null,
+        affixWordForms ?? null,
+        numWordForms ?? null,
+        cliticWordForms ?? null,
+        removeNulls(nounWordCategoryInputs) ?? null,
+        removeNulls(verbWordCategoryInputs) ?? null,
+        removeNulls(adjWordCategoryInputs) ?? null,
+        removeNulls(advWordCategoryInputs) ?? null,
+        removeNulls(adpWordCategoryInputs) ?? null,
+        removeNulls(partWordCategoryInputs) ?? null,
+        removeNulls(pronWordCategoryInputs) ?? null,
+        removeNulls(conjWordCategoryInputs) ?? null,
+        removeNulls(interjWordCategoryInputs) ?? null,
+        removeNulls(affixWordCategoryInputs) ?? null,
+        removeNulls(numWordCategoryInputs) ?? null,
+        removeNulls(cliticWordCategoryInputs) ?? null,
+        JSON.stringify(Date.now()),
+        JSON.stringify(tagInputs) ?? null,
+        JSON.stringify(thes) ?? null,
+      );
+    }
+  }
+
+  return { success: true };
+}
+
+export function getWord(id) {
+  const getWrdStmt = db.prepare(`
+    SELECT * 
+    FROM dictionary
+    WHERE word_id = ?
+    `);
+
+  const getWrd = getWrdStmt.all(id).map(parseDictionary);
+
+  return getWrd[0];
+}
+
+
+
+export function getToolTipWord(word, languageId) {
+  const cleanedWord = word
+    .split(" ")
+    .map((w) => (w.includes("=") ? w.split("=")[1] : w))
+    .join(" ");
+
+  if (!word || !languageId) {
+    return { message: "Missing word or languageId" };
+  }
+
+  const getWrdStmt = db.prepare(`
+      SELECT *
+      FROM dictionary
+      WHERE word = ? AND language_id = ? AND word_type = ?
+      `);
+
+  const getWrd = getWrdStmt
+    .all(cleanedWord.toLowerCase(), languageId, "word")
+    .map(parseDictionary);
+
+  return getWrd;
+}
+
+export function getText(textId, languageId) {
+  const getLangStmt = db.prepare(`
+    SELECT corpus
+    FROM languages
+    WHERE language_id = ?
+    `);
+
+  const getLang = getLangStmt.all(languageId).map(parseLanguage);
+
+  let correctText = "";
+
+  getLang[0].corpus.forEach((text) => {
+    if (text.id == textId) {
+      correctText = text;
+    }
+  });
+
+  if (correctText) {
+    return correctText;
+  } else {
+    return { message: "no corpus text found" };
+  }
+}
+
+export function editText(textId, languageId, title, text, translation) {
+  // Step 1: Get current corpus array
+      const getCorpusStmt = db.prepare(`
+        SELECT corpus
+        FROM languages 
+        where language_id = ?
+        `)
+
+        const getCorpus = getCorpusStmt.all(languageId).map(parseLanguage);
+
+        const currentCorpus = getCorpus[0].corpus;
+
+      currentCorpus.forEach((corpus) => {
+        if (corpus.id == textId) {
+          corpus.text = text,
+          corpus.translation = translation,
+          corpus.title = title
+        }
+      })
+
+
+        const editCorpusStmt = db.prepare(`
+          UPDATE languages
+          SET corpus = ?
+          WHERE language_id = ?
+          `);
+
+          const editCorpus = editCorpusStmt.run(JSON.stringify(currentCorpus), languageId);
+
+          if (editCorpus.changes === 0) return {"success": false};
+
+          return {"success": true};
+
+    
 }

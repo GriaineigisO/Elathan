@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import formatMeaning from "../Functions/formatMeaning";
+import { getToolTipWord } from "../services/languageService";
 
 export const WordWithTooltip = ({
   languageId,
@@ -13,16 +14,15 @@ export const WordWithTooltip = ({
 
   const fetchTooltip = async () => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getWord`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ wordToGet: word, languageId }),
-        }
-      );
-      const data = await response.json();
-      setTooltipData(data);
+      const data = await window.electron.getToolTipWord(word, languageId);
+
+      if (data.message) {
+        console.error(`error: ${data.message}`);
+      } else if (!data) {
+        console.error("error getting tooltip word");
+      } else {
+        setTooltipData(data);
+      }
     } catch (err) {
       setTooltipData([{ word, translation: "No data found." }]);
     }
@@ -34,7 +34,6 @@ export const WordWithTooltip = ({
   };
 
   const handleMouseLeave = () => setShow(false);
-
 
   return (
     <span
@@ -62,6 +61,7 @@ export const WordWithTooltip = ({
         >
           {tooltipData.map((entry, i) => (
             <div key={i} style={{ marginBottom: "4px" }}>
+              {console.log(entry)}
               <strong>{entry.word}</strong>: "{formatMeaning(entry)}"
             </div>
           ))}
@@ -116,13 +116,11 @@ const ParagraphWithTooltips = ({ languageId, paragraph }) => {
   // Updated regex to keep word=headword together
   const prepared = paragraph.replace(/([.,!?;:])(?=\S)/g, "$1 ");
   const tokens = paragraph.match(
-    /[\p{Script=Latin}=~\-']+|[.,!?;:()“”"«»]|[\r\n]+|\s+/gu
+    /[\p{Script=Latin}=~\-']+|[.,!?;:()“”"«»]|[\r\n]+|\s+/gu,
   );
 
   return (
-    <p style={{ lineHeight: 1.6 }}
-    
-    >
+    <p style={{ lineHeight: 1.6 }}>
       {tokens.map((token, index) => {
         const isWord = /\p{Script=Latin}/u.test(token) && !/^\s+$/.test(token);
 
@@ -143,7 +141,7 @@ const ParagraphWithTooltips = ({ languageId, paragraph }) => {
             </WordWithTooltip>
           );
         }
-        return <span key={index} >{token}</span>;
+        return <span key={index}>{token}</span>;
       })}
     </p>
   );

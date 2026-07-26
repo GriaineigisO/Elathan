@@ -4,6 +4,7 @@ import axios from "axios";
 import "../App.css";
 import AddTextModal from "../Components/addTextModal.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
+import { getLanguage } from "../services/languageService.js";
 
 
 const CorpusList = () => {
@@ -16,40 +17,13 @@ const CorpusList = () => {
   const [totalWords, setTotalWords] = useState([]);
   const [uniqueWords, setUniqueWords] = useState([]);
 
-  useEffect(() => {
-    const getLanguage = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        }
-      );
-
-      let data = await response.json();
-      setLanguage(data[0]);
-    };
-    getLanguage();
-  }, [id]);
-
   
     const getCorpus = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getCorpus`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        }
-      );
+     
 
-      let data = await response.json();
+      let data = await window.electron.getLanguage(id);
       setCorpus(data[0].corpus);
+      setLanguage(data[0])
     };
     useEffect(() => {
     getCorpus();
@@ -60,7 +34,7 @@ const CorpusList = () => {
   };
 
   const openText = (textId, languageId) => {
-  window.open(`${import.meta.env.VITE_FRONTEND_URL}/corpus/${languageId}/${textId}`, "_blank");
+  window.location.href = `/corpus/${languageId}/${textId}`;
 };
 
 //count total amount of words from all texts

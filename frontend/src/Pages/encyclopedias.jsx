@@ -27,7 +27,7 @@ const Encyclopedias = () => {
 
  
 
-  const fetchEncylopedias = async () => {
+  const fetchEncyclopedias = async () => {
    let data = await window.electron.getEncyclopedias();
       setEncyclopediaList([...data]);
       setOriginalEncyclopediaList([...data]);
@@ -36,7 +36,7 @@ const Encyclopedias = () => {
     
   };
   useEffect(() => {
-    fetchEncylopedias();
+    fetchEncyclopedias();
   }, [refreshEncyclopediasTrigger]);
   
   const handleOpenEncyclopedia = (id) => {
@@ -84,6 +84,7 @@ const Encyclopedias = () => {
           setShow={setShowEditEncyclopediaModal}
           name={encyclopediaToEdit.encyclopedia_name}
           id={encyclopediaToEdit.encyclopedia_id}
+          onSuccess={handleEncyclopediaAdded}
           triggerRefresh={() => setRefreshEncyclopediasTrigger((prev) => prev + 1)}
         />
       )}
