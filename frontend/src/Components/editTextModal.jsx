@@ -1,6 +1,7 @@
 import { Modal, Button } from "react-bootstrap";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { getText, editText } from "../services/languageService.js";
+import { getText, editText, deleteText } from "../services/languageService.js";
+import { useTranslate } from "../Functions/TranslateUI";
 
 import MyEditor from "../vendor/ckEditor-build/App.jsx";
 
@@ -10,6 +11,7 @@ const EditTextModal = ({ languageId, textId, show, setShow, onSuccess }) => {
   const [text, setText] = useState();
   const [translation, setTranslation] = useState();
   const [title, setTitle] = useState();
+  const { translate } = useTranslate();
 
   const getText = async () => {
     const data = await window.electron.getText(textId, languageId);
@@ -87,6 +89,16 @@ const EditTextModal = ({ languageId, textId, show, setShow, onSuccess }) => {
     setShow(false);
   };
 
+  const deleteText = async () => {
+    const data = await window.electron.deleteText(textId, languageId);
+
+    if (data.success) {
+      showToast(`${title} deleted ✅`)
+      close();
+      window.location.href = `/corpusList/${languageId}`
+    }
+  }
+
   return (
     <Modal
       show={show}
@@ -96,7 +108,7 @@ const EditTextModal = ({ languageId, textId, show, setShow, onSuccess }) => {
       dialogclassName="custom-modal-width"
     >
       <Modal.Header closeButton>
-        <Modal.Title>Add New Text</Modal.Title>
+        <Modal.Title>Edit Text</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="input-modal">
@@ -144,6 +156,9 @@ const EditTextModal = ({ languageId, textId, show, setShow, onSuccess }) => {
             <p className="warning">Please add a translation before saving</p>
           )}
         </div>
+         <button onClick={deleteText} className="delete-button">
+                  {translate("Delete {title}", { title })}
+                </button>
       </Modal.Body>
       <Modal.Footer>
         <div className="modal-footer-buttons">

@@ -12,7 +12,6 @@ const CorpusFrequencyList = () => {
 
   const [language, setLanguage] = useState();
   const [words, setWords] = useState([]);
-  const [canView, setCanView] = useState(false);
   const [uniqueWords, setUniqueWords] = useState([]);
   const [corpus, setCorpus] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,31 +38,6 @@ const CorpusFrequencyList = () => {
     }
   };
 
-  const checkPrivacy = async () => {
-    if (id) {
-      const userId = localStorage.getItem("userId");
-
-      //if user is not logged in
-      if (!userId && privacy === "private") {
-        setCanView(false);
-        return;
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/checkPrivacy`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id, userId }),
-        }
-      );
-      const data = await response.json();
-
-      setCanView(data);
-    }
-  };
 
    const getAllWords = async () => {
       const response = await fetch(
@@ -83,7 +57,6 @@ const CorpusFrequencyList = () => {
 
   useEffect(() => {
     getLanguage();
-    checkPrivacy();
     getAllWords();
   }, [id]);
 

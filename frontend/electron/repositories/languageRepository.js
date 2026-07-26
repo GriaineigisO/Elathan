@@ -3,6 +3,7 @@ import { parseLanguage } from "./parse/parseLanguages.js";
 import { parseGroup } from "./parse/parseGroup.js";
 import { parseDictionary } from "./parse/parseDictionary.js";
 import { parseInterfaceLanguages } from "./parse/parseInterfaceLanguages.js";
+import { parsePhonologyTemplates } from "./parse/parsePhonologyTemplates.js";
 
 export function addLanguage(
   id,
@@ -480,22 +481,6 @@ export function getWordCategories(languageId) {
   }
 }
 
-export function getInterfaceLanguage() {
-  try {
-    const languagesStmt = db.prepare(`
-          SELECT *
-          FROM interfaceLanguages
-          WHERE is_chosen = 1
-          `);
-
-    const languages = languagesStmt.all().map(parseInterfaceLanguages);
-
-    return languages[0];
-  } catch (error) {
-    console.error(`error fetching interface languages: ${error}`);
-  }
-}
-
 export function getDaughterLanguages(id) {
   try {
     const getDaughtersStmt = db.prepare(`
@@ -639,12 +624,11 @@ export function addWord(
   thesaurusDomains,
 ) {
   const removeNulls = (arr) => {
-    console.log(arr)
-    console.log(typeof arr)
-    if (!Array.isArray(arr)) return null;
-    return JSON.stringify(arr.filter((obj) => obj !== null));
+    if (!Array.isArray(arr)) return;
+    return JSON.stringify(
+      arr.filter((obj) => obj !== null && obj !== undefined),
+    );
   };
-
   const thes = thesaurusDomains ? thesaurusDomains : {};
 
   const nounMeaning = Array.isArray(meanings.noun)
@@ -924,10 +908,10 @@ export function editWord(
   thesaurusDomains,
 ) {
   const removeNulls = (arr) => {
-     console.log(arr)
-    console.log(typeof arr)
-    if (!Array.isArray(arr)) return null;
-    return JSON.stringify(arr.filter((obj) => obj !== null));
+    if (!Array.isArray(arr)) return;
+    return JSON.stringify(
+      arr.filter((obj) => obj !== null && obj !== undefined),
+    );
   };
 
   const thes = thesaurusDomains ? thesaurusDomains : {};
@@ -1116,8 +1100,6 @@ export function getWord(id) {
   return getWrd[0];
 }
 
-
-
 export function getToolTipWord(word, languageId) {
   const cleanedWord = word
     .split(" ")
@@ -1167,36 +1149,295 @@ export function getText(textId, languageId) {
 
 export function editText(textId, languageId, title, text, translation) {
   // Step 1: Get current corpus array
-      const getCorpusStmt = db.prepare(`
+  const getCorpusStmt = db.prepare(`
         SELECT corpus
         FROM languages 
         where language_id = ?
-        `)
+        `);
 
-        const getCorpus = getCorpusStmt.all(languageId).map(parseLanguage);
+  const getCorpus = getCorpusStmt.all(languageId).map(parseLanguage);
 
-        const currentCorpus = getCorpus[0].corpus;
+  const currentCorpus = getCorpus[0].corpus;
 
-      currentCorpus.forEach((corpus) => {
-        if (corpus.id == textId) {
-          corpus.text = text,
-          corpus.translation = translation,
-          corpus.title = title
-        }
-      })
+  currentCorpus.forEach((corpus) => {
+    if (corpus.id == textId) {
+      ((corpus.text = text),
+        (corpus.translation = translation),
+        (corpus.title = title));
+    }
+  });
 
-
-        const editCorpusStmt = db.prepare(`
+  const editCorpusStmt = db.prepare(`
           UPDATE languages
           SET corpus = ?
           WHERE language_id = ?
           `);
 
-          const editCorpus = editCorpusStmt.run(JSON.stringify(currentCorpus), languageId);
+  const editCorpus = editCorpusStmt.run(
+    JSON.stringify(currentCorpus),
+    languageId,
+  );
 
-          if (editCorpus.changes === 0) return {"success": false};
+  if (editCorpus.changes === 0) return { success: false };
 
-          return {"success": true};
+  return { success: true };
+}
 
+export function saveGrammar(languageId, grammar) {
+  const saveGramStmt = db.prepare(`
+    UPDATE languages
+    SET grammar = ?
+    WHERE language_id = ?
+    `);
+
+  const saveGram = saveGramStmt.run(grammar, languageId);
+
+  if (saveGram.changes === 0) return { success: false };
+
+  return { success: true };
+}
+
+export function addInterfaceLanguage(id, languageName, merged) {
+  const addLangStmt = db.prepare(`
+      INSERT INTO interfaceLanguages
+    (id, language_name, translations)
+      VALUES(?, ?, ?)
+      `);
+
+  const addLang = addLangStmt.run(id, languageName, JSON.stringify(merged));
+
+  if (addLang.changes === 0) return { success: false };
+
+  return { success: true };
+}
+
+export function getInterfaceLanguages() {
+  const addLangStmt = db.prepare(`
+      SELECT *
+      FROM interfaceLanguages
+      `);
+
+  const addLang = addLangStmt.all().map(parseInterfaceLanguages);
+
+  return addLang;
+}
+
+export function getInterfaceLanguage(id) {
+  const addLangStmt = db.prepare(`
+      SELECT *
+      FROM interfaceLanguages
+      WHERE id = ?
+      `);
+
+  const addLang = addLangStmt.all(id).map(parseInterfaceLanguages);
+
+  return addLang;
+}
+
+export function editInterfaceLanguage(id, languageName, translations) {
+  const addLangStmt = db.prepare(`
+      UPDATE interfaceLanguages
+      SET 
+        language_name = ?,
+        translations = ?
+      WHERE id = ?
+      `);
+
+  const addLang = addLangStmt.run(
+    languageName,
+    JSON.stringify(translations),
+    id,
+  );
+
+  if (addLang.changes === 0) return { success: false };
+
+  return { success: true };
+}
+
+export function deleteInterfaceLanguage(id) {
+  const delLangStmt = db.prepare(`
+    DELETE FROM interfaceLanguages
+    WHERE id = ?
+    `);
+
+  const delLang = delLangStmt.run(id);
+
+  if (delLang.changes === 0) return { success: false };
+
+  return { success: true };
+}
+
+export function editUserLanguage(id) {
+  //first, set all languages to false
+
+  const allFalseStmt = db.prepare(`
+    UPDATE interfaceLanguages
+    SET is_chosen = 0
+    `);
+
+  const allFalse = allFalseStmt.run();
+
+  if (allFalse.changes === 0) return { success: false };
+
+  //now set chosen language
+  const editLangStmt = db.prepare(`
+    UPDATE interfaceLanguages
+    SET is_chosen = 1
+    WHERE id = ?
+    `);
+
+  const editLang = editLangStmt.run(id);
+
+  if (editLang.changes === 0) return { success: false };
+
+  const getLangStmt = db.prepare(`
+      SELECT *
+      FROM interfaceLanguages
+      WHERE is_chosen = 1
+      `);
+
+  const getLang = getLangStmt.all().map(parseInterfaceLanguages);
+
+  return getLang[0];
+
+  return { success: true };
+}
+
+export function addText(id, title, text, translation) {
+  // Step 1: Get current corpus array
+  const getLangStmt = db.prepare(`
+  SELECT corpus 
+  FROM languages
+  WHERE language_id = ?
+  `);
+
+  const language = getLangStmt.all(id).map(parseLanguage);
+
+  const newCorpusItem = {
+    id: Date.now(),
+    title: title,
+    text: text,
+    translation: translation,
+  };
+
+  const currentCorpus = language[0].corpus ? language[0].corpus : [];
+
+  const updatedCorpus = [...currentCorpus, newCorpusItem];
+
+  const addTextStmt = db.prepare(`
+      UPDATE languages
+      SET corpus = ?
+      WHERE language_id = ?
+      `);
+
+  const addText = addTextStmt.run(JSON.stringify(updatedCorpus), id);
+
+  if (addText.changes === 0) return { success: false };
+
+  return { success: true };
+}
+
+export function deleteText(textId, languageId) {
+  const getCorpusStmt = db.prepare(`
+    SELECT corpus
+    FROM languages
+    WHERE language_id = ?
+    `);
+
+  const getCorpus = getCorpusStmt.all(languageId).map(parseLanguage);
+
+  //get all texts besides the one to be deleted
+  const filtered = getCorpus[0].corpus.filter(
+    (text) => text.id !== Number(textId),
+  );
+
+  //add filtered corpus back to the db
+  const updateCorpusStmt = db.prepare(`
+      UPDATE languages
+      SET corpus = ?
+      WHERE language_id = ?
+      `);
+
+  const updateCorpus = updateCorpusStmt.run(
+    JSON.stringify(filtered),
+    languageId,
+  );
+
+  if (updateCorpus.changes === 0) return { success: false };
+
+  return { success: true };
+}
+
+export function getLoanerLanguage(id) {
+  const getLangStmt = db.prepare(`
+          SELECT language_id, word
+          FROM dictionary
+          WHERE word_id = ?
+          `);
+
+  const getLang = getLangStmt.all(Number(id));
+
+  if (getLang.length > 0) {
+    const loanerId = getLang[0].language_id;
+
+    if (loanerId) {
+      const getMotherStmt = db.prepare(`
+              SELECT *
+              FROM languages
+              WHERE language_id = ?
+              `);
+
+      const getMother = getMotherStmt.all(loanerId).map(parseLanguage);
+
+      return { language: getMother, loanword: getLang[0].word };
+    } else {
+      return {
+        language_id: null,
+        language_name: null,
+        loaner_language_id: null,
+        loaned_word: getLang[0].word,
+      };
+    }
+  } else {
+    return {
+      language_id: null,
+      language_name: null,
+      loaner_language_id: null,
+      loaned_word: null,
+    };
+  }
+}
+
+export function savePhonology(title, template) {
+     //first, check if a template of the same name already exists
+        const checknameStmt = db.prepare(`
+            SELECT template_name
+            FROM phonologyTemplates
+            WHERE template_name = ?
+            `);
+
+            const findName = checknameStmt.all(title).map(parsePhonologyTemplates);
+
+
+      if (!findName.length > 0) {
+
+        
+        const insertPhonStmt = db.prepare(`
+          INSERT INTO phonologyTemplates
+          (id, template_name, phonology)
+          VALUES(?, ?, ?)
+          `)
+
+          const insertPhon = insertPhonStmt.run(Date.now(), title, template);
+
+            if (insertPhon.changes === 0) return {"success": false};
+
+            return {"success": true};
+
+        }
+
+      
+
+        return { nameAlreadyExists: false };
     
 }

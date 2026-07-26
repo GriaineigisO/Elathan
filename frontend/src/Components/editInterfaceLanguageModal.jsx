@@ -2,6 +2,7 @@ import { Modal, Button } from "react-bootstrap";
 import { useState, useEffect, useCallback, useRef } from "react";
 import translationList from "../assets/translationObj.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
+import { getInterfaceLanguage, editInterfaceLanguage, deleteInterfaceLanguage} from "../services/languageService.js";
 
 
 const EditInterfaceLanguageModal = ({
@@ -44,27 +45,15 @@ const EditInterfaceLanguageModal = ({
 
   const getInterfaceLanguage = async () => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getInterfaceLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id,
-          }),
-        }
-      );
 
-      const data = await response.json();
+      const data = await window.electron.getInterfaceLanguage(id);
 
-      setLanguageName(data.language_name);
+      setLanguageName(data[0].language_name);
       
 
       // Normalize the backend translations for fast lookup
       const translationMap = {};
-      data.translations.forEach((t) => {
+      data[0].translations.forEach((t) => {
         translationMap[t.phrase.toLowerCase()] = t.translation;
       });
 
@@ -91,28 +80,18 @@ const EditInterfaceLanguageModal = ({
 
   const save = async () => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/editInterfaceLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id,
-            languageName,
-            translations,
-          }),
-        }
-      );
 
-      if (response.ok) {
+      console.log(languageName)
+      const data = await window.electron.editInterfaceLanguage(id, languageName, translations);
+
+      if (data.success) {
         showToast(translate("Interface Language Edited"));
         if (typeof triggerRefresh === "function") {
+          close();
           triggerRefresh();
         }
         if (onSuccess) onSuccess(); // trigger parent's refresh
-        close();
+        
       }
     } catch (error) {
       console.error("Fetch failed:", error);
@@ -122,6 +101,19 @@ const EditInterfaceLanguageModal = ({
   const close = () => {
     setShow(false);
   };
+
+  const delLang = async() => {
+    const data = await window.electron.deleteInterfaceLanguage(id);
+
+    if (data.success) {
+      showToast(translate(`Interface Language ${languageName} Deleted`));
+        if (typeof triggerRefresh === "function") {
+          close();
+          triggerRefresh();
+        }
+        if (onSuccess) onSuccess(); // trigger parent's refresh
+    }
+  }
 
   return (
     <Modal
@@ -178,6 +170,9 @@ const EditInterfaceLanguageModal = ({
               ))}</div>
           </div>
         </div>
+        <button className="delete-button" onClick={delLang}>
+          Delete <i>{languageName}</i>
+        </button>
       </Modal.Body>
       <Modal.Footer>
         <div className="modal-footer-buttons">

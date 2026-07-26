@@ -76,15 +76,70 @@ export async function getWord(id) {
     return await window.electron.getWord(id);
 }
 
+export async function saveGrammar(languageId, grammar) {
+
+    return await window.electron.saveGrammar(languageId, grammar);
+}
+
+export async function addInterfaceLanguage(id, languageName, merged) {
+
+    return await window.electron.addInterfaceLanguage(id, languageName, merged);
+}
+
+export async function getInterfaceLanguages() {
+
+    return await window.electron.getInterfaceLanguages();
+}
+
+export async function getInterfaceLanguage() {
+
+    return await window.electron.getInterfaceLanguage();
+}
+
+export async function deleteInterfaceLanguage(id) {
+
+    return await window.electron.deleteInterfaceLanguage(id);
+}
+
+export async function editUserLanguage(id) {
+
+    return await window.electron.editUserLanguage(id);
+}
+
+export async function getLoanerLanguage(id) {
+
+    return await window.electron.getLoanerLanguage(id);
+}
+
+export async function addText(id, title, text, translation) {
+
+    return await window.electron.addText(id, title, text, translation);
+}
+
+
+export async function deleteText(textId, languagId) {
+
+    return await window.electron.deleteText(textId, languagId);
+}
+
+
+export async function editInterfaceLanguage(id, languageName, translations) {
+
+    return await window.electron.editInterfaceLanguage(id, languageName, translations);
+}
+
 export async function getToolTipWord(word, languageId) {
 
     return await window.electron.getToolTipWord(word, languageId);
 }
 
-export async function getInterfaceLanguage(languageId) {
+export async function savePhonology(title, template) {
 
-    return await window.electron.getInterfaceLanguage(languageId);
+    return await window.electron.savePhonology(title, template);
 }
+
+
+
 
 export async function getWordForms(languageId) {
 
@@ -249,3 +304,4 @@ export async function addWord(date,
         variants,
         thesaurusDomains);
 }
+

@@ -14,6 +14,28 @@ export async function deleteEtymology(id) {
 }
 
 
+export async function editEtymology(etymologyId,
+        etymologyType,
+        word_id,
+        motherWord,
+        firstElementId,
+        secondElementId,
+        thirdElementId,
+        loanWordId,
+        note) {
+
+    return await window.electron.editEtymology(etymologyId,
+        etymologyType,
+        word_id,
+        motherWord,
+        firstElementId,
+        secondElementId,
+        thirdElementId,
+        loanWordId,
+        note);
+}
+
+
 export async function addEtymology(word_id, etymologyType, motherWord, firstElementId, secondElementId, thirdElementId, loanWordId, note) {
 
     return await window.electron.addEtymology(word_id, etymologyType, motherWord, firstElementId, secondElementId, thirdElementId, loanWordId, note);

@@ -29,21 +29,22 @@ export const TranslationProvider = ({ children }) => {
 
   const fetchInterfaceLanguage = async () => {
     try {
-      const data = await window.electron.getInterfaceLanguage();
+      const data = await window.electron.getInterfaceLanguage(userLanguage);
+   
 
       if (data) {
-        setLanguageName(data.language_name);
+        setLanguageName(data[0].language_name);
 
         const dict = {};
-        data.translations.forEach((t) => {
+        data[0].translations.forEach((t) => {
           dict[t.phrase.toLowerCase()] = t.translation;
         });
 
         setTranslations(dict);
 
-        localStorage.setItem("cachedUserLanguage", data.language_id);
+        localStorage.setItem("cachedUserLanguage", data[0].language_id);
         localStorage.setItem("cachedTranslations", JSON.stringify(dict));
-        localStorage.setItem("cachedLanguageName", data.language_name);
+        localStorage.setItem("cachedLanguageName", data[0].language_name);
       } else {
         //fallback to English UI, no need to block rendering
         setUserLanguage("English");

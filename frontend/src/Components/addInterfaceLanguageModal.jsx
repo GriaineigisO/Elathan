@@ -2,6 +2,7 @@ import { Modal, Button } from "react-bootstrap";
 import { useState, useEffect, useCallback, useRef } from "react";
 import translationList from "../assets/translationObj.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
+import { addInterfaceLanguage } from "../services/languageService.js";
 
 const AddInterfaceLanguageModal = ({
   show,
@@ -54,37 +55,16 @@ const AddInterfaceLanguageModal = ({
         translation: translations[i] || "",
       }));
 
-      const userId = localStorage.getItem("userId");
-      const username = localStorage.getItem("username");
-      const id = idRef.current;
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/addInterfaceLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId,
-            id,
-            languageName,
-            translations: merged,
-            username: username
-          }),
-        }
-      );
+      const data = await window.electron.addInterfaceLanguage(Date.now(), languageName, merged);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error(`Error ${response.status}: ${data.message}`);
-      }
-
-      if (response.ok) {
+      if (!data.success) {
+        console.error(`Erroradding interface language`);
+      } else {
         showToast(translate("New Interface Language Added"));
         if (onSuccess) onSuccess(); // trigger parent's refresh
         close();
       }
+
 
       //reset values
       setLanguageName();

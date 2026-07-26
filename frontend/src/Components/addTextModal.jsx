@@ -1,5 +1,6 @@
 import { Modal, Button } from "react-bootstrap";
 import { useState, useEffect, useCallback, useRef } from "react";
+import { addText} from "../services/languageService";
 
 import MyEditor from "../vendor/ckEditor-build/App.jsx";
 
@@ -48,30 +49,13 @@ const AddTextModal = ({ id, show, setShow, onSuccess }) => {
     }
 
     try {
-      const userId = localStorage.getItem("userId");
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/addText`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id,
-            title,
-            text,
-            translation
-          }),
-        }
-      );
+         const data = await window.electron.addText(id, title, text, translation);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error(`Error ${response.status}: ${data.message}`);
+      if (!data.success) {
+        console.error(`Error adding text`);
       }
 
-      if (response.ok) {
+      if (data.success) {
         showToast("New text Added ✅");
         if (onSuccess) onSuccess(); // trigger parent's refresh
         close();

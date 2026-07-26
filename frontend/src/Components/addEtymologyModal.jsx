@@ -6,6 +6,7 @@ import MyEditor from "../vendor/ckEditor-build/App.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
 import React from "react";
 import { addEtymology} from "../services/etymologyService.js";
+import { getLanguage, getMotherLanguage } from "../services/languageService.js";
 
 const AddEtymologyModal = ({ show, setShow, name, id, word, onSuccess }) => {
   const { translate } = useTranslate();
@@ -27,27 +28,11 @@ const AddEtymologyModal = ({ show, setShow, name, id, word, onSuccess }) => {
     if (!id) return;
 
     const load = async () => {
-      const [languageRes, motherRes] = await Promise.all([
-        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/getLanguageName`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ languageId: id }),
-        }),
-        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/getMotherLanguage`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        }),
-      ]);
 
-      const languageData = await languageRes.json();
-      const motherData = await motherRes.json();
+      const languageData = await window.electron.getLanguage(id);
+      const motherData = await window.electron.getMotherLanguage(id);
 
-      setLanguageName(languageData.language_name);
+      setLanguageName(languageData[0].language_name);
       setSelectedParentLanguage(motherData[0] ?? null);
     };
 

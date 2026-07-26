@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../App.css";
 import EditLanguageModal from "../Components/EditLanguageModal.jsx";
+import { getGroup } from "../services/languageService.js";
 
 const Group = () => {
   const { id } = useParams();
@@ -14,15 +15,7 @@ const Group = () => {
 
   const fetchGroup = async () => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getGroup`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id }),
-        }
-      );
-      const data = await response.json();
+      const data = await window.electron.getGroup(id);
       setGroup(data[0]);
       setLanguageList(data[0].languages)
       setOriginalLanguageList(data[0].languages)

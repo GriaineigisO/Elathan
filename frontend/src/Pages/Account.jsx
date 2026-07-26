@@ -6,10 +6,13 @@ import { Link } from "react-router-dom";
 import AddInterfaceLanguageModal from "../Components/addInterfaceLanguageModal.jsx";
 import EditInterfaceLanguageModal from "../Components/editInterfaceLanguageModal.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
+import {
+  getInterfaceLanguages,
+  editUserLanguage,
+} from "../services/languageService.js";
 
 const Account = () => {
   const { id } = useParams();
-  const [userName, setUserName] = useState();
   const [totalWordCount, setTotalWordCount] = useState();
   const [userLanguage, setUserLanguage] = useState();
   const [showAddLanguageModal, setShowAddLanguageModal] = useState(false);
@@ -23,81 +26,18 @@ const Account = () => {
   const { translate } = useTranslate();
 
   const fetchInterfaceLanguages = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getInterfaceLanguages`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: id }),
-      }
-    );
+    const data = await window.electron.getInterfaceLanguages();
 
-    const data = await response.json();
+    setInterfaceLanguages(data);
 
-    if (response.ok) {
-      setInterfaceLanguages(data);
-    } else {
-      console.error(`Error fetching interface languages: ${data.message}`);
-    }
-  };
+    const chosenLang = data.filter((lang) => lang.is_chosen);
 
-  const fetchAllInterfaceLanguages = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getAllInterfaceLanguages`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
-      setAllInterfaceLanguages(data);
-    } else {
-      console.error(`Error fetching all interface languages: ${data.message}`);
-    }
-  };
-
-  const fetchUserInfo = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getUserInfo`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: id }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
-      setUserName(data.username);
-      setTotalWordCount(data.totalWordCount);
-      setUserLanguage(data.userLanguage);
-    } else {
-      console.error(`Error fetching user info: ${data.message}`);
-    }
+    setUserInterfaceLanguage(chosenLang[0].id);
   };
 
   useEffect(() => {
-    fetchUserInfo();
     fetchInterfaceLanguages();
-    fetchAllInterfaceLanguages();
   }, [refreshLanguagesTrigger]);
-
-  const OpenChangePassword = () => {
-    window.open(
-      `${import.meta.env.VITE_FRONTEND_URL}/changepassword`,
-      "_blank"
-    );
-  };
 
   const addNewInterfaceLanguage = () => {
     setShowAddLanguageModal(true);
@@ -113,49 +53,23 @@ const Account = () => {
     setShowEditInterfaceLanguageModal(true);
   };
 
-  const getInterfaceLanguage = async (language) => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getUserLanguage`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: id, language }),
-      }
-    );
-
-    const data = await response.json();
-    setUserInterfaceLanguage(data.interface_language);
-  };
-
-  useEffect(() => {
-    getInterfaceLanguage();
-  }, [id]);
-
   const changeInterfaceLanguage = async (language) => {
-    setUserInterfaceLanguage(language)
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/editUserLanguage`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: id, language }),
-      }
-    );
-    window.location.reload();
+    setUserInterfaceLanguage(language);
+
+    const data = await window.electron.editUserLanguage(language);
+    if (data) {
+      console.log(data);
+      localStorage.setItem("cachedUserLanguage", data.id);
+      localStorage.setItem("cachedTranslations", data.translations);
+      localStorage.setItem("cachedLanguageName", data.language_name);
+      window.location.reload();
+    }
   };
-
-
 
   return (
     <div style={{ textAlign: "center" }}>
       <h1>{translate("Account Settings")}</h1>
-      <p className="word-link" onClick={OpenChangePassword}>
-        {translate("Change Password")}
-      </p>
+
       <div className="settings-section thin-white-border">
         <h3>{translate("Interface Language")}</h3>
 
@@ -164,11 +78,10 @@ const Account = () => {
           <select
             value={userInterfaceLanguage}
             onChange={(e) => changeInterfaceLanguage(e.target.value)}
-            
           >
-            {allInterfaceLanguages.map((language, index) => (
+            {interfaceLanguages.map((language, index) => (
               <option key={index} value={language.id}>
-                {language.language_name} by {language.creator_username}
+                {language.language_name}
               </option>
             ))}
           </select>
@@ -178,7 +91,9 @@ const Account = () => {
           <h4>{translate("Your Custom Interface Languages")}</h4>
 
           <p>
-            {translate("Here you can create and manage your own translations of Elatha's interface.")}
+            {translate(
+              "Here you can create and manage your own translations of Elatha's interface.",
+            )}
           </p>
 
           <button onClick={addNewInterfaceLanguage}>

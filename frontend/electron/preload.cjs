@@ -85,9 +85,6 @@ api.getMotherLanguage = (id) => {
   return ipcRenderer.invoke("language:getMotherLanguage", id);
 };
 
-api.getInterfaceLanguage = () => {
-  return ipcRenderer.invoke("language:getInterfaceLanguage");
-};
 
 api.getGroups = () => {
   return ipcRenderer.invoke("language:getGroups");
@@ -110,6 +107,42 @@ api.editGroup = (groupName, wordForms, wordCategories, addedLanguages, id) => {
 
 api.deleteGroup = (id) => {
   return ipcRenderer.invoke("language:deleteGroup", id);
+};
+
+api.saveGrammar = (languageId, grammar) => {
+  return ipcRenderer.invoke("language:saveGrammar", languageId, grammar);
+};
+
+api.addInterfaceLanguage = (id, languageName, merged) => {
+  return ipcRenderer.invoke("language:addInterfaceLanguage", id, languageName, merged);
+};
+
+api.getInterfaceLanguages = () => {
+  return ipcRenderer.invoke("language:getInterfaceLanguages");
+};
+
+api.addText = (id, title, text, translation) => {
+  return ipcRenderer.invoke("language:addText", id, title, text, translation);
+};
+
+api.deleteText = (textId, languagId) => {
+  return ipcRenderer.invoke("language:deleteText", textId, languagId);
+};
+
+api.getInterfaceLanguage = (id) => {
+  return ipcRenderer.invoke("language:getInterfaceLanguage", id);
+};
+
+api.deleteInterfaceLanguage = (id) => {
+  return ipcRenderer.invoke("language:deleteInterfaceLanguage", id);
+};
+
+api.editUserLanguage = (id) => {
+  return ipcRenderer.invoke("language:editUserLanguage", id);
+};
+
+api.editInterfaceLanguage = (id, languageName, translations) => {
+  return ipcRenderer.invoke("language:editInterfaceLanguage", id, languageName, translations);
 };
 
 api.deleteLanguage = (id) => {
@@ -178,6 +211,26 @@ api.getRootWord = (id, isFirstElement, isSecondElement, isThirdElement) => {
 
 api.getEtymologyTrees = (id, rootIds) => {
   return ipcRenderer.invoke("etymology:getEtymologyTrees", id, rootIds);
+};
+
+api.editEtymology = (etymologyId,
+        etymologyType,
+        word_id,
+        motherWord,
+        firstElementId,
+        secondElementId,
+        thirdElementId,
+        loanWordId,
+        note) => {
+  return ipcRenderer.invoke("etymology:editEtymology", etymologyId,
+        etymologyType,
+        word_id,
+        motherWord,
+        firstElementId,
+        secondElementId,
+        thirdElementId,
+        loanWordId,
+        note);
 };
 
 api.getEtymology = (id) => {
@@ -257,6 +310,14 @@ api.deleteEntry = (id) => {
 
 api.getWordForms = (languageId) => {
   return ipcRenderer.invoke("language:getWordForms", languageId);
+};
+
+api.savePhonology = (title, template) => {
+  return ipcRenderer.invoke("language:savePhonology", title, template);
+};
+
+api.getLoanerLanguage = (id) => {
+  return ipcRenderer.invoke("language:getLoanerLanguage", id);
 };
 
 api.editWord = (

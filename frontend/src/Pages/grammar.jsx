@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import MyEditor from "../vendor/ckEditor-build/App.jsx";
+import { getLanguage, saveGrammar } from "../services/languageService.js";
 
 import { useTranslate } from "../Functions/TranslateUI";
 
@@ -11,194 +12,62 @@ const Grammar = () => {
   
   const [languageName, setLanguageName] = useState();
   const [loading, setLoading] = useState(false);
-  const [creatorUsername, setCreatorUsername] = useState();
-  const [creatorId, setCreatorId] = useState();
-  const [collaborators, setCollaborators] = useState([]);
-  const [canEdit, setCanEdit] = useState(false);
-  const [canView, setCanView] = useState(false);
-  const [privacy, setPrivacy] = useState(false);
   const [showPermissionMessage, setShowPermissionMessage] = useState(false);
   const [grammar, setGrammar] = useState();
   const [showEditGrammar, setShowEditGrammar] = useState(false);
 
   const getGrammar = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getGrammar`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      }
-    );
 
-    let data = await response.json();
-    setGrammar(data.grammar);
+    let data = await window.electron.getLanguage(id);
+    setGrammar(data[0].grammar);
+    setLanguageName(data[0].language_name);
   };
 
   useEffect(() => {
     getGrammar();
   }, [id]);
 
-  useEffect(() => {
-    const checkIfProto = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        }
-      );
 
-      let data = await response.json();
-      setPrivacy(data[0].privacy);
-      setLanguageName(data[0].language_name);
-      setCreatorId(data[0].user_id);
-      getUserInfo(data[0].user_id, setCreatorUsername);
-    };
-    checkIfProto();
-  }, [id]);
+   const showToast = (message) => {
+    const toastContainer = document.getElementById("toastContainer");
+    const toast = document.createElement("div");
+    toast.className =
+      "toast align-items-center text-white bg-success border-0 show";
+    toast.role = "alert";
+    toast.ariaLive = "assertive";
+    toast.ariaAtomic = "true";
 
-  const checkPermission = async () => {
-    const userId = localStorage.getItem("userId");
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/checkPermission`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id, userId }),
-      }
-    );
-    const data = await response.json();
-    setCanEdit(data);
+    toast.innerHTML = `
+      <div class="d-flex">
+        <div class="toast-body">
+          ${message}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    `;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
   };
 
-  useEffect(() => {
-    checkPermission();
-  }, [id]);
 
-  const checkPrivacy = async () => {
-    const userId = localStorage.getItem("userId");
-
-    //if user is not logged in
-    if (!userId && privacy === "private") {
-      setCanView(false);
-      return;
+  const saveGram = async () => {
+    const data = await window.electron.saveGrammar(id, grammar);
+    if (!data.success) {
+      console.error("error saving grammar")
+    } else {
+      showToast("Changes saved ✅");
+          
     }
-
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/checkPrivacy`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id, userId }),
-      }
-    );
-    const data = await response.json();
-    setCanView(data);
-  };
-
-  useEffect(() => {
-    checkPrivacy();
-  }, [id]);
-
-  const hasFetchedCollaborators = useRef(false);
-
-  useEffect(() => {
-    if (hasFetchedCollaborators.current) return;
-    hasFetchedCollaborators.current = true;
-
-    const getCollaborators = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!data[0]?.collaborators?.length) return;
-
-      const newCollaborators = [];
-
-      for (const collaborator of data[0].collaborators) {
-        const username = await getUsername(collaborator);
-        newCollaborators.push({
-          username: collaborator.username,
-          userId: collaborator.user_id,
-        });
-      }
-
-      setCollaborators((prev) => {
-        const existingIds = new Set(prev.map((c) => c.userId));
-        const filtered = newCollaborators.filter(
-          (c) => !existingIds.has(c.userId)
-        );
-        return [...prev, ...filtered];
-      });
-    };
-
-    getCollaborators();
-  }, [id]);
-
-  const getUserInfo = async (id, setUsername) => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/getUserInfo`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: id }),
-      }
-    );
-    const data = await response.json();
-
-    if (setUsername === null) {
-      return data.username;
-    }
-
-    setUsername(data.username);
-  };
-
-  const getUsername = (id) => {
-    return getUserInfo(id, null);
-  };
-
-  const handleOpenUser = (id) => {
-    window.open(`${import.meta.env.VITE_FRONTEND_URL}/user/${id}`, "_blank");
-  };
-
-  const saveGrammar = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/saveGrammar`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id, grammar }),
-      }
-    );
   };
 
   const handleEditGrammar = () => {
     if (showEditGrammar) {
       setShowEditGrammar(false);
-      saveGrammar();
+      saveGram();
     } else {
       setShowEditGrammar(true);
     }
@@ -209,7 +78,7 @@ const Grammar = () => {
   }
 
     const openDictionary = (id) => {
-    window.open(`${import.meta.env.VITE_FRONTEND_URL}/dictionary/${id}`, "_blank");
+     window.location.href = `/dictionary/${id}`;
   };
 
   const printGrammar = () => {
@@ -218,7 +87,7 @@ const Grammar = () => {
 
   return (
     <div style={{ width: "100%" }}>
-      {canView ? (
+     
         <>
           {loading ? (
             <div className="spinner-container">
@@ -228,7 +97,7 @@ const Grammar = () => {
           ) : (
             <div >
                 <div style={{ textAlign: "center" }}>
-              {canEdit && !showEditGrammar ? (
+              {!showEditGrammar ? (
                 <button
                   className="hide-for-printing"
                   onClick={handleEditGrammar}
@@ -239,7 +108,7 @@ const Grammar = () => {
                 <></>
               )}
 
-              {canEdit && showEditGrammar ? (
+              {showEditGrammar ? (
                 <div>
                 <button
                   className="hide-for-printing"
@@ -273,35 +142,11 @@ const Grammar = () => {
               {!showEditGrammar && (
 
               <div>
-              <h1 className="dictionary-title">{translate("{languageName} Grammar", {languageName})}</h1>
+              <h1 className="dictionary-title">{translate("{languageName} Grammar", {languageName: languageName})}</h1>
 
-              <p>
-                {translate("Created by")}{" "}
-                <span
-                  className="word-link"
-                  onClick={() => handleOpenUser(creatorId)}
-                >
-                  {creatorUsername}
-                </span>
-              </p>
+             
 
-              {collaborators.length > 0 ? (
-                <p>
-                  {translate("Collaborators")}:{" "}
-                  {collaborators.map((collaborator) => (
-                    <span
-                      className="word-link"
-                      onClick={() => handleOpenUser(collaborator.userId)}
-                    >
-                      {collaborator.username}
-                    </span>
-                  ))}
-                </p>
-              ) : (
-                <></>
-              )}
-
-              <p onClick={() => openDictionary(id)} className="word-link">{translate("View {languageName} Dictionary", {languageName})}</p>
+              <p onClick={() => openDictionary(id)} className="word-link">{translate("View {languageName} Dictionary", {languageName: languageName})}</p>
 
               </div>)}
 
@@ -331,21 +176,13 @@ const Grammar = () => {
                     />
                   </div>
                 ) : (
-                  <p>{translate("Begin adding {languageName}'s grammar!", {languageName})}</p>
+                  <p>{translate("Begin adding {languageName}'s grammar!", {languageName: languageName})}</p>
                 )}
               </div>
             </div>
           )}
         </>
-      ) : (
-        <>
-          {showPermissionMessage ? (
-            <h2>{translate("You do not have permission to view this grammar")}</h2>
-          ) : (
-            <h1>{translate("Loading...")}</h1>
-          )}
-        </>
-      )}
+      
     </div>
   );
 };

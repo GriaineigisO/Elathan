@@ -11,6 +11,9 @@ import {
 } from "@react-pdf/renderer";
 
 import { parseDocument } from "htmlparser2";
+import { getEtymology } from "../services/etymologyService";
+import { getWordData } from "../services/dictionaryService.js";
+
 
 const SplitDerivationIntoMorphemes = ({ derivation, wordId, isProto }) => {
   const [row, setRow] = useState(null);
@@ -22,14 +25,10 @@ const SplitDerivationIntoMorphemes = ({ derivation, wordId, isProto }) => {
     const ac = new AbortController();
     (async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/getEtymology`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: derivation.derived_word_id }),
-          signal: ac.signal,
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+
+        const data = await window.electron.getEtymology(derivation.derived_word_id)
+        if (!data.success) throw new Error(`HTTP ${res.status}`);
+
         setRow(data?.[0] ?? null);
       } catch (e) {
         if (e.name !== "AbortError") setError(e);
@@ -241,15 +240,14 @@ const FindWordsDescendants = ({
     setLoadingDesc(true);
     (async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/getDescendants`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: wordId }),
-          signal: ac.signal,
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        setDescendants(Array.isArray(data) ? data : []);
+
+
+        const data = await window.electron.getWordData(wordId);
+
+        if (!data.success) throw new Error(`HTTP ${res.status}`);
+
+   
+        setDescendants(Array.isArray(data.descendants) ? data : []);
       } catch (e) {
         if (e.name !== "AbortError") setError(e);
       } finally {
@@ -264,15 +262,10 @@ const FindWordsDescendants = ({
     setLoadingDeriv(true);
     (async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/getDerivations`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: wordId }),
-          signal: ac.signal,
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        setDerivations(Array.isArray(data) ? data : []);
+        const data = await window.electron.getWordData(wordId);
+        if (!data.success) throw new Error(`HTTP ${res.status}`);
+     
+        setDerivations(Array.isArray(data.derivations) ? data : []);
       } catch (e) {
         if (e.name !== "AbortError") setError(e);
       } finally {

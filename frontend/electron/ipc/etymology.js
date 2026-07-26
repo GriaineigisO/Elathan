@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { getEtymologyTrees, getEtymology, addEtymology, deleteEtymology } from "../repositories/EtymologyRepository.js";
+import { getEtymologyTrees, getEtymology, addEtymology, deleteEtymology, editEtymology } from "../repositories/EtymologyRepository.js";
 
 export function registerEtymologyHandlers() {
 
@@ -16,6 +16,26 @@ export function registerEtymologyHandlers() {
     ipcMain.handle(
         "etymology:deleteEtymology",
         (_, id) => deleteEtymology(id)
+    );
+
+
+     ipcMain.handle(
+        "etymology:editEtymology",
+        (_, etymologyId, etymologyType,
+        word_id,
+        motherWord,
+        firstElementId,
+        secondElementId,
+        thirdElementId,
+        loanWordId,
+        note) => editEtymology(etymologyId, etymologyType,
+        word_id,
+        motherWord,
+        firstElementId,
+        secondElementId,
+        thirdElementId,
+        loanWordId,
+        note)
     );
 
 

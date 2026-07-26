@@ -3,7 +3,8 @@ import { useState, useEffect, useCallback } from "react";
 import WordSelector from "./wordSelector";
 import LanguageSelector from "./languageSelector";
 import MyEditor from "../vendor/ckEditor-build/App.jsx";
-import { getLanguage, getMotherLanguage } from "../services/languageService.js";
+import { getLanguage, getMotherLanguage, getLoanerLanguage } from "../services/languageService.js";
+import { editEtymology } from "../services/etymologyService.js";
 
 
 const EditEtymologyModal = ({
@@ -62,17 +63,8 @@ if (id) {
    useEffect(() => {
     const getLanguages = async () => {
       if (!etymology.loanword_id) return; // no id = no request
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/getLoanerLanguage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: etymology.loanword_id }),
-        }
-      );
-      const data = await response.json();
+
+      const data = await window.electron.getLoanerLanguage(etymology.loanword_id);
       setLoanerLanguage(data.language[0]);
       setLoanWord(data.loanword);
     };
@@ -121,30 +113,11 @@ if (etymology) {
     setShowLoanWordWarning(false); // clear warning if proceeding
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/editEtymology`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            etymologyId: etymology.etymology_id,
-            word_id: word.word_id,
-            etymologyType: etymology.etymology_type,
-            motherWord: selectedMotherLanguageWord,
-            firstElementId: firstElementId,
-            secondElementId: secondElementId,
-            thirdElementId: thirdElementId,
-            loanWordId: loanWord ? loanWord.word_id : null,
-            note: note,
-          }),
-        }
-      );
 
-      const data = await response.json();
+      console.log(selectedMotherLanguageWord)
+      const data = await window.electron.editEtymology(etymology.etymology_id, etymology.etymology_type, word.word_id, selectedMotherLanguageWord, firstElementId, secondElementId, thirdElementId, loanWord ? loanWord.word_id : null, note);
 
-      if (response.ok) {
+      if (data.success) {
         showToast("Changes saved ✅");
         if (onSuccess) onSuccess(); // trigger parent's refresh
         close();

@@ -638,7 +638,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   };
 
   const openGrammar = (id) => {
-    window.open(`${import.meta.env.VITE_FRONTEND_URL}/grammar/${id}`, "_blank");
+    window.location.href = `/grammar/${id}`;
   };
 
   const openPlacenames = (id) => {

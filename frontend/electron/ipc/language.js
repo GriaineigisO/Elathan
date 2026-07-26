@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { getLanguage, getLanguages, getDaughterLanguages, getGroups, getGroup, getTags, getInterfaceLanguage, getMotherLanguage, getWordForms, editGroup, deleteGroup, editLanguage, deleteLanguage, addLanguage, addGroup, addWord, getWordCategories, deleteWord, getWord, editWord, getText, getToolTipWord, editText } from "../repositories/languageRepository.js";
+import { getLanguage, getLanguages, getDaughterLanguages, getGroups, getGroup, getTags, getInterfaceLanguage, getMotherLanguage, getWordForms, editGroup, deleteGroup, editLanguage, deleteLanguage, addLanguage, addGroup, addWord, getWordCategories, deleteWord, getWord, editWord, getText, getToolTipWord, editText, saveGrammar, addInterfaceLanguage, getInterfaceLanguages, editInterfaceLanguage, deleteInterfaceLanguage, editUserLanguage, addText, deleteText, getLoanerLanguage, savePhonology } from "../repositories/languageRepository.js";
 
 export function registerLanguageHandlers() {
 
@@ -11,6 +11,11 @@ export function registerLanguageHandlers() {
     ipcMain.handle(
         "language:deleteWord",
         (_, id) => deleteWord(id)
+    );
+
+    ipcMain.handle(
+        "language:getLoanerLanguage",
+        (_, id) => getLoanerLanguage(id)
     );
 
 
@@ -158,19 +163,66 @@ export function registerLanguageHandlers() {
         (_, languageId) => getTags(languageId)
     );
 
+     ipcMain.handle(
+        "language:addInterfaceLanguage",
+        (_, id, languageName, merged) => addInterfaceLanguage(id, languageName, merged)
+    );
+
+    ipcMain.handle(
+        "language:getInterfaceLanguages",
+        (_,) => getInterfaceLanguages()
+    );
+
+     ipcMain.handle(
+        "language:getInterfaceLanguage",
+        (_, id) => getInterfaceLanguage(id)
+    );
+
+    ipcMain.handle(
+        "language:deleteInterfaceLanguage",
+        (_, id) => deleteInterfaceLanguage(id)
+    );
+
+    ipcMain.handle(
+        "language:editUserLanguage",
+        (_, id) => editUserLanguage(id)
+    );
+
+      ipcMain.handle(
+        "language:editInterfaceLanguage",
+        (_, id, languageName, translations) => editInterfaceLanguage(id, languageName, translations)
+    );
+
     ipcMain.handle(
         "language:getWordCategories",
         (_, languageId) => getWordCategories(languageId)
     );
 
     ipcMain.handle(
-        "language:getInterfaceLanguage",
-        (_, id) => getInterfaceLanguage(id)
+        "language:addText",
+        (_, id, title, text, translation) => addText(id, title, text, translation)
     );
 
+
+    ipcMain.handle(
+        "language:deleteText",
+        (_, textId, languagId) => deleteText(textId, languagId)
+    );
+
+ 
     ipcMain.handle(
         "language:getWordForms",
         (_, languageId) => getWordForms(languageId)
+    );
+
+    ipcMain.handle(
+        "language:saveGrammar",
+        (_, languageId, grammar) => saveGrammar(languageId, grammar)
+    );
+
+    ipcMain.handle(
+        "language:savePhonology",
+        (_, title, template) => savePhonology(title, template)
     );
 
      ipcMain.handle(
@@ -258,3 +310,4 @@ export function registerLanguageHandlers() {
     );
 
 }
+

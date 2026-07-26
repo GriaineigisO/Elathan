@@ -372,3 +372,95 @@ export function deleteEtymology(id) {
 
     return {"success": true};
 }
+
+export function editEtymology(etymologyId,
+        etymologyType,
+        word_id,
+        motherWord,
+        firstElementId,
+        secondElementId,
+        thirdElementId,
+        loanWordId,
+        note) {
+
+       
+
+  if (etymologyType === "fromMother") {
+
+          const editEtymStmt = db.prepare(`
+            UPDATE etymology
+            SET
+              word_id = ?,
+              note = ?,
+              etymology_type = ?,
+              mother_word_id = ?
+            WHERE etymology_id = ?
+            `);
+
+            const editEtym = editEtymStmt.run(word_id, note, etymologyType, motherWord, etymologyId);
+
+            if (editEtym.changes === 0) return {"success": false};
+
+            return {"success": true};
+
+      }
+
+      if (etymologyType === "derived") {
+      
+        const editEtymStmt = db.prepare(`
+            UPDATE etymology
+            SET
+              word_id = ?,
+              note = ?,
+              etymology_type = ?,
+              first_element_id = ?
+               second_element_id = ?
+              third_element_id = ?
+            WHERE etymology_id = ?
+            `);
+
+            const editEtym = editEtymStmt.run(word_id, note, etymologyType, firstElementId,
+        secondElementId,
+        thirdElementId, etymologyId);
+
+            if (editEtym.changes === 0) return {"success": false};
+
+            return {"success": true};
+      }
+
+      if (etymologyType === "loaned") {
+        const editEtymStmt = db.prepare(`
+            UPDATE etymology
+            SET
+              word_id = ?,
+              note = ?,
+              etymology_type = ?,
+              loanword_id = ?
+            WHERE etymology_id = ?
+            `);
+
+            const editEtym = editEtymStmt.run(word_id, note, etymologyType, loanWordId, etymologyId);
+
+            if (editEtym.changes === 0) return {"success": false};
+
+            return {"success": true};
+        }
+
+      if (etymologyType === "other") {
+        const editEtymStmt = db.prepare(`
+            UPDATE etymology
+            SET
+              word_id = ?,
+              note = ?,
+              etymology_type = ?,
+              mother_word_id = ?
+            WHERE etymology_id = ?
+            `);
+
+            const editEtym = editEtymStmt.run(word_id, note, etymologyType, null, etymologyId);
+
+            if (editEtym.changes === 0) return {"success": false};
+
+            return {"success": true};
+}
+      }
