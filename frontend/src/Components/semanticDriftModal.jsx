@@ -6,6 +6,7 @@ import semanticDrifts from "../assets/semanticDrifts.jsx";
 import meaningKeys from "../assets/meaningKeys.jsx";
 import React from "react";
 import capitaliseFirstLetter from "../Functions/capitaliseFirstLetter.jsx";
+import { matchPath } from "react-router-dom";
 
 const SemanticDriftModal = ({
   show,
@@ -29,6 +30,7 @@ const SemanticDriftModal = ({
   const [newAffixMeanings, setNewAffixMeanings] = useState([]);
   const [newNumMeanings, setNewNumMeanings] = useState([]);
   const [noMatch, setNoMatch] = useState(false);
+  const [validPartsOfSpeech, setValidPartsOfSpeech] = useState([]);
 
   const [chosenMeanings, setChosenMeanings] = useState({
     n: [],
@@ -105,6 +107,13 @@ const SemanticDriftModal = ({
     }, 3000);
   };
 
+  function logValidPartsOfSpeech(POS) {
+    
+    if (!validPartsOfSpeech.includes(POS)) {
+    setValidPartsOfSpeech((prev) => [...prev, POS])
+    }
+  }
+
   useEffect(() => {
     if (!show) return;
 
@@ -125,25 +134,37 @@ const SemanticDriftModal = ({
           key.setNewMeanings(match.shifted_meanings);
 
           match.shifted_meanings.forEach((m) => {
-            drifts.push(m);
+
+
+            meaningKeys.forEach((meaningK) => {
+              if (
+                m[meaningK.meaning] &&
+                !drifts.some((d) => d[meaningK.meaning] === m[meaningK.meaning])
+              ) {
+                drifts.push(m);
+               logValidPartsOfSpeech(meaningK.meaning)
+                
+              }
+            });
           });
         } else {
-            setNoMatch(true)
+          setNoMatch(true);
         }
       }
     });
 
     meaningKeysExpanded.forEach((key) => {
+      const keyMeaning = key.meaning;
+
       drifts.forEach((drift) => {
-        if (
-          drift[key.meaning] &&
-          !key.newMeanings.includes(drift[key.meaning])
-        ) {
+        if (!key.newMeanings.some((m) => m[keyMeaning] === drift[keyMeaning])) {
           key.setNewMeanings((prev) => [...prev, drift]);
         }
       });
     });
   }, [show]);
+
+
 
   const save = () => {
     const updatedMeaningStrings = { ...meaningStrings };
@@ -202,14 +223,17 @@ const SemanticDriftModal = ({
         <Modal.Title>{translate("Semantic Drift")}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-
-        {noMatch && (<h2>{translate("There are no semantic shifts listed for this word")}</h2>)}
+        {noMatch && (
+          <h2>
+            {translate("There are no semantic shifts listed for this word")}
+          </h2>
+        )}
 
         <div className="thin-white-border">
           {meaningKeysExpanded.map((key, index) => (
             <>
               <React.Fragment key={index}>
-                {key.newMeanings.length > 0 && (
+                {key.newMeanings.length > 0 && validPartsOfSpeech.includes(key.meaning) && (
                   <>
                     <p>
                       {translate(
@@ -238,15 +262,14 @@ const SemanticDriftModal = ({
                                   >
                                     {meaning[key.meaning]}
                                   </span>
+                                  <hr
+                                    style={{
+                                      marginTop: "0px",
+                                      marginBottom: "2px",
+                                    }}
+                                  />
                                 </>
                               )}
-
-                              <hr
-                                style={{
-                                  marginTop: "0px",
-                                  marginBottom: "2px",
-                                }}
-                              />
                             </React.Fragment>
                           ))}
                         </div>

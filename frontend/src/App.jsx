@@ -35,8 +35,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Welcome />} />
         <Route path="/home" element={<Home />} />
-         <Route path="/encyclopedias" element={<Encyclopedias />} />
-          <Route path="/encyclopedia/:id" element={<Encyclopedia />} />
+        <Route path="/encyclopedias" element={<Encyclopedias />} />
+        <Route path="/encyclopedia/:id" element={<Encyclopedia />} />
         <Route path="/dictionary/:id" element={<Dictionary />} />
         <Route path="/placenames/:id" element={<PlaceNames />} />
         <Route path="/personalnames/:id" element={<PersonalNames />} />
@@ -51,6 +51,8 @@ function App() {
         <Route path="/corpusFrequency/:id/" element={<CorpusFrequencyList />} />
         <Route path="/thesaurus/:id/" element={<Thesaurus />} />
         <Route path="/:id/" element={<Account />} />
+        <Route path="/makeDaughter" element={<MakeDaughter />} />
+        <Route path="/devTools" element={<DevTools />} />
         <Route
           path="/createLanguage"
           element={
@@ -60,8 +62,6 @@ function App() {
             />
           }
         />
-        <Route path="/makeDaughter" element={<MakeDaughter />} />
-        <Route path="/devTools/:id" element={<DevTools />} />
       </Routes>
 
       {/* ✅ Toast container */}

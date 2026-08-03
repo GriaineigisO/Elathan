@@ -2,32 +2,20 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslate } from "../Functions/TranslateUI";
 import meaningKeys from "../assets/meaningKeys";
-
 import Collapsible from "../Components/collapsable";
 import themes from "../assets/themes";
 import capitaliseFirstLetter from "../Functions/capitaliseFirstLetter.jsx";
 import affixArray from "../assets/affixArray";
 import potentialAffixArray from "../assets/potentialAffixArray";
 import WordViewer from "../Components/wordViewer.jsx";
-
-//const derivationsDesponse = await fetch("/affixDerivations.json");
-//const allDerivations = await derivationsDesponse.json();
-const coreEnglishWordsResponse = await fetch("/coreEnglishWords.json");
-const coreEnglishWords = await coreEnglishWordsResponse.json();
-
 import compoundDerivations from "../assets/compoundDerivations";
 import semanticDrifts from "../assets/semanticDrifts.jsx";
-
-const allAffixes = affixArray.concat(potentialAffixArray);
-
-allAffixes.sort((a, b) => a.affixName.localeCompare(b.affixName));
 
 const DevTools = () => {
   const { translate } = useTranslate();
   const activeCompoundRowRef = useRef(null);
   const activeDerivationRowRef = useRef(null);
   const activeSemanticShiftRowRef = useRef(null);
-  const { id } = useParams();
   const [lists, setLists] = useState({});
   const [viewedListCompound, setViewedListCompound] = useState([]);
   const [viewedListSemanticShift, setViewedListSemanticShift] = useState([]);
@@ -44,12 +32,8 @@ const DevTools = () => {
   const [secondWordMeaning, setSecondWordMeaning] = useState();
   const [compoundMeaning, setCompoundMeaning] = useState();
 
-  const [selectedAffixName, setSelectedAffixName] = useState(
-    allAffixes[0].affixName
-  );
-  const [selectedAffixDescription, setSelectedAffixDescription] = useState(
-    allAffixes[0].affixDescription
-  );
+  const [selectedAffixName, setSelectedAffixName] = useState();
+  const [selectedAffixDescription, setSelectedAffixDescription] = useState();
 
   const [compounds, setCompounds] = useState([]);
   const [chosenInput, setChosenInput] = useState();
@@ -87,17 +71,34 @@ const DevTools = () => {
   const [shiftedThemes, setShiftedThemes] = useState([]);
   const [pendingSemanticShifts, setPendingSemanticShifts] = useState([]);
   const [semanticData, setSemanticData] = useState(semanticDrifts);
+  const [coreEnglishWords, setCoreEnglishWords] = useState([]);
+  const [allAffixes, setAllAffixes] = useState([]);
+  const [allDerivations, setAllDerivations] = useState([]);
 
-   useEffect(() => {
-    async function loadDerivations() {
-      const response = await fetch("/affixDerivations.json");
-      const json = await response.json();
-      setDerivations(json);
-    }
+  const getData = async () => {
+    const derivationsResponse = await fetch("/affixDerivations.json");
+    const derivs = await derivationsResponse.json();
+    setDerivations(derivs);
+    setAllDerivations(derivs)
 
-    loadDerivations();
+    const coreEnglishWordsResponse = await fetch("/coreEnglishWords.json");
+    const coreEng = await coreEnglishWordsResponse.json();
+    setCoreEnglishWords(coreEng);
+
+    const affixes = affixArray.concat(potentialAffixArray);
+
+    affixes.sort((a, b) => a.affixName.localeCompare(b.affixName));
+
+    setAllAffixes(affixes);
+
+setSelectedAffixName(affixes[0].affixName);
+setSelectedAffixDescription(affixes[0].affixDescription);
+
+  };
+
+  useEffect(() => {
+    getData();
   }, []);
-
 
   const showToast = (message) => {
     const toastContainer = document.getElementById("toastContainer");
@@ -165,19 +166,13 @@ const DevTools = () => {
     setAllWordsAdded(true);
   }, []);
 
-  //if somehow another user has opened the page, force it to close
-  if (id !== "1745767579287") {
-    close();
-    return;
-  }
-
   function splitByPartOfSpeech(partOfSpeech) {
     const filteredByPartofSpeech = allWords.filter(
-      (word) => word[partOfSpeech]
+      (word) => word[partOfSpeech],
     );
 
     filteredByPartofSpeech.sort((a, b) =>
-      a[partOfSpeech][0].localeCompare(b[partOfSpeech][0])
+      a[partOfSpeech][0].localeCompare(b[partOfSpeech][0]),
     );
 
     return filteredByPartofSpeech;
@@ -374,7 +369,7 @@ export default semanticDrifts;
           const val = newMeaningObj[pos];
 
           const alreadyExists = existing.shifted_meanings.some(
-            (m) => m[pos] === val
+            (m) => m[pos] === val,
           );
 
           if (!alreadyExists) {
@@ -492,7 +487,7 @@ export default semanticDrifts;
       JSON.stringify({
         partOfSpeech,
         index,
-      })
+      }),
     );
 
     setCompoundProgress({ partOfSpeech: partOfSpeech, index: index });
@@ -504,7 +499,7 @@ export default semanticDrifts;
       JSON.stringify({
         partOfSpeech,
         index,
-      })
+      }),
     );
 
     setDerivationProgress({ partOfSpeech: partOfSpeech, index: index });
@@ -516,7 +511,7 @@ export default semanticDrifts;
       JSON.stringify({
         partOfSpeech,
         index,
-      })
+      }),
     );
 
     setSemanticShiftProgress({ partOfSpeech: partOfSpeech, index: index });
@@ -545,11 +540,12 @@ export default semanticDrifts;
 
   function toggleAffix(name) {
     const selectedAffix = allAffixes.filter(
-      (affix) => affix.affixName === name
+      (affix) => affix.affixName === name,
     );
     setSelectedAffixName(selectedAffix[0].affixName);
     setSelectedAffixDescription(selectedAffix[0].affixDescription);
   }
+
 
   return (
     <div>
@@ -572,8 +568,10 @@ export default semanticDrifts;
             onChange={(e) => handleNewWordPartOfSpeech(e.target.value)}
             style={{ marginRight: "5px" }}
           >
-            {meaningKeys.map((key) => (
-              <option value={key.meaning}>{translate(key.type)}</option>
+            {meaningKeys.map((key, index) => (
+              <option key={index} value={key.meaning}>
+                {translate(key.type)}
+              </option>
             ))}
           </select>
 
@@ -858,7 +856,8 @@ export default semanticDrifts;
             <div className="shift-theme-container thin-white-border">
               {derivations.map((derivation, index) => (
                 <div className="word-form-list" key={index}>
-                  <span>{derivation.originalMeanings.join(", ")}</span>
+                
+                  <span>{derivation?.originalMeanings?.join(", ") ?? ""}</span>
 
                   <span>+</span>
 
@@ -871,7 +870,7 @@ export default semanticDrifts;
                   <button
                     onClick={() =>
                       setDerivations((prev) =>
-                        prev.filter((_, i) => i !== index)
+                        prev.filter((_, i) => i !== index),
                       )
                     }
                     className="btn-close btn-close-white extra-small-x-button"
@@ -998,7 +997,7 @@ export default semanticDrifts;
                 <div className="word-form-list" key={index}>
                   {meaningKeys.map(
                     (key) =>
-                      shift[key.meaning] && <span>{shift[key.meaning]}</span>
+                      shift[key.meaning] && <span>{shift[key.meaning]}</span>,
                   )}
                   <span>→</span>
                   <span>
@@ -1007,8 +1006,8 @@ export default semanticDrifts;
                         (key) =>
                           shifted[key.meaning] && (
                             <span>{shifted[key.meaning]}</span>
-                          )
-                      )
+                          ),
+                      ),
                     )}
                   </span>
                   <span style={{ marginLeft: "10px", fontStyle: "italic" }}>
@@ -1018,7 +1017,7 @@ export default semanticDrifts;
                   <button
                     onClick={() =>
                       setPendingSemanticShifts((prev) =>
-                        prev.filter((_, i) => i !== index)
+                        prev.filter((_, i) => i !== index),
                       )
                     }
                     className="btn-close btn-close-white extra-small-x-button"

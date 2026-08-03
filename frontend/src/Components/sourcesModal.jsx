@@ -8,34 +8,12 @@ const SourcesModal = ({ show, setShow, languageId }) => {
     setShow(false);
   };
   const [sources, setSources] = useState([]);
-  const [canEdit, setCanEdit] = useState(false);
   const [showAddSourcesModal, setShowAddSourcesModal] = useState(false);
   const [sourceName, setSourceName] = useState();
   const [sourceLink, setSourceLink] = useState();
   const [sourceId, setSourceId] = useState();
   const [isEditing, setIsEditing] = useState(false)
 
-  const checkPermission = async () => {
-    if (languageId) {
-      const userId = localStorage.getItem("userId");
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/checkPermission`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: languageId, userId }),
-        }
-      );
-      const data = await response.json();
-      setCanEdit(data);
-    }
-  };
-
-  useEffect(() => {
-    checkPermission();
-  }, [languageId]);
 
   const getSources = async () => {
     const response = await fetch(
@@ -172,7 +150,7 @@ const SourcesModal = ({ show, setShow, languageId }) => {
       </Modal.Header>
       <Modal.Body>
         
-        {canEdit && (
+       
             <>
             <div>
           <div style={{display:"flex", flexDirection:"row"}}>
@@ -196,7 +174,7 @@ const SourcesModal = ({ show, setShow, languageId }) => {
 
         <hr />
         </>
-        )}
+        
         
 
         {sources && (

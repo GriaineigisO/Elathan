@@ -8,9 +8,6 @@ import { registerDerivationHandlers } from "./ipc/derivation.js";
 import { registerEtymologyHandlers } from "./ipc/etymology.js";
 import { registerEncyclopediaHandlers } from "./ipc/encyclopedia.js";
 
-ipcMain.handle("get-version", () => {
-  return app.getVersion();
-});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,6 +19,7 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1400,
     height: 900,
+   icon: path.join(__dirname, "..", "src", "assets", "icon.png"),
     webPreferences: {
       preload: preloadPath,
       contextIsolation: true,
@@ -31,6 +29,7 @@ function createWindow() {
 
   win.loadURL("http://localhost:5173");
 }
+
 
 app.whenReady().then(() => {
   registerDictionaryHandlers();

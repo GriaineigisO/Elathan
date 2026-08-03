@@ -21,6 +21,7 @@ import {
 import { addEtymology } from "../services/etymologyService.js";
 import { getWordsForms } from "../services/dictionaryService.js";
 import { IPAkeyboard } from "./IPAkeyboard.jsx";
+import { Keyboard } from "./keyboard.jsx";
 
 const AddDescendantModal = ({
   show,
@@ -29,6 +30,7 @@ const AddDescendantModal = ({
   onSuccess,
   word,
   name,
+  setVersion
 }) => {
   const { translate } = useTranslate();
   const [newWord, setNewWord] = useState();
@@ -41,7 +43,7 @@ const AddDescendantModal = ({
   const [showSemanticDriftModal, setShowSemanticDriftModal] = useState(false);
   const [etymNote, setEtymNote] = useState();
   const [selectedSoundChanges, setSelectedSoundChanges] = useState([]);
-  const [spellings, setSpellings] = useState([]);
+  const [spellings, setSpellings] = useState({});
   const [meaningStrings, setMeaningStrings] = useState({});
   const [descendantWordType, setDescendantWordType] = useState();
   const [descendantLanguage, setDescendantLanguage] = useState();
@@ -68,7 +70,7 @@ const AddDescendantModal = ({
   const [wordCategories, setWordCategories] = useState([]);
   const [wordCategoryInputs, setWordCategoryInputs] = useState();
   const [adjWordCategoryInputs, setAdjWordCategoryInputs] = useState([]);
-  const [nounWordCategoryInputs, setNounWordCategoryInputs] = useState([]);
+  const [nounWordCategoryInputs, setNounWordCategoryInputs] = useState(word.noun_word_categories);
   const [numWordCategoryInputs, setNumWordCategoryInputs] = useState([]);
   const [verbWordCategoryInputs, setVerbWordCategoryInputs] = useState([]);
   const [advWordCategoryInputs, setAdvWordCategoryInputs] = useState([]);
@@ -80,7 +82,7 @@ const AddDescendantModal = ({
   const [cliticWordCategoryInputs, setCliticWordCategoryInputs] = useState([]);
   const [pronWordCategoryInputs, setPronWordCategoryInputs] = useState([]);
 
-  const [nounCategorySelections, setNounCategorySelections] = useState([]);
+  const [nounCategorySelections, setNounCategorySelections] = useState(word.noun_word_categories);
   const [numCategorySelections, setNumCategorySelections] = useState([]);
   const [verbCategorySelections, setVerbCategorySelections] = useState([]);
   const [adjCategorySelections, setAdjCategorySelections] = useState([]);
@@ -97,6 +99,8 @@ const AddDescendantModal = ({
   const [tagInputs, setTagInputs] = useState([]);
   const [initializedGroups, setInitializedGroups] = useState([]);
 
+  const [convertIPA, setConvertIPA] = useState(false);
+
   const [pronunciation, setPronunciation] = useState();
   const [note, setNote] = useState();
   const [variants, setVariants] = useState();
@@ -109,6 +113,7 @@ const AddDescendantModal = ({
   const [loanWord, setLoanWord] = useState();
   const [showLoanWordWarning, setShowLoanWordWarning] = useState(false);
   const [allCategoryValues, setAllCategoryValues] = useState({});
+  const [overrideWord, setOverrideWord] = useState(false);
 
   useEffect(() => {
     setDescendant(word);
@@ -129,18 +134,90 @@ const AddDescendantModal = ({
     setMeaningStrings(newMeaningStrings);
     setShownParts(newShownParts);
 
-    setNounWordFormInputs([...(descendant.noun_word_forms ?? [])]);
-    setVerbWordFormInputs([...(descendant.verb_word_forms ?? [])]);
-    setAdjWordFormInputs([...(descendant.adj_word_forms ?? [])]);
-    setAdvWordFormInputs([...(descendant.adv_word_forms ?? [])]);
-    setAdpWordFormInputs([...(descendant.adp_word_forms ?? [])]);
-    setConjWordFormInputs([...(descendant.conj_word_forms ?? [])]);
-    setPartWordFormInputs([...(descendant.part_word_forms ?? [])]);
-    setPronWordFormInputs([...(descendant.pron_word_forms ?? [])]);
-    setNumWordFormInputs([...(descendant.num_word_forms ?? [])]);
-    setInterjWordFormInputs([...(descendant.interj_word_forms ?? [])]);
-    setAffixWordFormInputs([...(descendant.affix_word_forms ?? [])]);
-    setCliticWordFormInputs([...(descendant.clitic_word_forms ?? [])]);
+    setNounWordFormInputs([
+      ...(word.noun_word_forms
+        ? word.noun_word_forms
+        : word[0].noun_word_forms
+          ? word[0].noun_word_forms
+          : []),
+    ]);
+    setVerbWordFormInputs([
+      ...(word.verb_word_forms
+        ? word.verb_word_forms
+        : word[0].verb_word_forms
+          ? word[0].verb_word_forms
+          : []),
+    ]);
+    setAdjWordFormInputs([
+      ...(word.adj_word_forms
+        ? word.adj_word_forms
+        : word[0].adj_word_forms
+          ? word[0].adj_word_forms
+          : []),
+    ]);
+    setAdvWordFormInputs([
+      ...(word.adv_word_forms
+        ? word.adv_word_forms
+        : word[0].adv_word_forms
+          ? word[0].adv_word_forms
+          : []),
+    ]);
+    setAdpWordFormInputs([
+      ...(word.adp_word_forms
+        ? word.adp_word_forms
+        : word[0].adp_word_forms
+          ? word[0].adp_word_forms
+          : []),
+    ]);
+    setConjWordFormInputs([
+      ...(word.conj_word_forms
+        ? word.conj_word_forms
+        : word[0].conj_word_forms
+          ? word[0].conj_word_forms
+          : []),
+    ]);
+    setPartWordFormInputs([
+      ...(word.part_word_forms
+        ? word.part_word_forms
+        : word[0].part_word_forms
+          ? word[0].part_word_forms
+          : []),
+    ]);
+    setPronWordFormInputs([
+      ...(word.pron_word_forms
+        ? word.pron_word_forms
+        : word[0].pron_word_forms
+          ? word[0].pron_word_forms
+          : []),
+    ]);
+    setNumWordFormInputs([
+      ...(word.num_word_forms
+        ? word.num_word_forms
+        : word[0].num_word_forms
+          ? word[0].num_word_forms
+          : []),
+    ]);
+    setInterjWordFormInputs([
+      ...(word.interj_word_forms
+        ? word.interj_word_forms
+        : word[0].interj_word_forms
+          ? word[0].interj_word_forms
+          : []),
+    ]);
+    setAffixWordFormInputs([
+      ...(word.affix_word_forms
+        ? word.affix_word_forms
+        : word[0].affix_word_forms
+          ? word[0].affix_word_forms
+          : []),
+    ]);
+    setCliticWordFormInputs([
+      ...(word.clitic_word_forms
+        ? word.clitic_word_forms
+        : word[0].clitic_word_forms
+          ? word[0].clitic_word_forms
+          : []),
+    ]);
   }, [word]);
 
   const displayedIpa =
@@ -165,14 +242,14 @@ const AddDescendantModal = ({
   const [partsOfSpeech, setPartsOfSpeech] = useState([
     { id: "noun", label: translate("Noun") },
     { id: "verb", label: translate("Verb") },
-    { id: "adj", label: translate("Adjective") },
-    { id: "num", label: translate("Number") },
-    { id: "adv", label: translate("Adverb") },
-    { id: "adp", label: translate("Adposition") },
-    { id: "conj", label: translate("Conjunction") },
-    { id: "part", label: translate("Particle") },
-    { id: "interj", label: translate("Interjection") },
-    { id: "pron", label: translate("Pronoun") },
+    { id: "adjective", label: translate("Adjective") },
+    { id: "number", label: translate("Number") },
+    { id: "adverb", label: translate("Adverb") },
+    { id: "adposition", label: translate("Adposition") },
+    { id: "conjunction", label: translate("Conjunction") },
+    { id: "particle", label: translate("Particle") },
+    { id: "interjection", label: translate("Interjection") },
+    { id: "pronoun", label: translate("Pronoun") },
     { id: "affix", label: translate("Affix") },
     { id: "clitic", label: translate("Clitic") },
   ]);
@@ -257,7 +334,8 @@ const AddDescendantModal = ({
     );
     setSelectedSoundChanges(data[0].sound_changes ?? []);
     setAllCategoryValues(data[0].category_values ?? []);
-    setSpellings(data[0].spelling ?? []);
+    setSpellings(data[0].spelling ?? {});
+    setConvertIPA(data[0].convert_ipa === 1 ? true : false);
   };
 
   useEffect(() => {
@@ -342,6 +420,7 @@ const AddDescendantModal = ({
 
     Object.entries(setterMap).forEach(
       ([type, [setSelections, setInputs, parentCategories]]) => {
+        
         const filtered = wordCategories
           .flatMap((wordCategory) => wordCategory.word_categories)
           .filter((cat) => cat.type === type);
@@ -351,11 +430,14 @@ const AddDescendantModal = ({
         );
 
         const initialSelections = filtered.map((cat) => {
+          const parent = parentLookup.get(cat.name);
+          
           const fromMother = parentLookup.get(cat.name);
 
-          return fromMother ? fromMother.category_type : cat.categories.name[0];
+          return fromMother ? fromMother : cat.categories.name[0];
         });
 
+       
         setSelections(initialSelections);
       },
     );
@@ -669,12 +751,13 @@ const AddDescendantModal = ({
         ? applySoundChange(word.ipa, selectedSoundChanges, allCategoryValues)
         : pronunciation;
 
+    const numOfKeys = Object.keys(spellings);
     const spelledWord =
-      spellings.length > 0
+      numOfKeys.length > 0
         ? spell(displayedIpa, spellings)
-        : newWordOverride
+        : newWordOverride && typeof newWordOverride === "string"
           ? newWordOverride
-          : displayedIpa;
+          : newWord;
 
     const data = await window.electron.addWord(
       date,
@@ -748,6 +831,7 @@ const AddDescendantModal = ({
     setShow(false);
     setLanguageSelected(false);
     setDescendantLanguage();
+    setVersion((v) => v + 1) //reset form
   };
 
   const handleWordFormInput = (setForms, name, value, field) => {
@@ -995,11 +1079,20 @@ const AddDescendantModal = ({
               </div>
 
               <div className="thin-white-border">
-                <h4>{translate("Enter Word")}</h4>
-                <input
-                  value={newWordOverride ?? spell(displayedIpa, spellings)}
-                  onChange={(e) => setNewWordOverride(e.target.value)}
-                />
+                <div className="keyboard">
+                  <Keyboard
+                    inputVal={
+                      newWordOverride
+                        ? newWord
+                        : convertIPA
+                          ? spell(displayedIpa, spellings)
+                          : newWord
+                    }
+                    setInputVal={setNewWordOverride}
+                    setOverrideWord={setOverrideWord}
+                    setWord={setNewWord}
+                  />
+                </div>
               </div>
 
               {showWordWarning && !descendant && (
@@ -1009,10 +1102,11 @@ const AddDescendantModal = ({
               )}
 
               <div className="thin-white-border">
-                
-
                 <div className="keyboard">
-                    <IPAkeyboard inputVal={displayedIpa} setInputVal={setPronunciationOverride} />
+                  <IPAkeyboard
+                    inputVal={displayedIpa}
+                    setInputVal={setPronunciationOverride}
+                  />
                 </div>
               </div>
 
@@ -1033,7 +1127,7 @@ const AddDescendantModal = ({
                           </span>
                           <select
                             value={
-                              nounCategorySelections[index] ??
+                              nounCategorySelections[index].category_type ??
                               cat.categories.name[0]
                             }
                             onChange={(e) => {
@@ -1083,7 +1177,7 @@ const AddDescendantModal = ({
                           </span>
                           <select
                             value={
-                              verbCategorySelections[index] ??
+                              verbCategorySelections[index].category_type ??
                               cat.categories.name[0]
                             }
                             onChange={(e) => {
@@ -1133,7 +1227,7 @@ const AddDescendantModal = ({
                           </span>
                           <select
                             value={
-                              adjCategorySelections[index] ??
+                              adjCategorySelections[index].category_type ??
                               cat.categories.name[0]
                             }
                             onChange={(e) => {
@@ -1183,7 +1277,7 @@ const AddDescendantModal = ({
                           </span>
                           <select
                             value={
-                              numCategorySelections[index] ??
+                              numCategorySelections[index].category_type ??
                               cat.categories.name[0]
                             }
                             onChange={(e) => {
@@ -1233,7 +1327,7 @@ const AddDescendantModal = ({
                           </span>
                           <select
                             value={
-                              advCategorySelections[index] ??
+                              advCategorySelections[index].category_type ??
                               cat.categories.name[0]
                             }
                             onChange={(e) => {
@@ -1283,7 +1377,7 @@ const AddDescendantModal = ({
                           </span>
                           <select
                             value={
-                              adpCategorySelections[index] ??
+                              adpCategorySelections[index].category_type ??
                               cat.categories.name[0]
                             }
                             onChange={(e) => {
@@ -1333,7 +1427,7 @@ const AddDescendantModal = ({
                           </span>
                           <select
                             value={
-                              partCategorySelections[index] ??
+                              partCategorySelections[index].category_type ??
                               cat.categories.name[0]
                             }
                             onChange={(e) => {
@@ -1383,7 +1477,7 @@ const AddDescendantModal = ({
                           </span>
                           <select
                             value={
-                              interjCategorySelections[index] ??
+                              interjCategorySelections[index].category_type ??
                               cat.categories.name[0]
                             }
                             onChange={(e) => {
@@ -1433,7 +1527,7 @@ const AddDescendantModal = ({
                           </span>
                           <select
                             value={
-                              conjCategorySelections[index] ??
+                              conjCategorySelections[index].category_type ??
                               cat.categories.name[0]
                             }
                             onChange={(e) => {
@@ -1483,7 +1577,7 @@ const AddDescendantModal = ({
                           </span>
                           <select
                             value={
-                              affixCategorySelections[index] ??
+                              affixCategorySelections[index].category_type ??
                               cat.categories.name[0]
                             }
                             onChange={(e) => {
@@ -1533,7 +1627,7 @@ const AddDescendantModal = ({
                           </span>
                           <select
                             value={
-                              pronCategorySelections[index] ??
+                              pronCategorySelections[index].category_type ??
                               cat.categories.name[0]
                             }
                             onChange={(e) => {
@@ -1838,7 +1932,9 @@ const AddDescendantModal = ({
                                   form
                                     ? (form.wordOverride ??
                                       spell(ipa, spellings))
-                                    : ""
+                                    : form.word
+                                      ? form.word
+                                      : ""
                                 }
                                 onChange={(e) =>
                                   handleWordFormInput(
@@ -1889,8 +1985,6 @@ const AddDescendantModal = ({
                             ))
                           : "";
 
-                        console.log(wordForm);
-
                         return wordForm.type === "verb" ? (
                           <div key={index}>
                             <>
@@ -1902,7 +1996,9 @@ const AddDescendantModal = ({
                                   form
                                     ? (form.wordOverride ??
                                       spell(ipa, spellings))
-                                    : ""
+                                    : form.word
+                                      ? form.word
+                                      : ""
                                 }
                                 onChange={(e) =>
                                   handleWordFormInput(
@@ -1964,7 +2060,9 @@ const AddDescendantModal = ({
                                   form
                                     ? (form.wordOverride ??
                                       spell(ipa, spellings))
-                                    : ""
+                                    : form.word
+                                      ? form.word
+                                      : ""
                                 }
                                 onChange={(e) =>
                                   handleWordFormInput(
@@ -2026,7 +2124,9 @@ const AddDescendantModal = ({
                                   form
                                     ? (form.wordOverride ??
                                       spell(ipa, spellings))
-                                    : ""
+                                    : form.word
+                                      ? form.word
+                                      : ""
                                 }
                                 onChange={(e) =>
                                   handleWordFormInput(
@@ -2088,7 +2188,9 @@ const AddDescendantModal = ({
                                   form
                                     ? (form.wordOverride ??
                                       spell(ipa, spellings))
-                                    : ""
+                                    : form.word
+                                      ? form.word
+                                      : ""
                                 }
                                 onChange={(e) =>
                                   handleWordFormInput(
@@ -2150,7 +2252,9 @@ const AddDescendantModal = ({
                                   form
                                     ? (form.wordOverride ??
                                       spell(ipa, spellings))
-                                    : ""
+                                    : form.word
+                                      ? form.word
+                                      : ""
                                 }
                                 onChange={(e) =>
                                   handleWordFormInput(
@@ -2212,7 +2316,9 @@ const AddDescendantModal = ({
                                   form
                                     ? (form.wordOverride ??
                                       spell(ipa, spellings))
-                                    : ""
+                                    : form.word
+                                      ? form.word
+                                      : ""
                                 }
                                 onChange={(e) =>
                                   handleWordFormInput(
@@ -2274,7 +2380,9 @@ const AddDescendantModal = ({
                                   form
                                     ? (form.wordOverride ??
                                       spell(ipa, spellings))
-                                    : ""
+                                    : form.word
+                                      ? form.word
+                                      : ""
                                 }
                                 onChange={(e) =>
                                   handleWordFormInput(
@@ -2336,7 +2444,9 @@ const AddDescendantModal = ({
                                   form
                                     ? (form.wordOverride ??
                                       spell(ipa, spellings))
-                                    : ""
+                                    : form.word
+                                      ? form.word
+                                      : ""
                                 }
                                 onChange={(e) =>
                                   handleWordFormInput(
@@ -2398,7 +2508,9 @@ const AddDescendantModal = ({
                                   form
                                     ? (form.wordOverride ??
                                       spell(ipa, spellings))
-                                    : ""
+                                    : form.word
+                                      ? form.word
+                                      : ""
                                 }
                                 onChange={(e) =>
                                   handleWordFormInput(
@@ -2460,7 +2572,9 @@ const AddDescendantModal = ({
                                   form
                                     ? (form.wordOverride ??
                                       spell(ipa, spellings))
-                                    : ""
+                                    : form.word
+                                      ? form.word
+                                      : ""
                                 }
                                 onChange={(e) =>
                                   handleWordFormInput(
@@ -2522,7 +2636,9 @@ const AddDescendantModal = ({
                                   form
                                     ? (form.wordOverride ??
                                       spell(ipa, spellings))
-                                    : ""
+                                    : form.word
+                                      ? form.word
+                                      : ""
                                 }
                                 onChange={(e) =>
                                   handleWordFormInput(

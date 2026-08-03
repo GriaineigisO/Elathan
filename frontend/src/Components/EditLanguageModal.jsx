@@ -7,6 +7,7 @@ import { useTranslate } from "../Functions/TranslateUI";
 import SoundChangeMaker from "./soundChangeMaker";
 import Collapsible from "./collapsable.jsx";
 import SpellingCreator from "./spellingCreator.jsx";
+import { IPAkeyboard } from "./IPAkeyboard.jsx";
 import {
   getDaughterLanguages,
   getMotherLanguage,
@@ -72,12 +73,18 @@ const EditLanguageModal = ({
   const [tags, setTags] = useState([]);
   const [tagGroup, setTagGroup] = useState([]);
   const [addedTagGroups, setAddedTagGroups] = useState([]);
+  const [motherSpellings, setMotherSpellings] = useState({})
+  const [defaultTag, setDefaultTag] = useState(0);
+
+  const [convertIPA, setConvertIPA] = useState(false);
 
   const [spellings, setSpellings] = useState([]);
   const [selectedSoundChanges, setSelectedSoundChanges] = useState([]);
   const [allCategoryValues, setAllCategoryValues] = useState({});
   const [prosodyType, setProsodyType] = useState("stress");
   const page = "languageModal";
+
+  
 
   useEffect(() => {
     setIsProto(is_proto);
@@ -91,23 +98,27 @@ const EditLanguageModal = ({
     getLanguages();
   }, [id]);
 
-  useEffect(() => {
-    const getLanguages = async () => {
-      const data = await window.electron.getMotherLanguage(id);
-      setSelectedParentLanguage(data[0]);
-    };
-    getLanguages();
-  }, [id]);
+  
 
   useEffect(() => {
     const fetchLanguage = async () => {
+
+
+        
+      const Motherdata = await window.electron.getMotherLanguage(id);
+      setSelectedParentLanguage(Motherdata[0]);
+      setMotherSpellings(Motherdata[0].spelling)
+    
+
+
       const data = await window.electron.getLanguage(id);
 
       setLanguage(data[0]);
       setSelectedSoundChanges(data[0].sound_changes ?? []);
-      setSpellings(data[0].spelling ?? []);
+      setSpellings(data[0].spelling ? data[0].spelling : Motherdata[0].spelling ? Motherdata[0].spelling : []);
       setOwner(data[0].user_id);
       setAddedTagGroups(data[0].tags ? data[0].tags : []);
+      setConvertIPA(data[0].convert_ipa === 1 ? true : false)
       if (data[0].groups) {
         setAddedGroups(data[0].groups);
         setPreexistingGroups(data[0].groups);
@@ -206,8 +217,10 @@ const EditLanguageModal = ({
         JSON.stringify(addedTagGroups),
         JSON.stringify(spellings),
         JSON.stringify(selectedSoundChanges),
-        JSON.stringify(allCategoryValues)
+        JSON.stringify(allCategoryValues),
+        convertIPA
       );
+
       
       if (!data.success) {
         console.error(`Errorediting language`);
@@ -339,10 +352,12 @@ const EditLanguageModal = ({
   };
 
   const addTagGroup = () => {
+
     if (tagGroupName) {
       const tag = {
         name: tagGroupName,
         tags: tags,
+        defaultTag: defaultTag
       };
       setAddedTagGroups((prev) => [...prev, tag]);
       setTagGroupName("");
@@ -378,6 +393,14 @@ const EditLanguageModal = ({
   };
 
   /*************************** */
+
+  function handleConvertIPA() {
+    if (convertIPA) {
+      setConvertIPA(false)
+    } else {
+      setConvertIPA(true)
+    }
+  }
 
   return (
     <Modal show={show} onHide={close} backdrop={true}>
@@ -453,7 +476,7 @@ const EditLanguageModal = ({
                   ></button>
                 </div>
 
-                <Collapsible title={translate("Create Spellings")}>
+                <Collapsible title={translate("Orthography")}>
                   <div className="thin-white-border">
                     <SpellingCreator
                       spellings={spellings}
@@ -548,6 +571,19 @@ const EditLanguageModal = ({
                     )}
                   </i>
                 </p>
+              </div>
+
+              <div className="thin-white-border">
+                    <label style={{ marginRight: "5px", fontWeight: "600" }}>
+                    {translate("IPA Conversion")}
+                  </label>
+                    <input
+                    type="checkbox"
+                    id="convert_ipa"
+                    onChange={handleConvertIPA}
+                    checked={convertIPA}
+                  ></input>
+                    <p>{translate("Automatically convert IPA transcriptions into spelled headwords")}</p>
               </div>
 
               <div className="thin-white-border">
@@ -1320,7 +1356,9 @@ const EditLanguageModal = ({
 
                 <br />
 
-                <div className="input-and-button-one-row">
+                <p>{translate("A tag can be assigned to a word for a variety of purposes, such a tracking which percentage of a language's vocabulary comes from loans of various sources.")}</p>
+
+                <div style={{display:"flex", flexDirection:"column"}}>
                   <input
                     type="text"
                     placeholder={translate("Enter tag group name")}
@@ -1336,7 +1374,7 @@ const EditLanguageModal = ({
                   />
 
                   <button
-                    style={{ height: "40px" }}
+                    style={{ height: "40px", width: "200px" }}
                     onClick={() => addTag(setTags)}
                   >
                     {translate("Add Tag")}
@@ -1365,6 +1403,16 @@ const EditLanguageModal = ({
                             }
                           />
 
+                          <input 
+                          style={{marginLeft:"5px"}}
+                          type="radio" 
+                          value={translate("set as default tag")}
+                          onChange={() => setDefaultTag(index)}
+                          checked={index === defaultTag ? true : false}
+                          />
+
+                          <span style={{marginLeft:"5px"}}>{translate("default tag")}</span>
+
                           <button
                             onClick={() => removeTag(setTags, index)}
                             className="btn-close btn-close-white extra-small-x-button"
@@ -1377,10 +1425,10 @@ const EditLanguageModal = ({
                       className="word-form-input-button"
                       style={{ marginTop: "10px", width: "fit-content" }}
                       onClick={() =>
-                        addTagGroup(tagName, setTagName, tags, setTags)
+                        addTagGroup(tagName, setTagName, tags, setTags, defaultTag)
                       }
                     >
-                      {translate("Submit")}
+                      {translate("Submit Tag Group")}
                     </button>
                   </div>
                 </div>

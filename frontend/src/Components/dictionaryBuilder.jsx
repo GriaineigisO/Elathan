@@ -251,7 +251,6 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
     try {
       let words = await window.electron.getAllWords(id);
       
-
       if (!words) return;
 
     
@@ -345,8 +344,10 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
 
   const getEtymologyGraph = async () => {
     const rootIds = visibleWords
-      .filter((word) => word.etymology_type === "not_derived")
+      .filter((word) => word.etymology_type !== "derived")
       .map((word) => word.word_id);
+
+      console.log(rootIds)
 
      let etymTree = await window.electron.getEtymologyTrees(id, rootIds);
     return etymTree;
@@ -642,24 +643,17 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   };
 
   const openPlacenames = (id) => {
-    window.open(
-      `${import.meta.env.VITE_FRONTEND_URL}/placenames/${id}`,
-      "_blank",
-    );
+    
+     window.location.href = `/placenames/${id}`
   };
 
   const openPersonalnames = (id) => {
-    window.open(
-      `${import.meta.env.VITE_FRONTEND_URL}/personalnames/${id}`,
-      "_blank",
-    );
+
+     window.location.href = `/personalnames/${id}`
   };
 
   const openDictionary = (id) => {
-    window.open(
-      `${import.meta.env.VITE_FRONTEND_URL}/dictionary/${id}`,
-      "_blank",
-    );
+    window.location.href = `/dictionary/${id}`
   };
 
 
@@ -673,10 +667,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   };
 
   const openFrequencyList = (id) => {
-    window.open(
-      `${import.meta.env.VITE_FRONTEND_URL}/frequency/${id}`,
-      "_blank",
-    );
+    window.location.href = `/frequency/${id}`
   };
 
  

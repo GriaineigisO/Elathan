@@ -200,8 +200,11 @@ export function editLanguage(
   spelling,
   selectedSoundChanges,
   allCategoryValues,
+  convertIPA
 ) {
   const isproto = isProto === "true" ? 1 : 0;
+
+  const ipaConversion = convertIPA ? 1 : 0;
 
   const editLangStmt = db.prepare(`
           UPDATE languages
@@ -212,8 +215,10 @@ export function editLanguage(
             spelling = ?,
             sound_changes = ?,
             word_forms = ?,
-            tags = ?
+            tags = ?,
+            convert_ipa = ?
             WHERE language_id = ?
+            
           `);
 
   const editLang = editLangStmt.run(
@@ -224,8 +229,10 @@ export function editLanguage(
     selectedSoundChanges,
     wordForms,
     addedTagGroups,
-    id,
-  );
+    ipaConversion,
+    id
+     );
+
 
   if (editLang.changes > 0) {
     if (daughterLanguageIds) {
@@ -298,8 +305,14 @@ export function editLanguage(
       }
     }
 
-    return { success: true };
+    //if a default tag has been selected, find all words with no tags and assign to them the default tag
+
+
+    return { "success": true };
   }
+
+  return {"success": false}
+
 }
 
 export function addGroup(groupName, wordForms, addedLanguages) {
@@ -624,6 +637,7 @@ export function addWord(
   thesaurusDomains,
 ) {
   const removeNulls = (arr) => {
+   
     if (!Array.isArray(arr)) return;
     return JSON.stringify(
       arr.filter((obj) => obj !== null && obj !== undefined),
@@ -631,38 +645,39 @@ export function addWord(
   };
   const thes = thesaurusDomains ? thesaurusDomains : {};
 
+
   const nounMeaning = Array.isArray(meanings.noun)
     ? JSON.stringify(meanings.noun)
     : null;
   const verbMeaning = Array.isArray(meanings.verb)
     ? JSON.stringify(meanings.verb)
     : null;
-  const adjMeaning = Array.isArray(meanings.adj)
-    ? JSON.stringify(meanings.adj)
+  const adjMeaning = Array.isArray(meanings.adjective)
+    ? JSON.stringify(meanings.adjective)
     : null;
-  const advMeaning = Array.isArray(meanings.adv)
-    ? JSON.stringify(meanings.adv)
+  const advMeaning = Array.isArray(meanings.adverb)
+    ? JSON.stringify(meanings.adverb)
     : null;
-  const adpMeaning = Array.isArray(meanings.adp)
-    ? JSON.stringify(meanings.adp)
+  const adpMeaning = Array.isArray(meanings.adposition)
+    ? JSON.stringify(meanings.adposition)
     : null;
-  const partMeaning = Array.isArray(meanings.part)
-    ? JSON.stringify(meanings.part)
+  const partMeaning = Array.isArray(meanings.particle)
+    ? JSON.stringify(meanings.particle)
     : null;
-  const pronMeaning = Array.isArray(meanings.pron)
-    ? JSON.stringify(meanings.pron)
+  const pronMeaning = Array.isArray(meanings.pronoun)
+    ? JSON.stringify(meanings.pronoun)
     : null;
-  const conjMeaning = Array.isArray(meanings.conj)
-    ? JSON.stringify(meanings.conj)
+  const conjMeaning = Array.isArray(meanings.conjunction)
+    ? JSON.stringify(meanings.conjunction)
     : null;
-  const interjMeaning = Array.isArray(meanings.interj)
-    ? JSON.stringify(meanings.interj)
+  const interjMeaning = Array.isArray(meanings.interjection)
+    ? JSON.stringify(meanings.interjection)
     : null;
   const affixMeaning = Array.isArray(meanings.affix)
     ? JSON.stringify(meanings.affix)
     : null;
-  const numMeaning = Array.isArray(meanings.num)
-    ? JSON.stringify(meanings.num)
+  const numMeaning = Array.isArray(meanings.number)
+    ? JSON.stringify(meanings.number)
     : null;
   const cliticMeaning = Array.isArray(meanings.clitic)
     ? JSON.stringify(meanings.clitic)

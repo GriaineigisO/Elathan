@@ -88,7 +88,7 @@ function PaginatedDictionary({
                           {translate("n")}
                           {word.noun_word_categories.map((category, index) => (
                             <span key={index}>
-                              {category.category_type !== "none" ? (
+                              {category && category.category_type !== "none" ? (
                                 <i>.{category.abbreviation}</i>
                               ) : (
                                 <></>

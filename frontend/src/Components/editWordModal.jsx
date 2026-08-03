@@ -5,13 +5,16 @@ import { PopulateThesaurusList } from "../Functions/thesaurusList.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
 import { deleteWord, editWord, getWord } from "../services/languageService.js";
 import { IPAkeyboard } from "./IPAkeyboard.jsx";
+import { Keyboard } from "./keyboard.jsx";
 
-const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
+
+const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spelling }) => {
   const { translate } = useTranslate();
   const [showWordWarning, setShowWordWarning] = useState(false);
   const [word, setWord] = useState();
   const [shownParts, setShownParts] = useState({});
   const [meaningStrings, setMeaningStrings] = useState({});
+  const [overrideWord, setOverrideWord] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("none");
   const [wordForms, setWordForms] = useState([]);
@@ -279,6 +282,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
         : (wordData.noun_word_categories ?? []),
     );
 
+
+
     setNumWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
         ? prev
@@ -534,6 +539,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
       return;
     }
 
+    
+console.log(nounWordCategories)
     const data = await window.electron.editWord(
           wordData.word_id,
           wordData.language_id,
@@ -555,18 +562,18 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
           cliticWordForms,
           pronWordForms,
 
-          adjWordCategoryInputs,
-          nounWordCategoryInputs,
-          numWordCategoryInputs,
-          verbWordCategoryInputs,
-          advWordCategoryInputs,
-          adpWordCategoryInputs,
-          partWordCategoryInputs,
-          conjWordCategoryInputs,
-          interjWordCategoryInputs,
-          affixWordCategoryInputs,
-          cliticWordCategoryInputs,
-          pronWordCategoryInputs,
+          adjWordCategories,
+          nounWordCategories,
+          numWordCategories,
+          verbWordCategories,
+          advWordCategories,
+          adpWordCategories,
+          partWordCategories,
+          conjWordCategories,
+          interjWordCategories,
+          affixWordCategories,
+          cliticWordCategories,
+          pronWordCategories,
 
           tagInputs,
           variants,
@@ -823,7 +830,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
 
         <div className="thin-white-border">
           <h4>Enter Word</h4>
-          <input
+          {/* <input
             type="text"
             className="modal-input"
             placeholder="word"
@@ -835,7 +842,21 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                 save();
               }
             }}
-          />
+          /> */}
+
+
+          <div className="keyboard">
+                      <Keyboard
+                        inputVal={
+                          convertIPA && !overrideWord
+                            ? spell(pronunciation, spelling)
+                            : word
+                        }
+                        setInputVal={setWord}
+                        setOverrideWord={setOverrideWord}
+                        setWord={setWord}
+                      />
+                    </div>
         </div>
 
         {showWordWarning && !word && (
@@ -851,7 +872,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
         <div className="thin-white-border">
           <h4>Word Categories</h4>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            {shownParts["noun"] &&
+            {shownParts["noun"] && wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "noun" ? (
@@ -902,7 +923,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                 ),
               )}
 
-            {shownParts["verb"] &&
+            {shownParts["verb"] && wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "verb" ? (
@@ -950,7 +971,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                 ),
               )}
 
-            {shownParts["adj"] &&
+            {shownParts["adj"]  && wordCategories&&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "adj" ? (
@@ -997,7 +1018,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                 ),
               )}
 
-            {shownParts["num"] &&
+            {shownParts["num"]  && wordCategories&&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "num" ? (
@@ -1048,7 +1069,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                 ),
               )}
 
-            {shownParts["adv"] &&
+            {shownParts["adv"]  && wordCategories&&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "adv" ? (
@@ -1095,7 +1116,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                 ),
               )}
 
-            {shownParts["adp"] &&
+            {shownParts["adp"]  && wordCategories&&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "adp" ? (
@@ -1142,7 +1163,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                 ),
               )}
 
-            {shownParts["part"] &&
+            {shownParts["part"]  && wordCategories&&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "part" ? (
@@ -1189,7 +1210,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                 ),
               )}
 
-            {shownParts["interj"] &&
+            {shownParts["interj"]  && wordCategories&&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "interj" ? (
@@ -1236,7 +1257,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                 ),
               )}
 
-            {shownParts["conj"] &&
+            {shownParts["conj"]  && wordCategories&&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "conj" ? (
@@ -1283,7 +1304,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                 ),
               )}
 
-            {shownParts["affix"] &&
+            {shownParts["affix"]  && wordCategories&&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "affix" ? (
@@ -1330,7 +1351,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                 ),
               )}
 
-            {shownParts["clitic"] &&
+            {shownParts["clitic"]  && wordCategories&&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "clitic" ? (
@@ -1377,7 +1398,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess }) => {
                 ),
               )}
 
-            {shownParts["pron"] &&
+            {shownParts["pron"] && wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "pron" ? (

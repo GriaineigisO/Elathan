@@ -8,9 +8,9 @@ export async function getLanguages() {
     return await window.electron.getLanguages();
 }
 
-export async function editLanguage(id, languageName, motherLanguageId, daughterLanguageIds, removedDaughterLanguageIds, isProto, wordForms,  addedGroups, groupsToBeRemoved, newGroups, addedTagGroups, spelling, selectedSoundChanges, allCategoryValues) {
+export async function editLanguage(id, languageName, motherLanguageId, daughterLanguageIds, removedDaughterLanguageIds, isProto, wordForms,  addedGroups, groupsToBeRemoved, newGroups, addedTagGroups, spelling, selectedSoundChanges, allCategoryValues, convertIPA) {
 
-    return await window.electron.editLanguage(id, languageName, motherLanguageId, daughterLanguageIds, removedDaughterLanguageIds, isProto, wordForms,  addedGroups, groupsToBeRemoved, newGroups, addedTagGroups, spelling, selectedSoundChanges, allCategoryValues);
+    return await window.electron.editLanguage(id, languageName, motherLanguageId, daughterLanguageIds, removedDaughterLanguageIds, isProto, wordForms,  addedGroups, groupsToBeRemoved, newGroups, addedTagGroups, spelling, selectedSoundChanges, allCategoryValues, convertIPA);
 }
 
 export async function getDaughterLanguages() {

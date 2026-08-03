@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useTranslate } from "../Functions/TranslateUI";
+import { IPAkeyboard } from "./IPAkeyboard";
 
 export default function SpellingCreator({ spellings, setSpellings }) {
+  
   const { translate } = useTranslate();
 
   // spellings is an object like { "ʃ": "sh", "aː": "â" }
@@ -58,7 +60,9 @@ export default function SpellingCreator({ spellings, setSpellings }) {
               }
             />
             <button onClick={() => removeSpelling(ipa)}>×</button>
+             
           </div>
+         
         ))}
       </div>
     </div>

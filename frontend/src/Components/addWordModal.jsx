@@ -7,9 +7,15 @@ import WordSelector from "./wordSelector";
 import LanguageSelector from "./languageSelector";
 import React from "react";
 import Collapsible from "./collapsable.jsx";
-import { addWord, getWordForms, getWordCategories } from "../services/languageService.js";
+import {
+  addWord,
+  getWordForms,
+  getWordCategories,
+} from "../services/languageService.js";
 import { addEtymology } from "../services/etymologyService.js";
 import { IPAkeyboard } from "./IPAkeyboard.jsx";
+import { Keyboard } from "./keyboard.jsx";
+import spell from "./orthography.jsx";
 
 const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   const { translate } = useTranslate();
@@ -18,6 +24,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
 
   const [shownParts, setShownParts] = useState({});
   const [meaningStrings, setMeaningStrings] = useState({});
+  const [overrideWord, setOverrideWord] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("none");
   const [wordType, setWordType] = useState("word");
@@ -98,15 +105,18 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   const [loanerLanguage, setLoanerLanguage] = useState();
   const [loanWord, setLoanWord] = useState();
   const [showLoanWordWarning, setShowLoanWordWarning] = useState(false);
+  const [convertIPA, setConvertIPA] = useState(false);
+  const [spelling, setSpelling] = useState([]);
 
   useEffect(() => {
     if (!languageId) return;
 
     const load = async () => {
-
       const languageData = await window.electron.getLanguage(languageId);
       const motherData = await window.electron.getMotherLanguage(languageId);
 
+      setConvertIPA(languageData[0].convert_ipa === 1 ? true : false);
+      setSpelling(languageData[0].spelling);
       setLanguageName(languageData[0].language_name);
       setSelectedParentLanguage(motherData[0] ?? null);
     };
@@ -149,6 +159,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   //END-ETYMOLOGY
 
   const resetState = () => {
+    setOverrideWord(false);
     setWord("");
     setShowWordWarning(false);
     setShownParts({});
@@ -261,7 +272,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   };
 
   const getWordForms = async () => {
-  const data = await window.electron.getWordForms(languageId);
+    const data = await window.electron.getWordForms(languageId);
 
     const unique = data.filter(
       (item, index, self) =>
@@ -276,7 +287,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   }, []);
 
   const getWordCategories = async () => {
-   const data = await window.electron.getWordCategories(Number(languageId))
+    const data = await window.electron.getWordCategories(Number(languageId));
     setWordCategories(data);
   };
 
@@ -345,9 +356,18 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   };
 
   const save = async () => {
+
+    let spelledWord = "";
+    
     if (!word) {
-      setShowWordWarning(true);
-      return;
+      //see if the word has been converted from IPA first
+      if (pronunciation && spell(pronunciation, spelling) ) {
+        spelledWord = spell(pronunciation, spelling);
+      } else {
+        setShowWordWarning(true);
+        return
+      }
+    
     }
 
     if (selectedOption === "loaned" && !loanWord) {
@@ -357,7 +377,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
 
     setShowLoanWordWarning(false); // clear warning if proceeding
 
-    const userId = localStorage.getItem("userId");
+    
 
     const date = new Date();
     const wordId = Date.now();
@@ -366,7 +386,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
       date,
       wordId,
       languageId,
-      word,
+      word.length > 0 ? word : spelledWord,
       makeMeaningArrays(),
       wordType,
       note,
@@ -397,7 +417,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
       pronWordCategoryInputs,
       JSON.stringify(tagInputs),
       variants,
-      JSON.stringify(selectedTerms)
+      JSON.stringify(selectedTerms),
     );
 
     if (!data.success) {
@@ -509,7 +529,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   };
 
   const getTags = async () => {
-   const data = await window.electron.getTags(languageId);
+    const data = await window.electron.getTags(languageId);
     setTagGroups(data[0].tags ?? []);
   };
 
@@ -597,20 +617,19 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
         </div>
 
         <div className="thin-white-border">
-          <h4>{translate("Enter Word")}</h4>
-          <input
-            type="text"
-            className="modal-input"
-            placeholder={translate("word")}
-            value={word}
-            onChange={(e) => setWord(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                save();
+
+          <div className="keyboard">
+            <Keyboard
+              inputVal={
+                convertIPA && !overrideWord
+                  ? pronunciation ? spell(pronunciation, spelling) : ""
+                  : word
               }
-            }}
-          />
+              setInputVal={setWord}
+              setOverrideWord={setOverrideWord}
+              setWord={setWord}
+            />
+          </div>
         </div>
 
         {showWordWarning && !word && (
@@ -618,7 +637,6 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
         )}
 
         <div className="thin-white-border">
-
           <IPAkeyboard inputVal={""} setInputVal={setPronunciation} />
         </div>
 
@@ -626,6 +644,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
           <h4>{translate("Word Categories")}</h4>
           <div style={{ display: "flex", flexDirection: "column" }}>
             {shownParts["noun"] &&
+              wordCategories &&
               wordCategories
                 .flatMap((wordCategory) => wordCategory.word_categories)
                 .filter((cat) => cat.type === "noun")
@@ -672,6 +691,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
                 ))}
 
             {shownParts["verb"] &&
+              wordCategories &&
               wordCategories
                 .flatMap((wordCategory) => wordCategory.word_categories)
                 .filter((cat) => cat.type === "verb")
@@ -718,6 +738,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
                 ))}
 
             {shownParts["adj"] &&
+              wordCategories &&
               wordCategories
                 .flatMap((wordCategory) => wordCategory.word_categories)
                 .filter((cat) => cat.type === "adj")
@@ -764,6 +785,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
                 ))}
 
             {shownParts["num"] &&
+              wordCategories &&
               wordCategories
                 .flatMap((wordCategory) => wordCategory.word_categories)
                 .filter((cat) => cat.type === "num")
@@ -810,6 +832,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
                 ))}
 
             {shownParts["adv"] &&
+              wordCategories &&
               wordCategories
                 .flatMap((wordCategory) => wordCategory.word_categories)
                 .filter((cat) => cat.type === "adv")
@@ -856,6 +879,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
                 ))}
 
             {shownParts["adp"] &&
+              wordCategories &&
               wordCategories
                 .flatMap((wordCategory) => wordCategory.word_categories)
                 .filter((cat) => cat.type === "adp")
@@ -902,6 +926,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
                 ))}
 
             {shownParts["part"] &&
+              wordCategories &&
               wordCategories
                 .flatMap((wordCategory) => wordCategory.word_categories)
                 .filter((cat) => cat.type === "part")
@@ -948,6 +973,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
                 ))}
 
             {shownParts["interj"] &&
+              wordCategories &&
               wordCategories
                 .flatMap((wordCategory) => wordCategory.word_categories)
                 .filter((cat) => cat.type === "interj")
@@ -994,6 +1020,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
                 ))}
 
             {shownParts["conj"] &&
+              wordCategories &&
               wordCategories
                 .flatMap((wordCategory) => wordCategory.word_categories)
                 .filter((cat) => cat.type === "conj")
@@ -1040,6 +1067,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
                 ))}
 
             {shownParts["affix"] &&
+              wordCategories &&
               wordCategories
                 .flatMap((wordCategory) => wordCategory.word_categories)
                 .filter((cat) => cat.type === "affix")
@@ -1086,6 +1114,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
                 ))}
 
             {shownParts["pron"] &&
+              wordCategories &&
               wordCategories
                 .flatMap((wordCategory) => wordCategory.word_categories)
                 .filter((cat) => cat.type === "pron")
@@ -1360,11 +1389,9 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
           <Collapsible title={translate("Word Forms")}>
             <h4>{translate("Word Forms")}</h4>
             <div style={{ display: "flex", flexDirection: "column" }}>
-
               {shownParts["noun"] &&
                 wordForms.map((wordForm, index) =>
                   wordForm.type === "noun" ? (
-                  
                     <input
                       key={index}
                       style={{ marginBottom: "10px", width: "300px" }}
@@ -1621,7 +1648,6 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
               )}
 
               {selectedEtymOption === "derived" ? (
-                
                 <>
                   <span style={{ marginRight: "5px", fontWeight: "600" }}>
                     {translate("Select First Element")}

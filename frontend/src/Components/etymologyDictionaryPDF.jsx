@@ -176,7 +176,7 @@ export default function EtymologyDictionaryPdf({
  
   //get number of roots i.e words with no etymology
   const numOfRoots = visibleWords.filter(
-    (word) => word.etymology_type === "not_derived",
+    (word) => word.etymology_type !== "derived",
   );
 
 
@@ -218,6 +218,9 @@ export default function EtymologyDictionaryPdf({
           <Text>"{formatMeaning(desc.word)}"</Text>
           {desc.word.word_type === "place_name" && (<Text style={styles.italic}>place name</Text>)}
           {desc.word.word_type === "personal_name" && (<Text style={styles.italic}>personal name</Text>)}
+           <Text>
+          <Text>{" "}{desc.word.word_note && renderHtml(desc.word.word_note)}</Text>
+        </Text>
           <Text>
             {desc.components?.length > 0 &&
               desc.components.map((component, index) => {
@@ -248,25 +251,27 @@ export default function EtymologyDictionaryPdf({
           
         </Text>
 
-        {desc.descendants.map((descendant, index) => (
 
 
-    
-        
+        {desc.descendants.map((descendant, index) => {
+
+          if (!descendant.word) return
           
+          return (
           <RenderDescendants
             key={descendant.word.word_id}
             child={descendant}
             depth={depth + 1}
             number={`${number}.${index + 1}`}
             ancestorId={desc.word.language_id}
-          />
-  ))}
+          />)
+  })}
       </View>
     );
   }
 
   function RenderTree({ root, headword, partOfSpeechAbbr }) {
+
     return (
       <View key={root.word.word_id} style={styles.word}>
         <Text style={styles.line}>
@@ -280,6 +285,8 @@ export default function EtymologyDictionaryPdf({
           <Text> </Text>
           <Text style={styles.meaning}>"{formatMeaning(root.word)}"</Text>
         </Text>
+       
+        
 
         {root.descendants.map((child, index) => (
           <RenderDescendants

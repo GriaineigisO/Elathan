@@ -1,5 +1,6 @@
 import db from "../database.js";
 import { parseDictionary } from "./parse/parseDictionary.js";
+import { parseEtymology } from "./parse/parseEtymology.js";
 
 export function getAllWords(languageId) {
   const getWordsStmt = db.prepare(`
@@ -9,9 +10,7 @@ export function getAllWords(languageId) {
         ORDER BY word COLLATE NOCASE
     `);
 
-    const getWords = getWordsStmt
-    .all(languageId)
-    .map(parseDictionary);
+  const getWords = getWordsStmt.all(languageId).map(parseDictionary);
 
   //step 2. get all word ids in an array
   const allWordIds = [];
@@ -20,15 +19,19 @@ export function getAllWords(languageId) {
   });
 
   //step 3: get all etymologies
-const placeholders = allWordIds.map(() => "?").join(",");
+  const placeholders = allWordIds.map(() => "?").join(",");
 
-const getEtymologiesStmt = db.prepare(`
+  const getEtymologiesStmt = db
+    .prepare(
+      `
     SELECT *
     FROM etymology
     WHERE word_id IN (${placeholders})
-`).all(...allWordIds);
+`,
+    )
+    .all(...allWordIds);
 
-        const getEtymologies = getEtymologiesStmt;
+  const getEtymologies = getEtymologiesStmt.map(parseEtymology);
 
   const results = [];
   const etymologyWordIds = [];
@@ -90,26 +93,28 @@ const getEtymologiesStmt = db.prepare(`
   for (let i = 0; i < getWords.length; i++) {
     //check if word has an etymology
     if (etymologyWordIds.includes(getWords[i].word_id)) {
-      getWords[i].etymology_type = results.etymology_type;
-      getWords[i].note = results.note;
+      const result = results.filter((e) => e.word_id === getWords[i].word_id);
 
-      getWords[i].first_element_word_id = results.first_element_word_id;
-      getWords[i].first_element_word = results.first_element_word;
+      getWords[i].etymology_type = result[0].etymology_type;
+      getWords[i].note = result[0].note;
+
+      getWords[i].first_element_word_id = result[0].first_element_word_id;
+      getWords[i].first_element_word = result[0].first_element_word;
       getWords[i].first_element_word_meaning =
-        results.first_element_word_meaning;
-      getWords[i].first_element_word_type = results.first_element_word_type;
+        result[0].first_element_word_meaning;
+      getWords[i].first_element_word_type = result[0].first_element_word_type;
 
-      getWords[i].second_element_word_id = results.second_element_word_id;
-      getWords[i].second_element_word = results.second_element_word;
+      getWords[i].second_element_word_id = result[0].second_element_word_id;
+      getWords[i].second_element_word = result[0].second_element_word;
       getWords[i].second_element_word_meaning =
-        results.second_element_word_meaning;
-      getWords[i].second_element_word_type = results.second_element_word_type;
+        result[0].second_element_word_meaning;
+      getWords[i].second_element_word_type = result[0].second_element_word_type;
 
-      getWords[i].third_element_word_id = results.third_element_word_id;
-      getWords[i].third_element_word = results.third_element_word;
+      getWords[i].third_element_word_id = result[0].third_element_word_id;
+      getWords[i].third_element_word = result[0].third_element_word;
       getWords[i].third_element_word_meaning =
-        results.third_element_word_meaning;
-      getWords[i].third_element_word_type = results.third_element_word_type;
+        result[0].third_element_word_meaning;
+      getWords[i].third_element_word_type = result[0].third_element_word_type;
     } else {
       getWords[i].etymology_type = "not_derived";
     }

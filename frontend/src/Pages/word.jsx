@@ -12,17 +12,21 @@ import ExtractExampleSentencesFromCorpus from "../Components/ExtractExampleSente
 import { useTranslate } from "../Functions/TranslateUI";
 import formatMeaning from "../Functions/formatMeaning";
 import AddDescendantModal from "../Components/addDescendantModal.jsx";
+import {AddDerivationModal} from "../Components/addDerivationModal.jsx";
 import { getWordData } from "../services/dictionaryService.js";
 import { getEtymology } from "../services/etymologyService.js";
 import { getLanguage } from "../services/languageService.js";
 
 const Word = () => {
+   const [version, setVersion] = useState(0);
+   const [derivationVersion, setDerivationVersion] = useState(0);
   const { id } = useParams();
   const { translate } = useTranslate();
   const [canView, setCanView] = useState(false);
   const [word, setWord] = useState(null);
   const [languageName, setLanguageName] = useState();
   const [showAddDescendantModal, setShowAddDescendantModal] = useState(false);
+  const [showAddDerivationModal, setShowAddDerivationModal] = useState(false);
   const [showAddEtymologyModal, setShowAddEtymologyModal] = useState(false);
   const [showEditEtymologyModal, setShowEditEtymologyModal] = useState(false);
   const [showDeleteEtymologyModal, setShowDeleteEtymologyModal] =
@@ -30,6 +34,7 @@ const Word = () => {
   const [etymology, setEtymology] = useState([]);
   const [derivations, setDerivations] = useState([]);
   const [descendants, setDescendants] = useState([]);
+  const [spelling, setSpelling] = useState({})
   const [isProto, setIsProto] = useState();
   const [motherLanguage, setMotherLanguage] = useState();
   const [languageId, setLanguageId] = useState();
@@ -62,6 +67,7 @@ const Word = () => {
   const [phrases, setPhrases] = useState([]);
   const [allWords, setAllWords] = useState([]);
   const [tags, setTags] = useState([]);
+  const [convertIPA, setConvertIPA] = useState(false);
 
   ////////////////////////////////////////////////
 
@@ -110,10 +116,11 @@ const Word = () => {
     setId,
   ) => {
    let data = await window.electron.getLanguage(languageId);
-   console.log(data.language_name)
     setName(data.language_name);
     setProto(data.is_proto);
     setId(data.language_id);
+    setConvertIPA(data.convert_ipa === 1 ? true : false);
+    setSpelling(data.spelling)
   };
 
   async function getWord(id, setWord) {
@@ -374,9 +381,13 @@ const Word = () => {
                   setShow={setShowEditWordModal}
                   wordData={word}
                   onSuccess={handleWordEdited}
+                  convertIPA={convertIPA}
+                  spelling={spelling}
                 />
 
                 <AddDescendantModal
+                key={version}
+                setVersion={setVersion}
                   show={showAddDescendantModal}
                   setShow={setShowAddDescendantModal}
                   languageId={word.language_id}
@@ -384,6 +395,19 @@ const Word = () => {
                   name={languageName}
                   onSuccess={handleDescendantAdded}
                   languageName={languageName}
+                />
+
+                 <AddDerivationModal
+                key={derivationVersion}
+                setVersion={setDerivationVersion}
+                  show={showAddDerivationModal}
+                  setShow={setShowAddDerivationModal}
+                  languageId={word.language_id}
+                  word={word}
+                  name={languageName}
+                  onSuccess={handleDescendantAdded}
+                  languageName={languageName}
+                  
                 />
 
                 <h1 style={{ fontSize: "70px" }}>
@@ -1895,11 +1919,25 @@ const Word = () => {
                   )}
                   <hr />
 
+
+
+                     <div className="title-and-edit-button-div">
+                      <h3>{translate("Derivations")}</h3>
+                      
+                        <img
+                          src={editIcon}
+                          className="edit-button"
+                          onClick={() => {
+                            setShowAddDerivationModal(true);
+                          }}
+                        ></img>
+                     
+                    </div>
+
+                 
                   {derivations.length > 0 && (
                     <div>
-                      <div className="title-and-edit-button-div">
-                        <h3>{translate("Derivations")}</h3>
-                      </div>
+                      
                       <ol>
                         {derivations.map((derivation, index) => (
                           <li key={index}>
@@ -1923,6 +1961,8 @@ const Word = () => {
                       <hr />
                     </div>
                   )}
+
+               
 
                   <div>
                     <div className="title-and-edit-button-div">

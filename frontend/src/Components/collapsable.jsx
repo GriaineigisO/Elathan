@@ -3,6 +3,7 @@ import { useState } from "react";
 function Collapsible({ title, children }) {
   const [open, setOpen] = useState(false);
 
+
   return (
     <div style={{ border: "1px solid #ccc", padding: "8px", borderRadius: "6px", width: "100%" }}>
       <button 

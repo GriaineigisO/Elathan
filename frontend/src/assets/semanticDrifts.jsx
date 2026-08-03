@@ -1,6 +1,17 @@
 
 const semanticDrifts = [
   {
+    "noun_meaning": "withe",
+    "shifted_meanings": [
+      {
+        "noun_meaning": "osier"
+      },
+      {
+        "noun_meaning": "shaft"
+      }
+    ]
+  },
+  {
     "noun_meaning": "ripple",
     "shifted_meanings": [
       {

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslate } from "../Functions/TranslateUI";
 import Collapsible from "./collapsable";
 import { Tooltip } from "react-tooltip";
@@ -7,10 +7,16 @@ export const IPAkeyboard = ({ inputVal, setInputVal }) => {
   const { translate } = useTranslate();
   const [charDisplay, setCharDisplay] = useState("flex");
   const [diacriticDisplay, setDiacriticDisplay] = useState("none");
-  const [IPAval, setIPAval] = useState(inputVal);
+  const [IPAval, setIPAval] = useState();
   const [leftButtonColor, setLeftButtonColor] = useState("#141414");
   const [rightButtonColor, setRightButtonColor] = useState("#626161");
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    setIPAval(inputVal)
+  }, [inputVal])
+
+
 
   function selectDiacritics() {
     setCharDisplay("none");
@@ -44,6 +50,7 @@ export const IPAkeyboard = ({ inputVal, setInputVal }) => {
     const newValue = IPAval.slice(0, start) + char + IPAval.slice(end);
 
     setIPAval(newValue);
+    setInputVal(newValue)
 
     // Restore focus after React updates
     requestAnimationFrame(() => {
@@ -64,6 +71,7 @@ export const IPAkeyboard = ({ inputVal, setInputVal }) => {
     setInputVal(value);
     setIPAval(value);
   }
+
 
   return (
     <div>

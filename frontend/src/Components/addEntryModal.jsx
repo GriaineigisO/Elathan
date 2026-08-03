@@ -136,7 +136,7 @@ const [entryText, setEntryText] = useState("");
 
         <div className="thin-white-border">
           <select onChange={(e) => setEntryTopic(e.target.value)}>
-             {topics.map((topic, index) => (
+             {topics.sort().map((topic, index) => (
                       <option key={index} value={topic.name}>
                         {topic.name}
                       </option>

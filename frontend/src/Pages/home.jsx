@@ -65,19 +65,15 @@ const Home = () => {
   };
 
   const openCreateLanguagePage = () => {
-    window.open(
-      `${import.meta.env.VITE_FRONTEND_URL}/createLanguage`,
-      "_blank"
-    );
+    window.location.href = `/createLanguage`
   }
 
   const handleOpenGroup = (id) => {
-    window.open(`${import.meta.env.VITE_FRONTEND_URL}/group/${id}`, "_blank");
+     window.location.href = `/group/${id}`;
   };
 
-  const openDevTools = (id) => {
-    const userId = localStorage.getItem("userId")
-    window.open(`${import.meta.env.VITE_FRONTEND_URL}/devTools/${userId}`, "_blank");
+  const openDevTools = () => {
+     window.location.href = `/devTools`
   };
 
   const handleEditLanguage = (languageId) => {

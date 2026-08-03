@@ -53,6 +53,7 @@ api.editLanguage = (
   spelling,
   selectedSoundChanges,
   allCategoryValues,
+  convertIPA
 ) => {
   return ipcRenderer.invoke(
     "language:editLanguage",
@@ -70,6 +71,7 @@ api.editLanguage = (
     spelling,
     selectedSoundChanges,
     allCategoryValues,
+    convertIPA
   );
 };
 
