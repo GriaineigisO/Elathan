@@ -237,6 +237,44 @@ export const AddDerivationModal = ({
     buildWord(word, 3);
   };
 
+    const handleWordCategoryInput = (
+    e,
+    categoryName,
+    type,
+    index,
+    selectedName,
+    abbreviation,
+  ) => {
+    const setMap = {
+      noun: setNounWordCategoryInputs,
+      num: setNumWordCategoryInputs,
+      verb: setVerbWordCategoryInputs,
+      adj: setAdjWordCategoryInputs,
+      adv: setAdvWordCategoryInputs,
+      adp: setAdpWordCategoryInputs,
+      conj: setConjWordCategoryInputs,
+      part: setPartWordCategoryInputs,
+      interj: setInterjWordCategoryInputs,
+      pron: setPronWordCategoryInputs,
+      affix: setAffixWordCategoryInputs,
+      clitic: setCliticWordCategoryInputs,
+    };
+
+    const updater = setMap[type];
+    if (!updater) return;
+
+    updater((prev) => {
+      const updated = [...prev];
+      updated[index] = {
+        category_name: categoryName,
+        category_type: selectedName,
+        abbreviation: abbreviation,
+      };
+      return updated;
+    });
+  };
+
+
   const [partsOfSpeech, setPartsOfSpeech] = useState([
       { id: "noun", label: translate("Noun") },
       { id: "verb", label: translate("Verb") },
@@ -700,7 +738,7 @@ export const AddDerivationModal = ({
 
   const close = () => {
     setShow(false);
-    setVersion((v) => v + 1); //reset form
+   // setVersion((v) => v + 1); //reset form
   };
 
   return (
@@ -812,8 +850,8 @@ export const AddDerivationModal = ({
                         </span>
                         <select
                           value={
-                            nounCategorySelections[index].category_type ??
-                            cat.categories.name[0]
+                            nounCategorySelections.length > 0 && nounCategorySelections[index] ? nounCategorySelections[index].category_type ??
+                            cat.categories.name[0] : cat.categories.name[0]
                           }
                           onChange={(e) => {
                             const selectedValue = e.target.value;
@@ -848,6 +886,7 @@ export const AddDerivationModal = ({
                       </div>
                     ))}
 
+
                 {shownParts["v"] &&
                   wordCategories
                     .flatMap((wc) => wc.word_categories ?? [])
@@ -862,8 +901,8 @@ export const AddDerivationModal = ({
                         </span>
                         <select
                           value={
-                            verbCategorySelections[index].category_type ??
-                            cat.categories.name[0]
+                            verbCategorySelections.length > 0 && verbCategorySelections[index] ? verbCategorySelections[index].category_type ??
+                            cat.categories.name[0] : cat.categories.name[0]
                           }
                           onChange={(e) => {
                             const selectedValue = e.target.value;
@@ -912,8 +951,8 @@ export const AddDerivationModal = ({
                         </span>
                         <select
                           value={
-                            adjCategorySelections[index].category_type ??
-                            cat.categories.name[0]
+                            adjCategorySelections.length > 0 && adjCategorySelections[index]  ? adjCategorySelections[index].category_type ??
+                            cat.categories.name[0] : cat.categories.name[0]
                           }
                           onChange={(e) => {
                             const selectedValue = e.target.value;
@@ -962,8 +1001,8 @@ export const AddDerivationModal = ({
                         </span>
                         <select
                           value={
-                            numCategorySelections[index].category_type ??
-                            cat.categories.name[0]
+                            numCategorySelections.length > 0 && numCategorySelections[index]  ? numCategorySelections[index].category_type ??
+                            cat.categories.name[0] : cat.categories.name[0]
                           }
                           onChange={(e) => {
                             const selectedValue = e.target.value;
@@ -1012,8 +1051,8 @@ export const AddDerivationModal = ({
                         </span>
                         <select
                           value={
-                            advCategorySelections[index].category_type ??
-                            cat.categories.name[0]
+                            advCategorySelections.length > 0  && advCategorySelections[index] ? advCategorySelections[index].category_type ??
+                            cat.categories.name[0] : cat.categories.name[0]
                           }
                           onChange={(e) => {
                             const selectedValue = e.target.value;
@@ -1062,8 +1101,8 @@ export const AddDerivationModal = ({
                         </span>
                         <select
                           value={
-                            adpCategorySelections[index].category_type ??
-                            cat.categories.name[0]
+                            adpCategorySelections.length > 0  && adpCategorySelections[index] ? adpCategorySelections[index].category_type ??
+                            cat.categories.name[0] : cat.categories.name[0]
                           }
                           onChange={(e) => {
                             const selectedValue = e.target.value;
@@ -1073,7 +1112,7 @@ export const AddDerivationModal = ({
                             const selectedAbbreviation =
                               cat.categories.abbreviation[selectedIndex];
 
-                            setVerbCategorySelections((prev) => {
+                            setAdpCategorySelections((prev) => {
                               const updated = [...prev];
                               updated[index] = selectedValue;
                               return updated;
@@ -1112,8 +1151,8 @@ export const AddDerivationModal = ({
                         </span>
                         <select
                           value={
-                            partCategorySelections[index].category_type ??
-                            cat.categories.name[0]
+                            partCategorySelections.length > 0 && partCategorySelections[index]  ? partCategorySelections[index].category_type ??
+                            cat.categories.name[0] : cat.categories.name[0]
                           }
                           onChange={(e) => {
                             const selectedValue = e.target.value;
@@ -1162,8 +1201,8 @@ export const AddDerivationModal = ({
                         </span>
                         <select
                           value={
-                            interjCategorySelections[index].category_type ??
-                            cat.categories.name[0]
+                            interjCategorySelections.length > 0 && interjCategorySelections[index]  ? interjCategorySelections[index].category_type ??
+                            cat.categories.name[0] : cat.categories.name[0]
                           }
                           onChange={(e) => {
                             const selectedValue = e.target.value;
@@ -1173,7 +1212,7 @@ export const AddDerivationModal = ({
                             const selectedAbbreviation =
                               cat.categories.abbreviation[selectedIndex];
 
-                            setVerbCategorySelections((prev) => {
+                            setInterjCategorySelections((prev) => {
                               const updated = [...prev];
                               updated[index] = selectedValue;
                               return updated;
@@ -1212,8 +1251,8 @@ export const AddDerivationModal = ({
                         </span>
                         <select
                           value={
-                            conjCategorySelections[index].category_type ??
-                            cat.categories.name[0]
+                            conjCategorySelections.length > 0 && conjCategorySelections[index]  ? conjCategorySelections[index].category_type ??
+                            cat.categories.name[0] : cat.categories.name[0]
                           }
                           onChange={(e) => {
                             const selectedValue = e.target.value;
@@ -1262,8 +1301,8 @@ export const AddDerivationModal = ({
                         </span>
                         <select
                           value={
-                            affixCategorySelections[index].category_type ??
-                            cat.categories.name[0]
+                           affixCategorySelections.length > 0 && affixCategorySelections[index]  ? affixCategorySelections[index].category_type ??
+                            cat.categories.name[0] : cat.categories.name[0]
                           }
                           onChange={(e) => {
                             const selectedValue = e.target.value;
@@ -1273,7 +1312,7 @@ export const AddDerivationModal = ({
                             const selectedAbbreviation =
                               cat.categories.abbreviation[selectedIndex];
 
-                            setVerbCategorySelections((prev) => {
+                            setAffixCategorySelections((prev) => {
                               const updated = [...prev];
                               updated[index] = selectedValue;
                               return updated;
@@ -1312,8 +1351,8 @@ export const AddDerivationModal = ({
                         </span>
                         <select
                           value={
-                            pronCategorySelections[index].category_type ??
-                            cat.categories.name[0]
+                            pronCategorySelections.length > 0 && pronCategorySelections[index]  ? pronCategorySelections[index].category_type ??
+                            cat.categories.name[0] : cat.categories.name[0]
                           }
                           onChange={(e) => {
                             const selectedValue = e.target.value;

@@ -24,13 +24,14 @@ import { IPAkeyboard } from "./IPAkeyboard.jsx";
 import { Keyboard } from "./keyboard.jsx";
 
 const AddDescendantModal = ({
+  key,
   show,
   setShow,
   languageId,
   onSuccess,
   word,
   name,
-  setVersion
+  setVersion,
 }) => {
   const { translate } = useTranslate();
   const [newWord, setNewWord] = useState();
@@ -70,7 +71,9 @@ const AddDescendantModal = ({
   const [wordCategories, setWordCategories] = useState([]);
   const [wordCategoryInputs, setWordCategoryInputs] = useState();
   const [adjWordCategoryInputs, setAdjWordCategoryInputs] = useState([]);
-  const [nounWordCategoryInputs, setNounWordCategoryInputs] = useState(word.noun_word_categories);
+  const [nounWordCategoryInputs, setNounWordCategoryInputs] = useState(
+    word.noun_word_categories,
+  );
   const [numWordCategoryInputs, setNumWordCategoryInputs] = useState([]);
   const [verbWordCategoryInputs, setVerbWordCategoryInputs] = useState([]);
   const [advWordCategoryInputs, setAdvWordCategoryInputs] = useState([]);
@@ -82,7 +85,9 @@ const AddDescendantModal = ({
   const [cliticWordCategoryInputs, setCliticWordCategoryInputs] = useState([]);
   const [pronWordCategoryInputs, setPronWordCategoryInputs] = useState([]);
 
-  const [nounCategorySelections, setNounCategorySelections] = useState(word.noun_word_categories);
+  const [nounCategorySelections, setNounCategorySelections] = useState(
+    word.noun_word_categories,
+  );
   const [numCategorySelections, setNumCategorySelections] = useState([]);
   const [verbCategorySelections, setVerbCategorySelections] = useState([]);
   const [adjCategorySelections, setAdjCategorySelections] = useState([]);
@@ -420,7 +425,6 @@ const AddDescendantModal = ({
 
     Object.entries(setterMap).forEach(
       ([type, [setSelections, setInputs, parentCategories]]) => {
-        
         const filtered = wordCategories
           .flatMap((wordCategory) => wordCategory.word_categories)
           .filter((cat) => cat.type === type);
@@ -431,13 +435,12 @@ const AddDescendantModal = ({
 
         const initialSelections = filtered.map((cat) => {
           const parent = parentLookup.get(cat.name);
-          
+
           const fromMother = parentLookup.get(cat.name);
 
           return fromMother ? fromMother : cat.categories.name[0];
         });
 
-       
         setSelections(initialSelections);
       },
     );
@@ -831,7 +834,7 @@ const AddDescendantModal = ({
     setShow(false);
     setLanguageSelected(false);
     setDescendantLanguage();
-    setVersion((v) => v + 1) //reset form
+    //setVersion((v) => v + 1); //reset form
   };
 
   const handleWordFormInput = (setForms, name, value, field) => {
@@ -2049,9 +2052,11 @@ const AddDescendantModal = ({
                             ))
                           : "";
 
+                        
                         return wordForm.type === "adjective" ? (
                           <div key={index}>
                             <>
+                            
                               <input
                                 key={index}
                                 style={{ marginBottom: "10px", width: "300px" }}

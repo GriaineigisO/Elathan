@@ -1703,9 +1703,11 @@ console.log(nounWordCategories)
                 ) : null,
               )}
 
+
+
             {shownParts["adj"] &&
               wordForms.map((wordForm, index) =>
-                wordForm.type === "adjective" ? (
+                wordForm.type === "adj" ? (
                   <div key={index}>
                     <>
                       <input
@@ -1715,7 +1717,7 @@ console.log(nounWordCategories)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(e, wordForm.name, "adjective")
+                          handleWordFormInput(e, wordForm.name, "adj")
                         }
                       />
 
@@ -1729,7 +1731,7 @@ console.log(nounWordCategories)
                           handleWordFormInput(
                             e,
                             wordForm.name,
-                            "adjective",
+                            "adj",
                             "ipa",
                           )
                         }
@@ -1751,7 +1753,7 @@ console.log(nounWordCategories)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(e, wordForm.name, "number")
+                          handleWordFormInput(e, wordForm.name, "num")
                         }
                       />
 
@@ -1762,7 +1764,7 @@ console.log(nounWordCategories)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(e, wordForm.name, "number", "ipa")
+                          handleWordFormInput(e, wordForm.name, "num", "ipa")
                         }
                       />
                     </>
@@ -1782,7 +1784,7 @@ console.log(nounWordCategories)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(e, wordForm.name, "adverb")
+                          handleWordFormInput(e, wordForm.name, "adv")
                         }
                       />
 
@@ -1793,7 +1795,7 @@ console.log(nounWordCategories)
                             ?.ipa ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(e, wordForm.name, "adverb", "ipa")
+                          handleWordFormInput(e, wordForm.name, "adv", "ipa")
                         }
                       />
                     </>
@@ -1813,7 +1815,7 @@ console.log(nounWordCategories)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(e, wordForm.name, "adposition")
+                          handleWordFormInput(e, wordForm.name, "adp")
                         }
                       />
 
@@ -1827,7 +1829,7 @@ console.log(nounWordCategories)
                           handleWordFormInput(
                             e,
                             wordForm.name,
-                            "adposition",
+                            "adp",
                             "ipa",
                           )
                         }
@@ -1849,7 +1851,7 @@ console.log(nounWordCategories)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(e, wordForm.name, "particle")
+                          handleWordFormInput(e, wordForm.name, "part")
                         }
                       />
 
@@ -1863,7 +1865,7 @@ console.log(nounWordCategories)
                           handleWordFormInput(
                             e,
                             wordForm.name,
-                            "particle",
+                            "part",
                             "ipa",
                           )
                         }
@@ -1885,7 +1887,7 @@ console.log(nounWordCategories)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(e, wordForm.name, "interjection")
+                          handleWordFormInput(e, wordForm.name, "interj")
                         }
                       />
 
@@ -1899,7 +1901,7 @@ console.log(nounWordCategories)
                           handleWordFormInput(
                             e,
                             wordForm.name,
-                            "interjection",
+                            "interj",
                             "ipa",
                           )
                         }
@@ -1921,7 +1923,7 @@ console.log(nounWordCategories)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(e, wordForm.name, "conjunction")
+                          handleWordFormInput(e, wordForm.name, "conj")
                         }
                       />
 
@@ -1935,7 +1937,7 @@ console.log(nounWordCategories)
                           handleWordFormInput(
                             e,
                             wordForm.name,
-                            "conjunction",
+                            "conj",
                             "ipa",
                           )
                         }
@@ -2019,7 +2021,7 @@ console.log(nounWordCategories)
                             ?.word ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(e, wordForm.name, "pronoun")
+                          handleWordFormInput(e, wordForm.name, "pron")
                         }
                       />
 
@@ -2033,7 +2035,7 @@ console.log(nounWordCategories)
                           handleWordFormInput(
                             e,
                             wordForm.name,
-                            "pronoun",
+                            "pron",
                             "ipa",
                           )
                         }

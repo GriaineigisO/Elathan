@@ -320,8 +320,10 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
 
         // 7️⃣ Generate phrases after derivations are ready
         const processed = addPhrasesToWords(words);
-        setVisibleWords(processed);
+        const filtered =  processed.filter((word) => word.word_type !== "personal_name" && word.word_type !== "place_name");
+        setVisibleWords(filtered);
       } else {
+
         const names = words.filter((word) => word.word_type === dictionaryType);
         setVisibleWords(names);
       }
@@ -1017,6 +1019,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
                 setShow={setShowAddWordModal}
                 languageId={id}
                 onSuccess={handleWordAdded}
+                allWords={allWords}
               />
 
               <StatModal

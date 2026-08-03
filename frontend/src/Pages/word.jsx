@@ -12,14 +12,14 @@ import ExtractExampleSentencesFromCorpus from "../Components/ExtractExampleSente
 import { useTranslate } from "../Functions/TranslateUI";
 import formatMeaning from "../Functions/formatMeaning";
 import AddDescendantModal from "../Components/addDescendantModal.jsx";
-import {AddDerivationModal} from "../Components/addDerivationModal.jsx";
+import { AddDerivationModal } from "../Components/addDerivationModal.jsx";
 import { getWordData } from "../services/dictionaryService.js";
 import { getEtymology } from "../services/etymologyService.js";
 import { getLanguage } from "../services/languageService.js";
 
 const Word = () => {
-   const [version, setVersion] = useState(0);
-   const [derivationVersion, setDerivationVersion] = useState(0);
+  const [version, setVersion] = useState(0);
+  const [derivationVersion, setDerivationVersion] = useState(0);
   const { id } = useParams();
   const { translate } = useTranslate();
   const [canView, setCanView] = useState(false);
@@ -34,7 +34,7 @@ const Word = () => {
   const [etymology, setEtymology] = useState([]);
   const [derivations, setDerivations] = useState([]);
   const [descendants, setDescendants] = useState([]);
-  const [spelling, setSpelling] = useState({})
+  const [spelling, setSpelling] = useState({});
   const [isProto, setIsProto] = useState();
   const [motherLanguage, setMotherLanguage] = useState();
   const [languageId, setLanguageId] = useState();
@@ -74,7 +74,11 @@ const Word = () => {
   const getWordData = async () => {
     let data = await window.electron.getWordData(id);
     setWord(data.word.wordData);
-    setTags(typeof data.word.wordData.tags === "object" ? data.word.wordData.tags : [])
+    setTags(
+      typeof data.word.wordData.tags === "object"
+        ? data.word.wordData.tags
+        : [],
+    );
     setLanguageName(data.word.languageData.language_name);
     setIsProto(data.word.languageData.is_proto);
     setLanguageId(data.word.languageData.language_id);
@@ -115,22 +119,21 @@ const Word = () => {
     setProto,
     setId,
   ) => {
-   let data = await window.electron.getLanguage(languageId);
+    let data = await window.electron.getLanguage(languageId);
     setName(data.language_name);
     setProto(data.is_proto);
     setId(data.language_id);
     setConvertIPA(data.convert_ipa === 1 ? true : false);
-    setSpelling(data.spelling)
+    setSpelling(data.spelling);
   };
 
   async function getWord(id, setWord) {
     const data = await window.electron.getWordData(id);
-    setLoanWord(data)
+    setLoanWord(data);
     setLoanerLanguageName(data.language.language_name);
-        setLoanerLanguageIsProto(data.language.is_proto);
-        setLoanerLanguageId(data.language.language_id);
+    setLoanerLanguageIsProto(data.language.is_proto);
+    setLoanerLanguageId(data.language.language_id);
   }
-
 
   const fetchEtymology = async () => {
     let data = await window.electron.getEtymology(id);
@@ -144,8 +147,6 @@ const Word = () => {
   useEffect(() => {
     fetchEtymology();
   }, []);
-
-
 
   useEffect(() => {
     if (word) {
@@ -248,12 +249,9 @@ const Word = () => {
     );
   };
 
- 
-
   const handleOpenUser = (id) => {
     window.open(`${import.meta.env.VITE_FRONTEND_URL}/user/${id}`, "_blank");
   };
-
 
   const handleEditEtymology = (etymology) => {
     setEtymologyToEdit(etymology);
@@ -287,7 +285,6 @@ const Word = () => {
   useEffect(() => {
     const getPhrases = async () => {
       if (allWords) {
-       
         allWords.forEach((entry) => {
           const phrase = entry.word.trim().split(/\s+/); //split string by whitespace incase the entry consists of multiple words divided by a whitespace i.e a phrase
 
@@ -386,8 +383,8 @@ const Word = () => {
                 />
 
                 <AddDescendantModal
-                key={version}
-                setVersion={setVersion}
+                  key={version}
+                  setVersion={setVersion}
                   show={showAddDescendantModal}
                   setShow={setShowAddDescendantModal}
                   languageId={word.language_id}
@@ -397,9 +394,9 @@ const Word = () => {
                   languageName={languageName}
                 />
 
-                 <AddDerivationModal
-                key={derivationVersion}
-                setVersion={setDerivationVersion}
+                <AddDerivationModal
+                  key={derivationVersion}
+                  setVersion={setDerivationVersion}
                   show={showAddDerivationModal}
                   setShow={setShowAddDerivationModal}
                   languageId={word.language_id}
@@ -407,7 +404,6 @@ const Word = () => {
                   name={languageName}
                   onSuccess={handleDescendantAdded}
                   languageName={languageName}
-                  
                 />
 
                 <h1 style={{ fontSize: "70px" }}>
@@ -425,16 +421,15 @@ const Word = () => {
                   ) : (
                     <></>
                   )}
-                 
-                    <img
-                      style={{ marginLeft: "10px" }}
-                      src={editIcon}
-                      className="edit-button"
-                      onClick={() => {
-                        setShowEditWordModal(true);
-                      }}
-                    ></img>
-                  
+
+                  <img
+                    style={{ marginLeft: "10px" }}
+                    src={editIcon}
+                    className="edit-button"
+                    onClick={() => {
+                      setShowEditWordModal(true);
+                    }}
+                  ></img>
                 </h1>
 
                 <h2>{languageName}</h2>
@@ -443,15 +438,14 @@ const Word = () => {
                   <hr />
                   <div className="title-and-edit-button-div">
                     <h3>{translate("Etymology")}</h3>
-                    
-                      <img
-                        src={editIcon}
-                        className="edit-button"
-                        onClick={() => {
-                          setShowAddEtymologyModal(true);
-                        }}
-                      ></img>
-                   
+
+                    <img
+                      src={editIcon}
+                      className="edit-button"
+                      onClick={() => {
+                        setShowAddEtymologyModal(true);
+                      }}
+                    ></img>
                   </div>
 
                   {etymology.length > 1 ? (
@@ -689,26 +683,25 @@ const Word = () => {
                                   }}
                                 />
                               )}
-                             
-                                <>
-                                  <img
-                                    style={{ marginLeft: "10px" }}
-                                    src={editIcon}
-                                    className="edit-button"
-                                    onClick={() =>
-                                      handleEditEtymology(etymology[0])
-                                    }
-                                  />
-                                  <img
-                                    style={{ marginLeft: "10px" }}
-                                    src={deleteIcon}
-                                    className="delete-button-with-icon"
-                                    onClick={() =>
-                                      handleDeleteEtymology(etymology[0])
-                                    }
-                                  />
-                                </>
-                              
+
+                              <>
+                                <img
+                                  style={{ marginLeft: "10px" }}
+                                  src={editIcon}
+                                  className="edit-button"
+                                  onClick={() =>
+                                    handleEditEtymology(etymology[0])
+                                  }
+                                />
+                                <img
+                                  style={{ marginLeft: "10px" }}
+                                  src={deleteIcon}
+                                  className="delete-button-with-icon"
+                                  onClick={() =>
+                                    handleDeleteEtymology(etymology[0])
+                                  }
+                                />
+                              </>
                             </li>
                           ))}
 
@@ -757,16 +750,14 @@ const Word = () => {
                                 />
                               )}
 
-                             
-                                <img
-                                  style={{ marginLeft: "10px" }}
-                                  src={editIcon}
-                                  className="edit-button"
-                                  onClick={() =>
-                                    handleEditEtymology(etymology[0])
-                                  }
-                                />
-                             
+                              <img
+                                style={{ marginLeft: "10px" }}
+                                src={editIcon}
+                                className="edit-button"
+                                onClick={() =>
+                                  handleEditEtymology(etymology[0])
+                                }
+                              />
                             </li>
                           ))}
                       </ol>
@@ -869,22 +860,20 @@ const Word = () => {
                         />
                       )}
 
-                      
-                        <>
-                          <img
-                            style={{ marginLeft: "10px" }}
-                            src={editIcon}
-                            className="edit-button"
-                            onClick={() => handleEditEtymology(etymology[0])}
-                          />
-                          <img
-                            style={{ marginLeft: "10px" }}
-                            src={deleteIcon}
-                            className="delete-button-with-icon"
-                            onClick={() => handleDeleteEtymology(etymology[0])}
-                          />
-                        </>
-                      
+                      <>
+                        <img
+                          style={{ marginLeft: "10px" }}
+                          src={editIcon}
+                          className="edit-button"
+                          onClick={() => handleEditEtymology(etymology[0])}
+                        />
+                        <img
+                          style={{ marginLeft: "10px" }}
+                          src={deleteIcon}
+                          className="delete-button-with-icon"
+                          onClick={() => handleDeleteEtymology(etymology[0])}
+                        />
+                      </>
                     </p>
                   ) : (
                     <></>
@@ -988,22 +977,21 @@ const Word = () => {
                       )}
 
                       {/* Edit/Delete buttons */}
-                     
-                        <>
-                          <img
-                            style={{ marginLeft: "10px" }}
-                            src={editIcon}
-                            className="edit-button"
-                            onClick={() => handleEditEtymology(etymology[0])}
-                          />
-                          <img
-                            style={{ marginLeft: "10px" }}
-                            src={deleteIcon}
-                            className="delete-button-with-icon"
-                            onClick={() => handleDeleteEtymology(etymology[0])}
-                          />
-                        </>
-                     
+
+                      <>
+                        <img
+                          style={{ marginLeft: "10px" }}
+                          src={editIcon}
+                          className="edit-button"
+                          onClick={() => handleEditEtymology(etymology[0])}
+                        />
+                        <img
+                          style={{ marginLeft: "10px" }}
+                          src={deleteIcon}
+                          className="delete-button-with-icon"
+                          onClick={() => handleDeleteEtymology(etymology[0])}
+                        />
+                      </>
                     </p>
                   ) : (
                     <></>
@@ -1101,22 +1089,21 @@ const Word = () => {
                       )}
 
                       {/* Edit/Delete buttons */}
-                      
-                        <>
-                          <img
-                            style={{ marginLeft: "10px" }}
-                            src={editIcon}
-                            className="edit-button"
-                            onClick={() => handleEditEtymology(etymology[0])}
-                          />
-                          <img
-                            style={{ marginLeft: "10px" }}
-                            src={deleteIcon}
-                            className="delete-button-with-icon"
-                            onClick={() => handleDeleteEtymology(etymology[0])}
-                          />
-                        </>
-                      
+
+                      <>
+                        <img
+                          style={{ marginLeft: "10px" }}
+                          src={editIcon}
+                          className="edit-button"
+                          onClick={() => handleEditEtymology(etymology[0])}
+                        />
+                        <img
+                          style={{ marginLeft: "10px" }}
+                          src={deleteIcon}
+                          className="delete-button-with-icon"
+                          onClick={() => handleDeleteEtymology(etymology[0])}
+                        />
+                      </>
                     </p>
                   ) : (
                     <></>
@@ -1134,22 +1121,21 @@ const Word = () => {
                       ) : (
                         <></>
                       )}
-                     
-                        <>
-                          <img
-                            style={{ marginLeft: "10px" }}
-                            src={editIcon}
-                            className="edit-button"
-                            onClick={() => handleEditEtymology(etymology[0])}
-                          ></img>
-                          <img
-                            style={{ marginLeft: "10px" }}
-                            src={deleteIcon}
-                            className="delete-button-with-icon"
-                            onClick={() => handleDeleteEtymology(etymology[0])}
-                          ></img>
-                        </>
-                     
+
+                      <>
+                        <img
+                          style={{ marginLeft: "10px" }}
+                          src={editIcon}
+                          className="edit-button"
+                          onClick={() => handleEditEtymology(etymology[0])}
+                        ></img>
+                        <img
+                          style={{ marginLeft: "10px" }}
+                          src={deleteIcon}
+                          className="delete-button-with-icon"
+                          onClick={() => handleDeleteEtymology(etymology[0])}
+                        ></img>
+                      </>
                     </span>
                   ) : (
                     <></>
@@ -1919,25 +1905,20 @@ const Word = () => {
                   )}
                   <hr />
 
+                  <div className="title-and-edit-button-div">
+                    <h3>{translate("Derivations")}</h3>
 
+                    <img
+                      src={editIcon}
+                      className="edit-button"
+                      onClick={() => {
+                        setShowAddDerivationModal(true);
+                      }}
+                    ></img>
+                  </div>
 
-                     <div className="title-and-edit-button-div">
-                      <h3>{translate("Derivations")}</h3>
-                      
-                        <img
-                          src={editIcon}
-                          className="edit-button"
-                          onClick={() => {
-                            setShowAddDerivationModal(true);
-                          }}
-                        ></img>
-                     
-                    </div>
-
-                 
                   {derivations.length > 0 && (
                     <div>
-                      
                       <ol>
                         {derivations.map((derivation, index) => (
                           <li key={index}>
@@ -1962,20 +1943,19 @@ const Word = () => {
                     </div>
                   )}
 
-               
+                  <hr />
 
                   <div>
                     <div className="title-and-edit-button-div">
                       <h3>{translate("Descendant Terms")}</h3>
-                      
-                        <img
-                          src={editIcon}
-                          className="edit-button"
-                          onClick={() => {
-                            setShowAddDescendantModal(true);
-                          }}
-                        ></img>
-                     
+
+                      <img
+                        src={editIcon}
+                        className="edit-button"
+                        onClick={() => {
+                          setShowAddDescendantModal(true);
+                        }}
+                      ></img>
                     </div>
                     {descendants.length > 0 && (
                       <ol>
@@ -2091,10 +2071,8 @@ const Word = () => {
                       </>
                     )}
 
-
-                    {word.thesaurus && (<h3>{translate("Thesaurus")}</h3>)}
+                    {word.thesaurus && <h3>{translate("Thesaurus")}</h3>}
                     {word.thesaurus &&
-                    
                       Object.entries(word.thesaurus).map(([domain, val]) => {
                         if (!val.bool) return;
 
@@ -2110,7 +2088,6 @@ const Word = () => {
 
                         return (
                           <div>
-                            
                             <div
                               key={domain}
                               style={{
@@ -2119,7 +2096,15 @@ const Word = () => {
                               }}
                             >
                               <span>
-                                <span style={{fontWeight:"bold", textDecoration:"underline"}}>{domain}</span>:
+                                <span
+                                  style={{
+                                    fontWeight: "bold",
+                                    textDecoration: "underline",
+                                  }}
+                                >
+                                  {domain}
+                                </span>
+                                :
                                 {matchingWords.map((matchedWord, index) => (
                                   <span
                                     key={matchedWord.word_id}
@@ -2149,18 +2134,16 @@ const Word = () => {
                                 ))}
                               </span>
                             </div>
-                           
                           </div>
                         );
                       })}
-                       <hr />
+                    <hr />
                   </div>
 
                   <div className="title-and-edit-button-div">
                     <h3>{translate("Sources")}</h3>
-                    
-                      <img src={editIcon} className="edit-button"></img>
-                   
+
+                    <img src={editIcon} className="edit-button"></img>
                   </div>
 
                   <hr />

@@ -16,8 +16,9 @@ import { addEtymology } from "../services/etymologyService.js";
 import { IPAkeyboard } from "./IPAkeyboard.jsx";
 import { Keyboard } from "./keyboard.jsx";
 import spell from "./orthography.jsx";
+import meaningKeys from "../assets/meaningKeys.jsx";
 
-const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
+const AddWordModal = ({ show, setShow, languageId, onSuccess, allWords }) => {
   const { translate } = useTranslate();
   const [word, setWord] = useState("");
   const [showWordWarning, setShowWordWarning] = useState(false);
@@ -42,6 +43,9 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   const [affixWordFormInputs, setAffixWordFormInputs] = useState([]);
   const [cliticWordFormInputs, setCliticWordFormInputs] = useState([]);
   const [pronWordFormInputs, setPronWordFormInputs] = useState([]);
+
+  const [flagPossibleDuplicate, setFlagPossibleDuplicate] = useState(false);
+  const [possibleDuplicate, setPossibleDuplicate] = useState(false);
 
   const [wordCategories, setWordCategories] = useState([]);
   const [wordCategoryInputs, setWordCategoryInputs] = useState();
@@ -83,14 +87,14 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   const [partsOfSpeech, setPartsOfSpeech] = useState([
     { id: "noun", label: translate("Noun") },
     { id: "verb", label: translate("Verb") },
-    { id: "adj", label: translate("Adjective") },
-    { id: "num", label: translate("Number") },
-    { id: "adv", label: translate("Adverb") },
-    { id: "adp", label: translate("Adposition") },
-    { id: "conj", label: translate("Conjunction") },
-    { id: "part", label: translate("Particle") },
-    { id: "interj", label: translate("Interjection") },
-    { id: "pron", label: translate("Pronoun") },
+    { id: "adjective", label: translate("Adjective") },
+    { id: "number", label: translate("Number") },
+    { id: "adverb", label: translate("Adverb") },
+    { id: "adposition", label: translate("Adposition") },
+    { id: "conjunction", label: translate("Conjunction") },
+    { id: "particle", label: translate("Particle") },
+    { id: "interjection", label: translate("Interjection") },
+    { id: "pronoun", label: translate("Pronoun") },
   ]);
 
   const [languageName, setLanguageName] = useState();
@@ -107,6 +111,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   const [showLoanWordWarning, setShowLoanWordWarning] = useState(false);
   const [convertIPA, setConvertIPA] = useState(false);
   const [spelling, setSpelling] = useState([]);
+  const [ignoreFlaggedDuplicate, setIgnoreFlaggedDuplicate] = useState(false);
 
   useEffect(() => {
     if (!languageId) return;
@@ -166,7 +171,9 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
     setMeaningStrings({});
     setSelectedOption("none");
     setWordType("word");
-
+    setFlagPossibleDuplicate(false);
+setPossibleDuplicate(false);
+setIgnoreFlaggedDuplicate(false);
     setWordFormInputs(undefined);
     setAdjWordFormInputs([]);
     setNounWordFormInputs([]);
@@ -271,6 +278,25 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
     return result;
   };
 
+  const makePossibleDuplicateMeaningArrays = (dupe) => {
+    const dupeMeaningStrings = [];
+    meaningKeys.forEach((key) => {
+      if (dupe[key.meaning]) {
+        dupe[key.meaning].forEach((dupeMeaning) => {
+          dupeMeaningStrings.push(dupeMeaning);
+        });
+      }
+    });
+
+    return dupeMeaningStrings.join(", ");
+  };
+
+  function ignoreDupe() {
+    setIgnoreFlaggedDuplicate(true);
+    setPossibleDuplicate(false);
+    setFlagPossibleDuplicate(false);
+  }
+
   const getWordForms = async () => {
     const data = await window.electron.getWordForms(languageId);
 
@@ -356,18 +382,16 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
   };
 
   const save = async () => {
-
     let spelledWord = "";
-    
+
     if (!word) {
       //see if the word has been converted from IPA first
-      if (pronunciation && spell(pronunciation, spelling) ) {
+      if (pronunciation && spell(pronunciation, spelling)) {
         spelledWord = spell(pronunciation, spelling);
       } else {
         setShowWordWarning(true);
-        return
+        return;
       }
-    
     }
 
     if (selectedOption === "loaned" && !loanWord) {
@@ -377,7 +401,34 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
 
     setShowLoanWordWarning(false); // clear warning if proceeding
 
-    
+    const headWord = word.length > 0 ? word : spelledWord;
+
+    //check if word may already exist
+    //first check if the headword matches any existing words. This will include homophones
+      const headwordMatch = allWords.find((entry) => entry.word === headWord);
+    if (!ignoreFlaggedDuplicate) {
+  
+    if (headwordMatch) {
+      //now check if the match is just a homophone, in which case the entry will not be flagged, or if the entry may be a duplicate. This will be done by checking if the meanings match
+      meaningKeys.forEach((key) => {
+        if (headwordMatch[key.meaning]) {
+          const newWordMeanings = makeMeaningArrays();
+
+       
+          const possibleMatch = headwordMatch[key.meaning].some((item) =>
+            newWordMeanings[key.type].includes(item),
+          );
+
+          if (possibleMatch) {
+            setFlagPossibleDuplicate(true);
+            setPossibleDuplicate(headwordMatch);
+          }
+        }
+      });
+    }
+  }
+
+  if (headWord && !ignoreFlaggedDuplicate) return;
 
     const date = new Date();
     const wordId = Date.now();
@@ -386,7 +437,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
       date,
       wordId,
       languageId,
-      word.length > 0 ? word : spelledWord,
+      headWord,
       makeMeaningArrays(),
       wordType,
       note,
@@ -461,6 +512,7 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
 
   const close = () => {
     setShow(false);
+    resetState();
   };
 
   const handleWordFormInput = (e, name, type, index) => {
@@ -617,12 +669,13 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
         </div>
 
         <div className="thin-white-border">
-
           <div className="keyboard">
             <Keyboard
               inputVal={
                 convertIPA && !overrideWord
-                  ? pronunciation ? spell(pronunciation, spelling) : ""
+                  ? pronunciation
+                    ? spell(pronunciation, spelling)
+                    : ""
                   : word
               }
               setInputVal={setWord}
@@ -1787,6 +1840,27 @@ const AddWordModal = ({ show, setShow, languageId, onSuccess }) => {
         </div>
       </Modal.Body>
       <Modal.Footer>
+        {flagPossibleDuplicate && (
+          <div>
+            <p className="warning">
+              {translate(
+                "This word may already exist in the dictionary. Please verify before adding this new word",
+              )}
+            </p>
+
+            <p>
+              {translate("Possible duplicate:")}{" "}
+              <span style={{ fontWeight: "bold" }}>
+                {possibleDuplicate.word}{" "}
+              </span>{" "}
+              "{makePossibleDuplicateMeaningArrays(possibleDuplicate)}"
+
+              <button style={{marginLeft:"10px"}} onClick={ignoreDupe}>
+                {translate("Ignore")}
+              </button>
+            </p>
+          </div>
+        )}
         <div className="modal-footer-buttons">
           <div className="non-delete-buttons">
             <Button variant="secondary" onClick={close}>
