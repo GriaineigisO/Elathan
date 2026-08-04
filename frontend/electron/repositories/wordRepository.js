@@ -141,6 +141,7 @@ export function getWordData(id) {
           word.interj_meaning,
           word.conj_meaning,
           word.part_meaning,
+          word.affix_meaning
         ]
           .filter(Array.isArray)
           .flat();

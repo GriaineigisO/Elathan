@@ -228,7 +228,6 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
 
   const handleWordAdded = () => {
     fetchAllWords(); // refresh updated etymology
-    
   };
 
   // Process large arrays without blocking the main thread
@@ -250,10 +249,9 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   const fetchAllWords = async () => {
     try {
       let words = await window.electron.getAllWords(id);
-      
+
       if (!words) return;
 
-    
       if (dictionaryType === "dictionary") {
         //normal dictionary
 
@@ -307,7 +305,9 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
               word.word_type,
             )
           ) {
-            const match = affixesWithDerivations.find((a) => a.id === word.id);
+            const match = affixesWithDerivations.find(
+              (a) => a.id === word.word_id,
+            );
             return match || word; // use derivations if found
           }
           return word;
@@ -320,10 +320,13 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
 
         // 7️⃣ Generate phrases after derivations are ready
         const processed = addPhrasesToWords(words);
-        const filtered =  processed.filter((word) => word.word_type !== "personal_name" && word.word_type !== "place_name");
+        const filtered = processed.filter(
+          (word) =>
+            word.word_type !== "personal_name" &&
+            word.word_type !== "place_name",
+        );
         setVisibleWords(filtered);
       } else {
-
         const names = words.filter((word) => word.word_type === dictionaryType);
         setVisibleWords(names);
       }
@@ -338,7 +341,6 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   }, [id]);
 
   const fetchDerivations = async (affix) => {
-    
     let derivs = await window.electron.getDerivations(affix.word_id);
     setGotDerivation(true);
     return derivs;
@@ -349,17 +351,9 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
       .filter((word) => word.etymology_type !== "derived")
       .map((word) => word.word_id);
 
-      console.log(rootIds)
-
-     let etymTree = await window.electron.getEtymologyTrees(id, rootIds);
+    let etymTree = await window.electron.getEtymologyTrees(id, rootIds);
     return etymTree;
   };
-
-  
-
-
-
-  
 
   useEffect(() => {
     const preloadResolvedAffixes = async () => {
@@ -488,10 +482,8 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   }, [showPrintedDictionary]);
 
   const openWord = (word_id) => {
-   window.location.href = `/word/${word_id}`;
+    window.location.href = `/word/${word_id}`;
   };
-
-
 
   useEffect(() => {
     const getLanguageData = async () => {
@@ -502,7 +494,6 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
     };
     getLanguageData();
   }, []);
-
 
   const searchLanguage = (searchTerm, searchSelect) => {
     let results = [];
@@ -594,47 +585,49 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   const filterByPOS = (value) => {
     let results = [];
 
+    const wordsToFilter = allWords;
+
+    console.log(value);
+
     switch (value) {
       case "noun":
-        results = allWords.filter((word) => word.noun_meaning);
+        results = wordsToFilter.filter((word) => word.noun_meaning);
         break;
       case "num":
-        results = allWords.filter((word) => word.num_meaning);
+        results = wordsToFilter.filter((word) => word.num_meaning);
         break;
       case "verb":
-        results = allWords.filter((word) => word.verb_meaning);
+        results = wordsToFilter.filter((word) => word.verb_meaning);
         break;
       case "adj":
-        results = allWords.filter((word) => word.adj_meaning);
+        results = wordsToFilter.filter((word) => word.adj_meaning);
         break;
       case "adv":
-        results = allWords.filter((word) => word.adv_meaning);
+        results = wordsToFilter.filter((word) => word.adv_meaning);
         break;
       case "adp":
-        results = allWords.filter((word) => word.adp_meaning);
+        results = wordsToFilter.filter((word) => word.adp_meaning);
         break;
       case "conj":
-        results = allWords.filter((word) => word.conj_meaning);
+        results = wordsToFilter.filter((word) => word.conj_meaning);
         break;
       case "interj":
-        results = allWords.filter((word) => word.interj_meaning);
+        results = wordsToFilter.filter((word) => word.interj_meaning);
         break;
       case "pron":
-        results = allWords.filter((word) => word.pron_meaning);
+        results = wordsToFilter.filter((word) => word.pron_meaning);
         break;
       case "affix":
-        results = allWords.filter(
-          (word) => word.word_type === "prefix" || word.word_type === "suffix",
-        );
+        results = wordsToFilter.filter((word) => word.affix_meaning);
         break;
       case "clitic":
-        results = allWords.filter(
+        results = wordsToFilter.filter(
           (word) =>
             word.word_type === "proclitic" || word.word_type === "enclitic",
         );
         break;
       default:
-        results = allWords.filter((word) => word.part_meaning);
+        results = wordsToFilter.filter((word) => word.part_meaning);
         break;
     }
     setVisibleWords(results);
@@ -645,23 +638,19 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   };
 
   const openPlacenames = (id) => {
-    
-     window.location.href = `/placenames/${id}`
+    window.location.href = `/placenames/${id}`;
   };
 
   const openPersonalnames = (id) => {
-
-     window.location.href = `/personalnames/${id}`
+    window.location.href = `/personalnames/${id}`;
   };
 
   const openDictionary = (id) => {
-    window.location.href = `/dictionary/${id}`
+    window.location.href = `/dictionary/${id}`;
   };
 
-
-
   const openCorpus = (id) => {
-   window.location.href = `/corpusList/${id}`;
+    window.location.href = `/corpusList/${id}`;
   };
 
   const openThesaurus = (id) => {
@@ -669,15 +658,11 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   };
 
   const openFrequencyList = (id) => {
-    window.location.href = `/frequency/${id}`
+    window.location.href = `/frequency/${id}`;
   };
 
- 
-
   const getTags = async () => {
-
-
-   let tags = await window.electron.getTags(Number(id));
+    let tags = await window.electron.getTags(Number(id));
 
     setTagGroups(tags[0].tags ?? []);
   };
@@ -724,8 +709,12 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
             }
 
             try {
-
-              let rootWord = await window.electron.getRootWord(derivation.derived_word_id, derivation.is_first_element, derivation.is_second_element, derivation.is_third_element);
+              let rootWord = await window.electron.getRootWord(
+                derivation.derived_word_id,
+                derivation.is_first_element,
+                derivation.is_second_element,
+                derivation.is_third_element,
+              );
 
               if (!rootWord) {
                 throw new Error(`Fetch failed: ${response.status}`);
@@ -991,16 +980,14 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
             </div>
           ) : (
             <>
-              
-                <button
-                  className="hide-for-printing"
-                  onClick={() => {
-                    setShowAddWordModal(true);
-                  }}
-                >
-                  {translate("Add Word")}
-                </button>
-              
+              <button
+                className="hide-for-printing"
+                onClick={() => {
+                  setShowAddWordModal(true);
+                }}
+              >
+                {translate("Add Word")}
+              </button>
 
               {!pdfUrl ? (
                 <button onClick={generatePdf} disabled={loading}>
@@ -1205,7 +1192,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
                     <option value="none">--</option>
                     <option value="adj">{translate("Adjective")}</option>
                     <option value="adp">{translate("Adposition")}</option>
-                    <option value="noadvun">{translate("Adverb")}</option>
+                    <option value="adv">{translate("Adverb")}</option>
                     <option value="conj">{translate("Conjunction")}</option>
                     <option value="interj">{translate("Interjection")}</option>
                     <option value="noun">{translate("Noun")}</option>
@@ -1596,9 +1583,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
         </>
       ) : (
         <>
-          
-            <h1>{translate("Loading...")}</h1>
-          
+          <h1>{translate("Loading...")}</h1>
         </>
       )}
     </div>

@@ -409,12 +409,12 @@ setIgnoreFlaggedDuplicate(false);
     if (!ignoreFlaggedDuplicate) {
   
     if (headwordMatch) {
+     
       //now check if the match is just a homophone, in which case the entry will not be flagged, or if the entry may be a duplicate. This will be done by checking if the meanings match
+      const newWordMeanings = makeMeaningArrays();
       meaningKeys.forEach((key) => {
-        if (headwordMatch[key.meaning]) {
-          const newWordMeanings = makeMeaningArrays();
-
-       
+        if (headwordMatch[key.meaning] && newWordMeanings[key.type]) {
+          
           const possibleMatch = headwordMatch[key.meaning].some((item) =>
             newWordMeanings[key.type].includes(item),
           );
@@ -428,7 +428,7 @@ setIgnoreFlaggedDuplicate(false);
     }
   }
 
-  if (headWord && !ignoreFlaggedDuplicate) return;
+  if (headwordMatch && possibleDuplicate && !ignoreFlaggedDuplicate) return;
 
     const date = new Date();
     const wordId = Date.now();

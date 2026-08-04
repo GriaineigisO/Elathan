@@ -552,6 +552,24 @@ const Word = () => {
                                   }}
                                 />
                               )}
+                              <>
+                                <img
+                                  style={{ marginLeft: "10px" }}
+                                  src={editIcon}
+                                  className="edit-button"
+                                  onClick={() =>
+                                    handleEditEtymology(etymology[0])
+                                  }
+                                />
+                                <img
+                                  style={{ marginLeft: "10px" }}
+                                  src={deleteIcon}
+                                  className="delete-button-with-icon"
+                                  onClick={() =>
+                                    handleDeleteEtymology(etymology[0])
+                                  }
+                                />
+                              </>
                             </li>
                           ))}
 
@@ -760,6 +778,8 @@ const Word = () => {
                               />
                             </li>
                           ))}
+
+                          
                       </ol>
                     </>
                   ) : (

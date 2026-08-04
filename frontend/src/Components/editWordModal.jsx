@@ -1710,6 +1710,7 @@ console.log(nounWordCategories)
                 wordForm.type === "adj" ? (
                   <div key={index}>
                     <>
+                    {console.log(form)}
                       <input
                         placeholder={wordForm.name}
                         value={
