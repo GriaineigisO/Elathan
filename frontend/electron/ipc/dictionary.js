@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { getAllWords } from "../repositories/dictionaryRepository.js";
+import { getAllWords, getAllWordsForPrint } from "../repositories/dictionaryRepository.js";
 import { getWordData, getWordsForms } from "../repositories/wordRepository.js";
 
 export function registerDictionaryHandlers() {
@@ -10,5 +10,8 @@ export function registerDictionaryHandlers() {
   ipcMain.handle("dictionary:getWordData", (_, id) => getWordData(id));
 
   ipcMain.handle("dictionary:getWordsForms", (_, id) => getWordsForms(id));
+
+  ipcMain.handle("dictionary:getAllWordsForPrint", (_, id) => getAllWordsForPrint(id));
+
   
 }

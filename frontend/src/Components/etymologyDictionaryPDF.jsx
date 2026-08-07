@@ -172,6 +172,7 @@ export default function EtymologyDictionaryPdf({
   isProto,
   etymologyTree,
   languageData,
+  authorName
 }) {
  
   //get number of roots i.e words with no etymology
@@ -308,6 +309,9 @@ export default function EtymologyDictionaryPdf({
         <Text
           style={styles.stats}
         >{`${numOfRoots.length.toLocaleString()} roots`}</Text>
+        <Text>
+           {translate("by {authorName}", {authorName})}
+        </Text>
 
         <View break>
           {etymologyTree.map((root) => {

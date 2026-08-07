@@ -149,4 +149,10 @@ export function createSchema() {
         );
     `);
 
+    db.exec(`
+        CREATE TABLE IF NOT EXISTS author (
+            author_name TEXT DEFAULT NULL
+        );
+    `);
+
 }

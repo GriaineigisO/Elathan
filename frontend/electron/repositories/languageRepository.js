@@ -4,6 +4,76 @@ import { parseGroup } from "./parse/parseGroup.js";
 import { parseDictionary } from "./parse/parseDictionary.js";
 import { parseInterfaceLanguages } from "./parse/parseInterfaceLanguages.js";
 import { parsePhonologyTemplates } from "./parse/parsePhonologyTemplates.js";
+import { parseAuthor } from "./parse/parseAuthor.js";
+import { getName } from "domutils";
+import { count } from "node:console";
+
+export function getAuthorName() {
+  try {
+    const getNameStmt = db
+      .prepare(
+        `
+      SELECT author_name
+      FROM author
+      `,
+      )
+      .all();
+
+    const authorName = getNameStmt.map(parseAuthor);
+
+    if (!authorName) {
+      console.error(`error getting author name`);
+      return;
+    }
+
+    return authorName[0].author_name;
+  } catch (error) {
+    console.error(`error getting author name: ${error}`);
+  }
+}
+
+export function saveAccountSettings(authorName) {
+  try {
+    const countRows = db
+      .prepare(
+        `
+      SELECT COUNT(*) as count
+      FROM author
+      `,
+      )
+      .get();
+
+    if (countRows.count === 0) {
+      const insertRowStmt = db.prepare(`
+          INSERT INTO author
+          (author_name)
+          VALUES(?) 
+        `);
+
+      const insertRow = insertRowStmt.run(authorName);
+
+      if (insertRow.changes === 0) return { success: false };
+
+      return { success: true };
+    } else {
+      const saveSettingsStmt = db.prepare(`
+      UPDATE author
+      SET author_name = ?
+   `);
+
+
+      const saveSettings = saveSettingsStmt.run(authorName);
+
+      console.log(saveSettings);
+
+      if (saveSettings.changes === 0) return { success: false };
+
+      return { success: true };
+    }
+  } catch (error) {
+    console.error(`error saving account settings: ${error}`);
+  }
+}
 
 export function addLanguage(
   id,
@@ -50,7 +120,7 @@ export function addLanguage(
           console.error(
             `error adding mother_language_id to daughter: ${error}`,
           );
-          return { success: false };
+          return { "success": false };
         }
       }
     }
@@ -73,14 +143,14 @@ export function addLanguage(
           );
         } catch (error) {
           console.error(`error adding language to group: ${error}`);
-          return { success: false };
+          return { "success": false };
         }
       }
     }
 
-    return { success: true };
+    return { "success": true };
   } catch (error) {
-    console.error(`errer adding language: ${error}`);
+    console.error(`error adding language: ${error}`);
   }
 }
 
@@ -200,7 +270,7 @@ export function editLanguage(
   spelling,
   selectedSoundChanges,
   allCategoryValues,
-  convertIPA
+  convertIPA,
 ) {
   const isproto = isProto === "true" ? 1 : 0;
 
@@ -230,9 +300,8 @@ export function editLanguage(
     wordForms,
     addedTagGroups,
     ipaConversion,
-    id
-     );
-
+    id,
+  );
 
   if (editLang.changes > 0) {
     if (daughterLanguageIds) {
@@ -307,12 +376,10 @@ export function editLanguage(
 
     //if a default tag has been selected, find all words with no tags and assign to them the default tag
 
-
-    return { "success": true };
+    return { success: true };
   }
 
-  return {"success": false}
-
+  return { success: false };
 }
 
 export function addGroup(groupName, wordForms, addedLanguages) {
@@ -636,15 +703,16 @@ export function addWord(
   variants,
   thesaurusDomains,
 ) {
+
+
+
   const removeNulls = (arr) => {
-   
     if (!Array.isArray(arr)) return;
     return JSON.stringify(
       arr.filter((obj) => obj !== null && obj !== undefined),
     );
   };
   const thes = thesaurusDomains ? thesaurusDomains : {};
-
 
   const nounMeaning = Array.isArray(meanings.noun)
     ? JSON.stringify(meanings.noun)
@@ -695,6 +763,7 @@ export function addWord(
   const affixWordForms = removeNulls(affixWordFormInputs);
   const numWordForms = removeNulls(numWordFormInputs);
   const cliticWordForms = removeNulls(cliticWordFormInputs);
+  
 
   try {
     const addWordStmt = db.prepare(`
@@ -751,12 +820,14 @@ export function addWord(
       JSON.stringify(thes) ?? null,
     );
 
+    
+
     if (addWords.changes === 0) return { success: false };
 
-    return { success: true };
+    return { "success": true };
   } catch (error) {
     console.error(`error adding word: ${error}`);
-    return { success: false };
+    return { "success": false };
   }
 
   try {
@@ -1424,35 +1495,28 @@ export function getLoanerLanguage(id) {
 }
 
 export function savePhonology(title, template) {
-     //first, check if a template of the same name already exists
-        const checknameStmt = db.prepare(`
+  //first, check if a template of the same name already exists
+  const checknameStmt = db.prepare(`
             SELECT template_name
             FROM phonologyTemplates
             WHERE template_name = ?
             `);
 
-            const findName = checknameStmt.all(title).map(parsePhonologyTemplates);
+  const findName = checknameStmt.all(title).map(parsePhonologyTemplates);
 
-
-      if (!findName.length > 0) {
-
-        
-        const insertPhonStmt = db.prepare(`
+  if (!findName.length > 0) {
+    const insertPhonStmt = db.prepare(`
           INSERT INTO phonologyTemplates
           (id, template_name, phonology)
           VALUES(?, ?, ?)
-          `)
+          `);
 
-          const insertPhon = insertPhonStmt.run(Date.now(), title, template);
+    const insertPhon = insertPhonStmt.run(Date.now(), title, template);
 
-            if (insertPhon.changes === 0) return {"success": false};
+    if (insertPhon.changes === 0) return { success: false };
 
-            return {"success": true};
+    return { success: true };
+  }
 
-        }
-
-      
-
-        return { nameAlreadyExists: false };
-    
+  return { nameAlreadyExists: false };
 }

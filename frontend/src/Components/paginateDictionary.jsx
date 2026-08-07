@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslate } from "../Functions/TranslateUI";
 import FindWordsDescendants from "./findWOrdsDescendants.jsx";
 import React from "react";
+import ExtractExampleSentencesFromCorpus from "./ExtractExampleSentencesFromCorpus.jsx";
 
 function PaginatedDictionary({
   visibleWords,
@@ -14,6 +15,8 @@ function PaginatedDictionary({
   const { translate } = useTranslate();
   const [page, setPage] = useState(1);
 
+  if (showPrintedDictionary) return;
+
 
   const totalPages = Math.ceil(visibleWords.length / Number(pageSize));
 
@@ -21,8 +24,9 @@ function PaginatedDictionary({
   const end = start + Number(pageSize);
   const pageItems = Number(pageSize) ? visibleWords.slice(start, end) : visibleWords;
 
+
   return (
-    <>
+    <div className="hide-for-printing">
       {pageItems.map((word, index) => (
             <div
               key={index}
@@ -1303,7 +1307,7 @@ function PaginatedDictionary({
 
                 {showPrintedDictionary && (
                   <ExtractExampleSentencesFromCorpus
-                    languageId={id}
+                    languageId={word.language_id}
                     entryWord={word.word}
                     wordId={word.word_id}
                   />
@@ -1518,7 +1522,7 @@ function PaginatedDictionary({
 
                 <div className="etymology-border">
                   <span className="etymology-print">
-                    {showPrintedDictionary && word.etymology.length > 1 ? (
+                    {showPrintedDictionary && word.etymology && word.etymology.length > 1 ? (
                       <>
                         <span>
                           {translate(
@@ -2038,7 +2042,7 @@ function PaginatedDictionary({
         </button>
       </div>
         
-    </>
+    </div>
   );
 }
 

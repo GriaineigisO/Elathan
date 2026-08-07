@@ -18,16 +18,18 @@ import { pdf } from "@react-pdf/renderer";
 import DictionaryTitle from "./DictionaryTitle.jsx";
 import { getAllWords } from "../services/dictionaryService";
 import { getLanguage } from "../services/languageService";
-import { getTags } from "../services/languageService";
+import { getTags, getAuthorName } from "../services/languageService";
 import { getDerivations } from "../services/derivationService.js";
 import { getRootWord } from "../services/derivationService.js";
 import { getEtymologyTrees } from "../services/etymologyService.js";
+import { PrintBilingualDictionary } from "./printBilingualDictionary.jsx";
+import meaningKeys from "../assets/meaningKeys.jsx";
+import { getEtymology } from "../services/etymologyService.js";
 
 const DictionaryBuilder = ({ id, dictionaryType }) => {
   const { translate } = useTranslate();
   const [pdfUrl, setPdfUrl] = useState(null);
   const [pageSize, setPageSize] = useState(200);
-  const [canView, setCanView] = useState(false);
   const [gotEtymology, setGotEtymology] = useState(false);
   const [gotDerivations, setGotDerivation] = useState(false);
   const [etymologyTree, setEtymologyTree] = useState([]);
@@ -43,6 +45,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   const [word, setWord] = useState();
   const [showPrintedDictionary, setShowPrintedDictionary] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingBilingual, setLoadingBilingual] = useState(false);
   const [selectSearch, setSelectSearch] = useState("match");
   const [searchTerm, setSearchTerm] = useState();
   const [searchEnglishTerm, setSearchEnglishTerm] = useState();
@@ -56,6 +59,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   const [resolvedAffixes, setResolvedAffixes] = useState([]);
   const [grammar, setGrammar] = useState();
   const [allWordsForThesaurus, setAllWordsForThesaurus] = useState([]);
+  const [authorName, setAuthorName] = useState("");
 
   const rotatingMessages = [
     <div className="quote">
@@ -215,7 +219,15 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
 
   useEffect(() => {
-    if (loading) {
+      const fetchAuthorName = async () => {
+        const data = await window.electron.getAuthorName();
+        setAuthorName(data);
+      };
+      fetchAuthorName();
+    }, []);
+
+  useEffect(() => {
+    if (loading || loadingBilingual) {
       const interval = setInterval(() => {
         setCurrentMessageIndex(
           (prevIndex) => (prevIndex + 1) % rotatingMessages.length,
@@ -224,7 +236,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
 
       return () => clearInterval(interval); // cleanup on unmount or loading false
     }
-  }, [loading]);
+  }, [loading, loadingBilingual]);
 
   const handleWordAdded = () => {
     fetchAllWords(); // refresh updated etymology
@@ -245,6 +257,200 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
 
     return result;
   };
+
+  function getEnglishWords(allWords) {
+    //prepare arrays to display the english > language part of the dictionary
+    let addedEnglishWords = []; //all English words happened upon are stored in this array, so we can check if an english word has already been entered e.g in the case of synonyms
+
+    let fromEnglishDictionary = [];
+
+    const skipWords = [
+      "a",
+      "-",
+      "/",
+      "an",
+      "the",
+      "has",
+      "you",
+      "I",
+      "us",
+      "him",
+      "her",
+      "them",
+    ];
+    const skipIfMultipleWords = [
+      "who",
+      "that",
+      "which",
+      "or",
+      "of",
+      "is",
+      "to",
+      "at",
+      "for",
+      "be",
+      "you",
+      "one",
+      "was",
+      "we",
+      "you",
+      "I",
+      "us",
+      "he",
+      "she",
+      "it",
+      "him",
+      "her",
+      "they",
+      "them",
+      "where",
+      "and",
+    ];
+
+    const manageFromEnglishDictionary = (posMeaning, pos, word) => {
+      posMeaning.forEach((rawEnglishWord) => {
+        let englishWord = rawEnglishWord.trim();
+      
+
+        // Special case: remove "to " if it's a verb meaning
+        if (pos === "v" && englishWord.toLowerCase().startsWith("to ")) {
+          englishWord = englishWord.slice(3).trim(); // remove "to "
+        }
+
+        if (englishWord.startsWith("(")) return; //skip if the word is something like "(of rivers)"
+
+        if (!addedEnglishWords.includes(englishWord.toLowerCase())) {
+          const words = englishWord.trim().split(/\s+/); //split string by whitespace incase the translation is made of several english words e.g "inhospitable place"
+
+          const hasMultipleWords = words.length > 1;
+
+          if (hasMultipleWords) {
+            words.forEach((splitWord) => {
+              const lowerSplit = splitWord.toLowerCase();
+
+              if (
+                skipWords.includes(splitWord) ||
+                skipIfMultipleWords.includes(splitWord)
+              )
+                return;
+
+              if (!addedEnglishWords.includes(lowerSplit)) {
+                addedEnglishWords.push(lowerSplit);
+
+                let obj = {
+                  english_word: lowerSplit,
+                  language_entries: [],
+                  phrases: [],
+                };
+
+                let phrase = {
+                  english: rawEnglishWord
+                    .replace(splitWord, "~")
+                    .replace(/^to\s+/i, ""),
+                  language_word: word.word,
+                  part_of_speech: [pos],
+                };
+
+                obj.phrases.push(phrase);
+                fromEnglishDictionary.push(obj);
+              } else {
+                // If already exists, update existing entry
+                fromEnglishDictionary.forEach((obj) => {
+                  if (obj.english_word === lowerSplit) {
+                    let phrase = {
+                      english: rawEnglishWord
+                        .replace(splitWord, "~")
+                        .replace(/^to\s+/i, ""),
+                      language_word: word.word,
+                      part_of_speech: [pos],
+                    };
+                    obj.phrases.push(phrase);
+                  }
+                });
+              }
+            });
+          } else {
+            if (skipWords.includes(englishWord.toLowerCase())) return;
+
+            addedEnglishWords.push(englishWord.toLowerCase());
+
+            let obj = {
+              english_word: englishWord.toLowerCase(),
+              language_entries: [{ part_of_speech: pos, word: word.word }],
+              phrases: [],
+            };
+
+            fromEnglishDictionary.push(obj);
+          }
+        } else {
+          const words = englishWord.trim().split(/\s+/); //split string by whitespace incase the translation is made of several english words e.g "inhospitable place"
+          const hasMultipleWords = words.length > 1;
+
+          if (hasMultipleWords) {
+            //find the object which already has the english word, add the language word to the phrases
+
+            words.forEach((splitWord) => {
+              if (
+                skipWords.includes(splitWord) ||
+                skipIfMultipleWords.includes(splitWord)
+              )
+                return;
+
+              fromEnglishDictionary.forEach((obj) => {
+                if (obj.english_word === splitWord.toLowerCase()) {
+                  let phrase = {
+                    english: rawEnglishWord
+                      .replace(splitWord, "~")
+                      .replace(/^to\s+/i, ""),
+                    language_word: word.word,
+                    part_of_speech: [pos],
+                  };
+
+                  obj.phrases.push(phrase);
+                  obj.part_of_speech.push(pos);
+                }
+              });
+            });
+          } else {
+            //find the object which already has the english word, add the language_word to the translation
+            fromEnglishDictionary.forEach((obj) => {
+              if (skipWords.includes(englishWord.toLowerCase())) return;
+
+              if (obj.english_word === englishWord.toLowerCase()) {
+                obj.language_entries.push({
+                  part_of_speech: pos,
+                  word: word.word,
+                });
+
+                //obj.part_of_speech.push("n");
+              }
+            });
+          }
+        }
+      });
+    };
+
+    let affixesArr = [];
+
+    allWords.forEach((word) => {
+      console.log(word)
+      if (word.word_type === "word") {
+        meaningKeys.forEach((key) => {
+          
+          if (word[key.meaning])
+            manageFromEnglishDictionary(word[key.meaning], key.abbr, word);
+        });
+      } else {
+        affixesArr.push(word);
+      }
+    });
+
+    fromEnglishDictionary.sort((a, b) =>
+      a.english_word.localeCompare(b.english_word),
+    );
+
+    setAllEnglishWords(fromEnglishDictionary);
+  }
 
   const fetchAllWords = async () => {
     try {
@@ -325,6 +531,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
             word.word_type !== "personal_name" &&
             word.word_type !== "place_name",
         );
+        getEnglishWords(filtered);
         setVisibleWords(filtered);
       } else {
         const names = words.filter((word) => word.word_type === dictionaryType);
@@ -337,7 +544,6 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
 
   useEffect(() => {
     fetchAllWords();
-    setCanView(true);
   }, [id]);
 
   const fetchDerivations = async (affix) => {
@@ -586,8 +792,6 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
     let results = [];
 
     const wordsToFilter = allWords;
-
-    console.log(value);
 
     switch (value) {
       case "noun":
@@ -964,9 +1168,9 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
 
   return (
     <div style={{ width: "100%", textAlign: "center" }}>
-      {canView ? (
-        <>
-          {loading ? (
+      <>
+        {loading ||
+          (loadingBilingual && (
             <div className="spinner-container">
               <div className="spinner" />
               <p>
@@ -978,614 +1182,389 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
                 {rotatingMessages[currentMessageIndex]}
               </div>
             </div>
+          ))}
+
+        <div
+          style={{ display: loading || loadingBilingual ? "none" : "block" }}
+        >
+          <button
+            className="hide-for-printing"
+            onClick={() => {
+              setShowAddWordModal(true);
+            }}
+          >
+            {translate("Add Word")}
+          </button>
+
+          {!pdfUrl ? (
+            <button
+              className="hide-for-printing"
+              onClick={generatePdf}
+              disabled={loading}
+            >
+              {loading
+                ? "Preparing Etymological Dictionary PDF..."
+                : "Generate Etymological Dictionary PDF"}
+            </button>
           ) : (
-            <>
-              <button
-                className="hide-for-printing"
-                onClick={() => {
-                  setShowAddWordModal(true);
-                }}
-              >
-                {translate("Add Word")}
-              </button>
+            <a href={pdfUrl} download={`${languageName}.pdf`}>
+              Download Etymological Dictionary PDF
+            </a>
+          )}
 
-              {!pdfUrl ? (
-                <button onClick={generatePdf} disabled={loading}>
-                  {loading
-                    ? "Preparing Etymological Dictionary PDF..."
-                    : "Generate Etymological Dictionary PDF"}
-                </button>
-              ) : (
-                <a href={pdfUrl} download={`${languageName}.pdf`}>
-                  Download Etymological Dictionary PDF
-                </a>
-              )}
+          <PrintBilingualDictionary
+            visibleWords={visibleWords}
+            pageSize={pageSize}
+            isProto={isProto}
+            showPrintedDictionary={showPrintedDictionary}
+            openWord={openWord}
+            allWords={allWords}
+            setLoadingBilingual={setLoadingBilingual}
+            dictionaryType={dictionaryType}
+            languageName={languageName}
+            allEnglishWords={allEnglishWords}
+            fixPhrases={fixPhrases}
+            resolvedAffixes={resolvedAffixes}
+            id={id}
+            authorName={authorName}
+          />
 
-              <AddWordModal
-                show={showAddWordModal}
-                setShow={setShowAddWordModal}
-                languageId={id}
-                onSuccess={handleWordAdded}
-                allWords={allWords}
-              />
+          <div className="hide-for-printing">
+            <AddWordModal
+              show={showAddWordModal}
+              setShow={setShowAddWordModal}
+              languageId={id}
+              onSuccess={handleWordAdded}
+              allWords={allWords}
+            />
 
-              <StatModal
-                show={showStatModal}
-                setShow={setShowStatModal}
-                tagGroups={tagGroups}
-                visibleWords={visibleWords}
-              />
+            <StatModal
+              show={showStatModal}
+              setShow={setShowStatModal}
+              tagGroups={tagGroups}
+              visibleWords={visibleWords}
+            />
 
-              <SourcesModal
-                show={showSourcesModal}
-                setShow={setShowSourcesModal}
-                languageId={id}
-              />
+            <SourcesModal
+              show={showSourcesModal}
+              setShow={setShowSourcesModal}
+              languageId={id}
+            />
+          </div>
 
-              {grammar ? (
-                showPrintedDictionary ? (
-                  <h1 className="dictionary-title">
-                    {translate("{languageName} Grammar and Dictionary", {
-                      languageName,
-                    })}
-                  </h1>
-                ) : (
-                  <DictionaryTitle
-                    languageName={languageName}
-                    dictionaryType={dictionaryType}
-                  />
-                )
-              ) : (
+          {grammar ? (
+            showPrintedDictionary ? (
+              <h1 className="dictionary-title">
+                {translate("{languageName} Grammar and Dictionary", {
+                  languageName,
+                })}
+              </h1>
+            ) : (
+              <div className="hide-for-printing">
                 <DictionaryTitle
                   languageName={languageName}
                   dictionaryType={dictionaryType}
                 />
-              )}
+              </div>
+            )
+          ) : (
+            <div className="hide-for-printing">
+              <DictionaryTitle
+                languageName={languageName}
+                dictionaryType={dictionaryType}
+              />
+            </div>
+          )}
 
-              {dictionaryType !== "place_name" && (
-                <p
-                  className="word-link hide-for-printing"
-                  onClick={() => openPlacenames(id)}
-                >
-                  {translate("View {languageName} Placenames", {
+          {dictionaryType !== "place_name" && (
+            <p
+              className="word-link hide-for-printing"
+              onClick={() => openPlacenames(id)}
+            >
+              {translate("View {languageName} Placenames", {
+                languageName,
+              })}
+            </p>
+          )}
+
+          {dictionaryType !== "personal_name" && (
+            <p
+              className="word-link hide-for-printing"
+              onClick={() => openPersonalnames(id)}
+            >
+              {translate("View {languageName} Personal names", {
+                languageName,
+              })}
+            </p>
+          )}
+
+          {dictionaryType !== "dictionary" && (
+            <p
+              className="word-link hide-for-printing"
+              onClick={() => openDictionary(id)}
+            >
+              {translate("View {languageName} Dictionary", {
+                languageName,
+              })}
+            </p>
+          )}
+
+          <p
+            className="word-link hide-for-printing"
+            onClick={() => openGrammar(id)}
+          >
+            {translate("View {languageName} Grammar", { languageName })}
+          </p>
+
+          <p
+            className="word-link hide-for-printing"
+            onClick={() => openCorpus(id)}
+          >
+            {translate("View {languageName} Corpus", { languageName })}
+          </p>
+
+          <p
+            className="word-link hide-for-printing"
+            onClick={() => openThesaurus(id)}
+          >
+            {translate("View {languageName} Thesaurus", { languageName })}
+          </p>
+
+          <p
+            className="word-link hide-for-printing"
+            onClick={() => openFrequencyList(id)}
+          >
+            {translate("View {languageName} Frequency List", {
+              languageName,
+            })}
+          </p>
+
+          <p className="word-count hide-for-printing">
+            {translate("{wordCount} words.", {
+              wordCount: visibleWords.length.toLocaleString(),
+            })}
+          </p>
+
+          <div className="page-break">
+            {showPrintedDictionary && grammar && (
+              <div
+                className="rendered-content"
+                style={{
+                  marginLeft: "10px",
+                  marginRight: "10px",
+                  fontSize: "16px",
+                  textAlign: "left",
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: grammar,
+                }}
+              />
+            )}
+          </div>
+
+          <div
+            style={{
+              marginBottom: "20px",
+              display: "flex",
+              flexDirection: "column",
+              /*width: "400px",*/
+            }}
+          >
+            <div
+              className="search-container"
+              style={{ display: "flex", flexDirection: "row" }}
+            >
+              <div className="search-div hide-for-printing">
+                <input
+                  placeholder={translate("Search {languageName} Words", {
                     languageName,
                   })}
-                </p>
-              )}
+                  style={{ marginRight: "10px" }}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  value={searchTerm}
+                ></input>
 
-              {dictionaryType !== "personal_name" && (
-                <p
-                  className="word-link hide-for-printing"
-                  onClick={() => openPersonalnames(id)}
+                <select
+                  onChange={(e) => setSelectSearch(e.target.value)}
+                  style={{ marginRight: "10px" }}
                 >
-                  {translate("View {languageName} Personal names", {
-                    languageName,
-                  })}
-                </p>
-              )}
+                  <option value="match">{translate("match")}</option>
+                  <option value="startswith">{translate("starts with")}</option>
+                  <option value="endswith">{translate("ends with")}</option>
+                </select>
 
-              {dictionaryType !== "dictionary" && (
-                <p
-                  className="word-link hide-for-printing"
-                  onClick={() => openDictionary(id)}
+                <button
+                  onClick={() => searchLanguage(searchTerm, selectSearch)}
                 >
-                  {translate("View {languageName} Dictionary", {
-                    languageName,
-                  })}
-                </p>
-              )}
+                  {translate("Search")}
+                </button>
+              </div>
 
-              <p
-                className="word-link hide-for-printing"
-                onClick={() => openGrammar(id)}
+              <div className="search-div hide-for-printing">
+                <input
+                  placeholder={translate("Search English Words")}
+                  onChange={(e) => setSearchEnglishTerm(e.target.value)}
+                  value={searchEnglishTerm}
+                ></input>
+
+                <button onClick={() => searchEnglish(searchEnglishTerm)}>
+                  {translate("Search")}
+                </button>
+              </div>
+            </div>
+
+            <div
+              className="hide-for-printing"
+              style={{ marginLeft: "600px", width: "300px" }}
+            >
+              <span style={{ marginRight: "10px" }}>
+                {translate("Filter by part of speech")}
+              </span>
+              <select onChange={(e) => filterByPOS(e.target.value)}>
+                <option value="none">--</option>
+                <option value="adj">{translate("Adjective")}</option>
+                <option value="adp">{translate("Adposition")}</option>
+                <option value="adv">{translate("Adverb")}</option>
+                <option value="conj">{translate("Conjunction")}</option>
+                <option value="interj">{translate("Interjection")}</option>
+                <option value="noun">{translate("Noun")}</option>
+                <option value="num">{translate("Number")}</option>
+                <option value="verb">{translate("Verb")}</option>
+                <option value="part">{translate("Particle")}</option>
+                <option value="pron">{translate("Pronoun")}</option>
+                <option value="affix">{translate("Affix")}</option>
+                <option value="clitic">{translate("Clitic")}</option>
+              </select>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "300px",
+                marginTop: "20px",
+              }}
+            >
+              <button
+                style={{ marginLeft: "700px", width: "100px" }}
+                onClick={() => refreshResults()}
+                className="hide-for-printing"
               >
-                {translate("View {languageName} Grammar", { languageName })}
-              </p>
+                {translate("Refresh")}
+              </button>
 
-              <p
-                className="word-link hide-for-printing"
-                onClick={() => openCorpus(id)}
+              <button
+                style={{ marginLeft: "20px", width: "100px" }}
+                onClick={() => setShowStatModal(true)}
+                className="hide-for-printing"
               >
-                {translate("View {languageName} Corpus", { languageName })}
-              </p>
+                {translate("Statistics")}
+              </button>
 
-              <p
-                className="word-link hide-for-printing"
-                onClick={() => openThesaurus(id)}
+              <button
+                style={{ marginLeft: "20px", width: "fit-content" }}
+                onClick={() => setShowSourcesModal(true)}
+                className="hide-for-printing"
               >
-                {translate("View {languageName} Thesaurus", { languageName })}
-              </p>
+                {translate("Sources")}
+              </button>
+            </div>
 
-              <p
-                className="word-link hide-for-printing"
-                onClick={() => openFrequencyList(id)}
+            <div
+              className="hide-for-printing"
+              style={{ marginLeft: "600px", width: "300px" }}
+            >
+              <span style={{ marginRight: "10px" }}>
+                {translate("Show words per page")}
+              </span>
+              <select
+                value={pageSize}
+                onChange={(e) => setPageSize(e.target.value)}
               >
-                {translate("View {languageName} Frequency List", {
-                  languageName,
-                })}
-              </p>
+                <option value="100">100</option>
+                <option value="200">200</option>
+                <option value="300">300</option>
+                <option value="400">400</option>
+                <option value="500">500</option>
+                <option value="600">600</option>
+                <option value="700">700</option>
+                <option value="800">800</option>
+                <option value="900">900</option>
+                <option value="1000">1000</option>
+                <option value="all">{translate("All")}</option>
+              </select>
+            </div>
+          </div>
 
-              <p className="word-count">
-                {translate("{wordCount} words.", {
-                  wordCount: visibleWords.length.toLocaleString(),
-                })}
-              </p>
+          <div className="page-break-wrapper">
+            <div className="page-break">
+              <div className="show-for-printing">
+                {tagGroups.length > 0 ? (
+                  tagGroups.map((group) => (
+                    <div
+                      style={{ marginBottom: "10px" }}
+                      className="thin-white-border"
+                    >
+                      <h4>{group.name}</h4>
 
-              <div className="page-break">
-                {showPrintedDictionary && grammar && (
-                  <div
-                    className="rendered-content"
-                    style={{
-                      marginLeft: "10px",
-                      marginRight: "10px",
-                      fontSize: "16px",
-                      textAlign: "left",
-                    }}
-                    dangerouslySetInnerHTML={{
-                      __html: grammar,
-                    }}
-                  />
+                      <table
+                        style={{
+                          marginLeft: "auto",
+                          marginRight: "auto",
+                        }}
+                      >
+                        <tbody>
+                          {group.tags.map((groupTag) => (
+                            <tr key={groupTag}>
+                              <td style={{ textAlign: "left" }}>
+                                {groupTag}:<span> </span>{" "}
+                              </td>
+                              <td style={{ textAlign: "right" }}>
+                                {
+                                  visibleWords.filter((word) =>
+                                    word.tags.some((t) => t.tag === groupTag),
+                                  ).length
+                                }{" "}
+                                /{" "}
+                                {(
+                                  (visibleWords.filter((word) =>
+                                    word.tags.some((t) => t.tag === groupTag),
+                                  ).length *
+                                    100) /
+                                  visibleWords.length
+                                ).toFixed(2)}
+                                %
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ))
+                ) : (
+                  <></>
                 )}
               </div>
+            </div>
+          </div>
 
-              <div
-                style={{
-                  marginBottom: "20px",
-                  display: "flex",
-                  flexDirection: "column",
-                  /*width: "400px",*/
-                }}
-              >
-                <div
-                  className="search-container"
-                  style={{ display: "flex", flexDirection: "row" }}
-                >
-                  <div className="search-div hide-for-printing">
-                    <input
-                      placeholder={translate("Search {languageName} Words", {
-                        languageName,
-                      })}
-                      style={{ marginRight: "10px" }}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      value={searchTerm}
-                    ></input>
-
-                    <select
-                      onChange={(e) => setSelectSearch(e.target.value)}
-                      style={{ marginRight: "10px" }}
-                    >
-                      <option value="match">{translate("match")}</option>
-                      <option value="startswith">
-                        {translate("starts with")}
-                      </option>
-                      <option value="endswith">{translate("ends with")}</option>
-                    </select>
-
-                    <button
-                      onClick={() => searchLanguage(searchTerm, selectSearch)}
-                    >
-                      {translate("Search")}
-                    </button>
-                  </div>
-
-                  <div className="search-div hide-for-printing">
-                    <input
-                      placeholder={translate("Search English Words")}
-                      onChange={(e) => setSearchEnglishTerm(e.target.value)}
-                      value={searchEnglishTerm}
-                    ></input>
-
-                    <button onClick={() => searchEnglish(searchEnglishTerm)}>
-                      {translate("Search")}
-                    </button>
-                  </div>
-                </div>
-
-                <div
-                  className="hide-for-printing"
-                  style={{ marginLeft: "600px", width: "300px" }}
-                >
-                  <span style={{ marginRight: "10px" }}>
-                    {translate("Filter by part of speech")}
-                  </span>
-                  <select onChange={(e) => filterByPOS(e.target.value)}>
-                    <option value="none">--</option>
-                    <option value="adj">{translate("Adjective")}</option>
-                    <option value="adp">{translate("Adposition")}</option>
-                    <option value="adv">{translate("Adverb")}</option>
-                    <option value="conj">{translate("Conjunction")}</option>
-                    <option value="interj">{translate("Interjection")}</option>
-                    <option value="noun">{translate("Noun")}</option>
-                    <option value="num">{translate("Number")}</option>
-                    <option value="verb">{translate("Verb")}</option>
-                    <option value="part">{translate("Particle")}</option>
-                    <option value="pron">{translate("Pronoun")}</option>
-                    <option value="affix">{translate("Affix")}</option>
-                    <option value="clitic">{translate("Clitic")}</option>
-                  </select>
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    width: "300px",
-                    marginTop: "20px",
-                  }}
-                >
-                  <button
-                    style={{ marginLeft: "700px", width: "100px" }}
-                    onClick={() => refreshResults()}
-                    className="hide-for-printing"
-                  >
-                    {translate("Refresh")}
-                  </button>
-
-                  <button
-                    style={{ marginLeft: "20px", width: "100px" }}
-                    onClick={() => setShowStatModal(true)}
-                    className="hide-for-printing"
-                  >
-                    {translate("Statistics")}
-                  </button>
-
-                  <button
-                    style={{ marginLeft: "20px", width: "fit-content" }}
-                    onClick={() => setShowSourcesModal(true)}
-                    className="hide-for-printing"
-                  >
-                    {translate("Sources")}
-                  </button>
-                </div>
-
-                <div
-                  className="hide-for-printing"
-                  style={{ marginLeft: "600px", width: "300px" }}
-                >
-                  <span style={{ marginRight: "10px" }}>
-                    {translate("Show words per page")}
-                  </span>
-                  <select
-                    value={pageSize}
-                    onChange={(e) => setPageSize(e.target.value)}
-                  >
-                    <option value="100">100</option>
-                    <option value="200">200</option>
-                    <option value="300">300</option>
-                    <option value="400">400</option>
-                    <option value="500">500</option>
-                    <option value="600">600</option>
-                    <option value="700">700</option>
-                    <option value="800">800</option>
-                    <option value="900">900</option>
-                    <option value="1000">1000</option>
-                    <option value="all">{translate("All")}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="page-break-wrapper">
-                <div className="page-break">
-                  <div className="show-for-printing">
-                    {tagGroups.length > 0 ? (
-                      tagGroups.map((group) => (
-                        <div
-                          style={{ marginBottom: "10px" }}
-                          className="thin-white-border"
-                        >
-                          <h4>{group.name}</h4>
-
-                          <table
-                            style={{
-                              marginLeft: "auto",
-                              marginRight: "auto",
-                            }}
-                          >
-                            <tbody>
-                              {group.tags.map((groupTag) => (
-                                <tr key={groupTag}>
-                                  <td style={{ textAlign: "left" }}>
-                                    {groupTag}:<span> </span>{" "}
-                                  </td>
-                                  <td style={{ textAlign: "right" }}>
-                                    {
-                                      visibleWords.filter((word) =>
-                                        word.tags.some(
-                                          (t) => t.tag === groupTag,
-                                        ),
-                                      ).length
-                                    }{" "}
-                                    /{" "}
-                                    {(
-                                      (visibleWords.filter((word) =>
-                                        word.tags.some(
-                                          (t) => t.tag === groupTag,
-                                        ),
-                                      ).length *
-                                        100) /
-                                      visibleWords.length
-                                    ).toFixed(2)}
-                                    %
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      ))
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className={`dictionary-table page-break two-cols
+          <div
+            className={`dictionary-table page-break two-cols
                     
                 }`}
-              >
-                <PaginatedDictionary
-                  visibleWords={visibleWords}
-                  pageSize={pageSize}
-                  isProto={isProto}
-                  showPrintedDictionary={showPrintedDictionary}
-                  openWord={openWord}
-                  allWords={allWords}
-                />
-              </div>
-
-              {showPrintedDictionary ? (
-                <>
-                  {resolvedAffixes?.length > 0 && (
-                    <DerivationalAffixBlock resolvedAffixes={resolvedAffixes} />
-                  )}
-
-                  <div className="show-for-printing page-break">
-                    <h2 className="dictionary-title">
-                      {translate("English - {languageName}", { languageName })}
-                    </h2>
-
-                    <div className="dictionary-table">
-                      {allEnglishWords.map((word, index) => (
-                        <div key={index} className="dictionary-entry">
-                          <span className="headword">
-                            <b style={{ fontWeight: "bolder" }}>
-                              {word.english_word}
-                            </b>
-                          </span>
-
-                          <span style={{ marginLeft: "3px" }}>
-                            <i>{word.part_of_speech}</i>
-                          </span>
-                          {[
-                            "n",
-                            "adj",
-                            "v",
-                            "adv",
-                            "conj",
-                            "part",
-                            "pron",
-                            "interj",
-                            "affix",
-                            "adp",
-                          ].map((pos) => {
-                            const entriesForPos = word.language_entries?.filter(
-                              (entry) => entry.part_of_speech === pos,
-                            );
-
-                            return entriesForPos?.length > 0 ? (
-                              <span key={pos} style={{ marginLeft: "3px" }}>
-                                <i>{pos}</i>{" "}
-                                <span className="meaning">
-                                  {entriesForPos
-                                    .map((e) => fixPhrases(e.word))
-                                    .join(", ")}{" "}
-                                </span>
-                              </span>
-                            ) : null;
-                          })}
-
-                          {word.phrases.length > 0 ? (
-                            word.phrases.map((phrase, index) => (
-                              <>
-                                <span>
-                                  ; <b>{phrase.english}</b>
-                                </span>
-                                <span style={{ marginLeft: "3px" }}>
-                                  <i>{phrase.part_of_speech}</i>
-                                </span>
-                                <span style={{ marginLeft: "3px" }}>
-                                  {fixPhrases(phrase.language_word)}
-                                </span>
-                              </>
-                            ))
-                          ) : (
-                            <></>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <></>
-              )}
-
-              {showPrintedDictionary && (
-                <div className="page-break-wrapper">
-                  <h1 className="page-break">
-                    {translate("{languageName} Thesaurus", { languageName })}
-                  </h1>
-                  {Object.entries(thesaurusJson).map(
-                    ([classification, categories], index) => (
-                      <div>
-                        <h4>
-                          {translate("Class {number}", { number: index + 1 })}:{" "}
-                          <br />
-                          {translate("Words Expressing {classification}", {
-                            classification: classification.toUpperCase(),
-                          })}
-                        </h4>
-                        {Object.entries(categories).map(
-                          ([category, domains], index) => (
-                            <div>
-                              <h5 style={{ marginTop: "10px" }}>
-                                {translate("Section {number}. {category}", {
-                                  number: index + 1,
-                                  category: category.toUpperCase(),
-                                })}
-                              </h5>
-
-                              {Object.entries(domains).map(
-                                ([domain, types], index) => (
-                                  <div style={{ marginTop: "30px" }}>
-                                    <p>
-                                      {index + 1}°.{" "}
-                                      {translate(domain.toUpperCase())}
-                                    </p>
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        textAlign: "left",
-                                        gap: "20px",
-                                        marginLeft: "10%",
-                                      }}
-                                    >
-                                      {types.map((type, index) => {
-                                        const matchingWords =
-                                          allWordsForThesaurus?.filter(
-                                            (word) =>
-                                              word.thesaurus &&
-                                              word.thesaurus[type.name],
-                                          );
-
-                                        if (
-                                          !matchingWords ||
-                                          matchingWords.length === 0
-                                        ) {
-                                          return null; // Don't render this type if no matches
-                                        }
-
-                                        return (
-                                          <div
-                                            key={type.name}
-                                            style={{
-                                              display: "flex",
-                                              flexDirection: "column",
-                                              maxWidth: "50%",
-                                            }}
-                                          >
-                                            <span>
-                                              <span
-                                                style={{
-                                                  fontWeight: "bold",
-                                                  fontSize: "12px",
-                                                }}
-                                              >
-                                                {type.number}.{" "}
-                                                {translate(type.name)}:
-                                              </span>
-                                              <span>
-                                                {sortByPOS(
-                                                  matchingWords,
-                                                  "noun",
-                                                  type.name,
-                                                )}
-                                                {sortByPOS(
-                                                  matchingWords,
-                                                  "num",
-                                                  type.name,
-                                                )}
-                                                {sortByPOS(
-                                                  matchingWords,
-                                                  "verb",
-                                                  type.name,
-                                                )}
-                                                {sortByPOS(
-                                                  matchingWords,
-                                                  "adj",
-                                                  type.name,
-                                                )}
-                                                {sortByPOS(
-                                                  matchingWords,
-                                                  "adv",
-                                                  type.name,
-                                                )}
-                                                {sortByPOS(
-                                                  matchingWords,
-                                                  "adp",
-                                                  type.name,
-                                                )}
-                                                {sortByPOS(
-                                                  matchingWords,
-                                                  "conj",
-                                                  type.name,
-                                                )}
-                                                {sortByPOS(
-                                                  matchingWords,
-                                                  "part",
-                                                  type.name,
-                                                )}
-                                                {sortByPOS(
-                                                  matchingWords,
-                                                  "injert",
-                                                  type.name,
-                                                )}
-                                                {sortByPOS(
-                                                  matchingWords,
-                                                  "pron",
-                                                  type.name,
-                                                )}
-                                              </span>
-                                            </span>
-                                          </div>
-                                        );
-                                      })}
-                                    </div>
-                                  </div>
-                                ),
-                              )}
-                            </div>
-                          ),
-                        )}
-                      </div>
-                    ),
-                  )}
-
-                  <h1 className="page-break">{translate("Thesaurus Index")}</h1>
-                  <div style={{ columnCount: "4" }}>
-                    <ul style={{ listStyle: "none" }}>
-                      {allWords.map(
-                        (word, index) =>
-                          word.thesaurus && (
-                            <li style={{ textAlign: "left" }} key={index}>
-                              <b>{word.word}</b>{" "}
-                              {Object.entries(word.thesaurus).map(
-                                ([typeKey, typeVal], index, array) => (
-                                  <span key={typeKey}>
-                                    <i>{typeVal.name} </i>
-                                    {typeVal.number}
-                                    {index < array.length - 1 && ", "}
-                                  </span>
-                                ),
-                              )}
-                            </li>
-                          ),
-                      )}
-                    </ul>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </>
-      ) : (
-        <>
-          <h1>{translate("Loading...")}</h1>
-        </>
-      )}
+          >
+            <PaginatedDictionary
+              visibleWords={visibleWords}
+              pageSize={pageSize}
+              isProto={isProto}
+              showPrintedDictionary={showPrintedDictionary}
+              setShowPrintedDictionary={setShowPrintedDictionary}
+              openWord={openWord}
+              allWords={allWords}
+            />
+          </div>
+        </div>
+      </>
     </div>
   );
 };

@@ -3,11 +3,17 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../App.css";
 import { rebuild } from "../services/databaseService.js";
+import { convertGhutonom } from "../Functions/GhutonDUmp/processGhuton.js";
 
 const Welcome = () => {
    //uncomment to rebuild the database. Remove when deploying
   // useEffect(() => {
   //   rebuild();
+  // }, [])
+
+ // uncomment to process Ghutonom
+  // useEffect(() => {
+  //   convertGhutonom();
   // }, [])
   
 

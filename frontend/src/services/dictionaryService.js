@@ -14,3 +14,10 @@ export async function getWordsForms(id) {
 }
 
 
+
+export async function getAllWordsForPrint(id) {
+
+    return await window.electron.getAllWordsForPrint(id);
+}
+
+

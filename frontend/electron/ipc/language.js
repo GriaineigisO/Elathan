@@ -1,8 +1,18 @@
 import { ipcMain } from "electron";
-import { getLanguage, getLanguages, getDaughterLanguages, getGroups, getGroup, getTags, getInterfaceLanguage, getMotherLanguage, getWordForms, editGroup, deleteGroup, editLanguage, deleteLanguage, addLanguage, addGroup, addWord, getWordCategories, deleteWord, getWord, editWord, getText, getToolTipWord, editText, saveGrammar, addInterfaceLanguage, getInterfaceLanguages, editInterfaceLanguage, deleteInterfaceLanguage, editUserLanguage, addText, deleteText, getLoanerLanguage, savePhonology } from "../repositories/languageRepository.js";
+import { getLanguage, getLanguages, getDaughterLanguages, getGroups, getGroup, getTags, getInterfaceLanguage, getMotherLanguage, getWordForms, editGroup, deleteGroup, editLanguage, deleteLanguage, addLanguage, addGroup, addWord, getWordCategories, deleteWord, getWord, editWord, getText, getToolTipWord, editText, saveGrammar, addInterfaceLanguage, getInterfaceLanguages, editInterfaceLanguage, deleteInterfaceLanguage, editUserLanguage, addText, deleteText, getLoanerLanguage, savePhonology, getAuthorName, saveAccountSettings } from "../repositories/languageRepository.js";
 
 export function registerLanguageHandlers() {
 
+    ipcMain.handle(
+        "language:getAuthorName",
+        (_,) => getAuthorName()
+    );
+
+    ipcMain.handle(
+        "language:saveAccountSettings",
+        (_, authorName) => saveAccountSettings(authorName)
+    );
+    
     ipcMain.handle(
         "language:getLanguage",
         (_, languageId) => getLanguage(languageId)

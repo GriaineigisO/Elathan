@@ -115,7 +115,7 @@ export function getRootWord(id, isFirstElement, isSecondElement, isThirdElement)
 
 
     if (!rootWordId) {
-      return res.json({ message: "No root element resolved" });
+      return { message: "No root element resolved" };
     }
 
       const rootWordDataStmt = db.prepare(`

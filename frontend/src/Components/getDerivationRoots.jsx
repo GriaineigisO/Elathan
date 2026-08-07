@@ -2,15 +2,16 @@ const DerivationalAffixBlock = ({ resolvedAffixes }) => {
 
   return (
     <div className="show-for-printing page-break">
-      <h2 className="dictionary-title">Derivational Affixes</h2>
-      <div className="dictionary-table">
+      <h2 className="dictionary-title" style={{textAlign:"center"}}>Derivational Affixes</h2>
+      <div className="dictionary-table two-cols">
         {resolvedAffixes.map((affix, index) => (
           <div key={index} className="dictionary-entry">
+          
             <span className="headword">
               <b style={{ fontWeight: "bolder" }}>
-                {affix.word_type === "suffix" && <span>-</span>}
+                {affix.word_type === "suffix" && (<span>-</span>)}
                 {affix.word}
-                {affix.word_type === "prefix" && <span>-</span>}
+                {affix.word_type === "prefix" && (<span>-</span>)}
               </b>
             </span>
 

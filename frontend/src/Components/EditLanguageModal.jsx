@@ -106,8 +106,11 @@ const EditLanguageModal = ({
 
         
       const Motherdata = await window.electron.getMotherLanguage(id);
-      setSelectedParentLanguage(Motherdata[0]);
+      if (Motherdata[0]) {
+         setSelectedParentLanguage(Motherdata[0]);
       setMotherSpellings(Motherdata[0].spelling)
+      }
+     
     
 
 
@@ -115,7 +118,7 @@ const EditLanguageModal = ({
 
       setLanguage(data[0]);
       setSelectedSoundChanges(data[0].sound_changes ?? []);
-      setSpellings(data[0].spelling ? data[0].spelling : Motherdata[0].spelling ? Motherdata[0].spelling : []);
+      setSpellings(data[0].spelling ? data[0].spelling : (Motherdata && Motherdata[0] && Motherdata[0].spelling) ? Motherdata[0].spelling : []);
       setOwner(data[0].user_id);
       setAddedTagGroups(data[0].tags ? data[0].tags : []);
       setConvertIPA(data[0].convert_ipa === 1 ? true : false)
@@ -340,6 +343,7 @@ const EditLanguageModal = ({
 
 
   const deleteLang = async () => {
+    
     const data = await window.electron.deleteLanguage(language.language_id)
 
     if (data.success) {

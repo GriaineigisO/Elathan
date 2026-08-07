@@ -8,6 +8,14 @@ api.rebuild = () => {
   return ipcRenderer.invoke("database:rebuild");
 };
 
+api.getAuthorName = () => {
+  return ipcRenderer.invoke("language:getAuthorName");
+};
+
+api.saveAccountSettings = (authorName) => {
+  return ipcRenderer.invoke("language:saveAccountSettings", authorName);
+};
+
 api.getAllWords = (languageId) => {
   return ipcRenderer.invoke("dictionary:getAllWords", languageId);
 };
@@ -23,6 +31,10 @@ api.getWordData = (id) => {
 
 api.getWordsForms = (id) => {
   return ipcRenderer.invoke("dictionary:getWordsForms", id);
+};
+
+api.getAllWordsForPrint = (id) => {
+  return ipcRenderer.invoke("dictionary:getAllWordsForPrint", id);
 };
 
 api.getText = (textId, languageId) => {

@@ -937,6 +937,9 @@ const AddDescendantModal = ({
   };
 
   useEffect(() => {
+    if (tagGroups) {
+      
+    
     tagGroups.forEach((group, index) => {
       const alreadyInitialized = initializedGroups.includes(group.name);
       const hasStoredValue = !!group.category_type;
@@ -951,6 +954,7 @@ const AddDescendantModal = ({
         setInitializedGroups((prev) => [...prev, group.name]);
       }
     });
+  }
   }, [tagGroups]);
 
   const handleVariants = (vars) => {

@@ -1,3 +1,14 @@
+export async function getAuthorName() {
+
+    return await window.electron.getAuthorName();
+}
+
+export async function saveAccountSettings(authorName) {
+
+    return await window.electron.saveAccountSettings(authorName);
+}
+
+
 export async function getLanguage(languageId) {
 
     return await window.electron.getLanguage(languageId);
