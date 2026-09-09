@@ -253,7 +253,9 @@ const Encyclopedia = () => {
   const getEncyclopedia = async () => {
    let data = await window.electron.getEncyclopedia(id);
     setEncyclopediaName(data.encyclopedia_name);
-    setTopics(data.topics);
+   
+    setTopics(data.topics.sort((a, b) =>
+      a.name.localeCompare(b.name)));
      setAllEntries(data.entries);
       setVisibleEntries(data.entries);
   };
@@ -557,14 +559,19 @@ const Encyclopedia = () => {
               </p>
               <p
                 className="word-count"
-                style={{ display: "flex", flexDirection: "column" }}
+                style={{ display: "flex", flexDirection: "row", textAlign:"center" }}
               >
-                {topicCounts.map((topic) =>
-                  topic.topicCount > 0 ? (
-                    <span key={topic.topicName}>
-                      {topic.topicCount} {topic.topicName}
+                {topicCounts.map((topic, index) =>
+                  topic.topicCount > 0 ? 
+                    (index === topicCounts.length - 1) ? (
+                        <span key={topic.topicName}>
+                     {translate("and")} {topic.topicCount} {topic.topicName}.
                     </span>
-                  ) : null,
+                    ) : (<span style={{marginRight:"5px"}} key={topic.topicName}>
+                      {topic.topicCount} {topic.topicName},
+                    </span>)
+                    
+                   : null,
                 )}
               </p>
 

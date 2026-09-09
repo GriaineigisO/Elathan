@@ -10,7 +10,7 @@ export function registerLanguageHandlers() {
 
     ipcMain.handle(
         "language:saveAccountSettings",
-        (_, authorName) => saveAccountSettings(authorName)
+        (_, authorName, excludedNearSynonymTerms) => saveAccountSettings(authorName, excludedNearSynonymTerms)
     );
     
     ipcMain.handle(
@@ -282,7 +282,7 @@ export function registerLanguageHandlers() {
         cliticWordCategoryInputs,
         tagInputs,
         variants,
-        thesaurusDomains) => addWord(date,
+        thesaurusDomains, variantOf, isCalque) => addWord(date,
         wordId,
         languageId,
         word,
@@ -316,7 +316,7 @@ export function registerLanguageHandlers() {
         cliticWordCategoryInputs,
         tagInputs,
         variants,
-        thesaurusDomains)
+        thesaurusDomains,variantOf, isCalque)
     );
 
 }

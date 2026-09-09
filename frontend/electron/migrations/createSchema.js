@@ -10,6 +10,7 @@ export function createSchema() {
             ipa TEXT DEFAULT NULL,
             word_type TEXT DEFAULT NULL,
             word_note TEXT DEFAULT NULL,
+            variants TEXT DEFAULT NULL,
             variant_of TEXT DEFAULT NULL,
             noun_meaning TEXT DEFAULT NULL,
             verb_meaning TEXT DEFAULT NULL,

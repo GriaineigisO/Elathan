@@ -201,9 +201,10 @@ const ExtractExampleSentencesFromCorpus = ({
         exampleSentences.map((exampleSentence, idx) => (
             //limit examples to a max of ten per word
             <div>
-            <h4>Example Sentences</h4>
+            
             {idx < 10 && (
           <div key={idx}>
+             <hr />
             <span
               dangerouslySetInnerHTML={{
                 __html: `<i>${exampleSentence.sentence}</i>`,
@@ -222,7 +223,7 @@ const ExtractExampleSentencesFromCorpus = ({
                 {exampleSentence.textTitle}
               </i>
             </span>
-            <hr />
+           
           </div>
         )}
         </div>

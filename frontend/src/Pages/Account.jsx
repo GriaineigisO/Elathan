@@ -12,6 +12,7 @@ import {
   getAuthorName,
   saveAccountSettings,
 } from "../services/languageService.js";
+import excludedTerms from "../assets/excludedNearSynonymTerms.txt?raw";
 
 const Account = () => {
   const { id } = useParams();
@@ -27,14 +28,23 @@ const Account = () => {
   const [userInterfaceLanguage, setUserInterfaceLanguage] = useState();
   const { translate } = useTranslate();
   const [authorName, setAuthorName] = useState("");
+  const [excludedNearSynonymTerms, setExcludedNearSynonymTerms] = useState("");
 
    useEffect(() => {
       const fetchAuthorName = async () => {
         const data = await window.electron.getAuthorName();
-        console.log(data)
+       
         setAuthorName(data);
       };
+
+      function getExcludedTerms() {
+          const removedQuations = excludedTerms.replace('"', "");
+          const removedQuations2 = removedQuations.replace('"', "");
+         setExcludedNearSynonymTerms(removedQuations2);
+      }
+
       fetchAuthorName();
+      getExcludedTerms();
     }, []);
 
   const fetchInterfaceLanguages = async () => {
@@ -106,9 +116,8 @@ const Account = () => {
   };
 
   const saveSettings = async () => {
-    const data = await window.electron.saveAccountSettings(authorName);
-
-    console.log(data);
+    console.log(excludedNearSynonymTerms)
+    const data = await window.electron.saveAccountSettings(authorName, excludedNearSynonymTerms);
 
     if (!data.success) {
       console.error("error saving settings");
@@ -193,6 +202,20 @@ const Account = () => {
             </table>
           </div>
         </div>
+
+         <div className="settings-section thin-white-border">
+         <h3>{translate("Exclude Terms from Near Synonym Detection")}</h3>
+          <p>
+            {translate(
+              "Near synonyms, entries that have similar but not the same meanings, are detected by searching for the same words within each entries' meanings. This can often result in false matches especially where entries contain common function words like 'with', 'for', 'the' and such. To prevent false matches, make a list below of words to be explictly excluded when detecting near synonyms.",
+            )}
+          </p>
+
+          <textarea style={{width: "100%"}}
+          value={excludedNearSynonymTerms}
+          onChange={(e) => setExcludedNearSynonymTerms(e.target.value)}
+          />
+         </div>
 
         <AddInterfaceLanguageModal
           show={showAddLanguageModal}

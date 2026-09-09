@@ -540,7 +540,6 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
     }
 
     
-console.log(nounWordCategories)
     const data = await window.electron.editWord(
           wordData.word_id,
           wordData.language_id,
@@ -825,11 +824,12 @@ console.log(nounWordCategories)
             <option value="enclitic">enclitic</option>
             <option value="place_name">{translate("place name")}</option>
             <option value="personal_name">{translate("personal name")}</option>
+             <option value="phrase">{translate("phrase")}</option>
           </select>
         </div>
 
         <div className="thin-white-border">
-          <h4>Enter Word</h4>
+       
           {/* <input
             type="text"
             className="modal-input"
@@ -1626,7 +1626,7 @@ console.log(nounWordCategories)
           )}
         </div>
 
-        <div className="thin-white-border">
+        {/* <div className="thin-white-border">
           <h4>Variants</h4>
 
           <input
@@ -1636,7 +1636,7 @@ console.log(nounWordCategories)
           <p style={{ marginLeft: "5px", fontSize: "12px" }}>
             <i>Divide each variant with a comma</i>
           </p>
-        </div>
+        </div> */}
 
         <div className="thin-white-border">
           <h4>Word Forms</h4>

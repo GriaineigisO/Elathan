@@ -41,7 +41,7 @@ export function registerEtymologyHandlers() {
 
      ipcMain.handle(
         "etymology:addEtymology",
-        (_, word_id, etymologyType, motherWord, firstElementId, secondElementId, thirdElementId, loanWordId, note) => addEtymology(word_id, etymologyType, motherWord, firstElementId, secondElementId, thirdElementId, loanWordId, note)
+        (_, word_id, etymologyType, motherWord, firstElementId, secondElementId, thirdElementId, loanWordId, note, isCalque) => addEtymology(word_id, etymologyType, motherWord, firstElementId, secondElementId, thirdElementId, loanWordId, note, isCalque)
     );
 
   

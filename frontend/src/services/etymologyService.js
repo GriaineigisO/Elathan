@@ -22,7 +22,7 @@ export async function editEtymology(etymologyId,
         secondElementId,
         thirdElementId,
         loanWordId,
-        note) {
+        note, isCalque) {
 
     return await window.electron.editEtymology(etymologyId,
         etymologyType,
@@ -32,7 +32,7 @@ export async function editEtymology(etymologyId,
         secondElementId,
         thirdElementId,
         loanWordId,
-        note);
+        note, isCalque);
 }
 
 

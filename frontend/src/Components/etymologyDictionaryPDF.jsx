@@ -15,7 +15,8 @@ import meaningKeys from "../assets/meaningKeys";
 import FindWordsDescendants from "./findWordsDescendants";
 import getPartofSpeech from "../Functions/getPartofSpeech";
 import checkIfProto from "../Functions/checkIfProto";
-import { useTranslate } from "../Functions/TranslateUI";
+//import { useTranslate } from "../Functions/TranslateUI";
+
 
 Font.register({
   family: "CharisSIL",
@@ -40,6 +41,8 @@ Font.register({
     },
   ],
 });
+
+
 
 function renderInline(nodes) {
   const result = [];
@@ -93,7 +96,6 @@ function renderInline(nodes) {
 
   return result;
 }
-
 
 const styles = StyleSheet.create({
   page: {
@@ -172,7 +174,8 @@ export default function EtymologyDictionaryPdf({
   isProto,
   etymologyTree,
   languageData,
-  authorName
+  authorName,
+  translate
 }) {
  
   //get number of roots i.e words with no etymology
@@ -314,7 +317,7 @@ export default function EtymologyDictionaryPdf({
         </Text>
 
         <View break>
-          {etymologyTree.map((root) => {
+          {etymologyTree.map((root, index) => {
            
 
             //check part of speech and return the right abbreviation
@@ -328,14 +331,14 @@ export default function EtymologyDictionaryPdf({
 
 
             return (
-              <>
+              <div key={index}>
                 <RenderTree
                   root={root}
                   headword={checkIfProto(root.word.language_id, root.word, languageData)}
                   partOfSpeechAbbr={partOfSpeechAbbr}
                 />
                 <View style={styles.divider} />
-              </>
+              </div>
             );
           })}
         </View>

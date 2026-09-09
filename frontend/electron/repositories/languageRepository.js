@@ -7,6 +7,13 @@ import { parsePhonologyTemplates } from "./parse/parsePhonologyTemplates.js";
 import { parseAuthor } from "./parse/parseAuthor.js";
 import { getName } from "domutils";
 import { count } from "node:console";
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 export function getAuthorName() {
   try {
@@ -32,7 +39,7 @@ export function getAuthorName() {
   }
 }
 
-export function saveAccountSettings(authorName) {
+export function saveAccountSettings(authorName, excludedNearSynonymTerms) {
   try {
     const countRows = db
       .prepare(
@@ -61,14 +68,26 @@ export function saveAccountSettings(authorName) {
       SET author_name = ?
    `);
 
-
       const saveSettings = saveSettingsStmt.run(authorName);
-
-      console.log(saveSettings);
 
       if (saveSettings.changes === 0) return { success: false };
 
-      return { success: true };
+      //now update the excluded near synynom terms
+     
+
+      const filePath = path.join(
+        __dirname,
+         "../../../../Elatha/frontend/src/assets/excludedNearSynonymTerms.txt"
+      );
+
+
+      fs.writeFileSync(
+        filePath,
+        JSON.stringify(excludedNearSynonymTerms, null, 2),
+        "utf8",
+      );
+
+      return { "success": true };
     }
   } catch (error) {
     console.error(`error saving account settings: ${error}`);
@@ -120,7 +139,7 @@ export function addLanguage(
           console.error(
             `error adding mother_language_id to daughter: ${error}`,
           );
-          return { "success": false };
+          return { success: false };
         }
       }
     }
@@ -143,12 +162,12 @@ export function addLanguage(
           );
         } catch (error) {
           console.error(`error adding language to group: ${error}`);
-          return { "success": false };
+          return { success: false };
         }
       }
     }
 
-    return { "success": true };
+    return { success: true };
   } catch (error) {
     console.error(`error adding language: ${error}`);
   }
@@ -348,7 +367,10 @@ export function editLanguage(
               WHERE group_id = ?
               `);
 
-        const addLanguageToGroup = addLanguageToGroupStmt.run(cleanedL, id);
+        const addLanguageToGroup = addLanguageToGroupStmt.run(
+          JSON.stringify(cleanedL),
+          id,
+        );
       }
     }
 
@@ -368,7 +390,7 @@ export function editLanguage(
               `);
 
         const deleteLanguageFromGroup = deleteLanguageFromGroupStmt.run(
-          filter,
+          JSON.stringify(filter),
           group.group_id,
         );
       }
@@ -618,7 +640,8 @@ export function getMotherLanguage(id) {
   }
 }
 
-export function getWordForms(languageId) {
+export function getWordForms(langId) {
+  const languageId = Number(langId);
   try {
     const getLangWordFormStmt = db.prepare(`
           SELECT * 
@@ -631,7 +654,7 @@ export function getWordForms(languageId) {
       .map(parseLanguage);
 
     const getGroupWordFormStmt = db.prepare(`
-         SELECT word_forms
+         SELECT *
 FROM groups
 WHERE EXISTS (
   SELECT 1
@@ -702,10 +725,9 @@ export function addWord(
   tagInputs,
   variants,
   thesaurusDomains,
+  variantOf,
+  isCalque,
 ) {
-
-
-
   const removeNulls = (arr) => {
     if (!Array.isArray(arr)) return;
     return JSON.stringify(
@@ -763,13 +785,12 @@ export function addWord(
   const affixWordForms = removeNulls(affixWordFormInputs);
   const numWordForms = removeNulls(numWordFormInputs);
   const cliticWordForms = removeNulls(cliticWordFormInputs);
-  
 
   try {
     const addWordStmt = db.prepare(`
           INSERT INTO dictionary
-        (word_id, language_id, word, word_type, word_note, ipa, noun_meaning, verb_meaning, adj_meaning, adv_meaning, adp_meaning, part_meaning, pron_meaning, conj_meaning, interj_meaning, affix_meaning, num_meaning, clitic_meaning, noun_word_forms, verb_word_forms, adj_word_forms, adv_word_forms, adp_word_forms, part_word_forms, pron_word_forms, conj_word_forms, interj_word_forms, affix_word_forms, num_word_forms, clitic_word_forms,   noun_word_categories, verb_word_categories, adj_word_categories, adv_word_categories, adp_word_categories, part_word_categories, pron_word_categories, conj_word_categories, interj_word_categories, affix_word_categories, num_word_categories, clitic_word_categories, date_added, tags, thesaurus )
-          VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?, ?)
+        (word_id, language_id, word, word_type, word_note, ipa, noun_meaning, verb_meaning, adj_meaning, adv_meaning, adp_meaning, part_meaning, pron_meaning, conj_meaning, interj_meaning, affix_meaning, num_meaning, clitic_meaning, noun_word_forms, verb_word_forms, adj_word_forms, adv_word_forms, adp_word_forms, part_word_forms, pron_word_forms, conj_word_forms, interj_word_forms, affix_word_forms, num_word_forms, clitic_word_forms,   noun_word_categories, verb_word_categories, adj_word_categories, adv_word_categories, adp_word_categories, part_word_categories, pron_word_categories, conj_word_categories, interj_word_categories, affix_word_categories, num_word_categories, clitic_word_categories, date_added, tags, thesaurus, variant_of )
+          VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?, ?, ?)
           `);
 
     const addWords = addWordStmt.run(
@@ -818,16 +839,15 @@ export function addWord(
       JSON.stringify(date),
       JSON.stringify(tagInputs) ?? null,
       JSON.stringify(thes) ?? null,
+      JSON.stringify(variantOf) ?? null,
     );
-
-    
 
     if (addWords.changes === 0) return { success: false };
 
-    return { "success": true };
+    return { success: true };
   } catch (error) {
     console.error(`error adding word: ${error}`);
-    return { "success": false };
+    return { success: false };
   }
 
   try {
@@ -850,7 +870,7 @@ export function addWord(
         const addVar = addVarStmt.run(
           wordId,
           languageId,
-          word,
+          variantArr[i],
           wordType,
           note,
           pronunciation,
@@ -946,7 +966,7 @@ export function deleteWord(id) {
       OR loanword_id = ?
     `,
         )
-        .run(id);
+        .run(id, id, id, id, id);
     } catch (error) {
       console.error(`error deleting descendant etymologies: ${error}`);
     }
@@ -1055,7 +1075,7 @@ export function editWord(
   const editWrdStmt = db.prepare(`
       UPDATE dictionary
       SET
-       word =?, word_type =?, word_note =?, ipa =?, noun_meaning =?, verb_meaning =?, adj_meaning =?, adv_meaning =?, adp_meaning =?, part_meaning =?, pron_meaning =?, conj_meaning =?, interj_meaning =?, affix_meaning =?, num_meaning =?, clitic_meaning =?, noun_word_forms =?, verb_word_forms =?, adj_word_forms =?, adv_word_forms =?, adp_word_forms =?, part_word_forms =?, pron_word_forms =?, conj_word_forms =?, interj_word_forms =?, affix_word_forms =?, num_word_forms =?, clitic_word_forms =?,   noun_word_categories =?, verb_word_categories =?, adj_word_categories =?, adv_word_categories =?, adp_word_categories =?, part_word_categories =?, pron_word_categories =?, conj_word_categories =?, interj_word_categories =?, affix_word_categories =?, num_word_categories =?, clitic_word_categories =?, tags =?, thesaurus =?, date_edited = ?
+       word =?, word_type =?, word_note =?, ipa =?, variants=?, noun_meaning =?, verb_meaning =?, adj_meaning =?, adv_meaning =?, adp_meaning =?, part_meaning =?, pron_meaning =?, conj_meaning =?, interj_meaning =?, affix_meaning =?, num_meaning =?, clitic_meaning =?, noun_word_forms =?, verb_word_forms =?, adj_word_forms =?, adv_word_forms =?, adp_word_forms =?, part_word_forms =?, pron_word_forms =?, conj_word_forms =?, interj_word_forms =?, affix_word_forms =?, num_word_forms =?, clitic_word_forms =?,   noun_word_categories =?, verb_word_categories =?, adj_word_categories =?, adv_word_categories =?, adp_word_categories =?, part_word_categories =?, pron_word_categories =?, conj_word_categories =?, interj_word_categories =?, affix_word_categories =?, num_word_categories =?, clitic_word_categories =?, tags =?, thesaurus =?, date_edited = ?
        WHERE word_id = ?
       
           `);
@@ -1065,6 +1085,7 @@ export function editWord(
     wordType ?? null,
     note ?? null,
     pronunciation ?? null,
+    JSON.stringify(variants) ?? null,
     nounMeaning,
     verbMeaning,
     adjMeaning,
@@ -1121,10 +1142,10 @@ export function editWord(
           `);
 
       const addWords = addWordStmt.run(
-        wordId,
+        JSON.stringify({ word: word, word_id: wordId }),
         Date.now(),
         languageId,
-        word,
+        variantArr[i],
         wordType ?? null,
         note ?? null,
         pronunciation ?? null,

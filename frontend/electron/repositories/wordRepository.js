@@ -2,7 +2,15 @@ import db from "../database.js";
 import { parseLanguage } from "./parse/parseLanguages.js";
 import { parseDictionary } from "./parse/parseDictionary.js";
 import { parseEtymology } from "./parse/parseEtymology.js";
+import fs from "fs";
+import path from "path";
 
+const filePath = path.join(
+  import.meta.dirname,
+  "../../../../Elatha/frontend/src/assets/excludedNearSynonymTerms.txt",
+);
+
+const excludedTerms = fs.readFileSync(filePath, "utf8");
 export function getWordData(id) {
   let lang = {};
   let langId = {};
@@ -16,21 +24,10 @@ export function getWordData(id) {
             `);
 
     const getWord = getWordStmt.all(id).map(parseDictionary);
-    
 
     const word = getWord[0];
 
-    const getVariantsStmt = db.prepare(`
-    SELECT
-        word,
-        word_id
-    FROM dictionary
-    WHERE json_extract(variant_of, '$.word_id') = ?
-`);
-
-    const getVariants = getVariantsStmt.all(id).map(parseDictionary);
-
-    langId = getWord[0].language_id;   
+    langId = getWord[0].language_id;
 
     const getLanguageStmt = db.prepare(`
     SELECT *
@@ -43,12 +40,10 @@ export function getWordData(id) {
     lang = getLanguage[0];
 
     return {
-      wordData: { ...word, variants: getVariants || [] },
+      wordData: { ...(word || []) },
       languageData: lang,
     };
   }
-
-
 
   function getAllWords() {
     const getAllWordsStmt = db.prepare(`
@@ -100,7 +95,6 @@ export function getWordData(id) {
         id,
       );
 
-
       const wordIds = cognates.map((row) => row.word_id);
 
       const wordsStmt = db.prepare(`
@@ -125,7 +119,7 @@ export function getWordData(id) {
       languages.forEach((lang) => {
         languageLookup[lang.language_id] = {
           language_name: lang.language_name,
-          is_proto: lang.is_proto,
+          is_proto: lang.is_proto === 1 ? true : false,
         };
       });
 
@@ -141,7 +135,7 @@ export function getWordData(id) {
           word.interj_meaning,
           word.conj_meaning,
           word.part_meaning,
-          word.affix_meaning
+          word.affix_meaning,
         ]
           .filter(Array.isArray)
           .flat();
@@ -178,6 +172,7 @@ export function getWordData(id) {
             SELECT 
             word_id,
     word,
+    word_type,
     noun_meaning,
     num_meaning,
     verb_meaning,
@@ -220,6 +215,7 @@ export function getWordData(id) {
         return {
           derived_word_id: etym.word_id,
           word: entry.word,
+          word_type: entry.word_type,
           meaning: meanings.join(", "),
           noun_meaning: entry.noun_meaning,
           num_meaning: entry.num_meaning,
@@ -242,6 +238,35 @@ export function getWordData(id) {
     return results;
   }
 
+  function getVariants() {
+    const getVariantsStmt = db.prepare(`
+    SELECT
+        word,
+        word_id,
+        word_type
+    FROM dictionary
+    WHERE json_extract(variant_of, '$.word_id') = ?
+`);
+
+    const getVariants = getVariantsStmt.all(Number(id)).map(parseDictionary);
+
+    return getVariants;
+  }
+
+  function getHomophones(word) {
+    const getHomophonesStmt = db.prepare(`
+      SELECT *
+      FROM dictionary
+      WHERE ipa = ? AND word_id != ? AND language_id = ?
+      `);
+
+    const getHomophones = getHomophonesStmt
+      .all(word.ipa, word.word_id, word.language_id)
+      .map(parseDictionary);
+
+    return getHomophones;
+  }
+
   function getSynonyms(selectedWord) {
     const wordsStmt = db.prepare(`
             SELECT *
@@ -257,10 +282,209 @@ export function getWordData(id) {
 
     const matchWords = (arr1, arr2, word, synonym) => {
       if (arr1 && arr2) {
-        const isMatch = arr1.some((item) => arr2.includes(item));
+        //check if either meaning has an identical term e.g cloth === cloth
+        let isMatch =
+          arr1.some((item) => arr2.includes(item)) ||
+          arr2.some((item) => arr1.includes(item));
 
         if (isMatch && synonym !== word.word && !synonyms.includes(word.word)) {
           //exclude the word from matching with itself
+          synonyms.push(word);
+        }
+      }
+    };
+
+    words.forEach((word) => {
+      if (word.noun_meaning && selectedWord.noun_meaning) {
+        matchWords(
+          word.noun_meaning,
+          selectedWord.noun_meaning,
+          word,
+          selectedWord.word,
+        );
+      }
+
+      if (word.num_meaning && selectedWord.num_meaning) {
+        matchWords(
+          word.num_meaning,
+          selectedWord.num_meaning,
+          word,
+          selectedWord.word,
+        );
+      }
+
+      if (word.verb_meaning && selectedWord.verb_meaning) {
+        matchWords(
+          word.verb_meaning,
+          selectedWord.verb_meaning,
+          word,
+          selectedWord.word,
+        );
+      }
+
+      if (word.adj_meaning && selectedWord.adj_meaning) {
+        matchWords(
+          word.adj_meaning,
+          selectedWord.adj_meaning,
+          word,
+          selectedWord.word,
+        );
+      }
+
+      if (word.adv_meaning && selectedWord.adv_meaning) {
+        matchWords(
+          word.adv_meaning,
+          selectedWord.adv_meaning,
+          word,
+          selectedWord.word,
+        );
+      }
+
+      if (word.adp_meaning && selectedWord.adp_meaning) {
+        matchWords(
+          word.adp_meaning,
+          selectedWord.adp_meaning,
+          word,
+          selectedWord.word,
+        );
+      }
+
+      if (word.conj_meaning && selectedWord.conj_meaning) {
+        matchWords(
+          word.conj_meaning,
+          selectedWord.conj_meaning,
+          word,
+          selectedWord.word,
+        );
+      }
+
+      if (word.interj_meaning && selectedWord.interj_meaning) {
+        matchWords(
+          word.interj_meaning,
+          selectedWord.interj_meaning,
+          word,
+          selectedWord.word,
+        );
+      }
+
+      if (word.pron_meaning && selectedWord.pron_meaning) {
+        matchWords(
+          word.part_meaning,
+          selectedWord.part_meaning,
+          word,
+          selectedWord.word,
+        );
+      }
+
+      if (word.part_meaning && selectedWord.part_meaning) {
+        matchWords(
+          word.part_meaning,
+          selectedWord.part_meaning,
+          word,
+          selectedWord.word,
+        );
+      }
+
+      if (word.affix_meaning && selectedWord.affix_meaning) {
+        matchWords(
+          word.affix_meaning,
+          selectedWord.affix_meaning,
+          word,
+          selectedWord.word,
+        );
+      }
+    });
+
+    synonyms.forEach((synonym) => {
+      let synonymMeaning = [];
+
+      const mergeMeanings = (meaning) => {
+        if (meaning) {
+          meaning.forEach((i) => synonymMeaning.push(i));
+        }
+      };
+
+      if (synonym.noun_meaning) mergeMeanings(synonym.noun_meaning);
+      if (synonym.num_meaning) mergeMeanings(synonym.num_meaning);
+      if (synonym.verb_meaning) mergeMeanings(synonym.verb_meaning);
+      if (synonym.adj_meaning) mergeMeanings(synonym.adj_meaning);
+      if (synonym.adp_meaning) mergeMeanings(synonym.adp_meaning);
+      if (synonym.part_meaning) mergeMeanings(synonym.part_meaning);
+      if (synonym.pron_meaning) mergeMeanings(synonym.pron_meaning);
+      if (synonym.conj_meaning) mergeMeanings(synonym.conj_meaning);
+      if (synonym.interj_meaning) mergeMeanings(synonym.interj_meaning);
+      if (synonym.affix_meaning) mergeMeanings(synonym.affix_meaning);
+      if (synonym.adv_meaning) mergeMeanings(synonym.adv_meaning);
+
+      synonym["meaning"] = synonymMeaning;
+    });
+
+    return synonyms;
+  }
+
+  function getNearSynonyms(selectedWord) {
+     const splitTerms = excludedTerms.split(", ");
+     const excludedArr = [];
+
+        splitTerms.forEach((word, index) => {
+          const cleaned = word.replaceAll('"', "");
+          
+
+          excludedArr.push(cleaned);
+        });
+
+      
+    const wordsStmt = db.prepare(`
+            SELECT *
+            FROM dictionary
+            WHERE language_id = ?
+            `);
+
+    const words = wordsStmt.all(lang.language_id).map(parseDictionary);
+
+    //match meanings to meanings of other words
+
+    let synonyms = [];
+
+    const matchWords = (arr1, arr2, word, synonym) => {
+      if (arr1 && arr2) {
+        //check if either meaning has an identical term e.g cloth === cloth
+
+        //make sure not to detect exact synonyms
+        let isExactSynonym =
+          arr1.some((item) => arr2.includes(item)) ||
+          arr2.some((item) => arr1.includes(item));
+
+        //check if one meaning has a term that is part of the other's term e.g cloth === thick cloth
+
+        const split1 = [];
+        const split2 = [];
+
+        //to make sure that common function words like 'of' or 'the' are not matched, they will be excluded
+       
+        function splitMeanings(arr, split) {
+          arr.forEach((word) => {
+            const splitWords = word.split(" ");
+            splitWords.forEach((sw) => {
+              
+              if (!excludedArr.includes(sw))  split.push(sw);
+            });
+          });
+        }
+
+        splitMeanings(arr1, split1);
+        splitMeanings(arr2, split2);
+
+        const isMatch = split1.some((w) => split2.includes(w));
+
+        if (
+          isMatch &&
+          !isExactSynonym &&
+          synonym !== word.word &&
+          !synonyms.includes(word.word)
+        ) {
+          //exclude the word from matching with itself
+          
           synonyms.push(word);
         }
       }
@@ -406,11 +630,17 @@ export function getWordData(id) {
 
       const getMother = getMotherStmt.all(motherId).map(parseLanguage);
 
+      const isProto = getMother[0].is_proto
+        ? true
+        : getMother[0].is_proto === 1
+          ? true
+          : false;
+
       return {
         language_id: getMother[0].language_id,
         language_name: getMother[0].language_name,
         mother_language_id: getMother[0].mother_language_id,
-        is_proto: getMother[0].is_proto,
+        is_proto: isProto,
       };
     }
   }
@@ -522,6 +752,7 @@ export function getWordData(id) {
           word_type: word.word_type,
 
           language_name: language?.language_name ?? null,
+          language_id: language?.language_id ?? null,
           is_proto: language?.is_proto ?? false,
         };
       })
@@ -535,7 +766,10 @@ export function getWordData(id) {
   const allWords = getAllWords();
   const cognates = getCognates(word.wordData.word_id);
   const derivations = getDerivations();
-  const synonyms = getSynonyms(word);
+  const synonyms = getSynonyms(word.wordData);
+  const nearSynonyms = getNearSynonyms(word.wordData);
+  const homophones = getHomophones(word.wordData);
+  const variants = getVariants();
   const motherLanguage = getMotherLanguage(lang);
   const descendants = getDescendants();
 
@@ -546,10 +780,13 @@ export function getWordData(id) {
     motherLanguage,
     cognates,
     descendants,
+    variants,
     derivations,
     synonyms,
+    nearSynonyms,
+    homophones,
   };
-};
+}
 
 export function getWordsForms(id) {
   const wordForms = [];
@@ -559,57 +796,55 @@ export function getWordsForms(id) {
     WHERE word_id = ?
     `);
 
-    const getForms = getFormsStmt.all(id).map(parseDictionary);
+  const getForms = getFormsStmt.all(id).map(parseDictionary);
 
-   
-      if (getForms[0].noun_word_forms.length > 0) {
-        wordForms.push(getForms[0].noun_word_forms)
-      }
+  if (getForms[0].noun_word_forms.length > 0) {
+    wordForms.push(getForms[0].noun_word_forms);
+  }
 
-      if (getForms[0].verb_word_forms.length > 0) {
-        wordForms.push(getForms[0].verb_word_forms)
-      }
+  if (getForms[0].verb_word_forms.length > 0) {
+    wordForms.push(getForms[0].verb_word_forms);
+  }
 
-      if (getForms[0].adj_word_forms.length > 0) {
-        wordForms.push(getForms[0].adj_word_forms)
-      }
+  if (getForms[0].adj_word_forms.length > 0) {
+    wordForms.push(getForms[0].adj_word_forms);
+  }
 
-      if (getForms[0].adv_word_forms.length > 0) {
-        wordForms.push(getForms[0].adv_word_forms)
-      }
+  if (getForms[0].adv_word_forms.length > 0) {
+    wordForms.push(getForms[0].adv_word_forms);
+  }
 
-      if (getForms[0].conj_word_forms.length > 0) {
-        wordForms.push(getForms[0].conj_word_forms)
-      }
+  if (getForms[0].conj_word_forms.length > 0) {
+    wordForms.push(getForms[0].conj_word_forms);
+  }
 
-      if (getForms[0].num_word_forms.length > 0) {
-        wordForms.push(getForms[0].num_word_forms)
-      }
+  if (getForms[0].num_word_forms.length > 0) {
+    wordForms.push(getForms[0].num_word_forms);
+  }
 
-      if (getForms[0].interj_word_forms.length > 0) {
-        wordForms.push(getForms[0].interj_word_forms)
-      }
+  if (getForms[0].interj_word_forms.length > 0) {
+    wordForms.push(getForms[0].interj_word_forms);
+  }
 
-      if (getForms[0].part_word_forms.length > 0) {
-        wordForms.push(getForms[0].part_word_forms)
-      }
+  if (getForms[0].part_word_forms.length > 0) {
+    wordForms.push(getForms[0].part_word_forms);
+  }
 
-       if (getForms[0].pron_word_forms.length > 0) {
-        wordForms.push(getForms[0].pron_word_forms)
-      }
+  if (getForms[0].pron_word_forms.length > 0) {
+    wordForms.push(getForms[0].pron_word_forms);
+  }
 
-      if (getForms[0].affix_word_forms.length > 0) {
-        wordForms.push(getForms[0].noun_word_forms)
-      }
+  if (getForms[0].affix_word_forms.length > 0) {
+    wordForms.push(getForms[0].noun_word_forms);
+  }
 
-      if (getForms[0].adp_word_forms.length > 0) {
-        wordForms.push(getForms[0].adp_word_forms)
-      }
+  if (getForms[0].adp_word_forms.length > 0) {
+    wordForms.push(getForms[0].adp_word_forms);
+  }
 
-      if (getForms[0].clitic_word_forms.length > 0) {
-        wordForms.push(getForms[0].clitic_word_forms)
-      }
-    
-    return wordForms;
+  if (getForms[0].clitic_word_forms.length > 0) {
+    wordForms.push(getForms[0].clitic_word_forms);
+  }
+
+  return wordForms;
 }
-

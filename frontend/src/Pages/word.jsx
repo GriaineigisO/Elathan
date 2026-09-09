@@ -13,9 +13,13 @@ import { useTranslate } from "../Functions/TranslateUI";
 import formatMeaning from "../Functions/formatMeaning";
 import AddDescendantModal from "../Components/addDescendantModal.jsx";
 import { AddDerivationModal } from "../Components/addDerivationModal.jsx";
+import { AddVariantModal } from "../Components/addVariantModal.jsx";
 import { getWordData } from "../services/dictionaryService.js";
 import { getEtymology } from "../services/etymologyService.js";
 import { getLanguage } from "../services/languageService.js";
+import capitaliseFirstLetter from "../Functions/capitaliseFirstLetter.jsx";
+import leftArrow from "../assets/caret-left-fill-white.svg";
+import rightArrow from "../assets/caret-right-fill-white.svg";
 
 const Word = () => {
   const [version, setVersion] = useState(0);
@@ -27,6 +31,8 @@ const Word = () => {
   const [languageName, setLanguageName] = useState();
   const [showAddDescendantModal, setShowAddDescendantModal] = useState(false);
   const [showAddDerivationModal, setShowAddDerivationModal] = useState(false);
+  const [showAddVariantModal, setShowAddVariantModal] = useState(false);
+  const [homophones, setHomophones] = useState([]);
   const [showAddEtymologyModal, setShowAddEtymologyModal] = useState(false);
   const [showEditEtymologyModal, setShowEditEtymologyModal] = useState(false);
   const [showDeleteEtymologyModal, setShowDeleteEtymologyModal] =
@@ -34,6 +40,7 @@ const Word = () => {
   const [etymology, setEtymology] = useState([]);
   const [derivations, setDerivations] = useState([]);
   const [descendants, setDescendants] = useState([]);
+  const [variants, setVariants] = useState([]);
   const [spelling, setSpelling] = useState({});
   const [isProto, setIsProto] = useState();
   const [motherLanguage, setMotherLanguage] = useState();
@@ -56,7 +63,8 @@ const Word = () => {
   const [partMeanings, setPartMeanings] = useState([]);
   const [cognates, setCognates] = useState([]);
   const [showEditWordModal, setShowEditWordModal] = useState(false);
-  const [synonyms, setsynonyms] = useState([]);
+  const [synonyms, setSynonyms] = useState([]);
+  const [nearSynonyms, setNearSynonyms] = useState([]);
   const [authorUsername, setAuthorUsername] = useState();
   const [editorUsername, setEditorUsername] = useState();
   const [madeDate, setMadeDate] = useState();
@@ -68,6 +76,10 @@ const Word = () => {
   const [allWords, setAllWords] = useState([]);
   const [tags, setTags] = useState([]);
   const [convertIPA, setConvertIPA] = useState(false);
+  const [nextWord, setNextWord] = useState({});
+  const [prevWord, setPrevWord] = useState({});
+  const [isNextWord, setIsNextWord] = useState(false);
+  const [isPrevWord, setIsPrevWord] = useState(false);
 
   ////////////////////////////////////////////////
 
@@ -87,7 +99,25 @@ const Word = () => {
     setCognates(data.cognates);
     setDerivations(data.derivations);
     setDescendants(data.descendants);
-    setsynonyms(data.synonyms);
+    setSynonyms(data.synonyms);
+    setNearSynonyms(data.nearSynonyms);
+    setVariants(data.variants);
+    setHomophones(data.homophones);
+
+    const wordsIndex = data.allWords.findIndex(
+      (w) => w.word_id === data.word.wordData.word_id,
+    );
+
+    if (wordsIndex < data.allWords.length - 1) {
+      //word is the last word so there will be no next word
+      setNextWord(data.allWords[wordsIndex + 1]);
+      setIsNextWord(true);
+    }
+    if (wordsIndex !== 0) {
+      //word is the first word so there will be no previous word
+      setPrevWord(data.allWords[wordsIndex - 1]);
+      setIsPrevWord(true);
+    }
   };
 
   useEffect(() => {
@@ -335,10 +365,11 @@ const Word = () => {
   };
 
   const handleOpenWord = (word_id) => {
-    window.open(
-      `${import.meta.env.VITE_FRONTEND_URL}/word/${word_id}`,
-      "_blank",
-    );
+    window.location.href = `/word/${word_id}`;
+  };
+
+  const handleOpenLanguage = (id) => {
+    window.location.href = `/dictionary/${id}`;
   };
 
   return (
@@ -392,6 +423,8 @@ const Word = () => {
                   name={languageName}
                   onSuccess={handleDescendantAdded}
                   languageName={languageName}
+                  wordDescendants={descendants}
+                  isProto={isProto}
                 />
 
                 <AddDerivationModal
@@ -406,6 +439,72 @@ const Word = () => {
                   languageName={languageName}
                 />
 
+                <AddVariantModal
+                  key={derivationVersion}
+                  setVersion={setDerivationVersion}
+                  show={showAddVariantModal}
+                  setShow={setShowAddVariantModal}
+                  languageId={word.language_id}
+                  word={word}
+                  name={languageName}
+                  onSuccess={handleDescendantAdded}
+                  languageName={languageName}
+                  spelling={spelling}
+                />
+
+                <div
+                  style={{
+                    marginTop: "10px",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div
+                    className="next-prev-word-button"
+                    onClick={() => isPrevWord && handleOpenWord(prevWord.word_id)}
+                  >
+                    <img style={{ width: "40px" }} src={leftArrow}></img>
+                    {isPrevWord && (
+                      <span style={{ fontSize: "25px" }}>
+                        {isProto && <span>*</span>}
+                        {(prevWord.word_type === "suffix" ||
+                          prevWord.word_type === "enclitic") && (
+                            <span>-</span>
+                          )}{" "}
+                        <i>{prevWord.word}</i>
+                        {prevWord.word_type === "prefix" ||
+                          (prevWord.word_type === "proclitic" && (
+                            <span>-</span>
+                          ))}
+                      </span>
+                    )}
+                  </div>
+
+                 
+                    {isNextWord && ( <div
+                    className="next-prev-word-button"
+                    onClick={() => isNextWord && handleOpenWord(nextWord.word_id)}
+                  >
+                      <span style={{ fontSize: "25px" }}>
+                        {isProto && <span>*</span>}
+                        {(nextWord.word_type === "suffix" ||
+                          nextWord.word_type === "enclitic") && (
+                            <span>-</span>
+                          )}{" "}
+                        <i>{nextWord.word}</i>
+                        {(nextWord.word_type === "prefix" ||
+                          nextWord.word_type === "proclitic") && (
+                            <span>-</span>
+                          )}
+                      </span>
+                      <img style={{ width: "40px" }} src={rightArrow}></img> </div>
+                    )}
+                    
+                    
+                 
+                </div>
+
                 <h1 style={{ fontSize: "70px" }}>
                   {isProto ? <span>*</span> : <></>}
                   {word.word_type === "suffix" ||
@@ -414,7 +513,10 @@ const Word = () => {
                   ) : (
                     <></>
                   )}
-                  {word.word}
+                  {word.word_type === "place_name" ||
+                  word.word_type === "personal_name"
+                    ? capitaliseFirstLetter(word.word)
+                    : word.word}
                   {word.word_type === "prefix" ||
                   word.word_type === "proclitic" ? (
                     <span>-</span>
@@ -432,7 +534,9 @@ const Word = () => {
                   ></img>
                 </h1>
 
-                <h2>{languageName}</h2>
+                <h2 onClick={() => handleOpenLanguage(languageId)}>
+                  {languageName}
+                </h2>
 
                 <div>
                   <hr />
@@ -468,7 +572,10 @@ const Word = () => {
                                     word.word_type === "enclitic") && (
                                     <span>-</span>
                                   )}
-                                  {word.word}
+                                  {word.word_type === "place_name" ||
+                                  word.word_type === "personal_name"
+                                    ? capitaliseFirstLetter(word.word)
+                                    : word.word}
                                   {(word.word_type === "prefix" ||
                                     word.word_type === "proclitic") && (
                                     <span>-</span>
@@ -499,7 +606,15 @@ const Word = () => {
                                   .map((part, i) => {
                                     if (part === "§LANG§") {
                                       return (
-                                        <span key={i} className="languageName">
+                                        <span
+                                          onClick={() =>
+                                            handleOpenLanguage(
+                                              motherLanguage.language_id,
+                                            )
+                                          }
+                                          key={i}
+                                          className="languageName"
+                                        >
                                           {motherLanguage.language_name}{" "}
                                         </span>
                                       );
@@ -523,7 +638,14 @@ const Word = () => {
                                                 "suffix" ||
                                                 etym.mother_word_type ===
                                                   "enclitic") && <span>-</span>}
-                                              {etym.mother_word}
+                                              {etym.mother_word_type ===
+                                                "place_name" ||
+                                              etym.mother_word_type ===
+                                                "personal_name"
+                                                ? capitaliseFirstLetter(
+                                                    etym.mother_word,
+                                                  )
+                                                : etym.mother_word}
                                               {(etym.mother_word_type ===
                                                 "prefix" ||
                                                 etym.mother_word_type ===
@@ -601,7 +723,14 @@ const Word = () => {
                                                 "suffix" ||
                                                 etym.first_element_word_type ===
                                                   "enclitic") && <span>-</span>}
-                                              {etym.first_element_word}
+                                              {etym.first_element_word_type ===
+                                                "place_name" ||
+                                              etym.first_element_word_type ===
+                                                "personal_name"
+                                                ? capitaliseFirstLetter(
+                                                    etym.first_element_word,
+                                                  )
+                                                : etym.first_element_word}
                                               {(etym.first_element_word_type ===
                                                 "prefix" ||
                                                 etym.first_element_word_type ===
@@ -634,7 +763,14 @@ const Word = () => {
                                                       "enclitic") && (
                                                     <span>-</span>
                                                   )}
-                                                  {etym.second_element_word}
+                                                  {etym.second_element_word_type ===
+                                                    "place_name" ||
+                                                  etym.second_element_word_type ===
+                                                    "personal_name"
+                                                    ? capitaliseFirstLetter(
+                                                        etym.second_element_word,
+                                                      )
+                                                    : etym.second_element_word}
                                                   {(etym.second_element_word_type ===
                                                     "prefix" ||
                                                     etym.second_element_word_type ===
@@ -670,7 +806,14 @@ const Word = () => {
                                                       "enclitic") && (
                                                     <span>-</span>
                                                   )}
-                                                  {etym.third_element_word}
+                                                  {etym.third_element_word_type ===
+                                                    "place_name" ||
+                                                  etym.third_element_word_type ===
+                                                    "personal_name"
+                                                    ? capitaliseFirstLetter(
+                                                        etym.third_element_word,
+                                                      )
+                                                    : etym.third_element_word}
                                                   {(etym.third_element_word_type ===
                                                     "prefix" ||
                                                     etym.third_element_word_type ===
@@ -730,7 +873,12 @@ const Word = () => {
                               {translate("Loaned from {word}", {
                                 word: (
                                   <React.Fragment>
-                                    <span className="languageName">
+                                    <span
+                                      onClick={() =>
+                                        handleOpenLanguage(loanerLanguageId)
+                                      }
+                                      className="languageName"
+                                    >
                                       {loanerLanguageName}{" "}
                                     </span>
                                     <a
@@ -747,7 +895,14 @@ const Word = () => {
                                           {(etym.loanword_type === "suffix" ||
                                             etym.loanword_type ===
                                               "prefix") && <span>-</span>}
-                                          {etym.loanword}
+
+                                          {etym.loanword_type ===
+                                            "place_name" ||
+                                          etym.loanword_type === "personal_name"
+                                            ? capitaliseFirstLetter(
+                                                etym.loanword,
+                                              )
+                                            : etym.loanword}
                                           {(etym.loantype === "prefix" ||
                                             etym.loantype === "proclitic") && (
                                             <span>-</span>
@@ -778,8 +933,6 @@ const Word = () => {
                               />
                             </li>
                           ))}
-
-                          
                       </ol>
                     </>
                   ) : (
@@ -797,7 +950,14 @@ const Word = () => {
                             {i === 0 ? (
                               <>
                                 {/* JSX element goes here */}
-                                <span className="languageName">
+                                <span
+                                  onClick={() =>
+                                    handleOpenLanguage(
+                                      motherLanguage.language_id,
+                                    )
+                                  }
+                                  className="languageName"
+                                >
                                   {motherLanguage.language_name}{" "}
                                 </span>
                                 <a
@@ -815,7 +975,14 @@ const Word = () => {
                                         "suffix" ||
                                         etymology[0].mother_word_type ===
                                           "enclitic") && <span>-</span>}
-                                      {etymology[0].mother_word}
+                                      {etymology[0].mother_word_type ===
+                                        "place_name" ||
+                                      etymology[0].mother_word_type ===
+                                        "personal_name"
+                                        ? capitaliseFirstLetter(
+                                            etymology[0].mother_word,
+                                          )
+                                        : etymology[0].mother_word}
                                       {(etymology[0].mother_word_type ===
                                         "prefix" ||
                                         etymology[0].mother_word_type ===
@@ -857,7 +1024,13 @@ const Word = () => {
                                           {(cognate.word_type === "suffix" ||
                                             cognate.word_type ===
                                               "enclitic") && <span>-</span>}
-                                          {cognate.word}
+                                          {cognate.word_type === "place_name" ||
+                                          cognate.word_type === "personal_name"
+                                            ? capitaliseFirstLetter(
+                                                cognate.word,
+                                              )
+                                            : cognate.word}
+
                                           {(cognate.word_type === "prefix" ||
                                             cognate.word_type ===
                                               "proclitic") && <span>-</span>}
@@ -918,7 +1091,14 @@ const Word = () => {
                                 "suffix" ||
                                 etymology[0].first_element_word_type ===
                                   "enclitic") && <span>-</span>}
-                              {etymology[0].first_element_word}
+                              {etymology[0].first_element_word_type ===
+                                "place_name" ||
+                              etymology[0].first_element_word_type ===
+                                "personal_name"
+                                ? capitaliseFirstLetter(
+                                    etymology[0].first_element_word,
+                                  )
+                                : etymology[0].first_element_word}
                               {(etymology[0].first_element_word_type ===
                                 "prefix" ||
                                 etymology[0].first_element_word_type ===
@@ -1031,7 +1211,12 @@ const Word = () => {
                               {index === 0 && (
                                 <React.Fragment>
                                   {/* Loanword */}
-                                  <span className="languageName">
+                                  <span
+                                    onClick={() =>
+                                      handleOpenLanguage(loanerLanguageId)
+                                    }
+                                    className="languageName"
+                                  >
                                     {loanerLanguageName}{" "}
                                   </span>
                                   <a
@@ -1049,7 +1234,14 @@ const Word = () => {
                                           "suffix" ||
                                           etymology[0].loanword_type ===
                                             "enclitic") && <span>-</span>}
-                                        {etymology[0].loanword}
+                                        {etymology[0].loanword_type ===
+                                          "place_name" ||
+                                        etymology[0].loanword_type ===
+                                          "personal_name"
+                                          ? capitaliseFirstLetter(
+                                              etymology[0].loanword,
+                                            )
+                                          : etymology[0].loanword}
                                         {(etymology[0].loanword_type ===
                                           "prefix" ||
                                           etymology[0].loanword_type ===
@@ -1085,7 +1277,10 @@ const Word = () => {
                                     cognate.word_type === "enclitic") && (
                                     <span>-</span>
                                   )}
-                                  {cognate.word}
+                                  {cognate.word_type === "place_name" ||
+                                  cognate.word_type === "personal_name"
+                                    ? capitaliseFirstLetter(cognate.word)
+                                    : cognate.word}
                                   {(cognate.word_type === "prefix" ||
                                     cognate.word_type === "proclitic") && (
                                     <span>-</span>
@@ -1161,9 +1356,8 @@ const Word = () => {
                     <></>
                   )}
 
-                  {word.variant_of && (
+                  {JSON.parse(word.variant_of) && (
                     <div>
-                      <hr />
                       <p>
                         {translate("Variant of {word}", {
                           word: `{word}`,
@@ -1178,9 +1372,9 @@ const Word = () => {
                                     className="word-link"
                                     href={`${
                                       import.meta.env.VITE_FRONTEND_URL
-                                    }/word/${word.variant_of.word_id}`}
+                                    }/word/${JSON.parse(word.variant_of).word_id}`}
                                   >
-                                    {word.variant_of.word}
+                                    {JSON.parse(word.variant_of).word}
                                   </a>
                                 </i>
                               )}
@@ -1203,7 +1397,10 @@ const Word = () => {
                       ) : (
                         <></>
                       )}
-                      {word.word}
+                      {word.word_type === "place_name" ||
+                      word.word_type === "personal_name"
+                        ? capitaliseFirstLetter(word.word)
+                        : word.word}
                       {word.word_type === "prefix" ||
                       word.word_type === "proclitic" ? (
                         <span>-</span>
@@ -1634,7 +1831,7 @@ const Word = () => {
                     <></>
                   )}
 
-                  {word.variants && word.variants.length > 0 && (
+                  {/* {word.variants && word.variants.length > 0 && (
                     <div>
                       <p>
                         {translate("Variants")}:&nbsp;
@@ -1653,7 +1850,7 @@ const Word = () => {
                         ))}
                       </p>
                     </div>
-                  )}
+                  )} */}
 
                   <div>
                     {
@@ -1926,6 +2123,189 @@ const Word = () => {
                   <hr />
 
                   <div className="title-and-edit-button-div">
+                    <h3>{translate("Variants")}</h3>
+
+                    <img
+                      src={editIcon}
+                      className="edit-button"
+                      onClick={() => {
+                        setShowAddVariantModal(true);
+                      }}
+                    ></img>
+                  </div>
+
+                  {variants.length > 0 && (
+                    <div>
+                      <ol>
+                        {variants.map((variant, index) => (
+                          <li key={index}>
+                            <a
+                              className="word-link"
+                              href={`${
+                                import.meta.env.VITE_FRONTEND_URL
+                              }/word/${variant.word_id}`}
+                            >
+                              <b>
+                                <i>
+                                  {isProto ? <span>*</span> : <></>}
+                                  {variant.word_type === "suffix" ||
+                                  variant.word_type === "enclitic" ? (
+                                    <span>-</span>
+                                  ) : (
+                                    <></>
+                                  )}
+                                  {variant.word_type === "place_name" ||
+                                  variant.word_type === "personal_name"
+                                    ? capitaliseFirstLetter(variant.word)
+                                    : variant.word}
+                                  {variant.word_type === "prefix" ||
+                                  variant.word_type === "proclitic" ? (
+                                    <span>-</span>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </i>
+                              </b>{" "}
+                            </a>
+                          </li>
+                        ))}
+                      </ol>
+                      <hr />
+                    </div>
+                  )}
+
+                  <hr />
+
+                  {synonyms.length > 0 && (
+                    <div>
+                      <div className="title-and-edit-button-div">
+                        <h3>{translate("Synonyms")}</h3>
+                      </div>
+                      <ol>
+                        {synonyms.map((synonym, index) => (
+                          <li key={index}>
+                            <a
+                              className="word-link"
+                              href={`${
+                                import.meta.env.VITE_FRONTEND_URL
+                              }/word/${synonym.word_id}`}
+                            >
+                              <b>
+                                <i>
+                                  {isProto ? <span>*</span> : <></>}
+                                  {synonym.word_type === "suffix" ||
+                                  synonym.word_type === "enclitic" ? (
+                                    <span>-</span>
+                                  ) : (
+                                    <></>
+                                  )}
+                                  {synonym.word_type === "place_name" ||
+                                  synonym.word_type === "personal_name"
+                                    ? capitaliseFirstLetter(synonym.word)
+                                    : synonym.word}
+                                  {synonym.word_type === "prefix" ||
+                                  synonym.word_type === "proclitic" ? (
+                                    <span>-</span>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </i>
+                              </b>{" "}
+                              "{synonym.meaning.join(", ")}"
+                            </a>
+                          </li>
+                        ))}
+                      </ol>{" "}
+                      <hr />
+                    </div>
+                  )}
+
+                  {nearSynonyms.length > 0 && (
+                    <div>
+                      <div className="title-and-edit-button-div">
+                        <h3>{translate("Near Synonyms")}</h3>
+                      </div>
+                      <ol>
+                        {nearSynonyms.map((synonym, index) => (
+                          <li key={index}>
+                            <a
+                              className="word-link"
+                              href={`${
+                                import.meta.env.VITE_FRONTEND_URL
+                              }/word/${synonym.word_id}`}
+                            >
+                              <b>
+                                <i>
+                                  {isProto ? <span>*</span> : <></>}
+                                  {synonym.word_type === "suffix" ||
+                                  synonym.word_type === "enclitic" ? (
+                                    <span>-</span>
+                                  ) : (
+                                    <></>
+                                  )}
+                                  {synonym.word_type === "place_name" ||
+                                  synonym.word_type === "personal_name"
+                                    ? capitaliseFirstLetter(synonym.word)
+                                    : synonym.word}
+                                  {synonym.word_type === "prefix" ||
+                                  synonym.word_type === "proclitic" ? (
+                                    <span>-</span>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </i>
+                              </b>{" "}
+                              "{synonym.meaning.join(", ")}"
+                            </a>
+                          </li>
+                        ))}
+                      </ol>{" "}
+                      <hr />
+                    </div>
+                  )}
+
+                  {homophones.length > 0 && (
+                    <div>
+                      <div className="title-and-edit-button-div">
+                        <h3>{translate("Homophones")}</h3>
+                      </div>
+                      <ol>
+                        {homophones.map((homophone, index) => (
+                          <li key={index}>
+                            <a
+                              className="word-link"
+                              href={`${
+                                import.meta.env.VITE_FRONTEND_URL
+                              }/word/${homophone.word_id}`}
+                            >
+                              <b>
+                                <i>
+                                  {isProto ? <span>*</span> : <></>}
+                                  {homophone.word_type === "suffix" ||
+                                  homophone.word_type === "enclitic" ? (
+                                    <span>-</span>
+                                  ) : (
+                                    <></>
+                                  )}
+                                  {homophone.word}
+                                  {homophone.word_type === "prefix" ||
+                                  homophone.word_type === "proclitic" ? (
+                                    <span>-</span>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </i>
+                              </b>{" "}
+                              "{formatMeaning(homophone)}"
+                            </a>
+                          </li>
+                        ))}
+                      </ol>{" "}
+                      <hr />
+                    </div>
+                  )}
+
+                  <div className="title-and-edit-button-div">
                     <h3>{translate("Derivations")}</h3>
 
                     <img
@@ -1951,7 +2331,22 @@ const Word = () => {
                               <b>
                                 <i>
                                   {isProto ? <span>*</span> : <></>}
-                                  {derivation.word}
+                                  {derivation.word_type === "suffix" ||
+                                  derivation.word_type === "enclitic" ? (
+                                    <span>-</span>
+                                  ) : (
+                                    <></>
+                                  )}
+                                  {derivation.word_type === "place_name" ||
+                                  derivation.word_type === "personal_name"
+                                    ? capitaliseFirstLetter(derivation.word)
+                                    : derivation.word}
+                                  {derivation.word_type === "prefix" ||
+                                  derivation.word_type === "proclitic" ? (
+                                    <span>-</span>
+                                  ) : (
+                                    <></>
+                                  )}
                                 </i>
                               </b>{" "}
                               "{derivation.meaning}"
@@ -1984,14 +2379,24 @@ const Word = () => {
                             {descendant.etymology_type === "loaned" ? (
                               <span>
                                 <i>({translate("loan")})</i>{" "}
-                                <span className="languageName">
+                                <span
+                                  className="languageName"
+                                  onClick={() =>
+                                    handleOpenLanguage(descendant.language_id)
+                                  }
+                                >
                                   {descendant.language_name}
                                 </span>
                                 :{" "}
                               </span>
                             ) : (
                               <span>
-                                <span className="languageName">
+                                <span
+                                  className="languageName"
+                                  onClick={() =>
+                                    handleOpenLanguage(descendant.language_id)
+                                  }
+                                >
                                   {descendant.language_name}
                                 </span>
                                 :{" "}
@@ -2013,7 +2418,10 @@ const Word = () => {
                                   ) : (
                                     <></>
                                   )}
-                                  {descendant.word}
+                                  {descendant.word_type === "place_name" ||
+                                  descendant.word_type === "personal_name"
+                                    ? capitaliseFirstLetter(descendant.word)
+                                    : descendant.word}
                                   {descendant.word_type === "prefix" ||
                                   descendant.word_type === "proclitic" ? (
                                     <span>-</span>
@@ -2030,47 +2438,6 @@ const Word = () => {
                     )}
                     <hr />
                   </div>
-
-                  {synonyms.length > 0 && (
-                    <div>
-                      <div className="title-and-edit-button-div">
-                        <h3>{translate("Synonyms")}</h3>
-                      </div>
-                      <ol>
-                        {synonyms.map((synonym, index) => (
-                          <li key={index}>
-                            <a
-                              className="word-link"
-                              href={`${
-                                import.meta.env.VITE_FRONTEND_URL
-                              }/word/${synonym.word_id}`}
-                            >
-                              <b>
-                                <i>
-                                  {isProto ? <span>*</span> : <></>}
-                                  {synonym.word_type === "suffix" ||
-                                  synonym.word_type === "enclitic" ? (
-                                    <span>-</span>
-                                  ) : (
-                                    <></>
-                                  )}
-                                  {synonym.word}
-                                  {synonym.word_type === "prefix" ||
-                                  synonym.word_type === "proclitic" ? (
-                                    <span>-</span>
-                                  ) : (
-                                    <></>
-                                  )}
-                                </i>
-                              </b>{" "}
-                              "{synonym.meaning.join(", ")}"
-                            </a>
-                          </li>
-                        ))}
-                      </ol>{" "}
-                      <hr />
-                    </div>
-                  )}
 
                   <div>
                     {tags.length > 0 && (

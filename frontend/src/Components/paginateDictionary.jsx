@@ -3,6 +3,7 @@ import { useTranslate } from "../Functions/TranslateUI";
 import FindWordsDescendants from "./findWOrdsDescendants.jsx";
 import React from "react";
 import ExtractExampleSentencesFromCorpus from "./ExtractExampleSentencesFromCorpus.jsx";
+import capitaliseFirstLetter from "../Functions/capitaliseFirstLetter.jsx";
 
 function PaginatedDictionary({
   visibleWords,
@@ -44,7 +45,9 @@ function PaginatedDictionary({
                     ) : (
                       <></>
                     )}
-                    <span className="headword">{word.word}</span>
+                    <span className="headword">
+                      {word.word_type === "placename" || word.word_type === "personal_name" ? capitaliseFirstLetter(word.word) : word.word}
+                      </span>
                     {word.word_type === "prefix" ||
                     word.word_type === "proclitic" ? (
                       <span>-</span>
@@ -59,28 +62,7 @@ function PaginatedDictionary({
                   <></>
                 )}
 
-                {word.variant_of && (
-                  <span>
-                    {" "}
-                    {translate("variant of {word}", {
-                      word: `{word}`,
-                    })
-                      .split("{word}")
-                      .map((part, index, arr) => (
-                        <React.Fragment key={index}>
-                          {part}
-                          {index < arr.length - 1 && (
-                            <i>
-                              <b>
-                                {isProto ? <span>*</span> : <></>}
-                                {word.variant_of.word}
-                              </b>
-                            </i>
-                          )}
-                        </React.Fragment>
-                      ))}
-                  </span>
-                )}
+               
 
                 {word.noun_meaning ? (
                   Array.isArray(word.noun_word_categories) &&
@@ -1234,6 +1216,30 @@ function PaginatedDictionary({
                   )
                 ) : (
                   <></>
+                )}
+
+                 {JSON.parse(word.variant_of) && (
+                  <span>
+                    ;
+                    {" "}
+                    {translate("variant of {word}", {
+                      word: `{word}`,
+                    })
+                      .split("{word}")
+                      .map((part, index, arr) => (
+                        <React.Fragment key={index}>
+                          {part}
+                          {index < arr.length - 1 && (
+                            <i>
+                              <b>
+                                {isProto ? <span>*</span> : <></>}
+                                {JSON.parse(word.variant_of).word}
+                              </b>
+                            </i>
+                          )}
+                        </React.Fragment>
+                      ))}
+                  </span>
                 )}
 
                 {word.phrases && (

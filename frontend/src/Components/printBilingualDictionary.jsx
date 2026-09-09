@@ -34,7 +34,7 @@ export function PrintBilingualDictionary({
     contentRef,
   });
 
-  console.log(allEnglishWords)
+
   async function printDict() {
     setLoadingBilingual(true);
     const data = await window.electron.getAllWordsForPrint(id);

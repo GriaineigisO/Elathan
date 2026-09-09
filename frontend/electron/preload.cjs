@@ -12,8 +12,8 @@ api.getAuthorName = () => {
   return ipcRenderer.invoke("language:getAuthorName");
 };
 
-api.saveAccountSettings = (authorName) => {
-  return ipcRenderer.invoke("language:saveAccountSettings", authorName);
+api.saveAccountSettings = (authorName, excludedNearSynonymTerms) => {
+  return ipcRenderer.invoke("language:saveAccountSettings", authorName, excludedNearSynonymTerms);
 };
 
 api.getAllWords = (languageId) => {
@@ -295,7 +295,7 @@ api.addEtymology = (
   secondElementId,
   thirdElementId,
   loanWordId,
-  note,
+  note, isCalque
 ) => {
   return ipcRenderer.invoke(
     "etymology:addEtymology",
@@ -306,7 +306,7 @@ api.addEtymology = (
     secondElementId,
     thirdElementId,
     loanWordId,
-    note,
+    note, isCalque
   );
 };
 
@@ -458,7 +458,7 @@ api.addWord = (
   cliticWordCategoryInputs,
   tagInputs,
   variants,
-  thesaurusDomains,
+  thesaurusDomains,variantOf, isCalque
 ) => {
   return ipcRenderer.invoke(
     "language:addWord",
@@ -496,7 +496,7 @@ api.addWord = (
     cliticWordCategoryInputs,
     tagInputs,
     variants,
-    thesaurusDomains,
+    thesaurusDomains,variantOf, isCalque
   );
 };
 

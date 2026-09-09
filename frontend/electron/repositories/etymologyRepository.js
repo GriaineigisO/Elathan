@@ -259,6 +259,7 @@ export function addEtymology(
   thirdElementId,
   loanWordId,
   note,
+  isCalque
 ) {
   if (etymologyType === "fromMother") {
     try {
@@ -311,11 +312,11 @@ export function addEtymology(
     }
   }
 
-  if (etymologyType === "loaned") {
+  if (etymologyType === "loaned" && !isCalque) {
     try {
       const addEtymStmt = db.prepare(`
           INSERT INTO etymology
-        (etymology_id, word_id, note, loanword_id, etymology_type)
+        (etymology_id, word_id, note, etymology_type, loanword_id)
           VALUES(?, ?, ?, ?, ?)
           `);
 
@@ -323,10 +324,36 @@ export function addEtymology(
         Date.now(),
         word_id,
         note,
-        loanWordId,
-        etymologyType
+        etymologyType,
+        motherWord.word_id
       );
 
+       if (addEtym.changes === 0) return { "success": false };
+
+      return { "success": true };
+    } catch (error) {
+      console.error(`error adding loan: ${error}`);
+    }
+  }
+
+   if (etymologyType === "loaned" && isCalque) {
+    try {
+      const addEtymStmt = db.prepare(`
+          INSERT INTO etymology
+        (etymology_id, word_id, note, etymology_type, first_element_id, second_element_id, third_element_id)
+          VALUES(?, ?, ?, ?, ?, ?, ?)
+          `);
+console.log(firstElementId)
+      const addEtym = addEtymStmt.run(
+        Date.now(),
+        word_id,
+        note,
+        etymologyType,
+       firstElementId,
+       secondElementId,
+       thirdElementId
+      );
+console.log(addEtym)
        if (addEtym.changes === 0) return { "success": false };
 
       return { "success": true };
@@ -387,6 +414,8 @@ export function editEtymology(etymologyId,
 
   if (etymologyType === "fromMother") {
 
+    
+
           const editEtymStmt = db.prepare(`
             UPDATE etymology
             SET
@@ -413,8 +442,8 @@ export function editEtymology(etymologyId,
               word_id = ?,
               note = ?,
               etymology_type = ?,
-              first_element_id = ?
-               second_element_id = ?
+              first_element_id = ?,
+               second_element_id = ?,
               third_element_id = ?
             WHERE etymology_id = ?
             `);

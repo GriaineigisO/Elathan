@@ -305,6 +305,7 @@ setIgnoreFlaggedDuplicate(false);
         index ===
         self.findIndex((t) => t.name === item.name && t.type === item.type),
     );
+ 
     setWordForms(unique);
   };
 
@@ -754,9 +755,10 @@ setIgnoreFlaggedDuplicate(false);
                     style={{ display: "flex", flexDirection: "row" }}
                   >
                     <span style={{ marginRight: "10px" }}>{cat.name}: </span>
+              
                     <select
                       value={
-                        nounCategorySelections[index] ?? cat.categories.name[0]
+                        verbCategorySelections[index] ?? cat.categories.name[0]
                       }
                       onChange={(e) => {
                         const selectedValue = e.target.value;
@@ -1442,6 +1444,7 @@ setIgnoreFlaggedDuplicate(false);
           <Collapsible title={translate("Word Forms")}>
             <h4>{translate("Word Forms")}</h4>
             <div style={{ display: "flex", flexDirection: "column" }}>
+              
               {shownParts["noun"] &&
                 wordForms.map((wordForm, index) =>
                   wordForm.type === "noun" ? (
@@ -1456,9 +1459,12 @@ setIgnoreFlaggedDuplicate(false);
                   ) : null,
                 )}
 
+              
+
               {shownParts["verb"] &&
                 wordForms.map((wordForm, index) =>
                   wordForm.type === "verb" ? (
+                    <>
                     <input
                       key={index}
                       style={{ marginBottom: "10px", width: "300px" }}
@@ -1466,7 +1472,7 @@ setIgnoreFlaggedDuplicate(false);
                       onChange={(e) =>
                         handleWordFormInput(e, wordForm.name, "verb", index)
                       }
-                    />
+                    /></>
                   ) : null,
                 )}
 

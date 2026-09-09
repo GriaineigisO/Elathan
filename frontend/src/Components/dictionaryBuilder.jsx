@@ -46,7 +46,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   const [showPrintedDictionary, setShowPrintedDictionary] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingBilingual, setLoadingBilingual] = useState(false);
-  const [selectSearch, setSelectSearch] = useState("match");
+  const [selectSearch, setSelectSearch] = useState("startswith");
   const [searchTerm, setSearchTerm] = useState();
   const [searchEnglishTerm, setSearchEnglishTerm] = useState();
   const [visibleWords, setVisibleWords] = useState([]);
@@ -219,12 +219,12 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
 
   useEffect(() => {
-      const fetchAuthorName = async () => {
-        const data = await window.electron.getAuthorName();
-        setAuthorName(data);
-      };
-      fetchAuthorName();
-    }, []);
+    const fetchAuthorName = async () => {
+      const data = await window.electron.getAuthorName();
+      setAuthorName(data);
+    };
+    fetchAuthorName();
+  }, []);
 
   useEffect(() => {
     if (loading || loadingBilingual) {
@@ -310,7 +310,6 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
     const manageFromEnglishDictionary = (posMeaning, pos, word) => {
       posMeaning.forEach((rawEnglishWord) => {
         let englishWord = rawEnglishWord.trim();
-      
 
         // Special case: remove "to " if it's a verb meaning
         if (pos === "v" && englishWord.toLowerCase().startsWith("to ")) {
@@ -433,13 +432,25 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
     let affixesArr = [];
 
     allWords.forEach((word) => {
-      console.log(word)
       if (word.word_type === "word") {
         meaningKeys.forEach((key) => {
-          
           if (word[key.meaning])
             manageFromEnglishDictionary(word[key.meaning], key.abbr, word);
         });
+
+        //merge (of X) items with the next item e.g '(of animals), bat' > '(of animals) bat'
+        meaningKeys.forEach((key) => {
+          if (word[key.meaning]) {
+            word[key.meaning].forEach((meaning, index) => {
+              if (meaning.endsWith(")")) {
+                  const nextItem = word[key.meaning][index + 1];
+                  const newItem = meaning + " " + nextItem;
+                  word[key.meaning][index + 1] = newItem;
+                  word[key.meaning].splice(index, 1);
+              }
+            })
+          }
+        })
       } else {
         affixesArr.push(word);
       }
@@ -519,12 +530,12 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
           return word;
         });
 
-        // 6️⃣ Update state
+        //Update state
         setAllWordsForThesaurus(dataWithDerivations);
         setAllWords(dataWithDerivations);
         setAllAffixes(affixesWithDerivations);
 
-        // 7️⃣ Generate phrases after derivations are ready
+        // Generate phrases after derivations are ready
         const processed = addPhrasesToWords(words);
         const filtered = processed.filter(
           (word) =>
@@ -618,11 +629,10 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
     let filtered = [...allWords];
 
     const managePhrases = (word, meaning) => {
-      const splitWords = word.trim().split(/\s+/);
-      const isPhrase = splitWords.length > 1;
-      if (!isPhrase) return;
-
-      filtered = filtered.filter((entry) => entry.word !== word);
+      const splitWords = word.word.trim().split(/\s+/);
+      
+     
+      filtered = filtered.filter((entry) => entry.word !== word.word);
 
       splitWords.forEach((sw) => {
         let headWord = "";
@@ -634,7 +644,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
           isDifferent = true;
         }
 
-        const cleanedPhrase = word
+        const cleanedPhrase = word.word
           .split(" ")
           .map((w) => (w.includes("=") ? w.split("=")[0] : w))
           .join(" ");
@@ -661,17 +671,17 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
     };
 
     for (const word of allWords) {
-      if (word.word_type === "word") {
-        if (word.noun_meaning) managePhrases(word.word, word.noun_meaning);
-        if (word.num_meaning) managePhrases(word.word, word.num_meaning);
-        if (word.adj_meaning) managePhrases(word.word, word.adj_meaning);
-        if (word.adv_meaning) managePhrases(word.word, word.adv_meaning);
-        if (word.adp_meaning) managePhrases(word.word, word.adp_meaning);
-        if (word.conj_meaning) managePhrases(word.word, word.conj_meaning);
-        if (word.interj_meaning) managePhrases(word.word, word.interj_meaning);
-        if (word.pron_meaning) managePhrases(word.word, word.pron_meaning);
-        if (word.part_meaning) managePhrases(word.word, word.part_meaning);
-        if (word.verb_meaning) managePhrases(word.word, word.verb_meaning);
+      if (word.word_type === "phrase" ) {
+        if (word.noun_meaning) managePhrases(word, word.noun_meaning);
+        if (word.num_meaning) managePhrases(word, word.num_meaning);
+        if (word.adj_meaning) managePhrases(word, word.adj_meaning);
+        if (word.adv_meaning) managePhrases(word, word.adv_meaning);
+        if (word.adp_meaning) managePhrases(word, word.adp_meaning);
+        if (word.conj_meaning) managePhrases(word, word.conj_meaning);
+        if (word.interj_meaning) managePhrases(word, word.interj_meaning);
+        if (word.pron_meaning) managePhrases(word, word.pron_meaning);
+        if (word.part_meaning) managePhrases(word, word.part_meaning);
+        if (word.verb_meaning) managePhrases(word, word.verb_meaning);
       }
     }
 
@@ -702,10 +712,11 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   }, []);
 
   const searchLanguage = (searchTerm, searchSelect) => {
+    setSearchTerm(searchTerm);
     let results = [];
 
     if (searchSelect === "match") {
-      results = visibleWords.filter(
+      results = allWords.filter(
         (word) =>
           word.word === searchTerm ||
           (word.phrases
@@ -713,7 +724,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
             : false),
       );
     } else if (searchSelect === "startswith") {
-      results = visibleWords.filter(
+      results = allWords.filter(
         (word) =>
           word.word.startsWith(searchTerm) ||
           (word.phrases &&
@@ -722,16 +733,21 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
             )),
       );
     } else if (searchSelect === "endswith") {
-      results = visibleWords.filter((word) => word.word.endsWith(searchTerm));
+      results = allWords.filter((word) => word.word.endsWith(searchTerm));
     }
 
     setVisibleWords(results);
   };
 
   const searchEnglish = (searchTerm) => {
+
+   
+    setSearchEnglishTerm(searchTerm)
     const regex = new RegExp(`\\b${searchTerm}\\b`, "i"); // "i" for case-insensitive
 
-    const results = visibleWords.filter(
+ 
+
+    const results = allWords.filter(
       (word) =>
         [
           ...(word.noun_meaning || []),
@@ -1146,43 +1162,75 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
   };
 
   async function generatePdf() {
+    console.log("loading etym dict");
     setLoading(true);
 
     const data = await getEtymologyGraph();
 
-    const blob = await pdf(
-      <EtymologyDictionaryPdf
-        visibleWords={visibleWords}
-        languageName={languageName}
-        isProto={isProto}
-        etymologyTree={data.trees}
-        languageData={data.languages}
-      />,
-    ).toBlob();
+    console.log("creating blob");
 
-    const url = URL.createObjectURL(blob);
+    try {
+      console.log("creating PDF");
 
-    setPdfUrl(url);
-    setLoading(false);
+      const pdfDocument = (
+        <EtymologyDictionaryPdf
+          visibleWords={visibleWords}
+          languageName={languageName}
+          isProto={isProto}
+          etymologyTree={data.trees}
+          languageData={data.languages}
+          translate={translate}
+        />
+      );
+
+      console.log("React element created");
+
+      const pdfInstance = pdf(pdfDocument);
+
+      console.log("pdf instance created");
+
+      const blob = await pdfInstance.toBlob();
+
+      console.log("blob created");
+
+      const url = URL.createObjectURL(blob);
+
+      console.log(url);
+
+      setPdfUrl(url);
+    } catch (error) {
+      console.error("PDF generation failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handlePageSelect(value) {
+    if (value === "placename") openPlacenames(id);
+    if (value === "personal_name") openPersonalnames(id);
+    if (value === "dictionary") openDictionary(id);
+    if (value === "grammar") openGrammar(id);
+    if (value === "corpus") openCorpus(id);
+    if (value === "thesaurus") openThesaurus(id);
+    if (value === "frequencylist") openFrequencyList(id);
   }
 
   return (
     <div style={{ width: "100%", textAlign: "center" }}>
       <>
-        {loading ||
-          (loadingBilingual && (
-            <div className="spinner-container">
-              <div className="spinner" />
-              <p>
-                {translate(
-                  "Your dictionary is being prepared for printing. This may take a few moments...",
-                )}
-              </p>
-              <div style={{ fontStyle: "italic", opacity: 0.8 }}>
-                {rotatingMessages[currentMessageIndex]}
-              </div>
+        {(loading || loadingBilingual) && (
+          <div className="spinner-container">
+            <div className="spinner" />
+            <p>
+              {translate(
+                "Your dictionary is being prepared for printing. This may take a few moments...",
+              )}
+            </p>
+            <div style={{ fontStyle: "italic", opacity: 0.8 }}>
+              {rotatingMessages[currentMessageIndex]}
             </div>
-          ))}
+          </div>
+        )}
 
         <div
           style={{ display: loading || loadingBilingual ? "none" : "block" }}
@@ -1276,68 +1324,45 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
             </div>
           )}
 
-          {dictionaryType !== "place_name" && (
-            <p
-              className="word-link hide-for-printing"
-              onClick={() => openPlacenames(id)}
-            >
-              {translate("View {languageName} Placenames", {
-                languageName,
-              })}
-            </p>
-          )}
-
-          {dictionaryType !== "personal_name" && (
-            <p
-              className="word-link hide-for-printing"
-              onClick={() => openPersonalnames(id)}
-            >
-              {translate("View {languageName} Personal names", {
-                languageName,
-              })}
-            </p>
-          )}
-
-          {dictionaryType !== "dictionary" && (
-            <p
-              className="word-link hide-for-printing"
-              onClick={() => openDictionary(id)}
-            >
-              {translate("View {languageName} Dictionary", {
-                languageName,
-              })}
-            </p>
-          )}
-
-          <p
-            className="word-link hide-for-printing"
-            onClick={() => openGrammar(id)}
-          >
-            {translate("View {languageName} Grammar", { languageName })}
-          </p>
-
-          <p
-            className="word-link hide-for-printing"
-            onClick={() => openCorpus(id)}
-          >
-            {translate("View {languageName} Corpus", { languageName })}
-          </p>
-
-          <p
-            className="word-link hide-for-printing"
-            onClick={() => openThesaurus(id)}
-          >
-            {translate("View {languageName} Thesaurus", { languageName })}
-          </p>
-
-          <p
-            className="word-link hide-for-printing"
-            onClick={() => openFrequencyList(id)}
-          >
-            {translate("View {languageName} Frequency List", {
+          <select onChange={(e) => handlePageSelect(e.target.value)}>
+            <option>--</option>
+            {dictionaryType !== "place_name" && (
+              <option value="placename">
+                {translate("View {languageName} Placenames", {
+                  languageName,
+                })}
+              </option>
+            )}
+            {dictionaryType !== "personal_name" && (
+              <option value="personal_name">
+                {translate("View {languageName} Personal names", {
+                  languageName,
+                })}
+              </option>
+            )}
+            {dictionaryType !== "dictionary" && (
+              <option value="dictionary">
+                {translate("View {languageName} Dictionary", {
+                  languageName,
+                })}
+              </option>
+            )}
+            <option value="grammar">
+              {translate("View {languageName} Grammar", { languageName })}
+            </option>
+             <option value="corpus">
+             {translate("View {languageName} Corpus", { languageName })}
+            </option>
+              <option value="thesaurus">
+              {translate("View {languageName} Thesaurus", { languageName })}
+            </option>
+             <option value="frequencylist">
+             {translate("View {languageName} Frequency List", {
               languageName,
             })}
-          </p>
+            </option>
+          </select>
+
 
           <p className="word-count hide-for-printing">
             {translate("{wordCount} words.", {
@@ -1380,7 +1405,7 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
                     languageName,
                   })}
                   style={{ marginRight: "10px" }}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => searchLanguage(e.target.value, selectSearch)}
                   value={searchTerm}
                 ></input>
 
@@ -1388,28 +1413,23 @@ const DictionaryBuilder = ({ id, dictionaryType }) => {
                   onChange={(e) => setSelectSearch(e.target.value)}
                   style={{ marginRight: "10px" }}
                 >
-                  <option value="match">{translate("match")}</option>
                   <option value="startswith">{translate("starts with")}</option>
+                  <option value="match">{translate("match")}</option>
+                  
                   <option value="endswith">{translate("ends with")}</option>
                 </select>
 
-                <button
-                  onClick={() => searchLanguage(searchTerm, selectSearch)}
-                >
-                  {translate("Search")}
-                </button>
+               
               </div>
 
               <div className="search-div hide-for-printing">
                 <input
                   placeholder={translate("Search English Words")}
-                  onChange={(e) => setSearchEnglishTerm(e.target.value)}
+                  onChange={(e) => searchEnglish(e.target.value)}
                   value={searchEnglishTerm}
                 ></input>
 
-                <button onClick={() => searchEnglish(searchEnglishTerm)}>
-                  {translate("Search")}
-                </button>
+               
               </div>
             </div>
 

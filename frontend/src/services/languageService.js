@@ -3,9 +3,9 @@ export async function getAuthorName() {
     return await window.electron.getAuthorName();
 }
 
-export async function saveAccountSettings(authorName) {
+export async function saveAccountSettings(authorName, excludedNearSynonymTerms) {
 
-    return await window.electron.saveAccountSettings(authorName);
+    return await window.electron.saveAccountSettings(authorName, excludedNearSynonymTerms);
 }
 
 
@@ -277,7 +277,7 @@ export async function addWord(date,
         cliticWordCategoryInputs,
         tagInputs,
         variants,
-        thesaurusDomains) {
+        thesaurusDomains,variantOf, isCalque) {
 
     return await window.electron.addWord(date,
         wordId,
@@ -313,6 +313,6 @@ export async function addWord(date,
         cliticWordCategoryInputs,
         tagInputs,
         variants,
-        thesaurusDomains);
+        thesaurusDomains,variantOf, isCalque);
 }
 

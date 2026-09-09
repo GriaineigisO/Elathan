@@ -13,6 +13,11 @@ body {
   font-size: 18px;
 }
 
+.next-prev-word-button:hover {
+cursor: pointer;
+text-decoration: underline;
+}
+
 ******************************
 IPA KEYBOARD
 
@@ -533,6 +538,10 @@ width: 60px !important
   color: rgb(195, 160, 160);
 }
 
+.languageName:hover {
+ cursor: pointer;
+}
+
 .word-form-list {
   list-style: none;
   background-color: #779b83;
@@ -1043,9 +1052,9 @@ a:hover {
   padding: 20px;
 }
 
-a {
+/* a {
   color: rgb(228, 217, 217) !important;
-}
+} */
 
 .dark-link {
   color: #242424 !important;

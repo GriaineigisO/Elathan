@@ -41,7 +41,7 @@ export function getEncyclopedia(id) {
 
     return {
       encyclopedia_name: fetchEncyclopedia[0].encyclopedia_name,
-      topics: fetchEncyclopedia[0].topics,
+      topics: fetchEncyclopedia[0].topics.sort(),
       entries: getEntries,
     };
   } catch (error) {

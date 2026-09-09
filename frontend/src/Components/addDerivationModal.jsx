@@ -666,7 +666,14 @@ export const AddDerivationModal = ({
          : newWordOverride && typeof newWordOverride === "string"
            ? newWordOverride
            : newWord;
+
+        
  
+      
+
+      console.log(pronunciationOverride)
+      console.log(displayedIpa)
+
      const data = await window.electron.addWord(
        date,
        wordId,
@@ -676,7 +683,7 @@ export const AddDerivationModal = ({
        makeMeaningArrays(),
        descendantWordType,
        note,
-       displayedIpa,
+       pronunciationOverride ?pronunciationOverride: displayedIpa,
        adjWordFormInputs,
        nounFormsToSave,
        numFormsToSave,
@@ -799,6 +806,7 @@ export const AddDerivationModal = ({
                 </option>
               </select>
             </div>
+
 
             <div className="thin-white-border">
               <div className="keyboard">
@@ -1337,7 +1345,7 @@ export const AddDerivationModal = ({
                       </div>
                     ))}
 
-                {shownParts["v"] &&
+                {shownParts["pron"] &&
                   wordCategories
                     .flatMap((wc) => wc.word_categories ?? [])
                     .filter((cat) => cat.type === "pronoun")

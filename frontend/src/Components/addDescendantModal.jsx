@@ -22,6 +22,8 @@ import { addEtymology } from "../services/etymologyService.js";
 import { getWordsForms } from "../services/dictionaryService.js";
 import { IPAkeyboard } from "./IPAkeyboard.jsx";
 import { Keyboard } from "./keyboard.jsx";
+import Ogma from "../assets/ogma.png";
+import formatMeaning from "../Functions/formatMeaning.jsx";
 
 const AddDescendantModal = ({
   key,
@@ -32,6 +34,8 @@ const AddDescendantModal = ({
   word,
   name,
   setVersion,
+  wordDescendants,
+  isProto,
 }) => {
   const { translate } = useTranslate();
   const [newWord, setNewWord] = useState();
@@ -105,7 +109,7 @@ const AddDescendantModal = ({
   const [initializedGroups, setInitializedGroups] = useState([]);
 
   const [convertIPA, setConvertIPA] = useState(false);
-
+  const [noDaughterChosen, setNoDaughterChosen] = useState(false);
   const [pronunciation, setPronunciation] = useState();
   const [note, setNote] = useState();
   const [variants, setVariants] = useState();
@@ -119,6 +123,12 @@ const AddDescendantModal = ({
   const [showLoanWordWarning, setShowLoanWordWarning] = useState(false);
   const [allCategoryValues, setAllCategoryValues] = useState({});
   const [overrideWord, setOverrideWord] = useState(false);
+  const [daughterLanguages, setDaughterLanguages] = useState([]);
+  const [randomLanguageChosen, setRandomLanguageChosen] = useState(false);
+  const [isCalque, setIsCalque] = useState(false);
+  const [firstElement, setFirstElement] = useState(null);
+    const [secondElement, setSecondElement] = useState(null);
+    const [thirdElement, setThirdElement] = useState(null);
 
   useEffect(() => {
     setDescendant(word);
@@ -223,6 +233,14 @@ const AddDescendantModal = ({
           ? word[0].clitic_word_forms
           : []),
     ]);
+
+    //gets only the daughter languages a given language
+    const getDaughterLanguages = async () => {
+      const data = await window.electron.getDaughterLanguages(languageId);
+      setDaughterLanguages(data);
+    };
+
+    getDaughterLanguages();
   }, [word]);
 
   const displayedIpa =
@@ -240,6 +258,8 @@ const AddDescendantModal = ({
   const removeDescendantLanguage = () => {
     setDescendantLanguage(null);
     setLanguageSelected(false);
+    setNoDaughterChosen(false);
+    setRandomLanguageChosen(false);
   };
 
   //END-ETYMOLOGY
@@ -754,7 +774,10 @@ const AddDescendantModal = ({
         ? applySoundChange(word.ipa, selectedSoundChanges, allCategoryValues)
         : pronunciation;
 
+    if (pronunciationOverride) chosenIPA = pronunciationOverride;
+
     const numOfKeys = Object.keys(spellings);
+
     const spelledWord =
       numOfKeys.length > 0
         ? spell(displayedIpa, spellings)
@@ -771,7 +794,7 @@ const AddDescendantModal = ({
       makeMeaningArrays(),
       descendantWordType,
       note,
-      displayedIpa,
+      pronunciationOverride ? pronunciationOverride : displayedIpa,
       adjWordFormInputs,
       nounFormsToSave,
       numFormsToSave,
@@ -800,6 +823,7 @@ const AddDescendantModal = ({
       tagInputs,
       variants,
       selectedTerms,
+      isCalque
     );
 
     if (!data.success) {
@@ -812,13 +836,15 @@ const AddDescendantModal = ({
           wordId,
           descendantType,
           selectedMotherLanguageWord,
-          null,
-          null,
-          null,
+          firstElement,
+          secondElement,
+          thirdElement,
           null,
           etymNote,
+          isCalque
         );
 
+     
         if (data.success) {
           showToast("Changes saved ✅");
           if (onSuccess) onSuccess(); // trigger parent's refresh
@@ -938,23 +964,21 @@ const AddDescendantModal = ({
 
   useEffect(() => {
     if (tagGroups) {
-      
-    
-    tagGroups.forEach((group, index) => {
-      const alreadyInitialized = initializedGroups.includes(group.name);
-      const hasStoredValue = !!group.category_type;
+      tagGroups.forEach((group, index) => {
+        const alreadyInitialized = initializedGroups.includes(group.name);
+        const hasStoredValue = !!group.category_type;
 
-      if (!hasStoredValue && !alreadyInitialized && group.tags.length > 0) {
-        const defaultTag = group.tags[0];
+        if (!hasStoredValue && !alreadyInitialized && group.tags.length > 0) {
+          const defaultTag = group.tags[0];
 
-        handleTagSelect(defaultTag, group, setTagGroups);
-        handleTagInput(group.name, index, defaultTag);
+          handleTagSelect(defaultTag, group, setTagGroups);
+          handleTagInput(group.name, index, defaultTag);
 
-        // Prevent re-initializing on future re-renders
-        setInitializedGroups((prev) => [...prev, group.name]);
-      }
-    });
-  }
+          // Prevent re-initializing on future re-renders
+          setInitializedGroups((prev) => [...prev, group.name]);
+        }
+      });
+    }
   }, [tagGroups]);
 
   const handleVariants = (vars) => {
@@ -966,6 +990,10 @@ const AddDescendantModal = ({
   }
 
   const handleDescendantLanguage = (lang) => {
+    if (lang === "none") {
+      //random daughter selector chose no descendant
+      setNoDaughterChosen(true);
+    }
     setDescendantLanguage(lang);
     setLanguageSelected(true);
   };
@@ -982,6 +1010,66 @@ const AddDescendantModal = ({
       return word[0].word;
     } else {
       return;
+    }
+  }
+
+  function randomlyChooseDaughterLanguage() {
+    //remove any daughter languages that already have a descendant of this word
+    setRandomLanguageChosen(true);
+    const alreadyChosenDaughterLanguages = [];
+    wordDescendants.forEach((daughter) => {
+      alreadyChosenDaughterLanguages.push(daughter.language_name);
+    });
+
+    const availableDaughterLanguages = [];
+    daughterLanguages.forEach((daughter) => {
+      if (!alreadyChosenDaughterLanguages.includes(daughter.language_name)) {
+        availableDaughterLanguages.push(daughter);
+      }
+    });
+
+    //allow the possibility for no descendant to be chosen. However, if the language is a proto-language, then a descendant must exist for the sake of reconstructability
+    if (
+      ((isProto && alreadyChosenDaughterLanguages.length > 0) || !isProto) &&
+      Math.floor(Math.random() * 3) !== 1
+    ) {
+      //change so more existant descendants increases chances of none
+      availableDaughterLanguages.push("none");
+    }
+
+    const chosen = Math.floor(
+      Math.random() * availableDaughterLanguages.length,
+    );
+    handleDescendantLanguage(availableDaughterLanguages[chosen]);
+  }
+
+  const handleFirstElement = (word) => {
+    setFirstElement(word.word_id);
+    setFirstElementIPA(word.ipa);
+    buildWord(word, 1);
+  };
+
+  const handleSecondElement = (word) => {
+    setSecondElement(word.word_id);
+    setSecondElementIPA(word.ipa);
+    buildWord(word, 2);
+  };
+
+  const handleThirdElement = (word) => {
+    setThirdElement(word.word_id);
+    setThirdElementIPA(word.ipa);
+    buildWord(word, 3);
+  };
+
+  function handleCalque() {
+    if (isCalque) {
+      setIsCalque(false);
+      setEtymNote("");
+    } else {
+      setIsCalque(true);
+      setEtymNote(
+        translate(`Calque of ${name} <i>${word.word}</i> "${formatMeaning(word)}"`),
+      );
     }
   }
 
@@ -1042,17 +1130,52 @@ const AddDescendantModal = ({
           </div>
 
           {!descendantLanguage && (
-            <div className="thin-white-border">
-              <LanguageSelector
-                id={languageId}
-                onLanguageSelect={handleDescendantLanguage}
-                descendantLanguage={setDescendantLanguage}
-                loanOrInherit={descendantType}
-              />
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <div className="thin-white-border">
+                <LanguageSelector
+                  id={languageId}
+                  onLanguageSelect={handleDescendantLanguage}
+                  descendantLanguage={setDescendantLanguage}
+                  loanOrInherit={descendantType}
+                />
+              </div>
+
+              <button
+                onClick={randomlyChooseDaughterLanguage}
+                style={{
+                  width: "200px",
+                  marginLeft: "10px",
+                  marginTop: "10px",
+                  borderRadius: "10px",
+                }}
+              >
+                {translate("Let Fate choose the daughter Language")}
+              </button>
             </div>
           )}
 
-          {descendantLanguage && (
+          {noDaughterChosen && (
+            <div>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <h4 className="ogma">
+                  {translate(
+                    "Ogma has chosen. This word shall have no descendants",
+                  )}
+                </h4>
+
+                <button
+                  className="btn-close btn-close-white small-x-button"
+                  aria-label="Close"
+                  onClick={removeDescendantLanguage}
+                ></button>
+                <span>{translate("try again")}</span>
+              </div>
+
+              <img src={Ogma} style={{ width: "300px", marginLeft: "200px" }} />
+            </div>
+          )}
+
+          {!noDaughterChosen && descendantLanguage && (
             <div style={{ display: "flex", flexDirection: "row" }}>
               <span>
                 <span style={{ fontWeight: "600" }}>
@@ -1065,11 +1188,58 @@ const AddDescendantModal = ({
                 aria-label="Close"
                 onClick={removeDescendantLanguage}
               ></button>
+              {randomLanguageChosen && (
+                <span className="ogma">
+                  {translate("Ogma's own divine choice!")}
+                </span>
+              )}
             </div>
           )}
 
-          {languageSelected && (
+          {!noDaughterChosen && languageSelected && (
             <>
+              <div className="thin-white-border">
+                <input
+                  type="checkbox"
+                  id="calque"
+                  onChange={handleCalque}
+                  checked={isCalque}
+                />
+                <label for="calque">{translate("This word is a calque")}</label>
+              </div>
+
+              {isCalque && (
+                <>
+                  <span style={{ marginRight: "5px", fontWeight: "600" }}>
+                    {translate("Select First Element")}
+                  </span>
+                  <WordSelector
+                    id={descendantLanguage.language_id}
+                    onWordSelect={handleFirstElement}
+                    motherLanguageName={descendantLanguage.language_name}
+                    motherLanguageId={descendantLanguage.language_id}
+                  />
+                  <span style={{ marginRight: "5px", fontWeight: "600" }}>
+                    {translate("Select Second Element")}
+                  </span>
+                  <WordSelector
+                    id={descendantLanguage.language_id}
+                    onWordSelect={handleSecondElement}
+                    motherLanguageName={descendantLanguage.language_name}
+                    motherLanguageId={descendantLanguage.language_id}
+                  />
+                  <span style={{ marginRight: "5px", fontWeight: "600" }}>
+                    {translate("Select Third Element")}
+                  </span>
+                  <WordSelector
+                    id={descendantLanguage.language_id}
+                    onWordSelect={handleThirdElement}
+                    motherLanguageName={descendantLanguage.language_name}
+                    motherLanguageId={descendantLanguage.language_id}
+                  />
+                </>
+              )}
+
               <div className="thin-white-border">
                 <h4>{translate("Word Type")}</h4>
                 <select value={descendantWordType} onChange={handleWordType}>
@@ -1675,40 +1845,42 @@ const AddDescendantModal = ({
               <div className="thin-white-border">
                 <h4>{translate("Tags")}</h4>
                 <div style={{ display: "flex", flexDirection: "column" }}>
-                  {tagGroups.map((group, index) => {
-                    const selectedValue = group.category_type || group.tags[0];
+                  {tagGroups &&
+                    tagGroups.map((group, index) => {
+                      const selectedValue =
+                        group.category_type || group.tags[0];
 
-                    return (
-                      <div
-                        key={index}
-                        style={{ display: "flex", flexDirection: "row" }}
-                      >
-                        <span style={{ marginRight: "10px" }}>
-                          {group.name}:
-                        </span>
-                        <select
-                          value={selectedValue}
-                          onChange={(e) => {
-                            const selectedIndex = e.target.selectedIndex;
-                            const selectedTag = group.tags[selectedIndex];
-
-                            handleTagSelect(
-                              e.target.value,
-                              group,
-                              setTagGroups,
-                            );
-                            handleTagInput(group.name, index, selectedTag);
-                          }}
+                      return (
+                        <div
+                          key={index}
+                          style={{ display: "flex", flexDirection: "row" }}
                         >
-                          {group.tags.map((tag, tagIndex) => (
-                            <option key={tagIndex} value={tag}>
-                              {tag}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    );
-                  })}
+                          <span style={{ marginRight: "10px" }}>
+                            {group.name}:
+                          </span>
+                          <select
+                            value={selectedValue}
+                            onChange={(e) => {
+                              const selectedIndex = e.target.selectedIndex;
+                              const selectedTag = group.tags[selectedIndex];
+
+                              handleTagSelect(
+                                e.target.value,
+                                group,
+                                setTagGroups,
+                              );
+                              handleTagInput(group.name, index, selectedTag);
+                            }}
+                          >
+                            {group.tags.map((tag, tagIndex) => (
+                              <option key={tagIndex} value={tag}>
+                                {tag}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
 
@@ -2056,11 +2228,9 @@ const AddDescendantModal = ({
                             ))
                           : "";
 
-                        
                         return wordForm.type === "adjective" ? (
                           <div key={index}>
                             <>
-                            
                               <input
                                 key={index}
                                 style={{ marginBottom: "10px", width: "300px" }}
@@ -2709,7 +2879,7 @@ const AddDescendantModal = ({
               <div className="thin-white-border">
                 <Collapsible title={translate("Etymology Note")}>
                   <MyEditor
-                    value={note || ""}
+                    value={etymNote || ""}
                     onChange={(content) => setEtymNote(content)}
                   />
                 </Collapsible>

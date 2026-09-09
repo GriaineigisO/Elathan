@@ -1,6 +1,53 @@
 
 const semanticDrifts = [
   {
+"noun_meaning": "pasture",
+ "shifted_meanings": [ {
+        "noun_meaning": "diet"
+      },
+      {
+        "noun_meaning": "opportunity"
+      },
+      {
+        "noun_meaning": "cafeteria"
+      },
+      {
+        "noun_meaning": "provision"
+      },
+      {
+        "noun_meaning": "fodder"
+      },
+      {
+        "noun_meaning": "cattle feed"
+      },
+      {
+        "noun_meaning": "food"
+      },
+      {
+        "noun_meaning": "sustenance"
+      },
+      {
+        "noun_meaning": "nourishment"
+      },
+      {
+        "noun_meaning": "subsistence"
+      },
+      {
+        "noun_meaning": "nutriment"
+      },
+      {
+        "noun_meaning": "aliment"
+      },
+      {
+        "noun_meaning": "hospitality"
+      },
+      {
+        "noun_meaning": "shelter"
+      }
+
+    ]
+  },
+  {
     "noun_meaning": "withe",
     "shifted_meanings": [
       {
