@@ -27,6 +27,7 @@ const EditEtymologyModal = ({
   const [loanerLanguage, setLoanerLanguage] = useState();
   const [loanWord, setLoanWord] = useState();
   const [showLoanWordWarning, setShowLoanWordWarning] = useState(false);
+  const [isCalque, setIsCalque] = useState(false);
 
   useEffect(() => {
     if (etymology) {
@@ -114,8 +115,7 @@ if (etymology) {
 
     try {
 
-      console.log(selectedMotherLanguageWord)
-      const data = await window.electron.editEtymology(etymology.etymology_id, etymology.etymology_type, word.word_id, selectedMotherLanguageWord, firstElementId, secondElementId, thirdElementId, loanWord ? loanWord.word_id : null, note);
+      const data = await window.electron.editEtymology(etymology.etymology_id, etymology.etymology_type, word.word_id, selectedMotherLanguageWord, firstElementId, secondElementId, thirdElementId, loanWord ? loanWord.word_id : null, note, isCalque);
 
       if (data.success) {
         showToast("Changes saved ✅");

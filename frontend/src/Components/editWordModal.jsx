@@ -6,14 +6,22 @@ import { useTranslate } from "../Functions/TranslateUI";
 import { deleteWord, editWord, getWord } from "../services/languageService.js";
 import { IPAkeyboard } from "./IPAkeyboard.jsx";
 import { Keyboard } from "./keyboard.jsx";
+import formatMeaning from "../Functions/formatMeaning.jsx";
 
-
-const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spelling }) => {
+const EditWordModal = ({
+  show,
+  setShow,
+  wordData,
+  onSuccess,
+  convertIPA,
+  spelling,
+}) => {
   const { translate } = useTranslate();
   const [showWordWarning, setShowWordWarning] = useState(false);
   const [word, setWord] = useState();
   const [shownParts, setShownParts] = useState({});
   const [meaningStrings, setMeaningStrings] = useState({});
+  const [excludedNearSynonyms, setExcludedNearSynonyms] = useState([]);
   const [overrideWord, setOverrideWord] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("none");
@@ -124,6 +132,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
     const defaultShownParts = {};
     const defaultMeaningStrings = {};
 
+    setExcludedNearSynonyms(JSON.parse(wordData.excluded_near_synonyms));
+
     if (wordData.noun_meaning?.length > 0) {
       defaultShownParts["noun"] = true;
       defaultMeaningStrings["noun"] = wordData.noun_meaning.join(", ");
@@ -191,7 +201,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
   ]);
 
   const getWrd = async () => {
-    const data = await window.electron.getWord(wordData.word_id)
+    const data = await window.electron.getWord(wordData.word_id);
     setWord(data.word);
     setPronunciation(data.ipa);
     setWordType(data.word_type);
@@ -201,17 +211,11 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
 
     data.thesaurus && setSelectedTerms(data.thesaurus);
 
-    if (
-      data.word_type === "enclitic" ||
-      data.word_type === "proclitic"
-    ) {
+    if (data.word_type === "enclitic" || data.word_type === "proclitic") {
       setPartsOfSpeech((prev) => [...prev, { id: "clitic", label: "Clitic" }]);
     }
 
-    if (
-      data.word_type === "prefix" ||
-      data.word_type === "suffix"
-    ) {
+    if (data.word_type === "prefix" || data.word_type === "suffix") {
       setPartsOfSpeech((prev) => [...prev, { id: "affix", label: "Affix" }]);
     }
 
@@ -281,8 +285,6 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
         ? prev
         : (wordData.noun_word_categories ?? []),
     );
-
-
 
     setNumWordCategories((prev) =>
       Array.isArray(prev) && prev.length > 0
@@ -474,8 +476,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
   };
 
   const getWrdForms = async () => {
-
-    const data = await window.electron.getWordForms(languageId)
+    const data = await window.electron.getWordForms(languageId);
     const unique = data.filter(
       (item, index, self) =>
         index ===
@@ -499,8 +500,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
   }, []);
 
   const fetchTags = async () => {
-   
-    const data = await window.electron.getTags(languageId)
+    const data = await window.electron.getTags(languageId);
     setTagGroups(data[0].tags);
   };
 
@@ -539,46 +539,45 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
       return;
     }
 
-    
     const data = await window.electron.editWord(
-          wordData.word_id,
-          wordData.language_id,
-          word,
-          makeMeaningArrays(),
-          wordType,
-          pronunciation,
-          note,
-          adjWordForms,
-          nounWordForms,
-          numWordForms,
-          verbWordForms,
-          advWordForms,
-          adpWordForms,
-          partWordForms,
-          conjWordForms,
-          interjWordForms,
-          affixWordForms,
-          cliticWordForms,
-          pronWordForms,
+      wordData.word_id,
+      wordData.language_id,
+      word,
+      makeMeaningArrays(),
+      wordType,
+      pronunciation,
+      note,
+      adjWordForms,
+      nounWordForms,
+      numWordForms,
+      verbWordForms,
+      advWordForms,
+      adpWordForms,
+      partWordForms,
+      conjWordForms,
+      interjWordForms,
+      affixWordForms,
+      cliticWordForms,
+      pronWordForms,
 
-          adjWordCategories,
-          nounWordCategories,
-          numWordCategories,
-          verbWordCategories,
-          advWordCategories,
-          adpWordCategories,
-          partWordCategories,
-          conjWordCategories,
-          interjWordCategories,
-          affixWordCategories,
-          cliticWordCategories,
-          pronWordCategories,
+      adjWordCategories,
+      nounWordCategories,
+      numWordCategories,
+      verbWordCategories,
+      advWordCategories,
+      adpWordCategories,
+      partWordCategories,
+      conjWordCategories,
+      interjWordCategories,
+      affixWordCategories,
+      cliticWordCategories,
+      pronWordCategories,
 
-          tagInputs,
-          variants,
-          selectedTerms)
-
-
+      tagInputs,
+      variants,
+      selectedTerms,
+      excludedNearSynonyms,
+    );
 
     if (!data.success) {
       console.error(`Error editing word`);
@@ -703,7 +702,7 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
       console.error(`Error deleting word`);
     } else {
       if (onSuccess)
-       window.location.href = `/dictionary/${wordData.language_id}`
+        window.location.href = `/dictionary/${wordData.language_id}`;
       showToast("Word deleted ✅");
     }
   };
@@ -800,6 +799,13 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
     setVariants(vars);
   };
 
+  function removeExcludedNearSynonym(excluded) {
+    const filtered = excludedNearSynonyms.filter(
+      (obj) => obj.word_id !== excluded.word_id,
+    );
+    setExcludedNearSynonyms(filtered);
+  }
+
   return (
     <Modal
       show={show}
@@ -824,12 +830,11 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
             <option value="enclitic">enclitic</option>
             <option value="place_name">{translate("place name")}</option>
             <option value="personal_name">{translate("personal name")}</option>
-             <option value="phrase">{translate("phrase")}</option>
+            <option value="phrase">{translate("phrase")}</option>
           </select>
         </div>
 
         <div className="thin-white-border">
-       
           {/* <input
             type="text"
             className="modal-input"
@@ -844,19 +849,18 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
             }}
           /> */}
 
-
           <div className="keyboard">
-                      <Keyboard
-                        inputVal={
-                          convertIPA && !overrideWord
-                            ? spell(pronunciation, spelling)
-                            : word
-                        }
-                        setInputVal={setWord}
-                        setOverrideWord={setOverrideWord}
-                        setWord={setWord}
-                      />
-                    </div>
+            <Keyboard
+              inputVal={
+                convertIPA && !overrideWord
+                  ? spell(pronunciation, spelling)
+                  : word
+              }
+              setInputVal={setWord}
+              setOverrideWord={setOverrideWord}
+              setWord={setWord}
+            />
+          </div>
         </div>
 
         {showWordWarning && !word && (
@@ -864,15 +868,17 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
         )}
 
         <div className="thin-white-border">
-
-
-           <IPAkeyboard inputVal={pronunciation} setInputVal={setPronunciation} />
+          <IPAkeyboard
+            inputVal={pronunciation}
+            setInputVal={setPronunciation}
+          />
         </div>
 
         <div className="thin-white-border">
           <h4>Word Categories</h4>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            {shownParts["noun"] && wordCategories &&
+            {shownParts["noun"] &&
+              wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "noun" ? (
@@ -923,7 +929,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                 ),
               )}
 
-            {shownParts["verb"] && wordCategories &&
+            {shownParts["verb"] &&
+              wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "verb" ? (
@@ -971,7 +978,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                 ),
               )}
 
-            {shownParts["adj"]  && wordCategories&&
+            {shownParts["adj"] &&
+              wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "adj" ? (
@@ -1018,7 +1026,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                 ),
               )}
 
-            {shownParts["num"]  && wordCategories&&
+            {shownParts["num"] &&
+              wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "num" ? (
@@ -1069,7 +1078,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                 ),
               )}
 
-            {shownParts["adv"]  && wordCategories&&
+            {shownParts["adv"] &&
+              wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "adv" ? (
@@ -1116,7 +1126,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                 ),
               )}
 
-            {shownParts["adp"]  && wordCategories&&
+            {shownParts["adp"] &&
+              wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "adp" ? (
@@ -1163,7 +1174,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                 ),
               )}
 
-            {shownParts["part"]  && wordCategories&&
+            {shownParts["part"] &&
+              wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "part" ? (
@@ -1210,7 +1222,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                 ),
               )}
 
-            {shownParts["interj"]  && wordCategories&&
+            {shownParts["interj"] &&
+              wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "interj" ? (
@@ -1257,7 +1270,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                 ),
               )}
 
-            {shownParts["conj"]  && wordCategories&&
+            {shownParts["conj"] &&
+              wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "conj" ? (
@@ -1304,7 +1318,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                 ),
               )}
 
-            {shownParts["affix"]  && wordCategories&&
+            {shownParts["affix"] &&
+              wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "affix" ? (
@@ -1351,7 +1366,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                 ),
               )}
 
-            {shownParts["clitic"]  && wordCategories&&
+            {shownParts["clitic"] &&
+              wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "clitic" ? (
@@ -1398,7 +1414,8 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                 ),
               )}
 
-            {shownParts["pron"] && wordCategories &&
+            {shownParts["pron"] &&
+              wordCategories &&
               wordCategories.map((wordCategory, index) =>
                 wordCategory.word_categories.map((cat) =>
                   cat.type === "pron" ? (
@@ -1450,34 +1467,35 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
         <div className="thin-white-border">
           <h4>Tags</h4>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            {tagGroups && tagGroups.map((group, index) => {
-              const selectedValue = group.category_type || group.tags[0];
+            {tagGroups &&
+              tagGroups.map((group, index) => {
+                const selectedValue = group.category_type || group.tags[0];
 
-              return (
-                <div
-                  key={index}
-                  style={{ display: "flex", flexDirection: "row" }}
-                >
-                  <span style={{ marginRight: "10px" }}>{group.name}:</span>
-                  <select
-                    value={selectedValue}
-                    onChange={(e) => {
-                      const selectedIndex = e.target.selectedIndex;
-                      const selectedTag = group.tags[selectedIndex];
-
-                      handleTagSelect(e.target.value, group, setTagGroups);
-                      handleTagInput(group.name, index, selectedTag);
-                    }}
+                return (
+                  <div
+                    key={index}
+                    style={{ display: "flex", flexDirection: "row" }}
                   >
-                    {group.tags.map((tag, tagIndex) => (
-                      <option key={tagIndex} value={tag}>
-                        {tag}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              );
-            })}
+                    <span style={{ marginRight: "10px" }}>{group.name}:</span>
+                    <select
+                      value={selectedValue}
+                      onChange={(e) => {
+                        const selectedIndex = e.target.selectedIndex;
+                        const selectedTag = group.tags[selectedIndex];
+
+                        handleTagSelect(e.target.value, group, setTagGroups);
+                        handleTagInput(group.name, index, selectedTag);
+                      }}
+                    >
+                      {group.tags.map((tag, tagIndex) => (
+                        <option key={tagIndex} value={tag}>
+                          {tag}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                );
+              })}
           </div>
         </div>
 
@@ -1649,8 +1667,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={wordForm.name}
                         value={
-                          nounWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.word ?? ""
+                          nounWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.word ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "noun")
@@ -1660,8 +1679,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          nounWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.ipa ?? ""
+                          nounWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.ipa ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "noun", "ipa")
@@ -1680,8 +1700,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={wordForm.name}
                         value={
-                          verbWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.word ?? ""
+                          verbWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.word ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "verb")
@@ -1691,8 +1712,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          verbWordForms.find((f) =>  f && f.name === wordForm.name)
-                            ?.ipa ?? ""
+                          verbWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.ipa ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "verb", "ipa")
@@ -1703,8 +1725,6 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                 ) : null,
               )}
 
-
-
             {shownParts["adj"] &&
               wordForms.map((wordForm, index) =>
                 wordForm.type === "adj" ? (
@@ -1713,8 +1733,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={wordForm.name}
                         value={
-                          adjWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.word ?? ""
+                          adjWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.word ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "adj")
@@ -1724,16 +1745,12 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          adjWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.ipa ?? ""
+                          adjWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.ipa ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(
-                            e,
-                            wordForm.name,
-                            "adj",
-                            "ipa",
-                          )
+                          handleWordFormInput(e, wordForm.name, "adj", "ipa")
                         }
                       />
                     </>
@@ -1749,8 +1766,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={wordForm.name}
                         value={
-                          numWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.word ?? ""
+                          numWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.word ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "num")
@@ -1760,8 +1778,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          numWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.ipa ?? ""
+                          numWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.ipa ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "num", "ipa")
@@ -1780,8 +1799,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={wordForm.name}
                         value={
-                          advWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.word ?? ""
+                          advWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.word ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "adv")
@@ -1791,8 +1811,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          advWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.ipa ?? ""
+                          advWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.ipa ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "adv", "ipa")
@@ -1811,8 +1832,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={wordForm.name}
                         value={
-                          adpWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.word ?? ""
+                          adpWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.word ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "adp")
@@ -1822,16 +1844,12 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          adpWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.ipa ?? ""
+                          adpWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.ipa ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(
-                            e,
-                            wordForm.name,
-                            "adp",
-                            "ipa",
-                          )
+                          handleWordFormInput(e, wordForm.name, "adp", "ipa")
                         }
                       />
                     </>
@@ -1847,8 +1865,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={wordForm.name}
                         value={
-                          partWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.word ?? ""
+                          partWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.word ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "part")
@@ -1858,16 +1877,12 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          partWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.ipa ?? ""
+                          partWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.ipa ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(
-                            e,
-                            wordForm.name,
-                            "part",
-                            "ipa",
-                          )
+                          handleWordFormInput(e, wordForm.name, "part", "ipa")
                         }
                       />
                     </>
@@ -1883,8 +1898,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={wordForm.name}
                         value={
-                          interjWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.word ?? ""
+                          interjWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.word ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "interj")
@@ -1894,16 +1910,12 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          interjWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.ipa ?? ""
+                          interjWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.ipa ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(
-                            e,
-                            wordForm.name,
-                            "interj",
-                            "ipa",
-                          )
+                          handleWordFormInput(e, wordForm.name, "interj", "ipa")
                         }
                       />
                     </>
@@ -1919,8 +1931,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={wordForm.name}
                         value={
-                          conjWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.word ?? ""
+                          conjWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.word ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "conj")
@@ -1930,16 +1943,12 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          conjWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.ipa ?? ""
+                          conjWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.ipa ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(
-                            e,
-                            wordForm.name,
-                            "conj",
-                            "ipa",
-                          )
+                          handleWordFormInput(e, wordForm.name, "conj", "ipa")
                         }
                       />
                     </>
@@ -1955,8 +1964,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={wordForm.name}
                         value={
-                          affixWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.word ?? ""
+                          affixWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.word ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "affix")
@@ -1966,8 +1976,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          affixWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.ipa ?? ""
+                          affixWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.ipa ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "affix", "ipa")
@@ -1986,8 +1997,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={wordForm.name}
                         value={
-                          cliticWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.word ?? ""
+                          cliticWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.word ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "clitic")
@@ -1997,8 +2009,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          cliticWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.ipa ?? ""
+                          cliticWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.ipa ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "clitic", "ipa")
@@ -2017,8 +2030,9 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={wordForm.name}
                         value={
-                          pronWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.word ?? ""
+                          pronWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.word ?? ""
                         }
                         onChange={(e) =>
                           handleWordFormInput(e, wordForm.name, "pron")
@@ -2028,16 +2042,12 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
                       <input
                         placeholder={`${wordForm.name} IPA`}
                         value={
-                          pronWordForms.find((f) => f && f.name === wordForm.name)
-                            ?.ipa ?? ""
+                          pronWordForms.find(
+                            (f) => f && f.name === wordForm.name,
+                          )?.ipa ?? ""
                         }
                         onChange={(e) =>
-                          handleWordFormInput(
-                            e,
-                            wordForm.name,
-                            "pron",
-                            "ipa",
-                          )
+                          handleWordFormInput(e, wordForm.name, "pron", "ipa")
                         }
                       />
                     </>
@@ -2083,529 +2093,20 @@ const EditWordModal = ({ show, setShow, wordData, onSuccess, convertIPA, spellin
         </div>
 
         <div className="thin-white-border">
-          <h4>Example Sentences</h4>
+          <h4>{translate("Excluded Near Synonyms")}</h4>
 
-          {shownParts["noun"] && (
-            <div>
-              {nounSentenceExampleInputs.map((example) => (
-                <div className="example-and-x-button" key={example.id}>
-                  <div className="sentence-example-input thin-white-border">
-                    <input
-                      placeholder="enter example sentence"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "sentence",
-                          e.target.value,
-                          nounSentenceExamples,
-                          setNounSentenceExamples,
-                        )
-                      }
-                    />
-                    <input
-                      placeholder="enter translation"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "translation",
-                          e.target.value,
-                          nounSentenceExamples,
-                          setNounSentenceExamples,
-                        )
-                      }
-                    />
-                  </div>
-                  <button
-                    className="btn-close btn-close-white small-x-button"
-                    aria-label="Close"
-                    onClick={() =>
-                      removeExample(
-                        example.id,
-                        nounSentenceExampleInputs,
-                        setNounSentenceExampleInputs,
-                      )
-                    }
-                  ></button>
-                </div>
-              ))}
-              <button
-                style={{ marginBottom: "10px" }}
-                onClick={() => addSentenceExample(setNounSentenceExampleInputs)}
-              >
-                Add Example Sentence (Noun)
-              </button>
-            </div>
-          )}
-
-          {shownParts["verb"] && (
-            <div>
-              {verbSentenceExampleInputs.map((example) => (
-                <div className="example-and-x-button" key={example.id}>
-                  <div className="sentence-example-input thin-white-border">
-                    <input
-                      placeholder="enter example sentence"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "sentence",
-                          e.target.value,
-                          verbSentenceExamples,
-                          setVerbSentenceExamples,
-                        )
-                      }
-                    />
-                    <input
-                      placeholder="enter translation"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "translation",
-                          e.target.value,
-                          verbSentenceExamples,
-                          setVerbSentenceExamples,
-                        )
-                      }
-                    />
-                  </div>
-                  <button
-                    className="btn-close btn-close-white small-x-button"
-                    aria-label="Close"
-                    onClick={() =>
-                      removeExample(
-                        example.id,
-                        verbSentenceExampleInputs,
-                        setVerbSentenceExampleInputs,
-                      )
-                    }
-                  ></button>
-                </div>
-              ))}
-              <button
-                style={{ marginBottom: "10px" }}
-                onClick={() => addSentenceExample(setVerbSentenceExampleInputs)}
-              >
-                Add Example Sentence (Verb)
-              </button>
-            </div>
-          )}
-
-          {shownParts["adj"] && (
-            <div>
-              {adjSentenceExampleInputs.map((example) => (
-                <div className="example-and-x-button" key={example.id}>
-                  <div className="sentence-example-input thin-white-border">
-                    <input
-                      placeholder="enter example sentence"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "sentence",
-                          e.target.value,
-                          adjSentenceExamples,
-                          setAdjSentenceExamples,
-                        )
-                      }
-                    />
-                    <input
-                      placeholder="enter translation"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "translation",
-                          e.target.value,
-                          adjSentenceExamples,
-                          setAdjSentenceExamples,
-                        )
-                      }
-                    />
-                  </div>
-                  <button
-                    className="btn-close btn-close-white small-x-button"
-                    aria-label="Close"
-                    onClick={() =>
-                      removeExample(
-                        example.id,
-                        adjSentenceExampleInputs,
-                        setAdjSentenceExampleInputs,
-                      )
-                    }
-                  ></button>
-                </div>
-              ))}
-              <button
-                style={{ marginBottom: "10px" }}
-                onClick={() => addSentenceExample(setAdjSentenceExampleInputs)}
-              >
-                Add Example Sentence (Adjective)
-              </button>
-            </div>
-          )}
-
-          {shownParts["num"] && (
-            <div>
-              {numSentenceExampleInputs.map((example) => (
-                <div className="example-and-x-button" key={example.id}>
-                  <div className="sentence-example-input thin-white-border">
-                    <input
-                      placeholder="enter example sentence"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "sentence",
-                          e.target.value,
-                          numSentenceExamples,
-                          setNumSentenceExamples,
-                        )
-                      }
-                    />
-                    <input
-                      placeholder="enter translation"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "translation",
-                          e.target.value,
-                          numSentenceExamples,
-                          setNumSentenceExamples,
-                        )
-                      }
-                    />
-                  </div>
-                  <button
-                    className="btn-close btn-close-white small-x-button"
-                    aria-label="Close"
-                    onClick={() =>
-                      removeExample(
-                        example.id,
-                        numSentenceExampleInputs,
-                        setNumSentenceExampleInputs,
-                      )
-                    }
-                  ></button>
-                </div>
-              ))}
-              <button
-                style={{ marginBottom: "10px" }}
-                onClick={() => addSentenceExample(setNumSentenceExampleInputs)}
-              >
-                Add Example Sentence (Num)
-              </button>
-            </div>
-          )}
-
-          {shownParts["adv"] && (
-            <div>
-              {advSentenceExampleInputs.map((example) => (
-                <div className="example-and-x-button" key={example.id}>
-                  <div className="sentence-example-input thin-white-border">
-                    <input
-                      placeholder="enter example sentence"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "sentence",
-                          e.target.value,
-                          advSentenceExamples,
-                          setAdvSentenceExamples,
-                        )
-                      }
-                    />
-                    <input
-                      placeholder="enter translation"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "translation",
-                          e.target.value,
-                          advSentenceExamples,
-                          setAdvSentenceExamples,
-                        )
-                      }
-                    />
-                  </div>
-                  <button
-                    className="btn-close btn-close-white small-x-button"
-                    aria-label="Close"
-                    onClick={() =>
-                      removeExample(
-                        example.id,
-                        advSentenceExampleInputs,
-                        setAdvSentenceExampleInputs,
-                      )
-                    }
-                  ></button>
-                </div>
-              ))}
-              <button
-                style={{ marginBottom: "10px" }}
-                onClick={() => addSentenceExample(setAdvSentenceExampleInputs)}
-              >
-                Add Example Sentence (Adverb)
-              </button>
-            </div>
-          )}
-
-          {shownParts["adp"] && (
-            <div>
-              {adpSentenceExampleInputs.map((example) => (
-                <div className="example-and-x-button" key={example.id}>
-                  <div className="sentence-example-input thin-white-border">
-                    <input
-                      placeholder="enter example sentence"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "sentence",
-                          e.target.value,
-                          adpSentenceExamples,
-                          setAdpSentenceExamples,
-                        )
-                      }
-                    />
-                    <input
-                      placeholder="enter translation"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "translation",
-                          e.target.value,
-                          adpSentenceExamples,
-                          setAdpSentenceExamples,
-                        )
-                      }
-                    />
-                  </div>
-                  <button
-                    className="btn-close btn-close-white small-x-button"
-                    aria-label="Close"
-                    onClick={() =>
-                      removeExample(
-                        example.id,
-                        adpSentenceExampleInputs,
-                        setAdpSentenceExampleInputs,
-                      )
-                    }
-                  ></button>
-                </div>
-              ))}
-              <button
-                style={{ marginBottom: "10px" }}
-                onClick={() => addSentenceExample(setAdpSentenceExampleInputs)}
-              >
-                Add Example Sentence (Adposition)
-              </button>
-            </div>
-          )}
-
-          {shownParts["part"] && (
-            <div>
-              {partSentenceExampleInputs.map((example) => (
-                <div className="example-and-x-button" key={example.id}>
-                  <div className="sentence-example-input thin-white-border">
-                    <input
-                      placeholder="enter example sentence"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "sentence",
-                          e.target.value,
-                          partSentenceExamples,
-                          setPartSentenceExamples,
-                        )
-                      }
-                    />
-                    <input
-                      placeholder="enter translation"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "translation",
-                          e.target.value,
-                          partSentenceExamples,
-                          setPartSentenceExamples,
-                        )
-                      }
-                    />
-                  </div>
-                  <button
-                    className="btn-close btn-close-white small-x-button"
-                    aria-label="Close"
-                    onClick={() =>
-                      removeExample(
-                        example.id,
-                        partSentenceExampleInputs,
-                        setPartSentenceExampleInputs,
-                      )
-                    }
-                  ></button>
-                </div>
-              ))}
-              <button
-                style={{ marginBottom: "10px" }}
-                onClick={() => addSentenceExample(setPartSentenceExampleInputs)}
-              >
-                Add Example Sentence (Particle)
-              </button>
-            </div>
-          )}
-
-          {shownParts["interj"] && (
-            <div>
-              {interjSentenceExampleInputs.map((example) => (
-                <div className="example-and-x-button" key={example.id}>
-                  <div className="sentence-example-input thin-white-border">
-                    <input
-                      placeholder="enter example sentence"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "sentence",
-                          e.target.value,
-                          interjSentenceExamples,
-                          setInterjSentenceExamples,
-                        )
-                      }
-                    />
-                    <input
-                      placeholder="enter translation"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "translation",
-                          e.target.value,
-                          interjSentenceExamples,
-                          setInterjSentenceExamples,
-                        )
-                      }
-                    />
-                  </div>
-                  <button
-                    className="btn-close btn-close-white small-x-button"
-                    aria-label="Close"
-                    onClick={() =>
-                      removeExample(
-                        example.id,
-                        interjSentenceExampleInputs,
-                        setInterjSentenceExampleInputs,
-                      )
-                    }
-                  ></button>
-                </div>
-              ))}
-              <button
-                style={{ marginBottom: "10px" }}
-                onClick={() =>
-                  addSentenceExample(setInterjSentenceExampleInputs)
-                }
-              >
-                Add Example Sentence (Interjection)
-              </button>
-            </div>
-          )}
-
-          {shownParts["conj"] && (
-            <div>
-              {conjSentenceExampleInputs.map((example) => (
-                <div className="example-and-x-button" key={example.id}>
-                  <div className="sentence-example-input thin-white-border">
-                    <input
-                      placeholder="enter example sentence"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "sentence",
-                          e.target.value,
-                          conjSentenceExamples,
-                          setConjSentenceExamples,
-                        )
-                      }
-                    />
-                    <input
-                      placeholder="enter translation"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "translation",
-                          e.target.value,
-                          conjSentenceExamples,
-                          setConjSentenceExamples,
-                        )
-                      }
-                    />
-                  </div>
-                  <button
-                    className="btn-close btn-close-white small-x-button"
-                    aria-label="Close"
-                    onClick={() =>
-                      removeExample(
-                        example.id,
-                        conjSentenceExampleInputs,
-                        setConjSentenceExampleInputs,
-                      )
-                    }
-                  ></button>
-                </div>
-              ))}
-              <button
-                style={{ marginBottom: "10px" }}
-                onClick={() => addSentenceExample(setConjSentenceExampleInputs)}
-              >
-                Add Example Sentence (Conjunction)
-              </button>
-            </div>
-          )}
-
-          {shownParts["pron"] && (
-            <div>
-              {pronSentenceExampleInputs.map((example) => (
-                <div className="example-and-x-button" key={example.id}>
-                  <div className="sentence-example-input thin-white-border">
-                    <input
-                      placeholder="enter example sentence"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "sentence",
-                          e.target.value,
-                          pronSentenceExamples,
-                          setPronSentenceExamples,
-                        )
-                      }
-                    />
-                    <input
-                      placeholder="enter translation"
-                      onChange={(e) =>
-                        updateSentenceValue(
-                          example.id,
-                          "translation",
-                          e.target.value,
-                          pronSentenceExamples,
-                          setPronSentenceExamples,
-                        )
-                      }
-                    />
-                  </div>
-                  <button
-                    className="btn-close btn-close-white small-x-button"
-                    aria-label="Close"
-                    onClick={() =>
-                      removeExample(
-                        example.id,
-                        pronSentenceExampleInputs,
-                        setPronSentenceExampleInputs,
-                      )
-                    }
-                  ></button>
-                </div>
-              ))}
-              <button
-                style={{ marginBottom: "10px" }}
-                onClick={() => addSentenceExample(setPronSentenceExampleInputs)}
-              >
-                Add Example Sentence (Pronoun)
-              </button>
-            </div>
-          )}
+          <div style={{ maxHeight: "100px" }}>
+            {excludedNearSynonyms && excludedNearSynonyms.length > 0 && excludedNearSynonyms.map((excluded) => (
+              <li className="excludedSynonym">
+                <i>{excluded.word}</i> "{formatMeaning(excluded)}"
+                <button
+                  className="btn-close btn-close-white small-x-button"
+                  aria-label="Close"
+                  onClick={() => removeExcludedNearSynonym(excluded)}
+                ></button>
+              </li>
+            ))}
+          </div>
         </div>
 
         <button className="delete-button" onClick={delWord}>

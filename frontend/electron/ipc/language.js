@@ -65,7 +65,7 @@ export function registerLanguageHandlers() {
   pronWordCategoryInputs,
   tagInputs,
   variants,
-  thesaurusDomains) => editWord(wordId,
+  thesaurusDomains,excludedNearSynonyms) => editWord(wordId,
   languageId,
   word,
   meanings,
@@ -98,7 +98,7 @@ export function registerLanguageHandlers() {
   pronWordCategoryInputs,
   tagInputs,
   variants,
-  thesaurusDomains)
+  thesaurusDomains,excludedNearSynonyms)
     );
 
      ipcMain.handle(

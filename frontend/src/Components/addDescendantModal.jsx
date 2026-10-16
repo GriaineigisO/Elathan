@@ -779,12 +779,16 @@ const AddDescendantModal = ({
     const numOfKeys = Object.keys(spellings);
 
     const spelledWord =
-      numOfKeys.length > 0
+      (numOfKeys.length > 0 && !newWordOverride)
         ? spell(displayedIpa, spellings)
         : newWordOverride && typeof newWordOverride === "string"
           ? newWordOverride
           : newWord;
 
+
+          
+
+       
     const data = await window.electron.addWord(
       date,
       wordId,

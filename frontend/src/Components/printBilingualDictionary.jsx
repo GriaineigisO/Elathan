@@ -1291,6 +1291,8 @@ export function PrintBilingualDictionary({
                   </div>
                 )}
 
+                
+
                 <span className="descendants-print">
                   {word.descendants && word.descendants.length > 0 ? (
                     <span>

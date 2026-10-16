@@ -343,7 +343,7 @@ export function addEtymology(
         (etymology_id, word_id, note, etymology_type, first_element_id, second_element_id, third_element_id)
           VALUES(?, ?, ?, ?, ?, ?, ?)
           `);
-console.log(firstElementId)
+
       const addEtym = addEtymStmt.run(
         Date.now(),
         word_id,
@@ -353,7 +353,7 @@ console.log(firstElementId)
        secondElementId,
        thirdElementId
       );
-console.log(addEtym)
+
        if (addEtym.changes === 0) return { "success": false };
 
       return { "success": true };
@@ -408,13 +408,11 @@ export function editEtymology(etymologyId,
         secondElementId,
         thirdElementId,
         loanWordId,
-        note) {
+        note, isCalque) {
 
        
 
   if (etymologyType === "fromMother") {
-
-    
 
           const editEtymStmt = db.prepare(`
             UPDATE etymology
@@ -426,7 +424,7 @@ export function editEtymology(etymologyId,
             WHERE etymology_id = ?
             `);
 
-            const editEtym = editEtymStmt.run(word_id, note, etymologyType, motherWord, etymologyId);
+            const editEtym = editEtymStmt.run(word_id, note, etymologyType, motherWord.word_id, etymologyId);
 
             if (editEtym.changes === 0) return {"success": false};
 

@@ -8,6 +8,7 @@ import AddGroupModal from "../Components/addGroupModal.jsx";
 import EditGroupModal from "../Components/editGroupModal.jsx";
 import { useTranslate } from "../Functions/TranslateUI";
 import { getLanguages, getGroups } from "../services/languageService.js";
+import capitaliseFirstLetter from "../Functions/capitaliseFirstLetter.jsx";
 
 
 const Home = () => {
@@ -248,7 +249,7 @@ const Home = () => {
                               }
                               style={{ textAlign: "left" }}
                             >
-                              {language.language_name}
+                              {capitaliseFirstLetter(language.language_name)}
                             </td>
                             <td>
                               <button

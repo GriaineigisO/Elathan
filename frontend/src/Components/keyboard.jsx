@@ -115,6 +115,7 @@ export const Keyboard = ({ inputVal, setInputVal, setOverrideWord, setWord}) => 
           <div className="letter-board" style={{ display: `${charDisplay}` }}>
             <>
               <div className="letter-section">
+                
                 <span
                   className="letter"
                   onClick={(e) => insertIPA(e.currentTarget.textContent)}
@@ -771,7 +772,20 @@ export const Keyboard = ({ inputVal, setInputVal, setOverrideWord, setWord}) => 
             style={{ display: `${diacriticDisplay}` }}
           >
             <>
+            
               <div className="letter-section">
+                <span
+                  className="diacritic"
+                  onClick={(e) => insertIPA(e.currentTarget.textContent)}
+                >
+                  č
+                </span>
+                 <span
+                  className="diacritic"
+                  onClick={(e) => insertIPA(e.currentTarget.textContent)}
+                >
+                  š
+                </span>
                 <span
                   className="diacritic"
                   onClick={(e) => insertIPA(e.currentTarget.textContent)}

@@ -17,6 +17,7 @@ import { AddVariantModal } from "../Components/addVariantModal.jsx";
 import { getWordData } from "../services/dictionaryService.js";
 import { getEtymology } from "../services/etymologyService.js";
 import { getLanguage } from "../services/languageService.js";
+import { editExcludedNearSynonyms } from "../services/languageService.js";
 import capitaliseFirstLetter from "../Functions/capitaliseFirstLetter.jsx";
 import leftArrow from "../assets/caret-left-fill-white.svg";
 import rightArrow from "../assets/caret-right-fill-white.svg";
@@ -35,6 +36,7 @@ const Word = () => {
   const [homophones, setHomophones] = useState([]);
   const [showAddEtymologyModal, setShowAddEtymologyModal] = useState(false);
   const [showEditEtymologyModal, setShowEditEtymologyModal] = useState(false);
+  const [excludedNearSynonyms, setExcludedNearSynonyms] = useState([]);
   const [showDeleteEtymologyModal, setShowDeleteEtymologyModal] =
     useState(false);
   const [etymology, setEtymology] = useState([]);
@@ -103,6 +105,9 @@ const Word = () => {
     setNearSynonyms(data.nearSynonyms);
     setVariants(data.variants);
     setHomophones(data.homophones);
+    setExcludedNearSynonyms(
+      JSON.parse(data.word.wordData.excluded_near_synonyms) ?? [],
+    );
 
     const wordsIndex = data.allWords.findIndex(
       (w) => w.word_id === data.word.wordData.word_id,
@@ -372,6 +377,41 @@ const Word = () => {
     window.location.href = `/dictionary/${id}`;
   };
 
+  async function removeNearSynonym(excluded) {
+    const temp = [];
+    excludedNearSynonyms.forEach((synonym) => temp.push(synonym));
+    temp.push(excluded);
+    setExcludedNearSynonyms(temp);
+
+    let data = await window.electron.editExcludedNearSynonyms(
+      temp,
+      word,
+    );
+  }
+
+  function checkIfExcluded(id) {
+    const excluded = excludedNearSynonyms.some((obj) => obj.word_id === id);
+   
+    if (excluded) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function checkIfDerivation(id) {
+    //makes sure that a derivation is not flagged as a near synonym
+    const isADerivation = derivations.includes(id)
+    const isAVariant =  variants.some((obj) => obj.word_id === id);
+    console.log(variants)
+   
+    if (isADerivation || isAVariant) {
+      return false
+    } else {
+      true
+    }
+  }
+
   return (
     <>
       <div style={{ textAlign: "left", marginLeft: "100px" }}>
@@ -462,7 +502,9 @@ const Word = () => {
                 >
                   <div
                     className="next-prev-word-button"
-                    onClick={() => isPrevWord && handleOpenWord(prevWord.word_id)}
+                    onClick={() =>
+                      isPrevWord && handleOpenWord(prevWord.word_id)
+                    }
                   >
                     <img style={{ width: "40px" }} src={leftArrow}></img>
                     {isPrevWord && (
@@ -470,8 +512,8 @@ const Word = () => {
                         {isProto && <span>*</span>}
                         {(prevWord.word_type === "suffix" ||
                           prevWord.word_type === "enclitic") && (
-                            <span>-</span>
-                          )}{" "}
+                          <span>-</span>
+                        )}{" "}
                         <i>{prevWord.word}</i>
                         {prevWord.word_type === "prefix" ||
                           (prevWord.word_type === "proclitic" && (
@@ -481,28 +523,29 @@ const Word = () => {
                     )}
                   </div>
 
-                 
-                    {isNextWord && ( <div
-                    className="next-prev-word-button"
-                    onClick={() => isNextWord && handleOpenWord(nextWord.word_id)}
-                  >
+                  {isNextWord && (
+                    <div
+                      className="next-prev-word-button"
+                      onClick={() =>
+                        isNextWord && handleOpenWord(nextWord.word_id)
+                      }
+                    >
                       <span style={{ fontSize: "25px" }}>
                         {isProto && <span>*</span>}
                         {(nextWord.word_type === "suffix" ||
                           nextWord.word_type === "enclitic") && (
-                            <span>-</span>
-                          )}{" "}
+                          <span>-</span>
+                        )}{" "}
                         <i>{nextWord.word}</i>
                         {(nextWord.word_type === "prefix" ||
-                          nextWord.word_type === "proclitic") && (
-                            <span>-</span>
-                          )}
+                          nextWord.word_type === "proclitic") && <span>-</span>}
                       </span>
-                      <img style={{ width: "40px" }} src={rightArrow}></img> </div>
-                    )}
-                    
-                    
-                 
+                      <img
+                        style={{ width: "40px" }}
+                        src={rightArrow}
+                      ></img>{" "}
+                    </div>
+                  )}
                 </div>
 
                 <h1 style={{ fontSize: "70px" }}>
@@ -535,7 +578,7 @@ const Word = () => {
                 </h1>
 
                 <h2 onClick={() => handleOpenLanguage(languageId)}>
-                  {languageName}
+                  {capitaliseFirstLetter(languageName)}
                 </h2>
 
                 <div>
@@ -2183,7 +2226,7 @@ const Word = () => {
                       </div>
                       <ol>
                         {synonyms.map((synonym, index) => (
-                          <li key={index}>
+                          (checkIfDerivation(synonym.word_id) && ( <li key={index}>
                             <a
                               className="word-link"
                               href={`${
@@ -2213,7 +2256,8 @@ const Word = () => {
                               </b>{" "}
                               "{synonym.meaning.join(", ")}"
                             </a>
-                          </li>
+                          </li>))
+                         
                         ))}
                       </ol>{" "}
                       <hr />
@@ -2226,39 +2270,47 @@ const Word = () => {
                         <h3>{translate("Near Synonyms")}</h3>
                       </div>
                       <ol>
-                        {nearSynonyms.map((synonym, index) => (
-                          <li key={index}>
-                            <a
-                              className="word-link"
-                              href={`${
-                                import.meta.env.VITE_FRONTEND_URL
-                              }/word/${synonym.word_id}`}
-                            >
-                              <b>
-                                <i>
-                                  {isProto ? <span>*</span> : <></>}
-                                  {synonym.word_type === "suffix" ||
-                                  synonym.word_type === "enclitic" ? (
-                                    <span>-</span>
-                                  ) : (
-                                    <></>
-                                  )}
-                                  {synonym.word_type === "place_name" ||
-                                  synonym.word_type === "personal_name"
-                                    ? capitaliseFirstLetter(synonym.word)
-                                    : synonym.word}
-                                  {synonym.word_type === "prefix" ||
-                                  synonym.word_type === "proclitic" ? (
-                                    <span>-</span>
-                                  ) : (
-                                    <></>
-                                  )}
-                                </i>
-                              </b>{" "}
-                              "{synonym.meaning.join(", ")}"
-                            </a>
-                          </li>
-                        ))}
+                        {nearSynonyms.map(
+                          (synonym, index) =>
+                            (checkIfExcluded(synonym.word_id) && checkIfDerivation(synonym.word_id)) && (
+                              <li key={index}>
+                                <a
+                                  className="word-link"
+                                  href={`${
+                                    import.meta.env.VITE_FRONTEND_URL
+                                  }/word/${synonym.word_id}`}
+                                >
+                                  <b>
+                                    <i>
+                                      {isProto ? <span>*</span> : <></>}
+                                      {synonym.word_type === "suffix" ||
+                                      synonym.word_type === "enclitic" ? (
+                                        <span>-</span>
+                                      ) : (
+                                        <></>
+                                      )}
+                                      {synonym.word_type === "place_name" ||
+                                      synonym.word_type === "personal_name"
+                                        ? capitaliseFirstLetter(synonym.word)
+                                        : synonym.word}
+                                      {synonym.word_type === "prefix" ||
+                                      synonym.word_type === "proclitic" ? (
+                                        <span>-</span>
+                                      ) : (
+                                        <></>
+                                      )}
+                                    </i>
+                                  </b>{" "}
+                                  "{synonym.meaning.join(", ")}"
+                                </a>
+                                <button
+                                  className="btn-close btn-close-white small-x-button"
+                                  aria-label="Close"
+                                  onClick={() => removeNearSynonym(synonym)}
+                                ></button>
+                              </li>
+                            ),
+                        )}
                       </ol>{" "}
                       <hr />
                     </div>

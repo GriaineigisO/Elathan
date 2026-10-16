@@ -235,7 +235,7 @@ api.editEtymology = (etymologyId,
         secondElementId,
         thirdElementId,
         loanWordId,
-        note) => {
+        note, isCalque) => {
   return ipcRenderer.invoke("etymology:editEtymology", etymologyId,
         etymologyType,
         word_id,
@@ -244,7 +244,7 @@ api.editEtymology = (etymologyId,
         secondElementId,
         thirdElementId,
         loanWordId,
-        note);
+        note, isCalque);
 };
 
 api.getEtymology = (id) => {
@@ -314,6 +314,10 @@ api.getEncyclopedias = (id) => {
   return ipcRenderer.invoke("encyclopedia:getEncyclopedias", id);
 };
 
+api.editExcludedNearSynonyms = (arr, id) => {
+  return ipcRenderer.invoke("dictionary:editExcludedNearSynonyms", arr, id);
+};
+
 api.getEncyclopedia = (id) => {
   return ipcRenderer.invoke("encyclopedia:getEncyclopedia", id);
 };
@@ -368,7 +372,7 @@ api.editWord = (
   pronWordCategoryInputs,
   tagInputs,
   variants,
-  thesaurusDomains,
+  thesaurusDomains,excludedNearSynonyms
 ) => {
   return ipcRenderer.invoke(
     "language:editWord",
@@ -405,7 +409,7 @@ api.editWord = (
     pronWordCategoryInputs,
     tagInputs,
     variants,
-    thesaurusDomains,
+    thesaurusDomains,excludedNearSynonyms
   );
 };
 

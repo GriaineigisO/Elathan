@@ -423,17 +423,15 @@ export function getWordData(id) {
   }
 
   function getNearSynonyms(selectedWord) {
-     const splitTerms = excludedTerms.split(", ");
-     const excludedArr = [];
+    const splitTerms = excludedTerms.split(", ");
+    const excludedArr = [];
 
-        splitTerms.forEach((word, index) => {
-          const cleaned = word.replaceAll('"', "");
-          
+    splitTerms.forEach((word, index) => {
+      const cleaned = word.replaceAll('"', "");
 
-          excludedArr.push(cleaned);
-        });
+      excludedArr.push(cleaned);
+    });
 
-      
     const wordsStmt = db.prepare(`
             SELECT *
             FROM dictionary
@@ -461,13 +459,12 @@ export function getWordData(id) {
         const split2 = [];
 
         //to make sure that common function words like 'of' or 'the' are not matched, they will be excluded
-       
+
         function splitMeanings(arr, split) {
           arr.forEach((word) => {
             const splitWords = word.split(" ");
             splitWords.forEach((sw) => {
-              
-              if (!excludedArr.includes(sw))  split.push(sw);
+              if (!excludedArr.includes(sw)) split.push(sw); 
             });
           });
         }
@@ -484,14 +481,19 @@ export function getWordData(id) {
           !synonyms.includes(word.word)
         ) {
           //exclude the word from matching with itself
-          
+
           synonyms.push(word);
         }
       }
     };
 
     words.forEach((word) => {
-      if (word.noun_meaning && selectedWord.noun_meaning) {
+
+      //excludes personal and place names from being synonyms
+      const isNotAName = word.word_type !== "place_name" && word.word_type !== "personal_name" ? true : false;
+     
+
+      if (word.noun_meaning && selectedWord.noun_meaning && isNotAName) {
         matchWords(
           word.noun_meaning,
           selectedWord.noun_meaning,
@@ -500,7 +502,7 @@ export function getWordData(id) {
         );
       }
 
-      if (word.num_meaning && selectedWord.num_meaning) {
+      if (word.num_meaning && selectedWord.num_meaning && isNotAName) {
         matchWords(
           word.num_meaning,
           selectedWord.num_meaning,
@@ -509,7 +511,7 @@ export function getWordData(id) {
         );
       }
 
-      if (word.verb_meaning && selectedWord.verb_meaning) {
+      if (word.verb_meaning && selectedWord.verb_meaning && isNotAName) {
         matchWords(
           word.verb_meaning,
           selectedWord.verb_meaning,
@@ -518,7 +520,7 @@ export function getWordData(id) {
         );
       }
 
-      if (word.adj_meaning && selectedWord.adj_meaning) {
+      if (word.adj_meaning && selectedWord.adj_meaning && isNotAName) {
         matchWords(
           word.adj_meaning,
           selectedWord.adj_meaning,
@@ -527,7 +529,7 @@ export function getWordData(id) {
         );
       }
 
-      if (word.adv_meaning && selectedWord.adv_meaning) {
+      if (word.adv_meaning && selectedWord.adv_meaning && isNotAName) {
         matchWords(
           word.adv_meaning,
           selectedWord.adv_meaning,
@@ -536,7 +538,7 @@ export function getWordData(id) {
         );
       }
 
-      if (word.adp_meaning && selectedWord.adp_meaning) {
+      if (word.adp_meaning && selectedWord.adp_meaning && isNotAName) {
         matchWords(
           word.adp_meaning,
           selectedWord.adp_meaning,
@@ -545,7 +547,7 @@ export function getWordData(id) {
         );
       }
 
-      if (word.conj_meaning && selectedWord.conj_meaning) {
+      if (word.conj_meaning && selectedWord.conj_meaning && isNotAName) {
         matchWords(
           word.conj_meaning,
           selectedWord.conj_meaning,
@@ -554,7 +556,7 @@ export function getWordData(id) {
         );
       }
 
-      if (word.interj_meaning && selectedWord.interj_meaning) {
+      if (word.interj_meaning && selectedWord.interj_meaning && isNotAName) {
         matchWords(
           word.interj_meaning,
           selectedWord.interj_meaning,
@@ -563,7 +565,7 @@ export function getWordData(id) {
         );
       }
 
-      if (word.pron_meaning && selectedWord.pron_meaning) {
+      if (word.pron_meaning && selectedWord.pron_meaning && isNotAName) {
         matchWords(
           word.part_meaning,
           selectedWord.part_meaning,
@@ -572,7 +574,7 @@ export function getWordData(id) {
         );
       }
 
-      if (word.part_meaning && selectedWord.part_meaning) {
+      if (word.part_meaning && selectedWord.part_meaning && isNotAName) {
         matchWords(
           word.part_meaning,
           selectedWord.part_meaning,
@@ -581,7 +583,7 @@ export function getWordData(id) {
         );
       }
 
-      if (word.affix_meaning && selectedWord.affix_meaning) {
+      if (word.affix_meaning && selectedWord.affix_meaning && isNotAName) {
         matchWords(
           word.affix_meaning,
           selectedWord.affix_meaning,
@@ -618,6 +620,8 @@ export function getWordData(id) {
     return synonyms;
   }
 
+
+
   function getMotherLanguage(lang) {
     const motherId = lang.mother_language_id;
 
@@ -630,11 +634,7 @@ export function getWordData(id) {
 
       const getMother = getMotherStmt.all(motherId).map(parseLanguage);
 
-      const isProto = getMother[0].is_proto
-        ? true
-        : getMother[0].is_proto === 1
-          ? true
-          : false;
+      const isProto = getMother[0].is_proto === 1 ? true : false;
 
       return {
         language_id: getMother[0].language_id,
@@ -768,10 +768,12 @@ export function getWordData(id) {
   const derivations = getDerivations();
   const synonyms = getSynonyms(word.wordData);
   const nearSynonyms = getNearSynonyms(word.wordData);
+ 
   const homophones = getHomophones(word.wordData);
   const variants = getVariants();
   const motherLanguage = getMotherLanguage(lang);
   const descendants = getDescendants();
+   
 
   return {
     word,
@@ -786,6 +788,51 @@ export function getWordData(id) {
     nearSynonyms,
     homophones,
   };
+}
+
+export function editExcludedNearSynonyms(arr, word) {
+  
+  const editWordStmt = db.prepare(`
+    UPDATE dictionary
+    SET excluded_near_synonyms = ?
+    WHERE word_id = ?
+    `);
+
+    const editWord = editWordStmt.run(JSON.stringify(arr), word.word_id);
+
+    if (!editWord.changes > 0) {
+      return {"success": false}
+    }
+
+    //now exclude the word from the synonym's excluded synonyms
+    arr.forEach((synonym) => {
+
+      //first, get the synonym's excluded synonym arr
+
+      const getExcludedArrStmt = db.prepare(`
+        SELECT excluded_near_synonyms 
+        FROM dictionary
+        WHERE word_id = ?
+               `)
+
+      const getExcludedArr = getExcludedArrStmt.all(synonym.word_id);
+      const excludedArr = JSON.parse(getExcludedArr[0].excluded_near_synonyms);
+      excludedArr.push(word);
+      
+
+        const editOtherWordStmt = db.prepare(`
+    UPDATE dictionary
+    SET excluded_near_synonyms = ?
+    WHERE word_id = ?
+    `);
+
+    const editOtherWord = editWordStmt.run(JSON.stringify(excludedArr), synonym.word_id);
+
+    
+    })
+   
+    
+    return {"success": true}
 }
 
 export function getWordsForms(id) {

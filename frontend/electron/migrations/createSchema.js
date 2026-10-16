@@ -56,7 +56,8 @@ export function createSchema() {
 
             inflection TEXT DEFAULT NULL,
             thesaurus TEXT DEFAULT NULL,
-            tags TEXT DEFAULT NULL
+            tags TEXT DEFAULT NULL,
+            excluded_near_synonyms TEXT DEFAULT NULL []
         );
     `);
 

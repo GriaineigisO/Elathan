@@ -406,6 +406,7 @@ setIgnoreFlaggedDuplicate(false);
 
     //check if word may already exist
     //first check if the headword matches any existing words. This will include homophones
+    
       const headwordMatch = allWords.find((entry) => entry.word === headWord);
     if (!ignoreFlaggedDuplicate) {
   
@@ -421,6 +422,7 @@ setIgnoreFlaggedDuplicate(false);
           );
 
           if (possibleMatch) {
+            console.log(headwordMatch)
             setFlagPossibleDuplicate(true);
             setPossibleDuplicate(headwordMatch);
           }
@@ -429,7 +431,8 @@ setIgnoreFlaggedDuplicate(false);
     }
   }
 
-  if (headwordMatch && possibleDuplicate && !ignoreFlaggedDuplicate) return;
+ 
+  if (headwordMatch && !ignoreFlaggedDuplicate) return;
 
     const date = new Date();
     const wordId = Date.now();

@@ -3,6 +3,13 @@ export async function getAuthorName() {
     return await window.electron.getAuthorName();
 }
 
+
+export async function editExcludedNearSynonyms(arr, id) {
+
+    return await window.electron.editExcludedNearSynonyms(arr, id);
+}
+
+
 export async function saveAccountSettings(authorName, excludedNearSynonymTerms) {
 
     return await window.electron.saveAccountSettings(authorName, excludedNearSynonymTerms);
@@ -195,7 +202,7 @@ export async function editWord(wordId,
   pronWordCategoryInputs,
   tagInputs,
   variants,
-  thesaurusDomains) {
+  thesaurusDomains, excludedNearSynonyms) {
 
     return await window.electron.editWord(wordId,
   languageId,
@@ -230,7 +237,7 @@ export async function editWord(wordId,
   pronWordCategoryInputs,
   tagInputs,
   variants,
-  thesaurusDomains);
+  thesaurusDomains, excludedNearSynonyms);
 }
 
 export async function addLanguage(id, languageName, motherLanguageId, daughterLanguageIds, isProto, wordForms, addedGroups) {

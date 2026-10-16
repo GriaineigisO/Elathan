@@ -802,7 +802,7 @@ export const AddVariantModal = ({
             <div className="thin-white-border">
               <h4>{translate("Word Categories")}</h4>
               <div style={{ display: "flex", flexDirection: "column" }}>
-                {shownParts["n"] &&
+                {(shownParts["n"] && wordCategories) &&
                   wordCategories
                     .flatMap((wc) => wc.word_categories ?? [])
                     .filter((cat) => cat.type === "noun")

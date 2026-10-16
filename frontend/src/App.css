@@ -18,6 +18,10 @@ cursor: pointer;
 text-decoration: underline;
 }
 
+.excludedSynonym:hover {
+  background-color: #877e7e !important;
+}
+
 ******************************
 IPA KEYBOARD
 

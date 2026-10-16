@@ -28,14 +28,14 @@ export function registerEtymologyHandlers() {
         secondElementId,
         thirdElementId,
         loanWordId,
-        note) => editEtymology(etymologyId, etymologyType,
+        note, isCalque) => editEtymology(etymologyId, etymologyType,
         word_id,
         motherWord,
         firstElementId,
         secondElementId,
         thirdElementId,
         loanWordId,
-        note)
+        note, isCalque)
     );
 
 

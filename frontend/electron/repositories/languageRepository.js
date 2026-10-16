@@ -1011,7 +1011,7 @@ export function editWord(
   pronWordCategoryInputs,
   tagInputs,
   variants,
-  thesaurusDomains,
+  thesaurusDomains,excludedNearSynonyms
 ) {
   const removeNulls = (arr) => {
     if (!Array.isArray(arr)) return;
@@ -1075,7 +1075,7 @@ export function editWord(
   const editWrdStmt = db.prepare(`
       UPDATE dictionary
       SET
-       word =?, word_type =?, word_note =?, ipa =?, variants=?, noun_meaning =?, verb_meaning =?, adj_meaning =?, adv_meaning =?, adp_meaning =?, part_meaning =?, pron_meaning =?, conj_meaning =?, interj_meaning =?, affix_meaning =?, num_meaning =?, clitic_meaning =?, noun_word_forms =?, verb_word_forms =?, adj_word_forms =?, adv_word_forms =?, adp_word_forms =?, part_word_forms =?, pron_word_forms =?, conj_word_forms =?, interj_word_forms =?, affix_word_forms =?, num_word_forms =?, clitic_word_forms =?,   noun_word_categories =?, verb_word_categories =?, adj_word_categories =?, adv_word_categories =?, adp_word_categories =?, part_word_categories =?, pron_word_categories =?, conj_word_categories =?, interj_word_categories =?, affix_word_categories =?, num_word_categories =?, clitic_word_categories =?, tags =?, thesaurus =?, date_edited = ?
+       word =?, word_type =?, word_note =?, ipa =?, variants=?, noun_meaning =?, verb_meaning =?, adj_meaning =?, adv_meaning =?, adp_meaning =?, part_meaning =?, pron_meaning =?, conj_meaning =?, interj_meaning =?, affix_meaning =?, num_meaning =?, clitic_meaning =?, noun_word_forms =?, verb_word_forms =?, adj_word_forms =?, adv_word_forms =?, adp_word_forms =?, part_word_forms =?, pron_word_forms =?, conj_word_forms =?, interj_word_forms =?, affix_word_forms =?, num_word_forms =?, clitic_word_forms =?,   noun_word_categories =?, verb_word_categories =?, adj_word_categories =?, adv_word_categories =?, adp_word_categories =?, part_word_categories =?, pron_word_categories =?, conj_word_categories =?, interj_word_categories =?, affix_word_categories =?, num_word_categories =?, clitic_word_categories =?, tags =?, thesaurus =?, date_edited = ?, excluded_near_synonyms = ?
        WHERE word_id = ?
       
           `);
@@ -1125,6 +1125,7 @@ export function editWord(
     JSON.stringify(tagInputs) ?? null,
     JSON.stringify(thes) ?? null,
     Date.now(),
+    JSON.stringify(excludedNearSynonyms),
     wordId,
   );
 
